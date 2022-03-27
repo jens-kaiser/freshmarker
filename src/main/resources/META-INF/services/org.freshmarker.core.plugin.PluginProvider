@@ -1,0 +1,5 @@
+org.freshmarker.core.plugin.StringPluginProvider
+org.freshmarker.core.plugin.TemporalPluginProvider
+org.freshmarker.core.plugin.DatePluginProvider
+org.freshmarker.core.plugin.BooleanPluginProvider
+org.freshmarker.core.plugin.FileAndPathPluginProvider

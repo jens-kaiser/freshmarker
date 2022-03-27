@@ -1,0 +1,54 @@
+= FreshMarker
+
+== Template Types
+
+|===
+|Type | Java Type(s) | Template Type
+
+|String|String|TemplateString
+|Number|Long, Integer, Short, Byte|TemplateNumber
+|Number|Double, Float|TemplateNumber
+|Boolean|Boolean|TemplateBoolean
+|DateTime|LocalDateTime, Date |TemplateDate
+|Date|LocalDate, java.sql.Date|TemplateDateTime
+|Time|LocalTime, java.sql.Time|TemplateTime
+|Sequence|List|TemplateListSequence
+|Duration|Duration|TemplateDuration
+|Period|Period|TemplatePeriod
+|===
+
+== Template Directives
+
+|===
+| Name | Comment
+
+| If/ElseIf/Else |
+| Swich/Case/Default | Without Break/Fallthrough
+| Interpolation | Dynamic Key, BuildIn, Exists
+| Dynamic Key| Sequence, Range
+|===
+
+== BuildIns
+
+|===
+|Name | Type | Comment
+
+| upper_case | String |
+| lower_case | String |
+| trim | String |
+| contains | String |
+| ends_with | String |
+| boolean | String |
+| c    | DateTime, Date, Time |
+| date | DateTime, Date |
+| time | DateTime, Time |
+| c    | Boolean |
+| then | Boolean |
+| string | Boolean |
+| name | Path, File |
+| parent | Path, File |
+| size | Path, File |
+| exists | Path, File |
+| is_file | Path, File |
+| is_directory | Path, File |
+|===

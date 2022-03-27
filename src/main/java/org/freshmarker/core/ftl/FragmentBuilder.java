@@ -1,0 +1,97 @@
+package org.freshmarker.core.ftl;
+
+import ftl.FTLConstants.TokenType;
+import ftl.Node;
+import ftl.Token;
+import ftl.ast.Block;
+import ftl.ast.FTLHeader;
+import ftl.ast.IfStatement;
+import ftl.ast.Interpolation;
+import ftl.ast.Root;
+import ftl.ast.SwitchInstruction;
+import ftl.ast.Text;
+import org.freshmarker.core.fragment.BlockFragment;
+import org.freshmarker.core.fragment.ConstantFragment;
+import org.freshmarker.core.fragment.IfFragment;
+import org.freshmarker.core.fragment.InterpolationFragment;
+import org.freshmarker.core.fragment.SwitchFragment;
+import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
+
+  private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
+
+  private final InterpolationBuilder interpolationBuilder = new InterpolationBuilder();
+
+  @Override
+  public BlockFragment visit(Node ftl, BlockFragment input) {
+    logger.info("unsupported node operation: {}", ftl.getClass());
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(Token ftl, BlockFragment input) {
+    if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
+      input.addFragment(new ConstantFragment<>(new TemplateString(ftl.getImage())));
+    }
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(FTLHeader ftl, BlockFragment input) {
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(Root ftl, BlockFragment input) {
+    logger.debug("root: {}", ftl);
+    for (Node node : ftl.children(true)) {
+      node.accept(this, input);
+    }
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(Block ftl, BlockFragment input) {
+    logger.debug("block: {}", ftl);
+    for (Node node : ftl.children(true)) {
+      node.accept(this, input);
+    }
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(Text ftl, BlockFragment input) {
+    logger.debug("text: {}", ftl);
+    ftl.getAllTokens(false).stream().map(Token::getImage).map(TemplateString::new).map(ConstantFragment::new)
+        .forEach(input::addFragment);
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(IfStatement ftl, BlockFragment input) {
+    logger.debug("if: {}", ftl);
+    IfFragment ifFragment = ftl.accept(new IfFragmentBuilder(), null);
+    input.addFragment(ifFragment);
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(SwitchInstruction ftl, BlockFragment input) {
+    logger.debug("switch: {}", ftl);
+    SwitchFragment switchFragment = ftl.accept(new SwitchFragmentBuilder(), null);
+    input.addFragment(switchFragment);
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(Interpolation ftl, BlockFragment input) {
+    logger.debug("interpolation: {}", ftl);
+    TemplateObject interpolation = ftl.getChild(1).accept(interpolationBuilder, null);
+    input.addFragment(new InterpolationFragment(interpolation));
+    return input;
+  }
+}
