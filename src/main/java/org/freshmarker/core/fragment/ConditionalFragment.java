@@ -10,8 +10,6 @@ public class ConditionalFragment implements Fragment {
   private final BlockFragment content;
 
   public ConditionalFragment(TemplateObject conditional, BlockFragment content) {
-    System.err.println(conditional + " " + content);
-
     this.conditional = conditional;
     this.content = content;
   }
@@ -22,7 +20,6 @@ public class ConditionalFragment implements Fragment {
 
   @Override
   public void process(Environment environment, Writer writer) {
-    System.err.println(content);
     content.process(environment, writer);
   }
 }

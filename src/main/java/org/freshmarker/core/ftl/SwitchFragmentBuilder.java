@@ -8,7 +8,6 @@ import java.util.List;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConditionalFragment;
 import org.freshmarker.core.fragment.EmptyFragment;
-import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.model.primitive.TemplateObject;
 import org.slf4j.Logger;

@@ -12,9 +12,13 @@ public class BufferedEnvironment implements Environment {
   private final Environment wrapped;
   private final Map<String, TemplateObject> dataModel;
 
-  public BufferedEnvironment(Environment wrapped) {
-    this.dataModel = new HashMap<>();
+  public BufferedEnvironment(Environment wrapped, Map<String, TemplateObject> dataModel) {
+    this.dataModel = dataModel;
     this.wrapped = wrapped;
+  }
+
+  public BufferedEnvironment(Environment wrapped) {
+    this(wrapped, new HashMap<>());
   }
 
   @Override

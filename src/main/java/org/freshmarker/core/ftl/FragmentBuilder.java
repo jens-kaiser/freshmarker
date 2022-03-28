@@ -5,8 +5,10 @@ import ftl.Node;
 import ftl.Token;
 import ftl.ast.Block;
 import ftl.ast.FTLHeader;
+import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
 import ftl.ast.Interpolation;
+import ftl.ast.ListInstruction;
 import ftl.ast.Root;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
@@ -14,6 +16,7 @@ import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
+import org.freshmarker.core.fragment.ListFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.model.primitive.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -32,10 +35,19 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     return input;
   }
 
+  private static final ConstantFragment<TemplateString> ONE_WHITESPACE = new ConstantFragment<>(
+      new TemplateString(" "));
+
   @Override
   public BlockFragment visit(Token ftl, BlockFragment input) {
     if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
       input.addFragment(new ConstantFragment<>(new TemplateString(ftl.getImage())));
+    } else if (ftl.getType() == TokenType.WHITESPACE) {
+      if (" ".equals(ftl.getImage())) {
+        input.addFragment(ONE_WHITESPACE);
+      } else {
+        input.addFragment(new ConstantFragment<>(new TemplateString(ftl.getImage())));
+      }
     }
     return input;
   }
@@ -92,6 +104,16 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     logger.debug("interpolation: {}", ftl);
     TemplateObject interpolation = ftl.getChild(1).accept(interpolationBuilder, null);
     input.addFragment(new InterpolationFragment(interpolation));
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
+    logger.debug("list: {}", ftl);
+    TemplateObject list = ftl.getChild(3).accept(interpolationBuilder, null);
+    IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(5);
+    BlockFragment block = ftl.getChild(7).accept(this, new BlockFragment());
+    input.addFragment(new ListFragment(list, identifier.getImage(), block));
     return input;
   }
 }

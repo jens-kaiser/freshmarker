@@ -10,6 +10,7 @@ import ftl.ast.ElseIfBlock;
 import ftl.ast.FTLHeader;
 import ftl.ast.IfStatement;
 import ftl.ast.Interpolation;
+import ftl.ast.ListInstruction;
 import ftl.ast.Root;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
@@ -65,6 +66,10 @@ public interface FtlVisitor<I, O> {
   }
 
   default O visit(Interpolation ftl, I input) {
+    return null;
+  }
+
+  default O visit(ListInstruction ftl, I input) {
     return null;
   }
 }
