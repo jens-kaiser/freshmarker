@@ -7,6 +7,7 @@ import ftl.ast.AdditiveExpression;
 import ftl.ast.BaseExpression;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
+import ftl.ast.BuiltinVariable;
 import ftl.ast.DynamicKey;
 import ftl.ast.Exists;
 import ftl.ast.MultiplicativeExpression;
@@ -191,5 +192,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   @Override
   public TemplateObject visit(NotExpression expression, Object input) {
     return new TemplateNegative(expression.getChild(1).accept(this, null));
+  }
+
+  @Override
+  public TemplateObject visit(BuiltinVariable expression, Object input) {
+    return new TemplateVariable("." + expression.getLastToken().getImage());
   }
 }

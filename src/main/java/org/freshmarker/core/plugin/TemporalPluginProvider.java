@@ -7,8 +7,8 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.util.Map;
 import java.util.function.Function;
-import org.freshmarker.core.buildin.BuildInComponent;
-import org.freshmarker.core.buildin.BuildInFunction;
+import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuildInKeyBuilder;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
@@ -25,17 +25,24 @@ import org.freshmarker.core.model.temporal.TemplatePeriod;
 
 public class TemporalPluginProvider implements PluginProvider {
 
+  private static final BuildInKeyBuilder<TemplateLocalDateTime> DATE_TIME_BUILDER = new BuildInKeyBuilder<>(
+      TemplateLocalDateTime.class);
+  private static final BuildInKeyBuilder<TemplateLocalDate> DATE_BUILDER = new BuildInKeyBuilder<>(
+      TemplateLocalDate.class);
+  private static final BuildInKeyBuilder<TemplateLocalTime> TIME_BUILDER = new BuildInKeyBuilder<>(
+      TemplateLocalTime.class);
+
   @Override
-  public void registerBuildIn(Map<String, BuildInComponent> buildIns) {
-    register(buildIns, "date", (x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate()));
-    register(buildIns, "time", (x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime()));
-    register(buildIns, "c", (x, y, e) -> new TemplateString(String.valueOf(x)));
-    getBuildInComponent(buildIns, "date").add(TemplateLocalDate.class, new TypedBuildIn((x, y, e) -> x));
-    getBuildInComponent(buildIns, "c").add(TemplateLocalTime.class,
-        new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    getBuildInComponent(buildIns, "time").add(TemplateLocalTime.class, new TypedBuildIn((x, y, e) -> x));
-    getBuildInComponent(buildIns, "c").add(TemplateLocalTime.class,
-        new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+  public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
+    buildIns.put(DATE_TIME_BUILDER.of("date"),
+        new TypedBuildIn((x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate())));
+    buildIns.put(DATE_TIME_BUILDER.of("time"),
+        new TypedBuildIn((x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime())));
+    buildIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    buildIns.put(DATE_BUILDER.of("date"), new TypedBuildIn((x, y, e) -> x));
+    buildIns.put(DATE_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    buildIns.put(TIME_BUILDER.of("time"), new TypedBuildIn((x, y, e) -> x));
+    buildIns.put(TIME_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
   }
 
   @Override
@@ -54,13 +61,5 @@ public class TemporalPluginProvider implements PluginProvider {
     formatter.put(TemplateLocalTime.class, new TimeFormatter("hh:mm:ss"));
     formatter.put(TemplateDuration.class, new DurationFormatter());
     formatter.put(TemplatePeriod.class, new DurationFormatter());
-  }
-
-  protected void register(Map<String, BuildInComponent> buildIns, String name, BuildInFunction function) {
-    getBuildInComponent(buildIns, name).add(TemplateLocalDateTime.class, new TypedBuildIn(function));
-  }
-
-  private BuildInComponent getBuildInComponent(Map<String, BuildInComponent> buildIns, String name) {
-    return buildIns.computeIfAbsent(name, k -> new BuildInComponent());
   }
 }

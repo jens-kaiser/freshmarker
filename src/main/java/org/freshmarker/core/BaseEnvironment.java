@@ -1,11 +1,11 @@
 package org.freshmarker.core;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
-import org.freshmarker.core.buildin.BuildInComponent;
+import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.StringFormatter;
 import org.freshmarker.core.model.TemplateListSequence;
@@ -14,14 +14,15 @@ import org.freshmarker.core.model.primitive.TemplateObject;
 
 public class BaseEnvironment implements Environment {
 
-  private static final StringFormatter FORMATTER = new StringFormatter();
-  private final Map<String, BuildInComponent> buildIns;
+  private static final StringFormatter STRING_FORMATTER = new StringFormatter();
+
+  private final Map<BuildInKey, TypedBuildIn> buildIns;
   private final Map<String, Object> dataModel;
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
   private final Locale locale;
 
-  public BaseEnvironment(Map<String, BuildInComponent> buildIns,
+  public BaseEnvironment(Map<BuildInKey, TypedBuildIn> buildIns,
       Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
       Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale) {
     this.buildIns = buildIns;
@@ -60,13 +61,17 @@ public class BaseEnvironment implements Environment {
   }
 
   @Override
-  public BuildInComponent getBuildIn(String name) {
-    return buildIns.getOrDefault(name, new BuildInComponent());
+  public TypedBuildIn getBuildIn(Class<? extends TemplateObject> type, String name) {
+    TypedBuildIn result = buildIns.get(new BuildInKey(type, name));
+    if (result == null) {
+      throw new IllegalArgumentException("unsupported plugin: " + name + " " + type);
+    }
+    return result;
   }
 
   @Override
   public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-    return formatter.getOrDefault(type, FORMATTER);
+    return formatter.getOrDefault(type, STRING_FORMATTER);
   }
 
   @Override

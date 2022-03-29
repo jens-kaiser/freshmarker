@@ -8,4 +8,8 @@ public class TemplateBoolean extends TemplatePrimitive<Boolean> {
   private TemplateBoolean(Boolean value) {
     super(value);
   }
+  
+  public TemplateBoolean not() {
+    return this == TRUE ? FALSE : TRUE;
+  }
 }

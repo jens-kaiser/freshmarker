@@ -4,33 +4,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.buildin.BuildInComponent;
 import org.freshmarker.core.buildin.BuildInFunction;
+import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuildInKeyBuilder;
 import org.freshmarker.core.buildin.TypedBuildIn;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.TemplateNull;
+import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class StringPluginProvider implements PluginProvider {
+  private static final BuildInKeyBuilder<TemplateString> BUILDER = new BuildInKeyBuilder<>(TemplateString.class);
 
-  public void registerBuildIn(Map<String, BuildInComponent> buildIns) {
-    register(buildIns, "boolean", this::toBoolean);
-    register(buildIns, "upper_case", (x, y, e) -> process(x, String::toUpperCase));
-    register(buildIns, "lower_case", (x, y, e) -> process(x, String::toLowerCase));
-    register(buildIns, "trim", (x, y, e) -> process(x, String::trim));
-    register(buildIns, "contains", this::contains, List.of(TemplateString.class));
-    register(buildIns, "ends_with", this::endsWith, List.of(TemplateString.class));
+  @Override
+  public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
+    register2(buildIns, "boolean", this::toBoolean);
+    register2(buildIns, "upper_case", (x, y, e) -> process(x, String::toUpperCase));
+    register2(buildIns, "lower_case", (x, y, e) -> process(x, String::toLowerCase));
+    register2(buildIns, "trim", (x, y, e) -> process(x, String::trim));
+    register2(buildIns, "contains", this::contains, List.of(TemplateString.class));
+    register2(buildIns, "ends_with", this::endsWith, List.of(TemplateString.class));
   }
 
-  protected void register(Map<String, BuildInComponent> buildIns, String name, BuildInFunction function,
+  protected void register2(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function,
       List<Class<? extends TemplateObject>> parameters) {
-    buildIns.computeIfAbsent(name, k -> new BuildInComponent())
-        .add(TemplateString.class, new TypedBuildIn(function, parameters));
+    buildIns.put(BUILDER.of(name), new TypedBuildIn(function, parameters));
   }
 
-  private void register(Map<String, BuildInComponent> buildIns, String name, BuildInFunction function) {
-    buildIns.computeIfAbsent(name, k -> new BuildInComponent()).add(TemplateString.class, new TypedBuildIn(function));
+  private void register2(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function) {
+    buildIns.put(BUILDER.of(name), new TypedBuildIn(function));
   }
 
   private TemplateObject contains(TemplateObject value, List<TemplateObject> parameter, Environment environment) {

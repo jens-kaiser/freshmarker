@@ -3,8 +3,8 @@ package org.freshmarker.core.plugin;
 import java.util.List;
 import java.util.Map;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.buildin.BuildInComponent;
-import org.freshmarker.core.buildin.BuildInFunction;
+import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuildInKeyBuilder;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateObject;
@@ -12,20 +12,13 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 public class BooleanPluginProvider implements PluginProvider {
 
-  public void registerBuildIn(Map<String, BuildInComponent> buildIns) {
-    register(buildIns, "c", (x, y, e) -> new TemplateString(String.valueOf(x)));
-    register(buildIns, "string", this::string, List.of(TemplateString.class, TemplateString.class));
-    register(buildIns, "then", this::thenBuildIn, List.of(TemplateString.class, TemplateString.class));
-  }
+  private static final BuildInKeyBuilder<TemplateBoolean> BUILDER = new BuildInKeyBuilder<>(TemplateBoolean.class);
 
-  private void register(Map<String, BuildInComponent> buildIns, String name, BuildInFunction function) {
-    buildIns.computeIfAbsent(name, k -> new BuildInComponent()).add(TemplateBoolean.class, new TypedBuildIn(function));
-  }
-
-  protected void register(Map<String, BuildInComponent> buildIns, String name, BuildInFunction function,
-      List<Class<? extends TemplateObject>> parameters) {
-    buildIns.computeIfAbsent(name, k -> new BuildInComponent())
-        .add(TemplateBoolean.class, new TypedBuildIn(function, parameters));
+  @Override
+  public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
+    buildIns.put(BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    buildIns.put(BUILDER.of("string"), new TypedBuildIn(this::string, List.of(TemplateString.class, TemplateString.class)));
+    buildIns.put(BUILDER.of("then"), new TypedBuildIn(this::thenBuildIn, List.of(TemplateString.class, TemplateString.class)));
   }
 
   private TemplateObject string(TemplateObject value, List<TemplateObject> parameter, Environment environment) {

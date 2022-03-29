@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -19,8 +18,8 @@ import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
-import org.freshmarker.core.buildin.BuildInComponent;
-import org.freshmarker.core.plugin.PluginProvider;
+import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -30,6 +29,7 @@ import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.plugin.PluginProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public final class Configuration {
 
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-  private final Map<String, BuildInComponent> buildIns = new HashMap<>();
+  private final Map<BuildInKey, TypedBuildIn> buildIns = new HashMap<>();
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
   private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
   private TemplateLoader templateLoader;

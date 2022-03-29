@@ -42,6 +42,6 @@ class FtlTemplateBuilderTest {
   void generateSequenceInterpolation() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${test[1]}");
     Template template = configuration.getTemplate("test");
-    assertEquals("test: 2", template.process(Map.of("test", List.of(1,2,3,4,5))));
+    assertEquals("test: 2", template.process(Map.of("test", List.of(1, 2, 3, 4, 5))));
   }
 }

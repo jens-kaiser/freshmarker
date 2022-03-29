@@ -27,7 +27,7 @@ class LoopDirectiveTest {
   }
 
   @Test
-  void loop() throws ParseException, IOException {
+  void loopIndex() throws ParseException, IOException {
     templateLoader.putTemplate("test",
         "test: <#list sequence as s>${s?index}. ${s}\n</#list>");
     Template template = configuration.getTemplate("test");
@@ -35,12 +35,37 @@ class LoopDirectiveTest {
   }
 
   @Test
-  void loopLoop() throws ParseException, IOException {
+  void hasNext() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s><#list sequence as t>(${s?index}.${t?index})</#list></#list>");
+        "test: <#list sequence as s>${s?has_next} </#list>");
     Template template = configuration.getTemplate("test");
-    assertEquals("test: (0.0)(0.1)(0.2)(0.3)(1.0)(1.1)(1.2)(1.3)(2.0)(2.1)(2.2)(2.3)(3.0)(3.1)(3.2)(3.3)", template.process(Map.of("sequence", List.of("a","b","c","d"))));
+    assertEquals("test: yes no ", template.process(Map.of("sequence", List.of("a","b"))));
   }
+
+  @Test
+  void itemParity() throws ParseException, IOException {
+    templateLoader.putTemplate("test",
+        "test: <#list sequence as s>${s?item_parity} </#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: odd even odd even ", template.process(Map.of("sequence", List.of("a","b","c","d"))));
+  }
+
+  @Test
+  void itemParityCap() throws ParseException, IOException {
+    templateLoader.putTemplate("test",
+        "test: <#list sequence as s>${s?item_parity_cap} </#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: Odd Even Odd Even ", template.process(Map.of("sequence", List.of("a","b","c","d"))));
+  }
+
+  @Test
+  void itemCycle() throws ParseException, IOException {
+    templateLoader.putTemplate("test",
+        "test: <#list sequence as s>${s?item_cycle(1, 2, 3)} </#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: 1 2 3 1 ", template.process(Map.of("sequence", List.of("a","b","c","d"))));
+  }
+
   @Test
   void firstLast() throws ParseException, IOException {
     templateLoader.putTemplate("test",

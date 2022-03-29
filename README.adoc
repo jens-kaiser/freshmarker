@@ -26,6 +26,7 @@
 | Swich/Case/Default | Without Break/Fallthrough
 | Interpolation | Dynamic Key, BuildIn, Exists
 | Dynamic Key| Sequence, Range
+| List |
 |===
 
 == BuildIns
@@ -51,4 +52,11 @@
 | exists | Path, File |
 | is_file | Path, File |
 | is_directory | Path, File |
+| index | Loop Variable |
+| counter | Loop Variable |
+| is_first | Loop Variable |
+| is_last | Loop Variable |
+| has_next | Loop Variable |
+| item_parity | Loop Variable |
+| item_parity_cap | Loop Variable |
 |===

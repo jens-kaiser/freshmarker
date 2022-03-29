@@ -4,7 +4,7 @@ import java.util.List;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.primitive.TemplateObject;
 
-public class TypedBuildIn {
+public class TypedBuildIn implements BuildInFunction {
 
   private final BuildInFunction function;
   private final List<Class<? extends TemplateObject>> parameters;
@@ -18,15 +18,14 @@ public class TypedBuildIn {
     this(function, List.of());
   }
 
-  public TemplateObject handle(TemplateObject value, List<TemplateObject> parameters,
-      Environment environment) {
-    validate(parameters);
-    return function.apply(value, parameters, environment);
-  }
-
   public void validate(List<TemplateObject> parameters) {
     if (this.parameters.size() != parameters.size()) {
       throw new IllegalArgumentException("invalid parameter count: " + parameters.size());
     }
+  }
+
+  @Override
+  public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, Environment environment) {
+    return function.apply(value, parameter, environment);
   }
 }

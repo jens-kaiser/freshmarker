@@ -10,8 +10,7 @@ public class TemplateFunction implements TemplateExpression {
   private final TemplateObject expression;
   private final List<TemplateObject> parameter;
 
-  public TemplateFunction(String name, TemplateObject expression,
-      List<TemplateObject> parameter) {
+  public TemplateFunction(String name, TemplateObject expression, List<TemplateObject> parameter) {
     this.name = name;
     this.expression = expression;
     this.parameter = parameter;
@@ -20,6 +19,6 @@ public class TemplateFunction implements TemplateExpression {
   @Override
   public TemplateObject evaluateToObject(Environment environment) {
     TemplateObject result = expression.evaluateToObject(environment);
-    return environment.getBuildIn(name).handle(result, parameter, environment);
+    return environment.getBuildIn(result.getClass(), name).apply(result, parameter, environment);
   }
 }
