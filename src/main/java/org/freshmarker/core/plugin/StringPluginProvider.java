@@ -18,20 +18,20 @@ public class StringPluginProvider implements PluginProvider {
 
   @Override
   public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
-    register2(buildIns, "boolean", this::toBoolean);
-    register2(buildIns, "upper_case", (x, y, e) -> process(x, String::toUpperCase));
-    register2(buildIns, "lower_case", (x, y, e) -> process(x, String::toLowerCase));
-    register2(buildIns, "trim", (x, y, e) -> process(x, String::trim));
-    register2(buildIns, "contains", this::contains, List.of(TemplateString.class));
-    register2(buildIns, "ends_with", this::endsWith, List.of(TemplateString.class));
+    register(buildIns, "boolean", this::toBoolean);
+    register(buildIns, "upper_case", (x, y, e) -> process(x, String::toUpperCase));
+    register(buildIns, "lower_case", (x, y, e) -> process(x, String::toLowerCase));
+    register(buildIns, "trim", (x, y, e) -> process(x, String::trim));
+    register(buildIns, "contains", this::contains, List.of(TemplateString.class));
+    register(buildIns, "ends_with", this::endsWith, List.of(TemplateString.class));
   }
 
-  protected void register2(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function,
+  protected void register(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function,
       List<Class<? extends TemplateObject>> parameters) {
     buildIns.put(BUILDER.of(name), new TypedBuildIn(function, parameters));
   }
 
-  private void register2(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function) {
+  private void register(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function) {
     buildIns.put(BUILDER.of(name), new TypedBuildIn(function));
   }
 
