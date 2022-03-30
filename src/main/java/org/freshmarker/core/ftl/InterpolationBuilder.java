@@ -44,11 +44,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   private static final Logger logger = LoggerFactory.getLogger(InterpolationBuilder.class);
 
   @Override
-  public TemplateObject visit(Node expression, Object input) {
-    return null;
-  }
-
-  @Override
   public TemplateObject visit(Token expression, Object input) {
     String image = expression.getImage();
     switch (expression.getType()) {

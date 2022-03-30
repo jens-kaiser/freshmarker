@@ -16,7 +16,11 @@ public class InterpolationFragment implements Fragment {
   @Override
   public void process(Environment environment, Writer writer) {
     try {
-      writer.write(expression.evaluateToObject(environment).evaluate(environment));
+      TemplateObject templateObject = expression;
+      do {
+        templateObject = templateObject.evaluateToObject(environment);
+      } while (!templateObject.isPrimitive());
+      writer.write(environment.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale()));
     } catch (IOException e) {
       throw new ProcessException(e.getMessage(), e);
     }

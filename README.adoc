@@ -3,18 +3,20 @@
 == Template Types
 
 |===
-|Type | Java Type(s) | Template Type
+|Type | Java Type(s) | Template Type | Comment
 
-|String|String|TemplateString
-|Number|Long, Integer, Short, Byte|TemplateNumber
-|Number|Double, Float|TemplateNumber
-|Boolean|Boolean|TemplateBoolean
-|DateTime|LocalDateTime, Date |TemplateDate
-|Date|LocalDate, java.sql.Date|TemplateDateTime
-|Time|LocalTime, java.sql.Time|TemplateTime
-|Sequence|List|TemplateListSequence
-|Duration|Duration|TemplateDuration
-|Period|Period|TemplatePeriod
+|String|String|TemplateString|
+|Number|Long, Integer, Short, Byte|TemplateNumber|
+|Number|Double, Float|TemplateNumber|
+|Boolean|Boolean|TemplateBoolean|
+|DateTime|LocalDateTime, Date |TemplateDate|
+|Date|LocalDate, java.sql.Date|TemplateDateTime|
+|Time|LocalTime, java.sql.Time|TemplateTime|
+|Sequence|List|TemplateListSequence|
+|Duration|Duration|TemplateDuration|
+|Period|Period|TemplatePeriod|
+|Map|Map|TemplateMap|
+|Bean|-|TemplateBeanMap|
 |===
 
 == Template Directives
@@ -26,7 +28,7 @@
 | Swich/Case/Default | Without Break/Fallthrough
 | Interpolation | Dynamic Key, BuildIn, Exists
 | Dynamic Key| Sequence, Range
-| List |
+| List | Sequence
 |===
 
 == BuildIns

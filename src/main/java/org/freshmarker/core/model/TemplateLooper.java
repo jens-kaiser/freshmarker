@@ -18,11 +18,6 @@ public class TemplateLooper implements TemplateObject {
   }
 
   @Override
-  public String evaluate(Environment environment) {
-    return environment.getFormatter(getClass()).format(evaluateToObject(environment), environment.getLocale());
-  }
-
-  @Override
   public TemplateObject evaluateToObject(Environment environment) {
     return sequence.get(environment, index);
   }

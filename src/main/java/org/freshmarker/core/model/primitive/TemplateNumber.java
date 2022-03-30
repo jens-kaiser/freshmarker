@@ -116,10 +116,12 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     return other.subtract(this);
   }
 
+  @Override
   public Optional<TemplateNumber> asNumber() {
     return Optional.of(this);
   }
 
+  @Override
   public boolean isNumber() {
     return true;
   }

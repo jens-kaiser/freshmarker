@@ -11,6 +11,7 @@ public class TemplateNegative implements TemplateObject {
   public TemplateNegative(TemplateObject expression) {
     this.expression = expression;
   }
+
   @Override
   public TemplateObject evaluateToObject(Environment environment) {
     TemplateObject templateObject = expression.evaluateToObject(environment);

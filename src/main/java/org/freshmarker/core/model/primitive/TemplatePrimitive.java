@@ -2,7 +2,6 @@ package org.freshmarker.core.model.primitive;
 
 import java.util.Objects;
 import java.util.Optional;
-import org.freshmarker.core.Environment;
 
 public class TemplatePrimitive<P> implements TemplateObject {
 
@@ -12,6 +11,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
     this.value = Objects.requireNonNull(value);
   }
 
+  @Override
   public boolean isPrimitive() {
     return true;
   }
@@ -28,11 +28,6 @@ public class TemplatePrimitive<P> implements TemplateObject {
   @Override
   public String toString() {
     return value.toString();
-  }
-
-  @Override
-  public String evaluate(Environment environment) {
-    return environment.getFormatter(getClass()).format(this, environment.getLocale());
   }
 
   public boolean equals(Object o) {

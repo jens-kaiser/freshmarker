@@ -25,10 +25,6 @@ public interface TemplateObject {
     return Optional.empty();
   }
 
-  default String evaluate(Environment environment) {
-    return environment.getFormatter(getClass()).format(this, environment.getLocale());
-  }
-
   default TemplateObject evaluateToObject(Environment environment) {
     return this;
   }
