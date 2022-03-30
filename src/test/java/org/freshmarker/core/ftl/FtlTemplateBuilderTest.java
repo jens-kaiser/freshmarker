@@ -17,11 +17,37 @@ class FtlTemplateBuilderTest {
   private Configuration configuration;
   private StringTemplateLoader templateLoader;
 
+  public static class TestBean {
+    private final String name;
+
+    TestBean(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
+
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
     templateLoader = new StringTemplateLoader();
     configuration.registerTemplateLoader(templateLoader);
+  }
+
+  @Test
+  void generateWithBean() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "${bean.name}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("Bean Name", template.process(Map.of("bean", new TestBean("Bean Name"))));
+  }
+
+  @Test
+  void generateWithMap() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "${bean.name}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("Bean Name", template.process(Map.of("bean", Map.of("name", "Bean Name"))));
   }
 
   @Test

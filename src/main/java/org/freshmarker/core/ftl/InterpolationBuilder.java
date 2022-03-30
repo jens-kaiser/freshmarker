@@ -8,6 +8,7 @@ import ftl.ast.BaseExpression;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
+import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
 import ftl.ast.Exists;
 import ftl.ast.MultiplicativeExpression;
@@ -20,6 +21,7 @@ import ftl.ast.RangeExpression;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.TemplateDynamicKey;
@@ -126,6 +128,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
       return new TemplateSlice((TemplateObject) input, dynamicKey);
     }
     return new TemplateDynamicKey((TemplateObject) input, dynamicKey);
+  }
+
+  @Override
+  public TemplateObject visit(DotKey expression, Object input) {
+    String dotKey = expression.getLastToken().getImage();
+    logger.info("dotkey: {}", dotKey);
+    return new TemplateDotKey((TemplateObject)input, dotKey);
   }
 
   @Override

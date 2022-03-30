@@ -8,7 +8,10 @@ import org.freshmarker.core.buildin.BuildInKey;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.StringFormatter;
+import org.freshmarker.core.model.TemplateBean;
+import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateListSequence;
+import org.freshmarker.core.model.TemplateMap;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateObject;
 
@@ -16,6 +19,7 @@ public class BaseEnvironment implements Environment {
 
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
+  private TemplateBeanProvider beanProvider = new TemplateBeanProvider();
   private final Map<BuildInKey, TypedBuildIn> buildIns;
   private final Map<String, Object> dataModel;
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
@@ -53,11 +57,21 @@ public class BaseEnvironment implements Environment {
       List<Object> values = (List<Object>) o;
       return new TemplateListSequence(values);
     }
-    Function<Object, TemplateObject> mapping = mapper.get(o.getClass());
-    if (mapping == null) {
-      throw new IllegalArgumentException("unsupported data type: " + o.getClass());
+    if (o instanceof Map) {
+      Map<String, Object> values = (Map<String, Object>) o;
+      return (TemplateMap) (environment, name) -> {
+        Object result = values.get(name);
+        return result == null ? TemplateNull.NULL : environment.mapObject(result);
+      };
     }
-    return mapping.apply(o);
+    Function<Object, TemplateObject> mapping = mapper.get(o.getClass());
+    if (mapping != null) {
+      return mapping.apply(o);
+    }
+    if (!o.getClass().isPrimitive() && !o.getClass().getName().startsWith("java")) {
+      return new TemplateBean(beanProvider.provide(o, this));
+    }
+    throw new IllegalArgumentException("unsupported data type: " + o.getClass());
   }
 
   @Override
