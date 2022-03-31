@@ -28,7 +28,5 @@ public interface TemplateObject {
     return Optional.empty();
   }
 
-  default TemplateObject evaluateToObject(Environment environment) {
-    return this;
-  }
+  TemplateObject evaluateToObject(Environment environment);
 }

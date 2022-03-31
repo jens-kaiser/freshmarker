@@ -20,12 +20,12 @@ public class TemplateSlice implements TemplateObject {
     TemplateNumber lower = (TemplateNumber) templateRange.getLower().evaluateToObject(environment);
     int min = lower.getValue().intValue();
     if (templateRange.isRightUnlimited()) {
-      return templateListSequence.slice(min, templateListSequence.size().getValue().intValue());
+      return templateListSequence.slice(min, templateListSequence.size(environment).getValue().intValue());
     }
     TemplateNumber upper = (TemplateNumber) templateRange.getUpper().evaluateToObject(environment);
     int max = upper.getValue().intValue();
     if (templateRange.isLengthLimited()) {
-      return templateListSequence.slice(min, Math.max(templateListSequence.size().getValue().intValue(), min + max));
+      return templateListSequence.slice(min, Math.max(templateListSequence.size(environment).getValue().intValue(), min + max));
     }
     return templateListSequence.slice(min, max);
   }

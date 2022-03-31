@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.model.TemplateListSequence;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateSequence;
+import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 public class ListFragment implements Fragment {
 
@@ -23,12 +25,14 @@ public class ListFragment implements Fragment {
 
   @Override
   public void process(Environment environment, Writer writer) {
-    TemplateListSequence sequence = (TemplateListSequence) list.evaluateToObject(environment);
-    TemplateLooper looper = new TemplateLooper(sequence);
+    TemplateSequence sequence = (TemplateSequence) list.evaluateToObject(environment);
+    int size = sequence.size(environment).asNumber().map(TemplatePrimitive::getValue)
+        .orElseThrow(() -> new ProcessException("no number")).intValue();
+    TemplateLooper looper = new TemplateLooper(sequence, size);
     Map<String, TemplateObject> dataModel = new HashMap<>();
     dataModel.put(identifier, looper);
     BufferedEnvironment listEnvironment = new BufferedEnvironment(environment, dataModel);
-    for (int i = 0, n = sequence.size().getValue().intValue(); i < n; i++) {
+    for (int i = 0, n = sequence.size(environment).getValue().intValue(); i < n; i++) {
       block.process(listEnvironment, writer);
       looper.increment();
     }

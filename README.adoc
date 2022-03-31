@@ -18,6 +18,7 @@
 |Period|Period|TemplatePeriod
 |Map|Map|TemplateMap
 |Bean|-|TemplateBeanMap
+|Null|-|TemplateNull
 |===
 
 == Template Directives
@@ -27,9 +28,10 @@
 
 | If/ElseIf/Else |
 | Swich/Case/Default | Without Break/Fallthrough
-| Interpolation | Dynamic Key, BuildIn, Exists
+| Interpolation | Dot Key, Dynamic Key, BuildIn, Exists
 | Dynamic Key| Sequence, Range
-| List | Sequence
+| Dot Key | With Identifier on Beans and Maps
+| List | Sequence, Range (not right unlimited)
 |===
 
 == BuildIns

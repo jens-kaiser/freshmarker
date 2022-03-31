@@ -15,4 +15,9 @@ public class TemplateBean implements TemplateMap {
     Object result = map.get(name);
     return result == null ? TemplateNull.NULL : environment.mapObject(result);
   }
+
+  @Override
+  public TemplateObject evaluateToObject(Environment environment) {
+    return this;
+  }
 }

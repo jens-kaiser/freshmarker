@@ -9,11 +9,13 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 public class TemplateLooper implements TemplateObject {
 
-  private final TemplateListSequence sequence;
+  private final TemplateSequence sequence;
+  private final int size;
   private int index;
 
-  public TemplateLooper(TemplateListSequence sequence) {
+  public TemplateLooper(TemplateSequence sequence, int size) {
     this.sequence = sequence;
+    this.size = size;
   }
 
   @Override
@@ -34,7 +36,7 @@ public class TemplateLooper implements TemplateObject {
   }
 
   public TemplateBoolean isLast() {
-    return sequence.size().getValue().equals(index + 1) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+    return size == index + 1 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
   }
 
   public TemplateBoolean hasNext() {

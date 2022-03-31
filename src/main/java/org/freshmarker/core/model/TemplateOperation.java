@@ -7,7 +7,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 
-public class TemplateOperation implements TemplateObject {
+public class TemplateOperation implements TemplateExpression {
 
   private final TokenType op;
   private final TemplateObject left;

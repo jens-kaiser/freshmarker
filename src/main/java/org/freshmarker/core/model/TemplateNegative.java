@@ -4,7 +4,7 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateNegative implements TemplateObject {
+public class TemplateNegative implements TemplateExpression {
   private final TemplateObject expression;
 
   public TemplateNegative(TemplateObject expression) {
