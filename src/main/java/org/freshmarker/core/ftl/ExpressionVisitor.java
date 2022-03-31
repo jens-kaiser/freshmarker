@@ -1,7 +1,6 @@
 package org.freshmarker.core.ftl;
 
 import com.javacc.parser.tree.UnaryExpression;
-import ftl.BaseNode;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.AdditiveExpression;

@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import java.util.Optional;
 import org.freshmarker.core.Environment;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -29,4 +30,12 @@ public interface TemplateObject {
   }
 
   TemplateObject evaluateToObject(Environment environment);
+
+  default <T extends TemplateObject> T evaluate(Environment environment, Class<T> type) {
+    TemplateObject result = evaluateToObject(environment);
+    if (type.isInstance(result)) {
+      return type.cast(result);
+    }
+    throw new WrongTypeException("expected " + type + " but is " + result.getClass() + " (" + result + ")");
+  }
 }

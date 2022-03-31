@@ -16,28 +16,22 @@ public class TemplateDynamicKey implements TemplateExpression {
 
   @Override
   public TemplateObject evaluateToObject(Environment environment) {
-    TemplateObject index = dynamicKey.evaluateToObject(environment);
-    TemplateNumber indexValue = index.asNumber()
-        .orElseThrow(() -> new ProcessException("index is not a number: " + index));
+    TemplateNumber index = dynamicKey.evaluate(environment, TemplateNumber.class);
     TemplateObject templateObject = sequence.evaluateToObject(environment);
     if (templateObject instanceof TemplateRange) {
       TemplateRange range = (TemplateRange) templateObject;
-      TemplateObject lower = range.getLower().evaluateToObject(environment);
-      TemplateNumber lowerNumber = lower.asNumber()
-          .orElseThrow(() -> new ProcessException("lower limit is not a number: " + lower));
-      TemplateNumber result = lowerNumber.add(indexValue);
+      TemplateNumber lower = range.getLower().evaluate(environment, TemplateNumber.class);
+      TemplateNumber result = lower.add(index);
       if (range.isRightUnlimited()) {
         return result;
       }
-      TemplateObject upper = range.getUpper().evaluateToObject(environment);
-      TemplateNumber upperNumber = lower.asNumber()
-          .orElseThrow(() -> new ProcessException("upper limit is not a number: " + upper));
-      if (result.compare(upperNumber).getValue().intValue() < 0) {
+      TemplateNumber upper = range.getUpper().evaluate(environment, TemplateNumber.class);
+      if (result.compare(upper).getValue().intValue() < 0) {
         return result;
       }
-      throw new ProcessException("index out of range");
+      throw new ProcessException("index out of range: " + result.getValue() + " " + upper.getValue());
     }
     TemplateListSequence list = (TemplateListSequence) templateObject;
-    return list.get(environment, indexValue.getValue().intValue());
+    return list.get(environment, index.getValue().intValue());
   }
 }

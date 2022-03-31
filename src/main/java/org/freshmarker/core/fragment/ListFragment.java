@@ -9,6 +9,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
+import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 public class ListFragment implements Fragment {
@@ -26,8 +27,8 @@ public class ListFragment implements Fragment {
   @Override
   public void process(Environment environment, Writer writer) {
     TemplateSequence sequence = (TemplateSequence) list.evaluateToObject(environment);
-    int size = sequence.size(environment).asNumber().map(TemplatePrimitive::getValue)
-        .orElseThrow(() -> new ProcessException("no number")).intValue();
+    int size = sequence.size(environment).asNumber().map(TemplateNumber::asInt)
+        .orElseThrow(() -> new ProcessException("no number"));
     TemplateLooper looper = new TemplateLooper(sequence, size);
     Map<String, TemplateObject> dataModel = new HashMap<>();
     dataModel.put(identifier, looper);

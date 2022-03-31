@@ -10,6 +10,7 @@ import org.freshmarker.core.StringTemplateLoader;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -49,5 +50,12 @@ class BooleanInterpolationTest {
     templateLoader.putTemplate("test", templateSource);
     Template template = configuration.getTemplate("test");
     assertEquals(expected, template.process(Map.of("var", true, "text", "test")));
+  }
+
+  @Test
+  void interpolationNumercialThen() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "${100 + (x > y)?then(x, y)}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("142", template.process(Map.of("var", true, "x", 42, "y", 23)));
   }
 }

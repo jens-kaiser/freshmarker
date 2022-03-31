@@ -18,11 +18,13 @@ import ftl.ast.Parenthesis;
 import ftl.ast.PositionalArgsList;
 import ftl.ast.PrimaryExpression;
 import ftl.ast.RangeExpression;
+import ftl.ast.RelationalExpression;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateExists;
+import org.freshmarker.core.model.TemplateRelational;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateFunction;
@@ -201,5 +203,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   @Override
   public TemplateObject visit(BuiltinVariable expression, Object input) {
     return new TemplateVariable("." + expression.getLastToken().getImage());
+  }
+
+  @Override
+  public TemplateObject visit(RelationalExpression expression, Object input) {
+    TemplateObject left = expression.getChild(0).accept(this, null);
+    TemplateObject right = expression.getChild(2).accept(this, null);
+    return new TemplateRelational(((Token)expression.getChild(1)).getType(), left, right);
   }
 }

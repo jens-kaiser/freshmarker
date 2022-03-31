@@ -15,14 +15,14 @@ public class TemplateSlice implements TemplateObject {
 
   @Override
   public TemplateListSequence evaluateToObject(Environment environment) {
-    TemplateRange templateRange = (TemplateRange) range.evaluateToObject(environment);
-    TemplateListSequence templateListSequence = (TemplateListSequence) sequence.evaluateToObject(environment);
-    TemplateNumber lower = (TemplateNumber) templateRange.getLower().evaluateToObject(environment);
+    TemplateRange templateRange = range.evaluate(environment, TemplateRange.class);
+    TemplateListSequence templateListSequence = sequence.evaluate(environment, TemplateListSequence.class);
+    TemplateNumber lower = templateRange.getLower().evaluate(environment, TemplateNumber.class);
     int min = lower.getValue().intValue();
     if (templateRange.isRightUnlimited()) {
       return templateListSequence.slice(min, templateListSequence.size(environment).getValue().intValue());
     }
-    TemplateNumber upper = (TemplateNumber) templateRange.getUpper().evaluateToObject(environment);
+    TemplateNumber upper = templateRange.getUpper().evaluate(environment, TemplateNumber.class);
     int max = upper.getValue().intValue();
     if (templateRange.isLengthLimited()) {
       return templateListSequence.slice(min, Math.max(templateListSequence.size(environment).getValue().intValue(), min + max));

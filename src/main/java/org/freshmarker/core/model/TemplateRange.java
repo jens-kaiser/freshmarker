@@ -4,7 +4,6 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
-import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,10 +47,8 @@ public class TemplateRange implements TemplateSequence {
   @Override
   public TemplateObject get(Environment environment, int index) {
     logger.info("get: {}", index);
-    TemplateObject lowerValue = lower.evaluateToObject(environment);
-    Number lowerNumber = lowerValue.asNumber().map(TemplatePrimitive::getValue)
-        .orElseThrow(() -> new ProcessException("no number: " + lowerValue));
-    return new TemplateNumber(lowerNumber.intValue() + index, Type.INTEGER);
+    int lowerNumber = lower.evaluate(environment, TemplateNumber.class).asInt();
+    return new TemplateNumber(lowerNumber + index, Type.INTEGER);
   }
 
   @Override
@@ -59,12 +56,9 @@ public class TemplateRange implements TemplateSequence {
     if (rightUnlimited) {
       throw new ProcessException("right unlimited range not supported");
     }
-    TemplateNumber lowerValue = lower.evaluateToObject(environment).asNumber()
-        .orElseThrow(() -> new ProcessException("no number"));
-    TemplateNumber upperValue = upper.evaluateToObject(environment).asNumber()
-        .orElseThrow(() -> new ProcessException("no number"));
-
-    int size = Math.abs(upperValue.getValue().intValue() - lowerValue.getValue().intValue()) + 1;
+    int lowerValue = lower.evaluate(environment, TemplateNumber.class).asInt();
+    int upperValue = upper.evaluate(environment, TemplateNumber.class).asInt();
+    int size = Math.abs(upperValue - lowerValue) + 1;
     logger.info("size: {}", size);
     return new TemplateNumber(size, Type.INTEGER);
   }
