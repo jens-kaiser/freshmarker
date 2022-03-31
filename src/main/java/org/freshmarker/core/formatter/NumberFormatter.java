@@ -2,7 +2,7 @@ package org.freshmarker.core.formatter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 public class NumberFormatter implements Formatter {

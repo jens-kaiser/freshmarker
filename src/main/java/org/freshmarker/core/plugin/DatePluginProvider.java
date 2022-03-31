@@ -14,7 +14,7 @@ import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.date.TemplateClassicDate;
 import org.freshmarker.core.model.date.TemplateClassicDateTime;
 import org.freshmarker.core.model.date.TemplateClassicTime;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class DatePluginProvider implements PluginProvider {

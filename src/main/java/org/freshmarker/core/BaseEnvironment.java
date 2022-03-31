@@ -12,7 +12,7 @@ import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateNull;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public class BaseEnvironment implements Environment {
 

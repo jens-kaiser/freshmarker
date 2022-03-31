@@ -15,7 +15,7 @@ import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.DurationFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.TimeFormatter;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.temporal.TemplateDuration;
 import org.freshmarker.core.model.temporal.TemplateLocalDate;

@@ -18,7 +18,7 @@ import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.ListFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

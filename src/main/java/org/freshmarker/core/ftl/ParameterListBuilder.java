@@ -2,7 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ast.PositionalArgsList;
 import java.util.List;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public class ParameterListBuilder implements
     ExpressionVisitor<List<TemplateObject>, List<TemplateObject>> {

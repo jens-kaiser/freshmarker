@@ -11,7 +11,7 @@ import org.freshmarker.core.buildin.BuildInKeyBuilder;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.model.file.TemplateFile;
 import org.freshmarker.core.model.file.TemplatePath;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public class FileAndPathPluginProvider implements PluginProvider {
 

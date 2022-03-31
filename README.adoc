@@ -3,20 +3,21 @@
 == Template Types
 
 |===
-|Type | Java Type(s) | Template Type | Comment
+|Type | Java Type(s) | Template Type
 
-|String|String|TemplateString|
-|Number|Long, Integer, Short, Byte|TemplateNumber|
-|Number|Double, Float|TemplateNumber|
-|Boolean|Boolean|TemplateBoolean|
-|DateTime|LocalDateTime, Date |TemplateDate|
-|Date|LocalDate, java.sql.Date|TemplateDateTime|
-|Time|LocalTime, java.sql.Time|TemplateTime|
-|Sequence|List|TemplateListSequence|
-|Duration|Duration|TemplateDuration|
-|Period|Period|TemplatePeriod|
-|Map|Map|TemplateMap|
-|Bean|-|TemplateBeanMap|
+|String|String|TemplateString
+|Number|Long, Integer, Short, Byte|TemplateNumber
+|Number|long, int, short, byte|TemplateNumber
+|Number|Double, Float, double, float|TemplateNumber
+|Boolean|Boolean, boolean|TemplateBoolean
+|DateTime|LocalDateTime, Date|TemplateDate
+|Date|LocalDate, java.sql.Date|TemplateDateTime
+|Time|LocalTime, java.sql.Time|TemplateTime
+|Sequence|List|TemplateListSequence
+|Duration|Duration|TemplateDuration
+|Period|Period|TemplatePeriod
+|Map|Map|TemplateMap
+|Bean|-|TemplateBeanMap
 |===
 
 == Template Directives

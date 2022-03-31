@@ -4,7 +4,6 @@ import java.util.List;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
-import org.freshmarker.core.model.primitive.TemplateObject;
 
 public class TemplateListSequence implements TemplateObject {
 

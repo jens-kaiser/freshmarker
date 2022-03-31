@@ -2,7 +2,6 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateObject;
 
 public class TemplateSlice implements TemplateObject {
 

@@ -10,7 +10,7 @@ import org.freshmarker.core.buildin.BuildInKeyBuilder;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class StringPluginProvider implements PluginProvider {

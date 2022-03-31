@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public class InterpolationFragment implements Fragment {
   private final TemplateObject expression;

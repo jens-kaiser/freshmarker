@@ -5,7 +5,7 @@ import java.util.function.Function;
 import org.freshmarker.core.buildin.BuildInKey;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public interface PluginProvider {
 

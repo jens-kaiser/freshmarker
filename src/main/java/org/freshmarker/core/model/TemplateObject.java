@@ -1,7 +1,10 @@
-package org.freshmarker.core.model.primitive;
+package org.freshmarker.core.model;
 
 import java.util.Optional;
 import org.freshmarker.core.Environment;
+import org.freshmarker.core.model.primitive.TemplateNumber;
+import org.freshmarker.core.model.primitive.TemplatePrimitive;
+import org.freshmarker.core.model.primitive.TemplateString;
 
 public interface TemplateObject {
 

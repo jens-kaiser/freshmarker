@@ -3,7 +3,6 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.model.primitive.TemplateObject;
 
 public class TemplateNegative implements TemplateObject {
   private final TemplateObject expression;

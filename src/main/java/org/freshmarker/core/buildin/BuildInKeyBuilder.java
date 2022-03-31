@@ -1,6 +1,6 @@
 package org.freshmarker.core.buildin;
 
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public class BuildInKeyBuilder<T extends TemplateObject> {
 

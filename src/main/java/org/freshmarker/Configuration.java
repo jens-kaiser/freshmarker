@@ -27,7 +27,7 @@ import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.slf4j.Logger;

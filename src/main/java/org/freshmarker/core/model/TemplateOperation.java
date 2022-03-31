@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class TemplateOperation implements TemplateObject {

@@ -2,6 +2,7 @@ package org.freshmarker.core.model.primitive;
 
 import java.util.Objects;
 import java.util.Optional;
+import org.freshmarker.core.model.TemplateObject;
 
 public class TemplatePrimitive<P> implements TemplateObject {
 

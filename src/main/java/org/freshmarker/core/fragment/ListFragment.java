@@ -7,7 +7,7 @@ import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateLooper;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 
 public class ListFragment implements Fragment {
 

@@ -9,7 +9,7 @@ import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConditionalFragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.model.primitive.TemplateObject;
+import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
