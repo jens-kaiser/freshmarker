@@ -18,8 +18,8 @@ import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.ListFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
+import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +102,9 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   public BlockFragment visit(Interpolation ftl, BlockFragment input) {
     logger.debug("interpolation: {}", ftl);
     TemplateObject interpolation = ftl.getChild(1).accept(interpolationBuilder, null);
+    if (!interpolation.isMarkup()) {
+      interpolation = new TemplateMarkup(interpolation);
+    }
     input.addFragment(new InterpolationFragment(interpolation));
     return input;
   }

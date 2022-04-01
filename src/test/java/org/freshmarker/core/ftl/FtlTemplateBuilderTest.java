@@ -46,6 +46,14 @@ class FtlTemplateBuilderTest {
   }
 
   @Test
+  void generateHtmlInterpolation() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${'<br/>'}");
+    configuration.setOutputFormat("HTML");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: &lt;br/&gt;", template.process(Map.of()));
+  }
+
+  @Test
   void generateSequenceInterpolation() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${test[1]}");
     Template template = configuration.getTemplate("test");

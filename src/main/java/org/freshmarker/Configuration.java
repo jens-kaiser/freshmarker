@@ -24,11 +24,15 @@ import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.ftl.FragmentBuilder;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
-import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.output.HtmlOutputFormat;
+import org.freshmarker.core.output.NoEscapeFormat;
+import org.freshmarker.core.output.UndefinedOutputFormat;
+import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +44,11 @@ public final class Configuration {
   private final Map<BuildInKey, TypedBuildIn> buildIns = new HashMap<>();
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
   private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
+  private final Map<String, OutputFormat> outputs = new HashMap<>();
   private TemplateLoader templateLoader;
   private Locale locale;
+
+  private String outputFormat = "undefined";
 
   public Configuration() {
     locale = Locale.getDefault();
@@ -49,25 +56,26 @@ public final class Configuration {
 
     mapper.put(String.class, o -> new TemplateString((String) o));
     mapper.put(Long.class, o -> new TemplateNumber((Number) o, Type.LONG));
-    mapper.put(long.class, o -> new TemplateNumber((Number) o, Type.LONG));
     mapper.put(Integer.class, o -> new TemplateNumber((Number) o, Type.INTEGER));
-    mapper.put(int.class, o -> new TemplateNumber((Number) o, Type.INTEGER));
     mapper.put(Short.class, o -> new TemplateNumber((Number) o, Type.SHORT));
-    mapper.put(short.class, o -> new TemplateNumber((Number) o, Type.SHORT));
     mapper.put(Byte.class, o -> new TemplateNumber((Number) o, Type.BYTE));
-    mapper.put(byte.class, o -> new TemplateNumber((Number) o, Type.BYTE));
     mapper.put(Double.class, o -> new TemplateNumber((Number) o, Type.DOUBLE));
-    mapper.put(double.class, o -> new TemplateNumber((Number) o, Type.DOUBLE));
     mapper.put(Float.class, o -> new TemplateNumber((Number) o, Type.FLOAT));
-    mapper.put(float.class, o -> new TemplateNumber((Number) o, Type.FLOAT));
     mapper.put(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
-    mapper.put(boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
 
     formatter.put(TemplateNumber.class, new NumberFormatter());
     formatter.put(TemplateBoolean.class, new BooleanFormatter("yes", "no"));
 
-    registerPlugins();
+    outputs.put("HTML", HtmlOutputFormat.HTML);
+    outputs.put("XHTML", HtmlOutputFormat.HTML);
+    outputs.put("XML", HtmlOutputFormat.XML);
+    outputs.put("undefined", UndefinedOutputFormat.INSTANCE);
+    outputs.put("plainText", NoEscapeFormat.INSTANCE);
+    outputs.put("JavaScript", NoEscapeFormat.INSTANCE);
+    outputs.put("JSON", NoEscapeFormat.INSTANCE);
+    outputs.put("CSS", NoEscapeFormat.INSTANCE);
 
+    registerPlugins();
   }
 
   private void registerPlugins() {
@@ -96,7 +104,7 @@ public final class Configuration {
         .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name))) {
       FTLParser parser = new FTLParser(reader);
       parser.Root();
-      Root root = (Root)parser.rootNode();
+      Root root = (Root) parser.rootNode();
       Template template = new Template(this);
       FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
       if (ftlHeader != null) {
@@ -108,10 +116,15 @@ public final class Configuration {
   }
 
   public Environment createEnvironment(Map<String, Object> dataModel) {
-    return new BufferedEnvironment(new BaseEnvironment(buildIns, dataModel, mapper, formatter, locale));
+    OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
+    return new BufferedEnvironment(new BaseEnvironment(buildIns, dataModel, mapper, formatter, locale, format));
   }
 
   public void setLocale(Locale locale) {
     this.locale = locale;
+  }
+
+  public void setOutputFormat(String outputFormat) {
+    this.outputFormat = outputFormat;
   }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.output.OutputFormat;
 
 public class BufferedEnvironment implements Environment {
 
@@ -50,5 +51,10 @@ public class BufferedEnvironment implements Environment {
   @Override
   public Locale getLocale() {
     return wrapped.getLocale();
+  }
+
+  @Override
+  public OutputFormat getOutputFormat() {
+    return wrapped.getOutputFormat();
   }
 }

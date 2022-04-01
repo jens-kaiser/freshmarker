@@ -4,6 +4,7 @@ import java.util.Locale;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.output.OutputFormat;
 
 public interface Environment {
 
@@ -16,4 +17,6 @@ public interface Environment {
   <T extends TemplateObject> Formatter getFormatter(Class<T> type);
 
   Locale getLocale();
+
+  OutputFormat getOutputFormat();
 }

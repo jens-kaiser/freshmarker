@@ -8,6 +8,7 @@ import org.freshmarker.core.buildin.BuildInKey;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.StringFormatter;
+import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateListSequence;
@@ -25,14 +26,18 @@ public class BaseEnvironment implements Environment {
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
   private final Locale locale;
 
+  private final OutputFormat outputFormat;
+
   public BaseEnvironment(Map<BuildInKey, TypedBuildIn> buildIns,
       Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
-      Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale) {
+      Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale,
+      OutputFormat outputFormat) {
     this.buildIns = buildIns;
     this.dataModel = dataModel;
     this.mapper = mapper;
     this.formatter = formatter;
     this.locale = locale;
+    this.outputFormat = outputFormat;
   }
 
   @Override
@@ -87,5 +92,9 @@ public class BaseEnvironment implements Environment {
   @Override
   public Locale getLocale() {
     return locale;
+  }
+
+  public OutputFormat getOutputFormat() {
+    return outputFormat;
   }
 }

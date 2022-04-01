@@ -17,6 +17,10 @@ public interface TemplateObject {
     return false;
   }
 
+  default boolean isMarkup() {
+    return false;
+  }
+
   default Optional<TemplatePrimitive<?>> asPrimitive() {
     return Optional.empty();
   }
