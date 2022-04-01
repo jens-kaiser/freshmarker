@@ -29,6 +29,14 @@ class NumberInterpolationTest {
   @CsvSource(value = {
       "test: ${42};test: 42",
       "test: ${42.23};test: 42,23",
+      "test: ${(-42)?abs};test: 42",
+      "test: ${42?abs};test: 42",
+      "test: ${(-0)?abs};test: 0",
+      "test: ${0?abs};test: 0",
+      "test: ${42?sign};test: 1",
+      "test: ${(-42)?sign};test: -1",
+      "test: ${(-0)?sign};test: 0",
+      "test: ${0?sign};test: 0",
   }, delimiterString = ";")
   void interpolationConstant(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);

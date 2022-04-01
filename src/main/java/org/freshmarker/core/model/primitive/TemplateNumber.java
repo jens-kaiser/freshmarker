@@ -116,24 +116,63 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     throw new ProcessException("something went wrong");
   }
 
-  private <N extends Number & Comparable<N>> int sign(N value, N zero) {
-    return value.compareTo(zero);
-  }
-
-  public int sign() {
+  public TemplateNumber sign() {
     switch (type) {
       case BYTE:
-        return sign(getValue().byteValue(), (byte) 0);
+        return new TemplateNumber(Byte.compare(getValue().byteValue(), (byte) 0));
       case SHORT:
-        return sign(getValue().shortValue(), (short) 0);
+        return new TemplateNumber(Short.compare(getValue().shortValue(), (short) 0));
       case INTEGER:
-        return sign(getValue().intValue(), 0);
+        return new TemplateNumber(Integer.compare(getValue().intValue(), 0));
       case LONG:
-        return sign(getValue().longValue(), 0L);
+        return new TemplateNumber(Long.compare(getValue().longValue(), 0L));
       case FLOAT:
-        return sign(getValue().floatValue(), 0F);
+        return new TemplateNumber(Float.compare(getValue().floatValue(), 0F));
       case DOUBLE:
-        return sign(getValue().doubleValue(), 0D);
+        return new TemplateNumber(Double.compare(getValue().doubleValue(), 0D));
+    }
+    throw new ProcessException("something went wrong");
+  }
+
+  public TemplateNumber abs() {
+    switch (type) {
+      case BYTE:
+        byte byteValue = getValue().byteValue();
+        return new TemplateNumber(byteValue >= 0 ? byteValue : -byteValue, Type.BYTE);
+      case SHORT:
+        short shortValue = getValue().shortValue();
+        return new TemplateNumber(shortValue >= 0 ? shortValue : -shortValue, Type.SHORT);
+      case INTEGER:
+        int intValue = getValue().intValue();
+        System.out.println(intValue);
+        return new TemplateNumber(intValue >= 0 ? intValue : -intValue);
+      case LONG:
+        long longValue = getValue().longValue();
+        return new TemplateNumber(longValue >= 0 ? longValue : -longValue, Type.LONG);
+      case FLOAT:
+        float floatValue = getValue().floatValue();
+        return new TemplateNumber(floatValue >= 0 ? floatValue : -floatValue, Type.FLOAT);
+      case DOUBLE:
+        double doubleValue = getValue().doubleValue();
+        return new TemplateNumber(doubleValue >= 0 ? doubleValue : -doubleValue, Type.DOUBLE);
+    }
+    throw new ProcessException("something went wrong");
+  }
+
+  public TemplateNumber negate() {
+    switch (type) {
+      case BYTE:
+        return new TemplateNumber(-getValue().byteValue());
+      case SHORT:
+        return new TemplateNumber(-getValue().shortValue());
+      case INTEGER:
+        return new TemplateNumber(-getValue().intValue());
+      case LONG:
+        return new TemplateNumber(-getValue().longValue());
+      case FLOAT:
+        return new TemplateNumber(-getValue().floatValue());
+      case DOUBLE:
+        return new TemplateNumber(-getValue().doubleValue());
     }
     throw new ProcessException("something went wrong");
   }
