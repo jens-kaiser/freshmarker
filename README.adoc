@@ -39,8 +39,8 @@
 |===
 |Name | Type | Comment
 
-| upper_case | String |
-| lower_case | String |
+| upper_case | String | uppercase by current locale
+| lower_case | String | lowercase by current locale
 | trim | String |
 | contains | String |
 | ends_with | String |
@@ -52,7 +52,7 @@
 | then | Boolean |
 | string | Boolean |
 | name | Path, File |
-| parent | Path, File |
+| parent | Path, File | path is file system dependent
 | size | Path, File |
 | exists | Path, File |
 | is_file | Path, File |
