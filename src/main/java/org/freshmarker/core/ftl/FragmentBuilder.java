@@ -35,18 +35,17 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     return input;
   }
 
-  private static final ConstantFragment<TemplateString> ONE_WHITESPACE = new ConstantFragment<>(
-      new TemplateString(" "));
+  private static final ConstantFragment ONE_WHITESPACE = new ConstantFragment(" ");
 
   @Override
   public BlockFragment visit(Token ftl, BlockFragment input) {
     if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
-      input.addFragment(new ConstantFragment<>(new TemplateString(ftl.getImage())));
+      input.addFragment(new ConstantFragment(ftl.getImage()));
     } else if (ftl.getType() == TokenType.WHITESPACE) {
       if (" ".equals(ftl.getImage())) {
         input.addFragment(ONE_WHITESPACE);
       } else {
-        input.addFragment(new ConstantFragment<>(new TemplateString(ftl.getImage())));
+        input.addFragment(new ConstantFragment(ftl.getImage()));
       }
     }
     return input;
@@ -78,7 +77,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   @Override
   public BlockFragment visit(Text ftl, BlockFragment input) {
     logger.debug("text: {}", ftl);
-    ftl.getAllTokens(false).stream().map(Token::getImage).map(TemplateString::new).map(ConstantFragment::new)
+    ftl.getAllTokens(false).stream().map(Token::getImage).map(ConstantFragment::new)
         .forEach(input::addFragment);
     return input;
   }
