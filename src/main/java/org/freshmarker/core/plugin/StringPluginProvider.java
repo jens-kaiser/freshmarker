@@ -9,18 +9,19 @@ import org.freshmarker.core.buildin.BuildInKey;
 import org.freshmarker.core.buildin.BuildInKeyBuilder;
 import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.model.TemplateNull;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class StringPluginProvider implements PluginProvider {
+
   private static final BuildInKeyBuilder<TemplateString> BUILDER = new BuildInKeyBuilder<>(TemplateString.class);
 
   @Override
   public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
     register(buildIns, "boolean", this::toBoolean);
-    register(buildIns, "upper_case", (x, y, e) -> process(x, String::toUpperCase));
-    register(buildIns, "lower_case", (x, y, e) -> process(x, String::toLowerCase));
+    register(buildIns, "upper_case", (x, y, e) -> process(x, s -> s.toUpperCase(e.getLocale())));
+    register(buildIns, "lower_case", (x, y, e) -> process(x, s -> s.toLowerCase(e.getLocale())));
     register(buildIns, "trim", (x, y, e) -> process(x, String::trim));
     register(buildIns, "contains", this::contains, List.of(TemplateString.class));
     register(buildIns, "ends_with", this::endsWith, List.of(TemplateString.class));
