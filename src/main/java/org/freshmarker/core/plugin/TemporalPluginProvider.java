@@ -7,9 +7,10 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.util.Map;
 import java.util.function.Function;
+import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuildInKey;
-import org.freshmarker.core.buildin.BuildInKeyBuilder;
-import org.freshmarker.core.buildin.TypedBuildIn;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.buildin.TypedBuiltIn;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.DurationFormatter;
@@ -25,24 +26,24 @@ import org.freshmarker.core.model.temporal.TemplatePeriod;
 
 public class TemporalPluginProvider implements PluginProvider {
 
-  private static final BuildInKeyBuilder<TemplateLocalDateTime> DATE_TIME_BUILDER = new BuildInKeyBuilder<>(
+  private static final BuiltInKeyBuilder<TemplateLocalDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(
       TemplateLocalDateTime.class);
-  private static final BuildInKeyBuilder<TemplateLocalDate> DATE_BUILDER = new BuildInKeyBuilder<>(
+  private static final BuiltInKeyBuilder<TemplateLocalDate> DATE_BUILDER = new BuiltInKeyBuilder<>(
       TemplateLocalDate.class);
-  private static final BuildInKeyBuilder<TemplateLocalTime> TIME_BUILDER = new BuildInKeyBuilder<>(
+  private static final BuiltInKeyBuilder<TemplateLocalTime> TIME_BUILDER = new BuiltInKeyBuilder<>(
       TemplateLocalTime.class);
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
-    buildIns.put(DATE_TIME_BUILDER.of("date"),
-        new TypedBuildIn((x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate())));
-    buildIns.put(DATE_TIME_BUILDER.of("time"),
-        new TypedBuildIn((x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime())));
-    buildIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    buildIns.put(DATE_BUILDER.of("date"), new TypedBuildIn((x, y, e) -> x));
-    buildIns.put(DATE_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    buildIns.put(TIME_BUILDER.of("time"), new TypedBuildIn((x, y, e) -> x));
-    buildIns.put(TIME_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
+    builtIns.put(DATE_TIME_BUILDER.of("date"),
+        new TypedBuiltIn((x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate())));
+    builtIns.put(DATE_TIME_BUILDER.of("time"),
+        new TypedBuiltIn((x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime())));
+    builtIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(DATE_BUILDER.of("date"), new TypedBuiltIn((x, y, e) -> x));
+    builtIns.put(DATE_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(TIME_BUILDER.of("time"), new TypedBuiltIn((x, y, e) -> x));
+    builtIns.put(TIME_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
   }
 
   @Override

@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.buildin.BuildInFunction;
+import org.freshmarker.core.buildin.BuiltIn;
+import org.freshmarker.core.buildin.BuiltInFunction;
 import org.freshmarker.core.buildin.BuildInKey;
-import org.freshmarker.core.buildin.BuildInKeyBuilder;
-import org.freshmarker.core.buildin.TypedBuildIn;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.buildin.TypedBuiltIn;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
@@ -15,25 +16,25 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 public class StringPluginProvider implements PluginProvider {
 
-  private static final BuildInKeyBuilder<TemplateString> BUILDER = new BuildInKeyBuilder<>(TemplateString.class);
+  private static final BuiltInKeyBuilder<TemplateString> BUILDER = new BuiltInKeyBuilder<>(TemplateString.class);
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
-    register(buildIns, "boolean", this::toBoolean);
-    register(buildIns, "upper_case", (x, y, e) -> process(x, s -> s.toUpperCase(e.getLocale())));
-    register(buildIns, "lower_case", (x, y, e) -> process(x, s -> s.toLowerCase(e.getLocale())));
-    register(buildIns, "trim", (x, y, e) -> process(x, String::trim));
-    register(buildIns, "contains", this::contains, List.of(TemplateString.class));
-    register(buildIns, "ends_with", this::endsWith, List.of(TemplateString.class));
+  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
+    register(builtIns, "boolean", this::toBoolean);
+    register(builtIns, "upper_case", (x, y, e) -> process(x, s -> s.toUpperCase(e.getLocale())));
+    register(builtIns, "lower_case", (x, y, e) -> process(x, s -> s.toLowerCase(e.getLocale())));
+    register(builtIns, "trim", (x, y, e) -> process(x, String::trim));
+    register(builtIns, "contains", this::contains, List.of(TemplateString.class));
+    register(builtIns, "ends_with", this::endsWith, List.of(TemplateString.class));
   }
 
-  protected void register(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function,
+  protected void register(Map<BuildInKey, BuiltIn> buildIns, String name, BuiltInFunction function,
       List<Class<? extends TemplateObject>> parameters) {
-    buildIns.put(BUILDER.of(name), new TypedBuildIn(function, parameters));
+    buildIns.put(BUILDER.of(name), new TypedBuiltIn(function, parameters));
   }
 
-  private void register(Map<BuildInKey, TypedBuildIn> buildIns, String name, BuildInFunction function) {
-    buildIns.put(BUILDER.of(name), new TypedBuildIn(function));
+  private void register(Map<BuildInKey, BuiltIn> buildIns, String name, BuiltInFunction function) {
+    buildIns.put(BUILDER.of(name), new TypedBuiltIn(function));
   }
 
   private TemplateObject contains(TemplateObject value, List<TemplateObject> parameter, Environment environment) {

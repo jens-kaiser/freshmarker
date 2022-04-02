@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
+import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuildInKey;
-import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.StringFormatter;
 import org.freshmarker.core.output.OutputFormat;
@@ -20,7 +20,7 @@ public class BaseEnvironment implements Environment {
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
   private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
-  private final Map<BuildInKey, TypedBuildIn> buildIns;
+  private final Map<BuildInKey, BuiltIn> buildIns;
   private final Map<String, Object> dataModel;
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
@@ -28,7 +28,7 @@ public class BaseEnvironment implements Environment {
 
   private final OutputFormat outputFormat;
 
-  public BaseEnvironment(Map<BuildInKey, TypedBuildIn> buildIns,
+  public BaseEnvironment(Map<BuildInKey, BuiltIn> buildIns,
       Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
       Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale,
       OutputFormat outputFormat) {
@@ -76,8 +76,8 @@ public class BaseEnvironment implements Environment {
   }
 
   @Override
-  public TypedBuildIn getBuildIn(Class<? extends TemplateObject> type, String name) {
-    TypedBuildIn result = buildIns.get(new BuildInKey(type, name));
+  public BuiltIn getBuildIn(Class<? extends TemplateObject> type, String name) {
+    BuiltIn result = buildIns.get(new BuildInKey(type, name));
     if (result == null) {
       throw new IllegalArgumentException("unsupported plugin: " + name + " " + type);
     }

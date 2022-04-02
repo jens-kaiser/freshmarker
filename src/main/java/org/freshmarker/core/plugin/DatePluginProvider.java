@@ -4,9 +4,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.Map;
 import java.util.function.Function;
+import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuildInKey;
-import org.freshmarker.core.buildin.BuildInKeyBuilder;
-import org.freshmarker.core.buildin.TypedBuildIn;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.buildin.TypedBuiltIn;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;
@@ -19,26 +20,26 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 public class DatePluginProvider implements PluginProvider {
 
-  private static final BuildInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuildInKeyBuilder<>(
+  private static final BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(
       TemplateClassicDateTime.class);
 
-  private static final BuildInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuildInKeyBuilder<>(
+  private static final BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(
       TemplateClassicDate.class);
 
-  private static final BuildInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuildInKeyBuilder<>(
+  private static final BuiltInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuiltInKeyBuilder<>(
       TemplateClassicTime.class);
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, TypedBuildIn> buildIns) {
-    buildIns.put(DATE_TIME_BUILDER.of("date"), new TypedBuildIn(
+  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
+    builtIns.put(DATE_TIME_BUILDER.of("date"), new TypedBuiltIn(
         (x3, y3, e3) -> new TemplateClassicDate(new Date(((TemplateClassicDateTime) x3).getValue().getTime()))));
-    buildIns.put(DATE_TIME_BUILDER.of("time"), new TypedBuildIn(
+    builtIns.put(DATE_TIME_BUILDER.of("time"), new TypedBuiltIn(
         (x2, y2, e2) -> new TemplateClassicTime(new Time(((TemplateClassicDateTime) x2).getValue().getTime()))));
-    buildIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuildIn((x1, y1, e1) -> new TemplateString(String.valueOf(x1))));
-    buildIns.put(DATE_BUILDER.of("date"), new TypedBuildIn((x, y, e) -> x));
-    buildIns.put(DATE_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    buildIns.put(TIME_BUILDER.of("time"), new TypedBuildIn((x, y, e) -> x));
-    buildIns.put(TIME_BUILDER.of("c"), new TypedBuildIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuiltIn((x1, y1, e1) -> new TemplateString(String.valueOf(x1))));
+    builtIns.put(DATE_BUILDER.of("date"), new TypedBuiltIn((x, y, e) -> x));
+    builtIns.put(DATE_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(TIME_BUILDER.of("time"), new TypedBuiltIn((x, y, e) -> x));
+    builtIns.put(TIME_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
   }
 
   @Override

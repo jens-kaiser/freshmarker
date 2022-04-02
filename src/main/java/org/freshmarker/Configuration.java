@@ -18,8 +18,8 @@ import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
+import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuildInKey;
-import org.freshmarker.core.buildin.TypedBuildIn;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -41,7 +41,7 @@ public final class Configuration {
 
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-  private final Map<BuildInKey, TypedBuildIn> buildIns = new HashMap<>();
+  private final Map<BuildInKey, BuiltIn> buildIns = new HashMap<>();
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
   private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
   private final Map<String, OutputFormat> outputs = new HashMap<>();

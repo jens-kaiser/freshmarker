@@ -3,7 +3,7 @@ package org.freshmarker.core;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.freshmarker.core.buildin.TypedBuildIn;
+import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
@@ -39,7 +39,7 @@ public class BufferedEnvironment implements Environment {
   }
 
   @Override
-  public TypedBuildIn getBuildIn(Class<? extends TemplateObject> type, String name) {
+  public BuiltIn getBuildIn(Class<? extends TemplateObject> type, String name) {
     return wrapped.getBuildIn(type, name);
   }
 
