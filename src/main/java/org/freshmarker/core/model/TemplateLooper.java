@@ -5,7 +5,6 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
-import org.freshmarker.core.model.primitive.TemplateString;
 
 public class TemplateLooper implements TemplateObject {
 
@@ -47,7 +46,7 @@ public class TemplateLooper implements TemplateObject {
     index++;
   }
 
-  public TemplateString cycle(List<TemplateString> cycle) {
+  public TemplateObject cycle(List<TemplateObject> cycle) {
     return cycle.get(index % cycle.size());
   }
 }

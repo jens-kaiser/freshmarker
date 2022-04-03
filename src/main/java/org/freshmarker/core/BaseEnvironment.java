@@ -20,7 +20,7 @@ public class BaseEnvironment implements Environment {
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
   private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
-  private final Map<BuildInKey, BuiltIn> buildIns;
+  private final Map<BuildInKey, BuiltIn> builtIns;
   private final Map<String, Object> dataModel;
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
@@ -28,11 +28,11 @@ public class BaseEnvironment implements Environment {
 
   private final OutputFormat outputFormat;
 
-  public BaseEnvironment(Map<BuildInKey, BuiltIn> buildIns,
+  public BaseEnvironment(Map<BuildInKey, BuiltIn> builtIns,
       Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
       Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale,
       OutputFormat outputFormat) {
-    this.buildIns = buildIns;
+    this.builtIns = builtIns;
     this.dataModel = dataModel;
     this.mapper = mapper;
     this.formatter = formatter;
@@ -76,10 +76,10 @@ public class BaseEnvironment implements Environment {
   }
 
   @Override
-  public BuiltIn getBuildIn(Class<? extends TemplateObject> type, String name) {
-    BuiltIn result = buildIns.get(new BuildInKey(type, name));
+  public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
+    BuiltIn result = builtIns.get(new BuildInKey(type, name));
     if (result == null) {
-      throw new IllegalArgumentException("unsupported plugin: " + name + " " + type);
+      throw new IllegalArgumentException("unsupported builtin: " + name + " " + type);
     }
     return result;
   }

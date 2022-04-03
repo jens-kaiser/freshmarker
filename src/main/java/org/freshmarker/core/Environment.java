@@ -12,7 +12,7 @@ public interface Environment {
 
   TemplateObject getValue(String name);
 
-  BuiltIn getBuildIn(Class<? extends TemplateObject> type, String name);
+  BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name);
 
   <T extends TemplateObject> Formatter getFormatter(Class<T> type);
 

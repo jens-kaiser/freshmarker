@@ -18,8 +18,8 @@ import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
-import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -31,8 +31,8 @@ import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.HtmlOutputFormat;
 import org.freshmarker.core.output.NoEscapeFormat;
-import org.freshmarker.core.output.UndefinedOutputFormat;
 import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.core.output.UndefinedOutputFormat;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public final class Configuration {
 
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-  private final Map<BuildInKey, BuiltIn> buildIns = new HashMap<>();
+  private final Map<BuildInKey, BuiltIn> builtIns = new HashMap<>();
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
   private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
   private final Map<String, OutputFormat> outputs = new HashMap<>();
@@ -83,8 +83,8 @@ public final class Configuration {
   }
 
   public void registerPlugin(PluginProvider provider) {
-    logger.info("register buildins: {}", provider.getClass().getSimpleName());
-    provider.registerBuildIn(buildIns);
+    logger.info("register builtins: {}", provider.getClass().getSimpleName());
+    provider.registerBuildIn(builtIns);
     logger.info("register formatter: {}", provider.getClass().getSimpleName());
     provider.registerFormatter(formatter);
     logger.info("register mapper: {}", provider.getClass().getSimpleName());
@@ -117,7 +117,7 @@ public final class Configuration {
 
   public Environment createEnvironment(Map<String, Object> dataModel) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    return new BufferedEnvironment(new BaseEnvironment(buildIns, dataModel, mapper, formatter, locale, format));
+    return new BufferedEnvironment(new BaseEnvironment(builtIns, dataModel, mapper, formatter, locale, format));
   }
 
   public void setLocale(Locale locale) {

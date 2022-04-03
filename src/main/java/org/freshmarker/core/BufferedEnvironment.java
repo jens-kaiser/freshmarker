@@ -39,8 +39,8 @@ public class BufferedEnvironment implements Environment {
   }
 
   @Override
-  public BuiltIn getBuildIn(Class<? extends TemplateObject> type, String name) {
-    return wrapped.getBuildIn(type, name);
+  public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
+    return wrapped.getBuiltIn(type, name);
   }
 
   @Override

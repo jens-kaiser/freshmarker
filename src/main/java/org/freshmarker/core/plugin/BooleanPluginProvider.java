@@ -1,48 +1,37 @@
 package org.freshmarker.core.plugin;
 
-import java.util.List;
 import java.util.Map;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.WrongTypeException;
-import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuildInKey;
-import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.buildin.TypedBuiltIn;
+import org.freshmarker.core.buildin.BuiltIn;
+import org.freshmarker.core.buildin.BuiltInMethod;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class BooleanPluginProvider implements PluginProvider {
-
-  private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
-
   @Override
   public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
-    builtIns.put(BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    builtIns.put(BUILDER.of("string"),
-        new TypedBuiltIn(this::string, List.of(TemplateString.class, TemplateString.class)));
-    builtIns.put(BUILDER.of("then"),
-        new TypedBuiltIn(this::thenBuildIn, List.of(TemplateString.class, TemplateString.class)));
+    new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
   }
 
-  private TemplateObject string(TemplateObject value, List<TemplateObject> parameter, Environment environment) {
-    if (parameter.size() != 2) {
-      throw new IllegalArgumentException("invalid number of parameters");
-    }
-    TemplateString trueValue = parameter.get(0).asString()
-        .orElseThrow(() -> new WrongTypeException("invalid type of parameter"));
-    TemplateString falseValue = parameter.get(1).asString()
-        .orElseThrow(() -> new WrongTypeException("invalid type of parameter"));
-    return value == TemplateBoolean.TRUE ? trueValue : falseValue;
+  @BuiltInMethod("c")
+  public static TemplateString computerBuildIn(TemplateBoolean value, Environment environment) {
+    return new TemplateString(String.valueOf(value));
   }
 
-  private TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameter, Environment environment) {
-    if (parameter.size() != 2) {
-      throw new IllegalArgumentException("invalid number of parameters");
-    }
+  @BuiltInMethod("then")
+  public static TemplateObject thenBuildIn(TemplateBoolean value, Environment environment, TemplateObject trueValue,
+      TemplateObject falseValue) {
     if (value == TemplateBoolean.TRUE) {
-      return parameter.get(0).evaluateToObject(environment);
+      return trueValue.evaluateToObject(environment);
     }
-    return parameter.get(1).evaluateToObject(environment);
+    return falseValue.evaluateToObject(environment);
+  }
+
+  @BuiltInMethod("string")
+  public static  TemplateString stringBuildIn(TemplateBoolean value, Environment environment, TemplateString trueValue,
+      TemplateString falseValue) {
+    return value == TemplateBoolean.TRUE ? trueValue : falseValue;
   }
 }

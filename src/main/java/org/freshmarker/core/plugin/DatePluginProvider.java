@@ -35,7 +35,8 @@ public class DatePluginProvider implements PluginProvider {
         (x3, y3, e3) -> new TemplateClassicDate(new Date(((TemplateClassicDateTime) x3).getValue().getTime()))));
     builtIns.put(DATE_TIME_BUILDER.of("time"), new TypedBuiltIn(
         (x2, y2, e2) -> new TemplateClassicTime(new Time(((TemplateClassicDateTime) x2).getValue().getTime()))));
-    builtIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuiltIn((x1, y1, e1) -> new TemplateString(String.valueOf(x1))));
+    builtIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuiltIn((x1, y1, e1) -> new TemplateString(String.valueOf(x1))
+    ));
     builtIns.put(DATE_BUILDER.of("date"), new TypedBuiltIn((x, y, e) -> x));
     builtIns.put(DATE_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
     builtIns.put(TIME_BUILDER.of("time"), new TypedBuiltIn((x, y, e) -> x));

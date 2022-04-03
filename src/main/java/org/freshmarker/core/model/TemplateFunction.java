@@ -18,6 +18,6 @@ public class TemplateFunction implements TemplateExpression {
   @Override
   public TemplateObject evaluateToObject(Environment environment) {
     TemplateObject result = expression.evaluateToObject(environment);
-    return environment.getBuildIn(result.getClass(), name).apply(result, parameter, environment);
+    return environment.getBuiltIn(result.getClass(), name).apply(result, parameter, environment);
   }
 }
