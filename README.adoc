@@ -28,13 +28,13 @@
 
 | If/ElseIf/Else |
 | Swich/Case/Default | Without Break/Fallthrough
-| Interpolation | Dot Key, Dynamic Key, BuildIn, Exists
+| Interpolation | Dot-Key, Dynamic-Key, Built-ins, Exists
 | Dynamic Key| Sequence, Range
 | Dot Key | With Identifier on Beans and Maps
 | List | Sequence, Range (not right unlimited)
 |===
 
-== BuildIns
+== Built-ins
 
 |===
 |Name | Type | Comment
