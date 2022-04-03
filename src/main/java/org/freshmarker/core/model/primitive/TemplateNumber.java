@@ -144,7 +144,6 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
         return new TemplateNumber(shortValue >= 0 ? shortValue : -shortValue, Type.SHORT);
       case INTEGER:
         int intValue = getValue().intValue();
-        System.out.println(intValue);
         return new TemplateNumber(intValue >= 0 ? intValue : -intValue);
       case LONG:
         long longValue = getValue().longValue();

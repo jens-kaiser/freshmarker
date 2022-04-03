@@ -21,27 +21,27 @@ public class FileAndPathPluginProvider implements PluginProvider {
 
   @Override
   public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
-    register2(builtIns, FILE_BUILDER.of("exists"), (x, y, e) -> processFile(x, File::exists, e));
-    register2(builtIns, FILE_BUILDER.of("is_directory"), (x, y, e) -> processFile(x, File::isDirectory, e));
-    register2(builtIns, FILE_BUILDER.of("is_file"), (x, y, e) -> processFile(x, File::isFile, e));
-    register2(builtIns, FILE_BUILDER.of("can_execute"), (x, y, e) -> processFile(x, File::canExecute, e));
-    register2(builtIns, FILE_BUILDER.of("can_read"), (x, y, e) -> processFile(x, File::canRead, e));
-    register2(builtIns, FILE_BUILDER.of("can_write"), (x, y, e) -> processFile(x, File::canWrite, e));
-    register2(builtIns, FILE_BUILDER.of("size"), (x, y, e) -> processFile(x, File::length, e));
-    register2(builtIns, FILE_BUILDER.of("name"), (x, y, e) -> processFile(x, File::getName, e));
-    register2(builtIns, FILE_BUILDER.of("parent"), (x, y, e) -> processFile(x, File::getParentFile, e));
-    register2(builtIns, PATH_BUILDER.of("exists"), (x, y, e) -> processPath(x, File::exists, e));
-    register2(builtIns, PATH_BUILDER.of("is_directory"), (x, y, e) -> processPath(x, File::isDirectory, e));
-    register2(builtIns, PATH_BUILDER.of("is_file"), (x, y, e) -> processPath(x, File::isFile, e));
-    register2(builtIns, PATH_BUILDER.of("can_execute"), (x, y, e) -> processPath(x, File::canExecute, e));
-    register2(builtIns, PATH_BUILDER.of("can_read"), (x, y, e) -> processPath(x, File::canRead, e));
-    register2(builtIns, PATH_BUILDER.of("can_write"), (x, y, e) -> processPath(x, File::canWrite, e));
-    register2(builtIns, PATH_BUILDER.of("size"), (x, y, e) -> processPath(x, File::length, e));
-    register2(builtIns, PATH_BUILDER.of("name"), (x, y, e) -> processPath(x, File::getName, e));
-    register2(builtIns, PATH_BUILDER.of("parent"), (x, y, e) -> processPath(x, File::getParentFile, e));
+    register(builtIns, FILE_BUILDER.of("exists"), (x, y, e) -> processFile(x, File::exists, e));
+    register(builtIns, FILE_BUILDER.of("is_directory"), (x, y, e) -> processFile(x, File::isDirectory, e));
+    register(builtIns, FILE_BUILDER.of("is_file"), (x, y, e) -> processFile(x, File::isFile, e));
+    register(builtIns, FILE_BUILDER.of("can_execute"), (x, y, e) -> processFile(x, File::canExecute, e));
+    register(builtIns, FILE_BUILDER.of("can_read"), (x, y, e) -> processFile(x, File::canRead, e));
+    register(builtIns, FILE_BUILDER.of("can_write"), (x, y, e) -> processFile(x, File::canWrite, e));
+    register(builtIns, FILE_BUILDER.of("size"), (x, y, e) -> processFile(x, File::length, e));
+    register(builtIns, FILE_BUILDER.of("name"), (x, y, e) -> processFile(x, File::getName, e));
+    register(builtIns, FILE_BUILDER.of("parent"), (x, y, e) -> processFile(x, File::getParentFile, e));
+    register(builtIns, PATH_BUILDER.of("exists"), (x, y, e) -> processPath(x, File::exists, e));
+    register(builtIns, PATH_BUILDER.of("is_directory"), (x, y, e) -> processPath(x, File::isDirectory, e));
+    register(builtIns, PATH_BUILDER.of("is_file"), (x, y, e) -> processPath(x, File::isFile, e));
+    register(builtIns, PATH_BUILDER.of("can_execute"), (x, y, e) -> processPath(x, File::canExecute, e));
+    register(builtIns, PATH_BUILDER.of("can_read"), (x, y, e) -> processPath(x, File::canRead, e));
+    register(builtIns, PATH_BUILDER.of("can_write"), (x, y, e) -> processPath(x, File::canWrite, e));
+    register(builtIns, PATH_BUILDER.of("size"), (x, y, e) -> processPath(x, File::length, e));
+    register(builtIns, PATH_BUILDER.of("name"), (x, y, e) -> processPath(x, File::getName, e));
+    register(builtIns, PATH_BUILDER.of("parent"), (x, y, e) -> processPath(x, File::getParentFile, e));
   }
 
-  private void register2(Map<BuildInKey, BuiltIn> buildIns, BuildInKey buildInKey, BuiltInFunction function) {
+  private void register(Map<BuildInKey, BuiltIn> buildIns, BuildInKey buildInKey, BuiltInFunction function) {
     buildIns.put(buildInKey, new TypedBuiltIn(function));
   }
 

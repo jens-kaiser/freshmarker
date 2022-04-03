@@ -16,17 +16,17 @@ public class NumberPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod("c")
-  public static TemplateString computerBuiltIn(TemplateNumber value, Environment environment) {
+  public static TemplateString computerBuiltIn(TemplateNumber value) {
     return new TemplateString(String.valueOf(value));
   }
 
   @BuiltInMethod
-  public static TemplateNumber abs(TemplateNumber value, Environment environment) {
+  public static TemplateNumber abs(TemplateNumber value) {
     return value.abs();
   }
 
   @BuiltInMethod
-  public static TemplateNumber sign(TemplateNumber value, Environment environment) {
+  public static TemplateNumber sign(TemplateNumber value) {
     return value.sign();
   }
 }

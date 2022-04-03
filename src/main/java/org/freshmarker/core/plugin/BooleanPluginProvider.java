@@ -16,7 +16,7 @@ public class BooleanPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod("c")
-  public static TemplateString computerBuildIn(TemplateBoolean value, Environment environment) {
+  public static TemplateString computerBuiltIn(TemplateBoolean value) {
     return new TemplateString(String.valueOf(value));
   }
 
@@ -30,7 +30,7 @@ public class BooleanPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod("string")
-  public static  TemplateString stringBuildIn(TemplateBoolean value, Environment environment, TemplateString trueValue,
+  public static  TemplateString stringBuiltIn(TemplateBoolean value, TemplateString trueValue,
       TemplateString falseValue) {
     return value == TemplateBoolean.TRUE ? trueValue : falseValue;
   }

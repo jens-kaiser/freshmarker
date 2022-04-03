@@ -2,7 +2,6 @@ package org.freshmarker.core.buildin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
@@ -36,55 +35,50 @@ public class MethodBuiltIn implements BuiltIn {
 
   @Override
   public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, Environment environment) {
-    if (withVarargs) {
-      return applyWithDynamicParameter(value, parameter, environment);
+    try {
+      if (withVarargs) {
+        return applyWithDynamicParameter(value, parameter, environment);
+      }
+      return applyWithStaticParameter(value, parameter, environment);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      throw new ProcessException("cannot invoke builtIn: " + e.getMessage());
     }
-    return applyWithStaticParameter(value, parameter, environment);
   }
 
   private TemplateObject applyWithDynamicParameter(TemplateObject value, List<TemplateObject> parameter,
-      Environment environment) {
+      Environment environment) throws InvocationTargetException, IllegalAccessException {
     int parameterCount = method.getParameterCount();
     if (parameter.size() + 2 < parameterCount) {
       throw new ProcessException("wrong parameter count: ");
     }
     int firstBuiltInParameter = withEnvironment ? 2 : 1;
-    try {
-      Object[] args = new Object[parameterCount];
-      args[0] = value;
-      args[1] = environment;
-      for (int i = 0, j = firstBuiltInParameter, n = Math.min(parameterCount - firstBuiltInParameter,
-          parameter.size() - 1); i < n; i++, j++) {
-        args[j] = parameter.get(i);
-      }
-        args[args.length - 1] = parameter.subList(parameterCount - firstBuiltInParameter - 1, parameter.size())
-            .toArray(new TemplateObject[0]);
-      System.out.println(method.getName() + ": "+ Arrays.asList(args));
-      return (TemplateObject) method.invoke(null, args);
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new ProcessException("cannot invoke builtIn: " + e.getMessage());
+    Object[] args = new Object[parameterCount];
+    args[0] = value;
+    args[1] = environment;
+    for (int i = 0, j = firstBuiltInParameter, n = Math.min(parameterCount - firstBuiltInParameter,
+        parameter.size() - 1); i < n; i++, j++) {
+      args[j] = parameter.get(i);
     }
+    args[args.length - 1] = parameter.subList(parameterCount - firstBuiltInParameter - 1, parameter.size())
+        .toArray(new TemplateObject[0]);
+    return (TemplateObject) method.invoke(null, args);
   }
 
   private TemplateObject applyWithStaticParameter(TemplateObject value, List<TemplateObject> parameter,
-      Environment environment) {
+      Environment environment) throws InvocationTargetException, IllegalAccessException {
     int parameterCount = method.getParameterCount();
     int firstBuiltInParameter = withEnvironment ? 2 : 1;
     if (parameterCount != 1 && parameter.size() + firstBuiltInParameter != parameterCount) {
       throw new ProcessException("wrong parameter count");
     }
-    try {
-      Object[] args = new Object[parameterCount];
-      args[0] = value;
-      if (parameterCount > 1) {
-        args[1] = environment;
-        for (int i = 0, j = firstBuiltInParameter, n = parameterCount - firstBuiltInParameter; i < n; i++, j++) {
-          args[j] = parameter.get(i);
-        }
+    Object[] args = new Object[parameterCount];
+    args[0] = value;
+    if (parameterCount > 1) {
+      args[1] = environment;
+      for (int i = 0, j = firstBuiltInParameter, n = parameterCount - firstBuiltInParameter; i < n; i++, j++) {
+        args[j] = parameter.get(i);
       }
-      return (TemplateObject) method.invoke(null, args);
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new ProcessException("cannot invoke builtIn: " + e.getMessage());
     }
+    return (TemplateObject) method.invoke(null, args);
   }
 }

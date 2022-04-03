@@ -57,7 +57,7 @@ public class LooperPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod
-  public static TemplateObject itemCycle(TemplateLooper value, Environment environment, TemplateObject... cycle) {
+  public static TemplateObject itemCycle(TemplateLooper value, TemplateObject... cycle) {
     return value.cycle(Arrays.asList(cycle));
   }
 

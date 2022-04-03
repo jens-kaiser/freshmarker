@@ -13,8 +13,6 @@ public class TemplateSign implements TemplateExpression {
 
   @Override
   public TemplateObject evaluateToObject(Environment environment) {
-    TemplateNumber templateObject = expression.evaluate(environment, TemplateNumber.class);
-    System.out.println(templateObject + " " + templateObject.negate());
-    return templateObject.negate();
+    return expression.evaluate(environment, TemplateNumber.class).negate();
   }
 }
