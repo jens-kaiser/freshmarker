@@ -7,9 +7,9 @@ import java.util.function.Function;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInFunction;
-import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.buildin.TypedBuiltIn;
+import org.freshmarker.core.buildin.FunctionalBuiltIn;
 import org.freshmarker.core.model.file.TemplateFile;
 import org.freshmarker.core.model.file.TemplatePath;
 import org.freshmarker.core.model.TemplateObject;
@@ -20,7 +20,7 @@ public class FileAndPathPluginProvider implements PluginProvider {
   private static final BuiltInKeyBuilder<TemplatePath> PATH_BUILDER = new BuiltInKeyBuilder<>(TemplatePath.class);
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
+  public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
     register(builtIns, FILE_BUILDER.of("exists"), (x, y, e) -> processFile(x, File::exists, e));
     register(builtIns, FILE_BUILDER.of("is_directory"), (x, y, e) -> processFile(x, File::isDirectory, e));
     register(builtIns, FILE_BUILDER.of("is_file"), (x, y, e) -> processFile(x, File::isFile, e));
@@ -41,8 +41,8 @@ public class FileAndPathPluginProvider implements PluginProvider {
     register(builtIns, PATH_BUILDER.of("parent"), (x, y, e) -> processPath(x, File::getParentFile, e));
   }
 
-  private void register(Map<BuildInKey, BuiltIn> buildIns, BuildInKey buildInKey, BuiltInFunction function) {
-    buildIns.put(buildInKey, new TypedBuiltIn(function));
+  private void register(Map<BuiltInKey, BuiltIn> buildIns, BuiltInKey builtInKey, BuiltInFunction function) {
+    buildIns.put(builtInKey, new FunctionalBuiltIn(function));
   }
 
   @Override

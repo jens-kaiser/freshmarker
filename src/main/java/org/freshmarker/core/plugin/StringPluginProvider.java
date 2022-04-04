@@ -2,11 +2,14 @@ package org.freshmarker.core.plugin;
 
 import java.util.Map;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInMethod;
+import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
+import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.output.NoEscapeFormat;
 
 public class StringPluginProvider implements PluginProvider {
 
@@ -14,7 +17,7 @@ public class StringPluginProvider implements PluginProvider {
       TemplateBoolean.FALSE);
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
+  public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
     new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
   }
 
@@ -51,5 +54,20 @@ public class StringPluginProvider implements PluginProvider {
       throw new IllegalArgumentException("cannot convert string to boolean: " + input);
     }
     return result;
+  }
+
+  @BuiltInMethod
+  public static TemplateNumber length(TemplateString value) {
+    return new TemplateNumber(value.getValue().length());
+  }
+
+  @BuiltInMethod
+  public static TemplateMarkup noEsc(TemplateString value) {
+    return new TemplateMarkup(value, NoEscapeFormat.INSTANCE);
+  }
+
+  @BuiltInMethod
+  public static TemplateMarkup esc(TemplateString value, Environment environment) {
+    return new TemplateMarkup(value, environment.getOutputFormat());
   }
 }

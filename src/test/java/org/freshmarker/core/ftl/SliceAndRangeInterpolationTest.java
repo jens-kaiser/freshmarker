@@ -42,13 +42,13 @@ class SliceAndRangeInterpolationTest {
   void interpolationRangeRightUnbound() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${(0..)[100]}");
     Template template = configuration.getTemplate("test");
-    assertEquals("test: 100", template.process(Map.of("list", List.of(1,2,3,4,5,6,7))));
+    assertEquals("test: 100", template.process(Map.of()));
   }
 
   @Test
   void interpolationRange() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${(0..20)[10]}");
     Template template = configuration.getTemplate("test");
-    assertEquals("test: 10", template.process(Map.of("list", List.of(1,2,3,4,5,6,7))));
+    assertEquals("test: 10", template.process(Map.of()));
   }
 }

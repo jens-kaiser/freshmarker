@@ -5,9 +5,9 @@ import java.sql.Time;
 import java.util.Map;
 import java.util.function.Function;
 import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.buildin.TypedBuiltIn;
+import org.freshmarker.core.buildin.FunctionalBuiltIn;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;
@@ -30,17 +30,17 @@ public class DatePluginProvider implements PluginProvider {
       TemplateClassicTime.class);
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
-    builtIns.put(DATE_TIME_BUILDER.of("date"), new TypedBuiltIn(
+  public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
+    builtIns.put(DATE_TIME_BUILDER.of("date"), new FunctionalBuiltIn(
         (x3, y3, e3) -> new TemplateClassicDate(new Date(((TemplateClassicDateTime) x3).getValue().getTime()))));
-    builtIns.put(DATE_TIME_BUILDER.of("time"), new TypedBuiltIn(
+    builtIns.put(DATE_TIME_BUILDER.of("time"), new FunctionalBuiltIn(
         (x2, y2, e2) -> new TemplateClassicTime(new Time(((TemplateClassicDateTime) x2).getValue().getTime()))));
-    builtIns.put(DATE_TIME_BUILDER.of("c"), new TypedBuiltIn((x1, y1, e1) -> new TemplateString(String.valueOf(x1))
+    builtIns.put(DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn((x1, y1, e1) -> new TemplateString(String.valueOf(x1))
     ));
-    builtIns.put(DATE_BUILDER.of("date"), new TypedBuiltIn((x, y, e) -> x));
-    builtIns.put(DATE_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    builtIns.put(TIME_BUILDER.of("time"), new TypedBuiltIn((x, y, e) -> x));
-    builtIns.put(TIME_BUILDER.of("c"), new TypedBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(DATE_BUILDER.of("date"), new FunctionalBuiltIn((x, y, e) -> x));
+    builtIns.put(DATE_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(TIME_BUILDER.of("time"), new FunctionalBuiltIn((x, y, e) -> x));
+    builtIns.put(TIME_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
   }
 
   @Override

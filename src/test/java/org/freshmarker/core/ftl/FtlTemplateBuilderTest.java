@@ -54,6 +54,22 @@ class FtlTemplateBuilderTest {
   }
 
   @Test
+  void generateHtmlInterpolationEsc() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${'<br/>'?esc}");
+    configuration.setOutputFormat("HTML");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: &lt;br/&gt;", template.process(Map.of()));
+  }
+
+  @Test
+  void generateHtmlInterpolationNoEsc() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${'<br/>'?no_esc}");
+    configuration.setOutputFormat("HTML");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: <br/>", template.process(Map.of()));
+  }
+
+  @Test
   void generateSequenceInterpolation() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${test[1]}");
     Template template = configuration.getTemplate("test");

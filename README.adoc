@@ -42,6 +42,7 @@
 | upper_case | String | uppercase by current locale
 | lower_case | String | lowercase by current locale
 | trim | String |
+| length | String |
 | contains | String |
 | ends_with | String |
 | boolean | String |

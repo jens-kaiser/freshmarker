@@ -1,5 +1,6 @@
 package org.freshmarker.core.output;
 
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class HtmlOutputFormat implements OutputFormat {
@@ -14,7 +15,7 @@ public class HtmlOutputFormat implements OutputFormat {
   public static final HtmlOutputFormat XML = new HtmlOutputFormat("&apos;");
 
   @Override
-  public TemplateString escape(String value) {
+  public TemplateString escape(Environment environment, String value) {
     StringBuilder builder = new StringBuilder();
     for (char c : value.toCharArray()) {
       switch (c) {
@@ -31,7 +32,7 @@ public class HtmlOutputFormat implements OutputFormat {
           builder.append("&quot;");
           break;
         case '\'':
-          builder.append("&#39;");
+          builder.append(apos);
           break;
         default:
           builder.append(c);

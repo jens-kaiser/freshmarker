@@ -10,7 +10,7 @@ public class BuiltInKeyBuilder<T extends TemplateObject> {
     this.type = type;
   }
 
-  public BuildInKey of(String name) {
-    return new BuildInKey(type, name);
+  public BuiltInKey of(String name) {
+    return new BuiltInKey(type, name);
   }
 }

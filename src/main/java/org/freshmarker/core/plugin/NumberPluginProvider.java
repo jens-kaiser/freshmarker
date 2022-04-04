@@ -1,8 +1,7 @@
 package org.freshmarker.core.plugin;
 
 import java.util.Map;
-import org.freshmarker.core.Environment;
-import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInMethod;
 import org.freshmarker.core.model.primitive.TemplateNumber;
@@ -11,7 +10,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 public class NumberPluginProvider implements PluginProvider {
 
   @Override
-  public void registerBuildIn(Map<BuildInKey, BuiltIn> builtIns) {
+  public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
     new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
   }
 

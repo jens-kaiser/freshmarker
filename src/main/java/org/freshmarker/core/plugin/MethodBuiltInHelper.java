@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Map;
 import org.freshmarker.core.ConfigurationException;
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.buildin.BuildInKey;
 import org.freshmarker.core.buildin.BuiltIn;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInMethod;
 import org.freshmarker.core.buildin.MethodBuiltIn;
 import org.freshmarker.core.model.TemplateObject;
@@ -18,13 +18,13 @@ public class MethodBuiltInHelper {
 
   private static final Logger logger = LoggerFactory.getLogger(MethodBuiltInHelper.class);
 
-  public void registerBuiltIns(PluginProvider provider, Map<BuildInKey, BuiltIn> builtIns) {
+  public void registerBuiltIns(PluginProvider provider, Map<BuiltInKey, BuiltIn> builtIns) {
     logger.debug("register builtins");
     Arrays.stream(provider.getClass().getDeclaredMethods()).filter(m -> m.isAnnotationPresent(BuiltInMethod.class))
         .forEach(m -> registerBuiltIn(m, builtIns));
   }
 
-  private void registerBuiltIn(Method method, Map<BuildInKey, BuiltIn> builtIns) {
+  private void registerBuiltIn(Method method, Map<BuiltInKey, BuiltIn> builtIns) {
     validateBuiltInMethod(method);
 
     Class<?>[] parameterTypes = method.getParameterTypes();
@@ -75,18 +75,19 @@ public class MethodBuiltInHelper {
     }
   }
 
-  private void getMethodBuiltIn(Method method, Map<BuildInKey, BuiltIn> builtIns, boolean withEnvironment,
+  private void getMethodBuiltIn(Method method, Map<BuiltInKey, BuiltIn> builtIns, boolean withEnvironment,
       boolean withVarargs) {
     String annotatedName = method.getAnnotation(BuiltInMethod.class).value();
     Class<?>[] parameterTypes = method.getParameterTypes();
     Class<? extends TemplateObject> parameterType = (Class<? extends TemplateObject>) parameterTypes[0];
     MethodBuiltIn methodBuiltIn = new MethodBuiltIn(method, withEnvironment, withVarargs);
     if (!annotatedName.isEmpty()) {
-      builtIns.put(new BuildInKey(parameterType, annotatedName), methodBuiltIn);
+      builtIns.put(new BuiltInKey(parameterType, annotatedName), methodBuiltIn);
+    } else {
+      String name = method.getName();
+      builtIns.put(new BuiltInKey(parameterType, name), methodBuiltIn);
+      builtIns.put(new BuiltInKey(parameterType, generateSnakeCase(name)), methodBuiltIn);
     }
-    String name = method.getName();
-    builtIns.put(new BuildInKey(parameterType, name), methodBuiltIn);
-    builtIns.put(new BuildInKey(parameterType, generateSnakeCase(name)), methodBuiltIn);
   }
 
   private String generateSnakeCase(String name) {

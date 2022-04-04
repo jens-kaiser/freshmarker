@@ -54,6 +54,13 @@ class StringInterpolationTest {
     assertEquals("test: text", template.process(Map.of("text", "  text  ")));
   }
 
+  @Test
+  void interpolationLength() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${text?length} ${text?trim?length}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: 8 4", template.process(Map.of("text", "  text  ")));
+  }
+
   @ParameterizedTest
   @CsvSource({
       "test: ${text?contains('ex')},test: yes",

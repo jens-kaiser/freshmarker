@@ -3,11 +3,11 @@ package org.freshmarker.core.buildin;
 import java.util.Objects;
 import org.freshmarker.core.model.TemplateObject;
 
-public class BuildInKey {
+public class BuiltInKey {
   private final Class<? extends TemplateObject> type;
   private final String name;
 
-  public BuildInKey(Class<? extends TemplateObject> type, String name) {
+  public BuiltInKey(Class<? extends TemplateObject> type, String name) {
     this.type = Objects.requireNonNull(type);
     this.name = Objects.requireNonNull(name);
   }
@@ -20,7 +20,7 @@ public class BuildInKey {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    BuildInKey that = (BuildInKey) o;
+    BuiltInKey that = (BuiltInKey) o;
     return type.equals(that.type) && name.equals(that.name);
   }
 

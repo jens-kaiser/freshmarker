@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuildInKey;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.StringFormatter;
 import org.freshmarker.core.output.OutputFormat;
@@ -20,7 +20,7 @@ public class BaseEnvironment implements Environment {
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
   private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
-  private final Map<BuildInKey, BuiltIn> builtIns;
+  private final Map<BuiltInKey, BuiltIn> builtIns;
   private final Map<String, Object> dataModel;
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
@@ -28,7 +28,7 @@ public class BaseEnvironment implements Environment {
 
   private final OutputFormat outputFormat;
 
-  public BaseEnvironment(Map<BuildInKey, BuiltIn> builtIns,
+  public BaseEnvironment(Map<BuiltInKey, BuiltIn> builtIns,
       Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
       Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale,
       OutputFormat outputFormat) {
@@ -77,7 +77,7 @@ public class BaseEnvironment implements Environment {
 
   @Override
   public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
-    BuiltIn result = builtIns.get(new BuildInKey(type, name));
+    BuiltIn result = builtIns.get(new BuiltInKey(type, name));
     if (result == null) {
       throw new IllegalArgumentException("unsupported builtin: " + name + " " + type);
     }

@@ -3,12 +3,12 @@ package org.freshmarker.core.output;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.primitive.TemplateString;
 
-public class UndefinedOutputFormat implements OutputFormat {
+public class DelegatingOutputFormat implements OutputFormat {
 
-  public static final UndefinedOutputFormat INSTANCE = new UndefinedOutputFormat();
+  public static final DelegatingOutputFormat INSTANCE = new DelegatingOutputFormat();
 
   @Override
   public TemplateString escape(Environment environment, String value) {
-    return new TemplateString(value);
+    return environment.getOutputFormat().escape(environment, value);
   }
 }
