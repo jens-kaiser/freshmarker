@@ -10,6 +10,7 @@ import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
 import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
+import ftl.ast.EqualityExpression;
 import ftl.ast.Exists;
 import ftl.ast.MultiplicativeExpression;
 import ftl.ast.NotExpression;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.freshmarker.core.model.TemplateDotKey;
+import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateRelational;
 import org.freshmarker.core.model.TemplateSign;
@@ -212,6 +214,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     TemplateObject left = expression.getChild(0).accept(this, null);
     TemplateObject right = expression.getChild(2).accept(this, null);
     return new TemplateRelational(((Token)expression.getChild(1)).getType(), left, right);
+  }
+
+  @Override
+  public TemplateObject visit(EqualityExpression expression, Object input) {
+    TemplateObject left = expression.getChild(0).accept(this, null);
+    TemplateObject right = expression.getChild(2).accept(this, null);
+    return new TemplateEquality(((Token)expression.getChild(1)).getType(), left, right);
   }
 
   @Override

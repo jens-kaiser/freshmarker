@@ -22,21 +22,22 @@ public class TemplateRelational implements TemplateObject {
     TemplateNumber rightValue = right.evaluate(environment, TemplateNumber.class);
     switch (type) {
       case EQUALS:
-        return leftValue.compare(rightValue).sign().asInt() == 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+      case DOUBLE_EQUALS:
+        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() == 0);
       case LT:
       case ALT_LT:
-        return leftValue.compare(rightValue).sign().asInt() < 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() < 0);
       case GT:
       case ALT_GT:
-        return leftValue.compare(rightValue).sign().asInt() > 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() > 0);
       case NOT_EQUALS:
-        return leftValue.compare(rightValue).sign().asInt() != 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() != 0);
       case LTE:
       case ALT_LTE:
-        return leftValue.compare(rightValue).sign().asInt() <= 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() <= 0);
       case GTE:
       case ALT_GTE:
-        return leftValue.compare(rightValue).sign().asInt() >= 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() >= 0);
       default:
         throw new IllegalArgumentException("unsupported releation: " + type);
     }

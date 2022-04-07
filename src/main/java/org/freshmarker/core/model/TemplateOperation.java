@@ -30,11 +30,8 @@ public class TemplateOperation implements TemplateExpression {
         return leftString.get().concat(rightString.get());
       }
     }
-    TemplateNumber leftNumber = leftValue.asNumber().orElse(null);
-    TemplateNumber rightNumber = rightValue.asNumber().orElse(null);
-    if (leftNumber == null || rightNumber == null) {
-      throw new ProcessException("wrong operand types: " + leftValue.getClass() + " " + rightValue.getClass());
-    }
+    TemplateNumber leftNumber = leftValue.evaluate(environment, TemplateNumber.class);
+    TemplateNumber rightNumber = rightValue.evaluate(environment, TemplateNumber.class);
     switch (op) {
       case PLUS:
         return leftNumber.add(rightNumber);
