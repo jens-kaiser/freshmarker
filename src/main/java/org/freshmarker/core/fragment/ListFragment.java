@@ -1,8 +1,6 @@
 package org.freshmarker.core.fragment;
 
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ListEnvironent;
 import org.freshmarker.core.ProcessException;
