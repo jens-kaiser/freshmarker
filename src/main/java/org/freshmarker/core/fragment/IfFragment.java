@@ -15,11 +15,7 @@ public class IfFragment implements Fragment {
   }
 
   public void process(Environment environment, Writer writer) {
-    for (ConditionalFragment fragment : fragments) {
-      if (fragment.getConditional().evaluateToObject(environment) == TemplateBoolean.TRUE) {
-        fragment.process(environment, writer);
-        return;
-      }
-    }
+    fragments.stream().filter(f -> f.getConditional().evaluateToObject(environment) == TemplateBoolean.TRUE)
+        .findFirst().ifPresent(f -> f.process(environment, writer));
   }
 }

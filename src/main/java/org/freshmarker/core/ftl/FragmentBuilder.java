@@ -85,16 +85,14 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   @Override
   public BlockFragment visit(IfStatement ftl, BlockFragment input) {
     logger.debug("if: {}", ftl);
-    IfFragment ifFragment = ftl.accept(new IfFragmentBuilder(), null);
-    input.addFragment(ifFragment);
+    input.addFragment(ftl.<Object, IfFragment>accept(new IfFragmentBuilder(), null));
     return input;
   }
 
   @Override
   public BlockFragment visit(SwitchInstruction ftl, BlockFragment input) {
     logger.debug("switch: {}", ftl);
-    SwitchFragment switchFragment = ftl.accept(new SwitchFragmentBuilder(), null);
-    input.addFragment(switchFragment);
+    input.addFragment(ftl.<Object, SwitchFragment>accept(new SwitchFragmentBuilder(), null));
     return input;
   }
 

@@ -77,6 +77,13 @@ class FtlTemplateBuilderTest {
   }
 
   @Test
+  void generateMultiListDirectives() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: <#list 1..4 as s><#list 1..2 as s><#if s % 2 == 0>${s} is even<#else>${s} is odd</#if> </#list></#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: 1 is odd 2 is even 1 is odd 2 is even 1 is odd 2 is even 1 is odd 2 is even ", template.process(Map.of()));
+  }
+
+  @Test
   void generateSequenceInterpolation() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${test[1]}");
     Template template = configuration.getTemplate("test");

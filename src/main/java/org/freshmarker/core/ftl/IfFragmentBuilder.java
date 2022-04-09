@@ -21,7 +21,6 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
   @Override
   public IfFragment visit(IfStatement ftl, IfFragment input) {
-    logger.info("children: {}", ftl.children());
     IfFragment ifFragment = new IfFragment();
     Node expression = ftl.getChild(3);
     TemplateObject ifExpression = expression.accept(interpolationBuilder, null);
