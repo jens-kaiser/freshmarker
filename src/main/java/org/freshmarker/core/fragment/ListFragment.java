@@ -27,7 +27,7 @@ public class ListFragment implements Fragment {
         .orElseThrow(() -> new ProcessException("no number"));
     TemplateLooper looper = new TemplateLooper(sequence, size);
     ListEnvironent listEnvironment = new ListEnvironent(context.getEnvironment(), identifier, looper);
-    ProcessContext listContext = new ProcessContext(listEnvironment, context.getWriter());
+    ProcessContext listContext = new ProcessContext(listEnvironment, context);
     for (int i = 0; i < size; i++) {
       block.process(listContext);
       looper.increment();

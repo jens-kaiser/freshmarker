@@ -6,6 +6,7 @@ import ftl.ast.FTLHeader;
 import ftl.ast.Root;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.function.Function;
 import org.freshmarker.core.BaseEnvironment;
 import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
 import org.freshmarker.core.buildin.BuiltInKey;
@@ -117,7 +119,14 @@ public final class Configuration {
 
   public Environment createEnvironment(Map<String, Object> dataModel) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    return new BufferedEnvironment(new BaseEnvironment(builtIns, dataModel, mapper, formatter, locale, format));
+    return new BufferedEnvironment(new BaseEnvironment(dataModel, mapper, locale, format));
+  }
+
+  public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
+    OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, mapper, locale, format);
+    BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
+    return new ProcessContext(environment, writer, builtIns, formatter);
   }
 
   public void setLocale(Locale locale) {

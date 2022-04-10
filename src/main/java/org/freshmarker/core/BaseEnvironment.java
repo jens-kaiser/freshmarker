@@ -4,38 +4,26 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
-import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.formatter.StringFormatter;
-import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.output.OutputFormat;
 
 public class BaseEnvironment implements Environment {
 
-  private static final StringFormatter STRING_FORMATTER = new StringFormatter();
-
   private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
-  private final Map<BuiltInKey, BuiltIn> builtIns;
   private final Map<String, Object> dataModel;
   private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
-  private final Map<Class<? extends TemplateObject>, Formatter> formatter;
   private final Locale locale;
 
   private final OutputFormat outputFormat;
 
-  public BaseEnvironment(Map<BuiltInKey, BuiltIn> builtIns,
-      Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
-      Map<Class<? extends TemplateObject>, Formatter> formatter, Locale locale,
-      OutputFormat outputFormat) {
-    this.builtIns = builtIns;
+  public BaseEnvironment(Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
+      Locale locale, OutputFormat outputFormat) {
     this.dataModel = dataModel;
     this.mapper = mapper;
-    this.formatter = formatter;
     this.locale = locale;
     this.outputFormat = outputFormat;
   }
@@ -73,20 +61,6 @@ public class BaseEnvironment implements Environment {
       return new TemplateBean(beanProvider.provide(o, this));
     }
     throw new IllegalArgumentException("unsupported data type: " + o.getClass());
-  }
-
-  @Override
-  public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
-    BuiltIn result = builtIns.get(new BuiltInKey(type, name));
-    if (result == null) {
-      throw new IllegalArgumentException("unsupported builtin: " + name + " " + type);
-    }
-    return result;
-  }
-
-  @Override
-  public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-    return formatter.getOrDefault(type, STRING_FORMATTER);
   }
 
   @Override
