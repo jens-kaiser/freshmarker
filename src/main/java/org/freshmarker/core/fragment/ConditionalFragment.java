@@ -1,7 +1,6 @@
 package org.freshmarker.core.fragment;
 
-import java.io.Writer;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
 
 public class ConditionalFragment implements Fragment {
@@ -19,7 +18,7 @@ public class ConditionalFragment implements Fragment {
   }
 
   @Override
-  public void process(Environment environment, Writer writer) {
-    content.process(environment, writer);
+  public void process(ProcessContext context) {
+    content.process(context);
   }
 }

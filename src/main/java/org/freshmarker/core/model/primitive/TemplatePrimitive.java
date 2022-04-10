@@ -2,7 +2,7 @@ package org.freshmarker.core.model.primitive;
 
 import java.util.Objects;
 import java.util.Optional;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
 
 public class TemplatePrimitive<P> implements TemplateObject {
@@ -44,7 +44,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
+  public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
 }

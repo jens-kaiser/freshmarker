@@ -1,9 +1,8 @@
 package org.freshmarker.core.model;
 
 import ftl.FTLConstants.TokenType;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 public class TemplateEquality implements TemplateObject {
@@ -18,9 +17,9 @@ public class TemplateEquality implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    TemplatePrimitive<?> leftValue = left.evaluate(environment, TemplatePrimitive.class);
-    TemplatePrimitive<?> rightValue = right.evaluate(environment, TemplatePrimitive.class);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    TemplatePrimitive<?> leftValue = left.evaluate(context, TemplatePrimitive.class);
+    TemplatePrimitive<?> rightValue = right.evaluate(context, TemplatePrimitive.class);
     switch (type) {
       case EQUALS:
       case DOUBLE_EQUALS:

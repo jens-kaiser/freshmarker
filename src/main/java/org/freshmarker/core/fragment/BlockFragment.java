@@ -1,9 +1,8 @@
 package org.freshmarker.core.fragment;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 
 public class BlockFragment implements Fragment {
 
@@ -13,7 +12,8 @@ public class BlockFragment implements Fragment {
     fragments.add(fragment);
   }
 
-  public void process(Environment environment, Writer writer) {
-    fragments.forEach(f -> f.process(environment, writer));
+  @Override
+  public void process(ProcessContext context) {
+    fragments.forEach(f -> f.process(context));
   }
 }

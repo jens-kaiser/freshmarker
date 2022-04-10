@@ -3,6 +3,8 @@ package org.freshmarker;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.fragment.BlockFragment;
 
 public final class Template {
@@ -15,7 +17,8 @@ public final class Template {
   }
 
   public void process(Map<String, Object> dataModel, Writer writer) {
-    rootFragment.process(configuration.createEnvironment(dataModel), writer);
+    Environment environment = configuration.createEnvironment(dataModel);
+    rootFragment.process(new ProcessContext(environment, writer));
   }
 
   public String process(Map<String, Object> dataModel) {

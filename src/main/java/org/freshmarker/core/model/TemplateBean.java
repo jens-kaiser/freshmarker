@@ -1,7 +1,7 @@
 package org.freshmarker.core.model;
 
 import java.util.Map;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 
 public class TemplateBean implements TemplateMap {
 
@@ -11,13 +11,13 @@ public class TemplateBean implements TemplateMap {
     this.map = map;
   }
 
-  public TemplateObject get(Environment environment, String name) {
+  public TemplateObject get(ProcessContext context, String name) {
     Object result = map.get(name);
-    return result == null ? TemplateNull.NULL : environment.mapObject(result);
+    return result == null ? TemplateNull.NULL : context.getEnvironment().mapObject(result);
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
+  public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
 }

@@ -1,7 +1,7 @@
 package org.freshmarker.core.model;
 
 import ftl.FTLConstants.TokenType;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
@@ -17,9 +17,9 @@ public class TemplateRelational implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    TemplateNumber leftValue = left.evaluate(environment, TemplateNumber.class);
-    TemplateNumber rightValue = right.evaluate(environment, TemplateNumber.class);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    TemplateNumber leftValue = left.evaluate(context, TemplateNumber.class);
+    TemplateNumber rightValue = right.evaluate(context, TemplateNumber.class);
     switch (type) {
       case EQUALS:
       case DOUBLE_EQUALS:

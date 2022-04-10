@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 
 public class TemplateDotKey implements TemplateExpression {
@@ -14,11 +14,11 @@ public class TemplateDotKey implements TemplateExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    TemplateObject templateObject = map.evaluateToObject(environment);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    TemplateObject templateObject = map.evaluateToObject(context);
     if (templateObject instanceof TemplateMap) {
       TemplateMap templateMap = (TemplateMap) templateObject;
-      return templateMap.get(environment, dotKey);
+      return templateMap.get(context, dotKey);
     }
     throw new ProcessException("index out of range");
   }

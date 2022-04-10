@@ -5,8 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
@@ -36,14 +38,21 @@ public class TemporalPluginProvider implements PluginProvider {
   @Override
   public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
     builtIns.put(DATE_TIME_BUILDER.of("date"),
-        new FunctionalBuiltIn((x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate())));
+        new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateLocalDate(
+            ((TemplateLocalDateTime) x).getValue().toLocalDate())));
     builtIns.put(DATE_TIME_BUILDER.of("time"),
-        new FunctionalBuiltIn((x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime())));
-    builtIns.put(DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    builtIns.put(DATE_BUILDER.of("date"), new FunctionalBuiltIn((x, y, e) -> x));
-    builtIns.put(DATE_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-    builtIns.put(TIME_BUILDER.of("time"), new FunctionalBuiltIn((x, y, e) -> x));
-    builtIns.put(TIME_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
+        new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateLocalTime(
+            ((TemplateLocalDateTime) x).getValue().toLocalTime())));
+    builtIns.put(DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn(
+        (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(DATE_BUILDER.of("date"),
+        new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext e) -> x));
+    builtIns.put(DATE_BUILDER.of("c"), new FunctionalBuiltIn(
+        (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
+    builtIns.put(TIME_BUILDER.of("time"),
+        new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext e) -> x));
+    builtIns.put(TIME_BUILDER.of("c"), new FunctionalBuiltIn(
+        (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
   }
 
   @Override

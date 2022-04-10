@@ -3,7 +3,7 @@ package org.freshmarker.core.buildin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 
@@ -34,27 +34,27 @@ public class MethodBuiltIn implements BuiltIn {
   }
 
   @Override
-  public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, Environment environment) {
+  public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, ProcessContext context) {
     try {
       if (withVarargs) {
-        return applyWithDynamicParameter(value, parameter, environment);
+        return applyWithDynamicParameter(value, parameter, context);
       }
-      return applyWithStaticParameter(value, parameter, environment);
+      return applyWithStaticParameter(value, parameter, context);
     } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new ProcessException("cannot invoke builtIn: " + e.getMessage());
+      throw new ProcessException("cannot invoke builtIn: " + e.getMessage(), e);
     }
   }
 
   private TemplateObject applyWithDynamicParameter(TemplateObject value, List<TemplateObject> parameter,
-      Environment environment) throws InvocationTargetException, IllegalAccessException {
+      ProcessContext context) throws InvocationTargetException, IllegalAccessException {
     int parameterCount = method.getParameterCount();
-    if (parameter.size() + 2 < parameterCount) {
-      throw new ProcessException("wrong parameter count: ");
-    }
     int firstBuiltInParameter = withEnvironment ? 2 : 1;
+    if (parameter.size() + firstBuiltInParameter < parameterCount) {
+      throw new ProcessException("wrong parameter count: " + (parameter.size() + 2) + " < " + parameterCount);
+    }
     Object[] args = new Object[parameterCount];
     args[0] = value;
-    args[1] = environment;
+    args[1] = context;
     for (int i = 0, j = firstBuiltInParameter, n = Math.min(parameterCount - firstBuiltInParameter,
         parameter.size() - 1); i < n; i++, j++) {
       args[j] = parameter.get(i);
@@ -65,7 +65,7 @@ public class MethodBuiltIn implements BuiltIn {
   }
 
   private TemplateObject applyWithStaticParameter(TemplateObject value, List<TemplateObject> parameter,
-      Environment environment) throws InvocationTargetException, IllegalAccessException {
+      ProcessContext context) throws InvocationTargetException, IllegalAccessException {
     int parameterCount = method.getParameterCount();
     int firstBuiltInParameter = withEnvironment ? 2 : 1;
     if (parameterCount != 1 && parameter.size() + firstBuiltInParameter != parameterCount) {
@@ -74,7 +74,7 @@ public class MethodBuiltIn implements BuiltIn {
     Object[] args = new Object[parameterCount];
     args[0] = value;
     if (parameterCount > 1) {
-      args[1] = environment;
+      args[1] = context;
       for (int i = 0, j = firstBuiltInParameter, n = parameterCount - firstBuiltInParameter; i < n; i++, j++) {
         args[j] = parameter.get(i);
       }

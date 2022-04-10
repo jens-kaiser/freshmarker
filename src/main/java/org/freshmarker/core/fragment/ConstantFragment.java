@@ -1,11 +1,12 @@
 package org.freshmarker.core.fragment;
 
 import java.io.IOException;
-import java.io.Writer;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 
 public class ConstantFragment implements Fragment {
+
+  public static final ConstantFragment EMPTY = new ConstantFragment("");
 
   private final String value;
 
@@ -14,9 +15,9 @@ public class ConstantFragment implements Fragment {
   }
 
   @Override
-  public void process(Environment environment, Writer writer) {
+  public void process(ProcessContext context) {
     try {
-      writer.write(value);
+      context.getWriter().write(value);
     } catch (IOException e) {
       throw new ProcessException(e.getMessage(), e);
     }

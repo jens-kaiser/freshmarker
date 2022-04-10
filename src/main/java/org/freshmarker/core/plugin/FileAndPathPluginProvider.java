@@ -4,15 +4,15 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Function;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInFunction;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.buildin.FunctionalBuiltIn;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.file.TemplateFile;
 import org.freshmarker.core.model.file.TemplatePath;
-import org.freshmarker.core.model.TemplateObject;
 
 public class FileAndPathPluginProvider implements PluginProvider {
 
@@ -52,14 +52,14 @@ public class FileAndPathPluginProvider implements PluginProvider {
     mapper.put(Path.class, o -> new TemplatePath((Path) o));
   }
 
-  private TemplateObject processFile(TemplateObject value, Function<File, ?> function, Environment environment) {
+  private TemplateObject processFile(TemplateObject value, Function<File, ?> function, ProcessContext context) {
     File input = ((TemplateFile) value).getValue();
-    return environment.mapObject(function.apply(input));
+    return context.getEnvironment().mapObject(function.apply(input));
   }
 
-  private TemplateObject processPath(TemplateObject value, Function<File, ?> function, Environment environment) {
+  private TemplateObject processPath(TemplateObject value, Function<File, ?> function, ProcessContext context) {
     Path input = ((TemplatePath) value).getValue();
     Function<Path, File> convert = Path::toFile;
-    return environment.mapObject(convert.andThen(function).apply(input));
+    return context.getEnvironment().mapObject(convert.andThen(function).apply(input));
   }
 }

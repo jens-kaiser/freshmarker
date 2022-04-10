@@ -7,7 +7,7 @@ import ftl.ast.SwitchInstruction;
 import java.util.List;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConditionalFragment;
-import org.freshmarker.core.fragment.EmptyFragment;
+import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     if (defaultPart != null) {
       defaultPart.accept(this, switchFragment);
     } else {
-      switchFragment.addDefaultFragment(EmptyFragment.EMPTY);
+      switchFragment.addDefaultFragment(ConstantFragment.EMPTY);
     }
     return switchFragment;
   }

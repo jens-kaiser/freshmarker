@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
@@ -24,7 +24,7 @@ public class TemplateRange implements TemplateSequence {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
+  public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
 
@@ -45,19 +45,19 @@ public class TemplateRange implements TemplateSequence {
   }
 
   @Override
-  public TemplateObject get(Environment environment, int index) {
+  public TemplateObject get(ProcessContext context, int index) {
     logger.info("get: {}", index);
-    int lowerNumber = lower.evaluate(environment, TemplateNumber.class).asInt();
+    int lowerNumber = lower.evaluate(context, TemplateNumber.class).asInt();
     return new TemplateNumber(lowerNumber + index, Type.INTEGER);
   }
 
   @Override
-  public TemplateNumber size(Environment environment) {
+  public TemplateNumber size(ProcessContext context) {
     if (rightUnlimited) {
       throw new ProcessException("right unlimited range not supported");
     }
-    int lowerValue = lower.evaluate(environment, TemplateNumber.class).asInt();
-    int upperValue = upper.evaluate(environment, TemplateNumber.class).asInt();
+    int lowerValue = lower.evaluate(context, TemplateNumber.class).asInt();
+    int upperValue = upper.evaluate(context, TemplateNumber.class).asInt();
     int size = Math.abs(upperValue - lowerValue) + 1;
     logger.info("size: {}", size);
     return new TemplateNumber(size, Type.INTEGER);

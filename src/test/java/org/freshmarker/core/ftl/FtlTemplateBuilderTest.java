@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import ftl.ParseException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import org.freshmarker.core.StringTemplateLoader;
 import org.freshmarker.Configuration;
@@ -20,6 +21,7 @@ class FtlTemplateBuilderTest {
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
+    configuration.setLocale(Locale.GERMANY);
     templateLoader = new StringTemplateLoader();
     configuration.registerTemplateLoader(templateLoader);
   }
@@ -78,9 +80,18 @@ class FtlTemplateBuilderTest {
 
   @Test
   void generateMultiListDirectives() throws ParseException, IOException {
-    templateLoader.putTemplate("test", "test: <#list 1..4 as s><#list 1..2 as s><#if s % 2 == 0>${s} is even<#else>${s} is odd</#if> </#list></#list>");
+    templateLoader.putTemplate("test",
+        "<#list list as s>" +
+               "<#list 1..2 as s>" +
+               "<#if s % 2 == 0>${s} is even<#else>${s} is odd</#if>" +
+               "<#if s?has_next>, </#if>" +
+               "</#list>" +
+               "<#if s?is_last>.<#else>, </#if>" +
+               "</#list>");
     Template template = configuration.getTemplate("test");
-    assertEquals("test: 1 is odd 2 is even 1 is odd 2 is even 1 is odd 2 is even 1 is odd 2 is even ", template.process(Map.of()));
+    Map<String, Object> dataModel = Map.of("list", List.of(1,2,3,4));
+    assertEquals("1 is odd, 2 is even, 1 is odd, 2 is even, 1 is odd, 2 is even, 1 is odd, 2 is even.", template.process(
+        dataModel));
   }
 
   @Test

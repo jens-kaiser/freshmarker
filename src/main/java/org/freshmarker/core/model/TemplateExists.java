@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public class TemplateExists implements TemplateObject {
@@ -12,8 +12,8 @@ public class TemplateExists implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    TemplateObject templateObject = expression.evaluateToObject(environment);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    TemplateObject templateObject = expression.evaluateToObject(context);
     return templateObject == TemplateNull.NULL ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
   }
 }

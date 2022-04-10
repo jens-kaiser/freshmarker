@@ -1,7 +1,7 @@
 package org.freshmarker.core.model;
 
 import java.util.Optional;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
@@ -33,10 +33,10 @@ public interface TemplateObject {
     return Optional.empty();
   }
 
-  TemplateObject evaluateToObject(Environment environment);
+  TemplateObject evaluateToObject(ProcessContext context);
 
-  default <T extends TemplateObject> T evaluate(Environment environment, Class<T> type) {
-    TemplateObject result = evaluateToObject(environment);
+  default <T extends TemplateObject> T evaluate(ProcessContext context, Class<T> type) {
+    TemplateObject result = evaluateToObject(context);
     if (type.isInstance(result)) {
       return type.cast(result);
     }

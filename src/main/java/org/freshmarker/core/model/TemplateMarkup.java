@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.DelegatingOutputFormat;
 import org.freshmarker.core.output.OutputFormat;
@@ -28,14 +29,15 @@ public class TemplateMarkup implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
+  public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateObject templateObject = content;
     do {
-      templateObject = templateObject.evaluateToObject(environment);
+      templateObject = templateObject.evaluateToObject(context);
     } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
     if (templateObject.isMarkup()) {
-      return templateObject.evaluate(environment, TemplateString.class);
+      return templateObject.evaluate(context, TemplateString.class);
     }
+    Environment environment = context.getEnvironment();
     String result = environment.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale());
     return outputFormat.escape(environment, result);
   }

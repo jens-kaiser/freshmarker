@@ -1,8 +1,8 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 
 public interface TemplateMap extends TemplateObject {
 
-  TemplateObject get(Environment environment, String name);
+  TemplateObject get(ProcessContext context, String name);
 }

@@ -1,9 +1,8 @@
 package org.freshmarker.core.fragment;
 
-import java.io.Writer;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 
 public interface Fragment {
 
-  void process(Environment environment, Writer writer);
+  void process(ProcessContext context);
 }

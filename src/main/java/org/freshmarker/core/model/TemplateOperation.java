@@ -2,7 +2,7 @@ package org.freshmarker.core.model;
 
 import ftl.FTLConstants.TokenType;
 import java.util.Optional;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -20,9 +20,9 @@ public class TemplateOperation implements TemplateExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    TemplateObject leftValue = left.evaluateToObject(environment);
-    TemplateObject rightValue = right.evaluateToObject(environment);
+  public TemplateObject evaluateToObject(ProcessContext processContext) {
+    TemplateObject leftValue = left.evaluateToObject(processContext);
+    TemplateObject rightValue = right.evaluateToObject(processContext);
     if (op == TokenType.PLUS) {
       Optional<TemplateString> leftString = leftValue.asString();
       Optional<TemplateString> rightString = rightValue.asString();
@@ -30,8 +30,8 @@ public class TemplateOperation implements TemplateExpression {
         return leftString.get().concat(rightString.get());
       }
     }
-    TemplateNumber leftNumber = leftValue.evaluate(environment, TemplateNumber.class);
-    TemplateNumber rightNumber = rightValue.evaluate(environment, TemplateNumber.class);
+    TemplateNumber leftNumber = leftValue.evaluate(processContext, TemplateNumber.class);
+    TemplateNumber rightNumber = rightValue.evaluate(processContext, TemplateNumber.class);
     switch (op) {
       case PLUS:
         return leftNumber.add(rightNumber);

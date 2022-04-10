@@ -1,7 +1,7 @@
 package org.freshmarker.core.model;
 
 import java.util.List;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
@@ -18,8 +18,8 @@ public class TemplateLooper implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    return sequence.get(environment, index);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    return sequence.get(context, index);
   }
 
   public TemplateNumber getIndex() {

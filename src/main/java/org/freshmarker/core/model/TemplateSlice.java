@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateSlice implements TemplateObject {
@@ -14,18 +14,18 @@ public class TemplateSlice implements TemplateObject {
   }
 
   @Override
-  public TemplateListSequence evaluateToObject(Environment environment) {
-    TemplateRange templateRange = range.evaluate(environment, TemplateRange.class);
-    TemplateListSequence templateListSequence = sequence.evaluate(environment, TemplateListSequence.class);
-    TemplateNumber lower = templateRange.getLower().evaluate(environment, TemplateNumber.class);
+  public TemplateListSequence evaluateToObject(ProcessContext context) {
+    TemplateRange templateRange = range.evaluate(context, TemplateRange.class);
+    TemplateListSequence templateListSequence = sequence.evaluate(context, TemplateListSequence.class);
+    TemplateNumber lower = templateRange.getLower().evaluate(context, TemplateNumber.class);
     int min = lower.getValue().intValue();
     if (templateRange.isRightUnlimited()) {
-      return templateListSequence.slice(min, templateListSequence.size(environment).getValue().intValue());
+      return templateListSequence.slice(min, templateListSequence.size(context).getValue().intValue());
     }
-    TemplateNumber upper = templateRange.getUpper().evaluate(environment, TemplateNumber.class);
+    TemplateNumber upper = templateRange.getUpper().evaluate(context, TemplateNumber.class);
     int max = upper.getValue().intValue();
     if (templateRange.isLengthLimited()) {
-      return templateListSequence.slice(min, Math.max(templateListSequence.size(environment).getValue().intValue(), min + max));
+      return templateListSequence.slice(min, Math.max(templateListSequence.size(context).getValue().intValue(), min + max));
     }
     return templateListSequence.slice(min, max);
   }

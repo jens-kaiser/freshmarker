@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
@@ -15,23 +15,23 @@ public class TemplateDynamicKey implements TemplateExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    TemplateNumber index = dynamicKey.evaluate(environment, TemplateNumber.class);
-    TemplateObject templateObject = sequence.evaluateToObject(environment);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
+    TemplateObject templateObject = sequence.evaluateToObject(context);
     if (templateObject instanceof TemplateRange) {
       TemplateRange range = (TemplateRange) templateObject;
-      TemplateNumber lower = range.getLower().evaluate(environment, TemplateNumber.class);
+      TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
       TemplateNumber result = lower.add(index);
       if (range.isRightUnlimited()) {
         return result;
       }
-      TemplateNumber upper = range.getUpper().evaluate(environment, TemplateNumber.class);
+      TemplateNumber upper = range.getUpper().evaluate(context, TemplateNumber.class);
       if (result.compare(upper).getValue().intValue() < 0) {
         return result;
       }
       throw new ProcessException("index out of range: " + result.getValue() + " " + upper.getValue());
     }
     TemplateListSequence list = (TemplateListSequence) templateObject;
-    return list.get(environment, index.getValue().intValue());
+    return list.get(context, index.getValue().intValue());
   }
 }

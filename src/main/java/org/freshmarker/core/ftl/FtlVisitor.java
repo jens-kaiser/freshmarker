@@ -12,6 +12,7 @@ import ftl.ast.IfStatement;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
 import ftl.ast.Root;
+import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
 
@@ -72,4 +73,6 @@ public interface FtlVisitor<I, O> {
   default O visit(ListInstruction ftl, I input) {
     return null;
   }
+
+  default O visit (SettingInstruction ftl, I input) { return null; }
 }

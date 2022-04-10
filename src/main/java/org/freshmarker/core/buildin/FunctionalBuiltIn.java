@@ -1,7 +1,7 @@
 package org.freshmarker.core.buildin;
 
 import java.util.List;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
 
 public class FunctionalBuiltIn implements BuiltIn {
@@ -26,7 +26,7 @@ public class FunctionalBuiltIn implements BuiltIn {
   }
 
   @Override
-  public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, Environment environment) {
-    return function.apply(value, parameter, environment);
+  public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, ProcessContext context) {
+    return function.apply(value, parameter, context);
   }
 }

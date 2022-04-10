@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Map;
 import org.freshmarker.core.ConfigurationException;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInMethod;
@@ -35,7 +35,7 @@ public class MethodBuiltInHelper {
       getMethodBuiltIn(method, builtIns, false, false);
       return;
     }
-    boolean withEnvironment = Environment.class.equals(parameterTypes[1]);
+    boolean withEnvironment = ProcessContext.class.equals(parameterTypes[1]);
     if (parameterTypes.length == 2 && withEnvironment) {
       getMethodBuiltIn(method, builtIns, true, false);
       return;

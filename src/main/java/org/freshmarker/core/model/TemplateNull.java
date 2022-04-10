@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 
 public class TemplateNull implements TemplateObject {
 
@@ -11,7 +11,7 @@ public class TemplateNull implements TemplateObject {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
+  public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
 }

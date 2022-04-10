@@ -1,7 +1,7 @@
 package org.freshmarker.core.model;
 
 import java.util.List;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 
@@ -14,12 +14,12 @@ public class TemplateListSequence implements TemplateSequence {
   }
 
   @Override
-  public TemplateObject get(Environment environment, int index) {
-    return environment.mapObject(sequence.get(index));
+  public TemplateObject get(ProcessContext context, int index) {
+    return context.getEnvironment().mapObject(sequence.get(index));
   }
 
   @Override
-  public TemplateNumber size(Environment environment) {
+  public TemplateNumber size(ProcessContext context) {
     return new TemplateNumber(sequence.size(), Type.INTEGER);
   }
 
@@ -28,7 +28,7 @@ public class TemplateListSequence implements TemplateSequence {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
+  public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
 }

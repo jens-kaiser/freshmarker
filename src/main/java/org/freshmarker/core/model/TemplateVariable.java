@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 
 public class TemplateVariable implements TemplateExpression {
 
@@ -11,7 +11,7 @@ public class TemplateVariable implements TemplateExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(Environment environment) {
-    return environment.getValue(name);
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    return context.getEnvironment().getValue(name);
   }
 }

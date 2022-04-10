@@ -1,7 +1,7 @@
 package org.freshmarker.core.plugin;
 
 import java.util.Map;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInMethod;
@@ -21,12 +21,12 @@ public class BooleanPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod("then")
-  public static TemplateObject thenBuildIn(TemplateBoolean value, Environment environment, TemplateObject trueValue,
+  public static TemplateObject thenBuildIn(TemplateBoolean value, ProcessContext context, TemplateObject trueValue,
       TemplateObject falseValue) {
     if (value == TemplateBoolean.TRUE) {
-      return trueValue.evaluateToObject(environment);
+      return trueValue.evaluateToObject(context);
     }
-    return falseValue.evaluateToObject(environment);
+    return falseValue.evaluateToObject(context);
   }
 
   @BuiltInMethod("string")

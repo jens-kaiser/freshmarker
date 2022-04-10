@@ -1,7 +1,7 @@
 package org.freshmarker.core.plugin;
 
 import java.util.Map;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInMethod;
@@ -22,13 +22,13 @@ public class StringPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod
-  public static TemplateString upperCase(TemplateString value, Environment environment) {
-    return new TemplateString(value.getValue().toUpperCase(environment.getLocale()));
+  public static TemplateString upperCase(TemplateString value, ProcessContext context) {
+    return new TemplateString(value.getValue().toUpperCase(context.getEnvironment().getLocale()));
   }
 
   @BuiltInMethod
-  public static TemplateString lowerCase(TemplateString value, Environment environment) {
-    return new TemplateString(value.getValue().toLowerCase(environment.getLocale()));
+  public static TemplateString lowerCase(TemplateString value, ProcessContext context) {
+    return new TemplateString(value.getValue().toLowerCase(context.getEnvironment().getLocale()));
   }
 
   @BuiltInMethod
@@ -67,7 +67,7 @@ public class StringPluginProvider implements PluginProvider {
   }
 
   @BuiltInMethod
-  public static TemplateMarkup esc(TemplateString value, Environment environment) {
-    return new TemplateMarkup(value, environment.getOutputFormat());
+  public static TemplateMarkup esc(TemplateString value, ProcessContext context) {
+    return new TemplateMarkup(value, context.getEnvironment().getOutputFormat());
   }
 }
