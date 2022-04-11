@@ -19,13 +19,6 @@ public class FunctionalBuiltIn implements BuiltIn {
   }
 
   @Override
-  public void validate(List<TemplateObject> parameters) {
-    if (this.parameters.size() != parameters.size()) {
-      throw new IllegalArgumentException("invalid parameter count: " + parameters.size());
-    }
-  }
-
-  @Override
   public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, ProcessContext context) {
     return function.apply(value, parameter, context);
   }

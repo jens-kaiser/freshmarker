@@ -117,11 +117,6 @@ public final class Configuration {
     }
   }
 
-  public Environment createEnvironment(Map<String, Object> dataModel) {
-    OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    return new BufferedEnvironment(new BaseEnvironment(dataModel, mapper, locale, format));
-  }
-
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
     BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, mapper, locale, format);

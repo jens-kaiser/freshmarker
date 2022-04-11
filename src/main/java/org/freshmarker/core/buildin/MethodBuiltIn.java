@@ -20,20 +20,6 @@ public class MethodBuiltIn implements BuiltIn {
   }
 
   @Override
-  public void validate(List<TemplateObject> parameters) {
-    Class<?>[] parameterTypes = method.getParameterTypes();
-    if (parameters.size() + 2 < parameterTypes.length) {
-      throw new ProcessException(
-          "invalid parameter count:" + parameters.size() + " expected: " + (parameterTypes.length - 2));
-    }
-    for (int i = 0, j = withEnvironment ? 2 : 1; j < parameterTypes.length; i++, j++) {
-      if (!parameterTypes[i].isAssignableFrom(parameters.get(i).getClass())) {
-        throw new ProcessException("invalid parameter type: " + parameters.get(i) + " expected: " + parameterTypes[i]);
-      }
-    }
-  }
-
-  @Override
   public TemplateObject apply(TemplateObject value, List<TemplateObject> parameter, ProcessContext context) {
     try {
       if (withVarargs) {
