@@ -21,17 +21,12 @@ public class TemplateRelational implements TemplateObject {
     TemplateNumber leftValue = left.evaluate(context, TemplateNumber.class);
     TemplateNumber rightValue = right.evaluate(context, TemplateNumber.class);
     switch (type) {
-      case EQUALS:
-      case DOUBLE_EQUALS:
-        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() == 0);
       case LT:
       case ALT_LT:
         return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() < 0);
       case GT:
       case ALT_GT:
         return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() > 0);
-      case NOT_EQUALS:
-        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() != 0);
       case LTE:
       case ALT_LTE:
         return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() <= 0);

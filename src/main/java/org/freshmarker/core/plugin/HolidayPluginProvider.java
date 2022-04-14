@@ -25,9 +25,8 @@ public class HolidayPluginProvider implements PluginProvider {
     builtIns.put(DATE_BUILDER.of("get_holiday"),
         new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext c) -> {
           Locale locale = checkCountry(c.getEnvironment().getLocale());
-          String fallback = getOptionalFallback(y);
           TemplateLocalDate value = x.evaluate(c, TemplateLocalDate.class);
-          return new TemplateString(getHolidaysFromStore(c, locale).getHoliday(value.getValue()).orElse(fallback));
+          return new TemplateString(getHolidaysFromStore(c, locale).getHoliday(value.getValue()).orElseGet(() -> getOptionalFallback(y)));
         }));
     builtIns.put(DATE_BUILDER.of("is_holiday"),
         new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext c) -> {
