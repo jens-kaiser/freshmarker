@@ -20,7 +20,7 @@ public class TemplateListSequence implements TemplateSequence {
 
   @Override
   public TemplateNumber size(ProcessContext context) {
-    return new TemplateNumber(sequence.size(), Type.INTEGER);
+    return new TemplateNumber(sequence.size());
   }
 
   public TemplateListSequence slice(int min, int max) {

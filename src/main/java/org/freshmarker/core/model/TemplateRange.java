@@ -3,7 +3,6 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +47,7 @@ public class TemplateRange implements TemplateSequence {
   public TemplateObject get(ProcessContext context, int index) {
     logger.info("get: {}", index);
     int lowerNumber = lower.evaluate(context, TemplateNumber.class).asInt();
-    return new TemplateNumber(lowerNumber + index, Type.INTEGER);
+    return new TemplateNumber(lowerNumber + index);
   }
 
   @Override
@@ -60,6 +59,6 @@ public class TemplateRange implements TemplateSequence {
     int upperValue = upper.evaluate(context, TemplateNumber.class).asInt();
     int size = Math.abs(upperValue - lowerValue) + 1;
     logger.info("size: {}", size);
-    return new TemplateNumber(size, Type.INTEGER);
+    return new TemplateNumber(size);
   }
 }

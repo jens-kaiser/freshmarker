@@ -50,12 +50,13 @@ class NumberInterpolationTest {
       "test: ${42.0*x};test: 1.764",
       "test: ${42*10-0.5};test: 419,5",
       "test: ${42.23*10};test: 422,3",
-      "test: ${x*x};test: 1.764",
+      "test: ${x*x};test: -28",
+      "test: ${y*y};test: 1.764",
       "test: ${x % 4};test: 2",
   }, delimiterString = ";")
   void interpolationExpression(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
     Template template = configuration.getTemplate("test");
-    assertEquals(expected, template.process(Map.of("x", (byte)42)));
+    assertEquals(expected, template.process(Map.of("x", (byte)42, "y", 42)));
   }
 }

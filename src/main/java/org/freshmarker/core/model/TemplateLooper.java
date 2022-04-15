@@ -4,7 +4,6 @@ import java.util.List;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 
 public class TemplateLooper implements TemplateObject {
 
@@ -23,11 +22,11 @@ public class TemplateLooper implements TemplateObject {
   }
 
   public TemplateNumber getIndex() {
-    return new TemplateNumber(index, Type.INTEGER);
+    return new TemplateNumber(index);
   }
 
   public TemplateNumber getCounter() {
-    return new TemplateNumber(index + 1, Type.INTEGER);
+    return new TemplateNumber(index + 1);
   }
 
   public TemplateBoolean isFirst() {

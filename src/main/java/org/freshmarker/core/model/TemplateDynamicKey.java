@@ -26,12 +26,12 @@ public class TemplateDynamicKey implements TemplateExpression {
         return result;
       }
       TemplateNumber upper = range.getUpper().evaluate(context, TemplateNumber.class);
-      if (result.compare(upper).getValue().intValue() < 0) {
+      if (result.compare(upper).getValue().getNumber().intValue() < 0) {
         return result;
       }
       throw new ProcessException("index out of range: " + result.getValue() + " " + upper.getValue());
     }
     TemplateListSequence list = (TemplateListSequence) templateObject;
-    return list.get(context, index.getValue().intValue());
+    return list.get(context, index.getValue().getNumber().intValue());
   }
 }
