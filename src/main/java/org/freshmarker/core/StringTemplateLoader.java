@@ -17,14 +17,14 @@ public class StringTemplateLoader implements TemplateLoader {
   }
 
   public void putTemplate(String name, String content) {
-    cache.put(name, new StringTemplateSource(name, content));
+    cache.put(name, new StringTemplateSource(content));
   }
 
   private static class StringTemplateSource implements TemplateSource {
 
     final String content;
 
-    public StringTemplateSource(String name, String content) {
+    public StringTemplateSource(String content) {
       this.content = content;
     }
 

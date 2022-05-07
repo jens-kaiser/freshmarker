@@ -56,7 +56,7 @@ public class ProcessContext {
   public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
     BuiltIn result = builtIns.get(new BuiltInKey(type, name));
     if (result == null) {
-      throw new IllegalArgumentException("unsupported builtin: " + name + " " + type);
+      throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
     }
     return result;
   }

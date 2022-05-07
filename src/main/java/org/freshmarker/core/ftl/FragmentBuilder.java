@@ -105,7 +105,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     if (!interpolation.isMarkup()) {
       interpolation = new TemplateMarkup(interpolation);
     }
-    input.addFragment(new InterpolationFragment(interpolation));
+    input.addFragment(new InterpolationFragment(interpolation, ftl));
     return input;
   }
 

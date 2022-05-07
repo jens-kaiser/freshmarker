@@ -14,6 +14,7 @@ public class TemplateMarkup implements TemplateObject {
   public TemplateMarkup(TemplateObject content) {
     this(content, DelegatingOutputFormat.INSTANCE);
   }
+
   public TemplateMarkup(TemplateObject content, OutputFormat outputFormat) {
     if (content.isMarkup()) {
       this.content = ((TemplateMarkup) content).content;
@@ -31,9 +32,12 @@ public class TemplateMarkup implements TemplateObject {
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateObject templateObject = content;
+    TemplateObject previous;
     do {
+      previous = templateObject;
       templateObject = templateObject.evaluateToObject(context);
-    } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
+    } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup()
+        && previous != templateObject);
     if (templateObject.isMarkup()) {
       return templateObject.evaluate(context, TemplateString.class);
     }
