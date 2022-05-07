@@ -35,7 +35,6 @@ import org.freshmarker.core.model.TemplateFunction;
 import org.freshmarker.core.model.TemplateNegative;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateOperation;
 import org.freshmarker.core.model.TemplateRange;
@@ -70,7 +69,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
       case EXISTS_OPERATOR:
         return new TemplateExists((TemplateObject) input);
       default:
-        throw new IllegalArgumentException("invalid token type: " + expression.getType());
+        throw new IllegalArgumentException("invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
     }
   }
 

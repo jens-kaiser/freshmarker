@@ -13,7 +13,7 @@ public class ProcessContext {
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
   private Environment environment;
-  private Writer writer;
+  private final Writer writer;
   private final Map<Object, Map<Object, Object>> stores = new HashMap<>();
   private final Map<BuiltInKey, BuiltIn> builtIns;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
@@ -27,10 +27,7 @@ public class ProcessContext {
   }
 
   public ProcessContext(Environment environment, ProcessContext parent) {
-    this.environment = environment;
-    this.writer = parent.getWriter();
-    this.builtIns = parent.builtIns;
-    this.formatter = parent.formatter;
+    this(environment, parent.getWriter(), parent.builtIns, parent.formatter);
   }
 
   public Environment getEnvironment() {
@@ -43,10 +40,6 @@ public class ProcessContext {
 
   public Writer getWriter() {
     return writer;
-  }
-
-  public void setWriter(Writer writer) {
-    this.writer = writer;
   }
 
   public Map<Object, Object> getStore(Object key) {
@@ -64,5 +57,4 @@ public class ProcessContext {
   public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
     return formatter.getOrDefault(type, STRING_FORMATTER);
   }
-
 }

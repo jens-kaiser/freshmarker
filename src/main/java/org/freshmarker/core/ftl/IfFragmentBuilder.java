@@ -1,5 +1,6 @@
 package org.freshmarker.core.ftl;
 
+import ftl.Node;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
 import ftl.ast.IfStatement;
@@ -18,7 +19,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
     IfFragment ifFragment = new IfFragment();
     TemplateObject ifExpression = ftl.getChild(3).accept(interpolationBuilder, null);
     BlockFragment ifBlock = ftl.getChild(5).accept(new FragmentBuilder(), new BlockFragment());
-    ConditionalFragment ifPart = new ConditionalFragment(ifExpression, ifBlock);
+    ConditionalFragment ifPart = new ConditionalFragment(ifExpression, ifBlock, ftl.getChild(3));
     ifFragment.addFragment(ifPart);
     List<ElseIfBlock> elseIfParts = ftl.childrenOfType(ElseIfBlock.class);
     elseIfParts.forEach(elseIfPart -> elseIfPart.accept(this, ifFragment));
@@ -31,16 +32,17 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
   @Override
   public IfFragment visit(ElseIfBlock ftl, IfFragment input) {
-    TemplateObject ifExpression = ftl.getChild(3).accept(interpolationBuilder, null);
+    Node expression = ftl.getChild(3);
+    TemplateObject ifExpression = expression.accept(interpolationBuilder, null);
     BlockFragment ifBlock = ftl.getChild(5).accept(new FragmentBuilder(), new BlockFragment());
-    input.addFragment(new ConditionalFragment(ifExpression, ifBlock));
+    input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
     return input;
   }
 
   @Override
   public IfFragment visit(ElseBlock ftl, IfFragment input) {
     BlockFragment ifBlock = ftl.getChild(3).accept(new FragmentBuilder(), new BlockFragment());
-    input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock));
+    input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock, null));
     return input;
   }
 }

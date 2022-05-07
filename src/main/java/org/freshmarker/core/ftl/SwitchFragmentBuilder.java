@@ -24,7 +24,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     logger.info("children: {}", ftl.children());
     Node expression = ftl.getChild(3);
     TemplateObject switchExpression = expression.accept(interpolationBuilder, null);
-    SwitchFragment switchFragment = new SwitchFragment(switchExpression);
+    SwitchFragment switchFragment = new SwitchFragment(switchExpression, expression);
     List<CaseInstruction> caseParts = ftl.childrenOfType(CaseInstruction.class);
     caseParts.forEach(elseIfPart -> elseIfPart.accept(this, switchFragment));
     DefaultInstruction defaultPart = ftl.firstChildOfType(DefaultInstruction.class);
@@ -44,7 +44,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     Node block = ftl.getChild(5);
     BlockFragment caseBlock = block.accept(new FragmentBuilder(), new BlockFragment());
     logger.info("{} {}", block, caseBlock);
-    input.addFragment(new ConditionalFragment(caseExpression, caseBlock));
+    input.addFragment(new ConditionalFragment(caseExpression, caseBlock, expression));
     return input;
   }
 

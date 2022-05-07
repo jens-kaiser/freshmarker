@@ -1,9 +1,11 @@
 package org.freshmarker.core.fragment;
 
+import ftl.Node;
 import java.util.ArrayList;
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.UnsupportedBuiltInException;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
@@ -13,9 +15,11 @@ public class SwitchFragment implements Fragment {
   private Fragment defaultFragment;
 
   private final TemplateObject switchExpression;
+  private final Node node;
 
-  public SwitchFragment(TemplateObject switchExpression) {
+  public SwitchFragment(TemplateObject switchExpression, Node node) {
     this.switchExpression = switchExpression;
+    this.node = node;
   }
 
   public void addFragment(ConditionalFragment fragment) {
@@ -27,17 +31,22 @@ public class SwitchFragment implements Fragment {
   }
 
   public void process(ProcessContext context) {
-    TemplatePrimitive<?> switchValue = switchExpression.evaluateToObject(context).asPrimitive()
-        .orElseThrow(() -> new ProcessException("not a primitive type"));
+    TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
     for (ConditionalFragment fragment : fragments) {
-      TemplatePrimitive<?> conditionalValue = fragment.getConditional().evaluateToObject(context)
-          .asPrimitive()
-          .orElse(null);
-      if (switchValue.equals(conditionalValue)) {
+      if (switchValue.equals(evaluatePrimitive(fragment.getConditional(), context, fragment.getNode()))) {
         fragment.process(context);
         return;
       }
     }
     defaultFragment.process(context);
+  }
+
+  private TemplatePrimitive<?> evaluatePrimitive(TemplateObject conditional, ProcessContext context, Node node) {
+    try {
+      return conditional.evaluateToObject(context).asPrimitive()
+          .orElseThrow(() -> new WrongTypeException("not a primitive type", node));
+    } catch (UnsupportedBuiltInException e) {
+      throw new UnsupportedBuiltInException(e.getMessage(), node, e);
+    }
   }
 }

@@ -8,6 +8,10 @@ public class ProcessException extends RuntimeException {
     super(message);
   }
 
+  public ProcessException(String message, Node node) {
+    super(message + " in " + generateLocation(node));
+  }
+
   public ProcessException(String message, Throwable cause) {
     super(message, cause);
   }
