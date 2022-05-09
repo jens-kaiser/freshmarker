@@ -19,6 +19,7 @@ import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
+import org.freshmarker.core.TemplateSource;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.formatter.BooleanFormatter;
@@ -106,9 +107,11 @@ public final class Configuration {
   }
 
   public Template getTemplate(String name, Charset charset) throws ParseException, IOException {
-    try (Reader reader = templateLoader.getTemplate(name).map(t -> t.getReader(charset))
-        .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name))) {
+    try (TemplateSource templateSource = templateLoader.getTemplate(name)
+        .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name));
+        Reader reader = templateSource.getReader(charset)) {
       FTLParser parser = new FTLParser(reader);
+      parser.setInputSource(templateSource.getName());
       parser.Root();
       Root root = (Root) parser.rootNode();
       Template template = new Template(this);

@@ -46,7 +46,7 @@ class ExceptionHandlingTest {
     Map<String, Object> dataModel = Map.of();
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'upper_case' for TemplateBoolean at input:1:7 '${true?upper_case}'",
+    assertEquals("unsupported builtin 'upper_case' for TemplateBoolean at test:1:7 '${true?upper_case}'",
         exception.getMessage());
   }
 
@@ -65,7 +65,7 @@ class ExceptionHandlingTest {
     Map<String, Object> dataModel = Map.of("text", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'contains' for TemplateNumber at input:2:6 'text?contains('A')'",
+    assertEquals("unsupported builtin 'contains' for TemplateNumber at test:2:6 'text?contains('A')'",
         exception.getMessage());
   }
 
@@ -82,7 +82,7 @@ class ExceptionHandlingTest {
     Map<String, Object> dataModel = Map.of("text", "A");
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'xxx' for TemplateString at input:3:1 '${text?xxx}'",
+    assertEquals("unsupported builtin 'xxx' for TemplateString at test:3:1 '${text?xxx}'",
         exception.getMessage());
   }
 
@@ -94,7 +94,7 @@ class ExceptionHandlingTest {
     Map<String, Object> dataModel = Map.of("text", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'upper_case' for TemplateNumber at input:2:10 'text?upper_case'",
+    assertEquals("unsupported builtin 'upper_case' for TemplateNumber at test:2:10 'text?upper_case'",
         exception.getMessage());
   }
 }

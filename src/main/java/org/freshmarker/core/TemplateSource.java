@@ -12,4 +12,6 @@ public interface TemplateSource extends Closeable {
   default void close() throws IOException {
 
   }
+
+  String getName();
 }

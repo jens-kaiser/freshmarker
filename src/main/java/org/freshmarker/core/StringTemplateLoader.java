@@ -17,20 +17,27 @@ public class StringTemplateLoader implements TemplateLoader {
   }
 
   public void putTemplate(String name, String content) {
-    cache.put(name, new StringTemplateSource(content));
+    cache.put(name, new StringTemplateSource(name, content));
   }
 
   private static class StringTemplateSource implements TemplateSource {
 
     final String content;
+    final String name;
 
-    public StringTemplateSource(String content) {
+    public StringTemplateSource(String name, String content) {
+      this.name = name;
       this.content = content;
     }
 
     @Override
     public Reader getReader(Charset encoding) {
       return new StringReader(content);
+    }
+
+    @Override
+    public String getName() {
+      return name;
     }
   }
 }
