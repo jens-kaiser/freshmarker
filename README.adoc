@@ -5,19 +5,20 @@
 |===
 |Type | Java Type(s) | Template Type
 
-|String|String|TemplateString
-|Number|Long, Integer, Short, Byte|TemplateNumber
-|Number|long, int, short, byte|TemplateNumber
-|Number|Double, Float, double, float|TemplateNumber
-|Boolean|Boolean, boolean|TemplateBoolean
-|DateTime|LocalDateTime, Date|TemplateDate
-|Date|LocalDate, java.sql.Date|TemplateDateTime
-|Time|LocalTime, java.sql.Time|TemplateTime
-|Sequence|List|TemplateListSequence
-|Duration|Duration|TemplateDuration
-|Period|Period|TemplatePeriod
-|Map|Map|TemplateMap
-|Bean|-|TemplateBeanMap
+|String|`String`|TemplateString
+|Number|`Long`, `Integer`, `Short`, `Byte`|TemplateNumber
+|Number|`long`, `int`, `short`, `byte`|TemplateNumber
+|Number|`Double`, `Float`, `double`, `float`|TemplateNumber
+|Boolean|`Boolean`, `boolean`|TemplateBoolean
+|DateTime|`LocalDateTime`, `Date`|TemplateDate
+|Date|`LocalDate`, `java.sql.Date`|TemplateDateTime
+|Time|`LocalTime`, `java.sql.Time`|TemplateTime
+|Duration|`Duration`|TemplateDuration
+|Period|`Period`|TemplatePeriod
+|Sequence|Lists|TemplateListSequence
+|Map|Maps|TemplateMap
+|Bean|Beans|TemplateBeanMap
+|Enum|Enums|TemplateEnum
 |Null|-|TemplateNull
 |===
 
@@ -29,9 +30,9 @@
 | If/ElseIf/Else |
 | Swich/Case/Default | Without Break/Fallthrough
 | Interpolation | Dot-Key, Dynamic-Key, Built-ins, Exists
-| Dynamic Key| Sequence, Range
-| Dot Key | With Identifier on Beans and Maps
-| List | Sequence, Range (not right unlimited)
+| Interpolation: Dynamic Key| Sequence, Range
+| Interpolation: Dot Key | With Identifier on Beans and Maps
+| Interpolation: List | Sequence, Range (not right unlimited)
 |===
 
 == Built-ins
@@ -65,4 +66,6 @@
 | has_next | Loop Variable |
 | item_parity | Loop Variable |
 | item_parity_cap | Loop Variable |
+| c | Enum | Enum name
+| ordinal | Enum | Enum ordinal
 |===

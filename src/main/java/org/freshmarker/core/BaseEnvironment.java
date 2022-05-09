@@ -9,6 +9,7 @@ import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateEnum;
 import org.freshmarker.core.output.OutputFormat;
 
 public class BaseEnvironment implements Environment {
@@ -52,6 +53,9 @@ public class BaseEnvironment implements Environment {
     if (o instanceof Map) {
       Map<String, Object> values = (Map<String, Object>) o;
       return new TemplateBean(values);
+    }
+    if (o instanceof Enum<?>) {
+      return new TemplateEnum<>((Enum)o);
     }
     Function<Object, TemplateObject> mapping = mapper.get(o.getClass());
     if (mapping != null) {
