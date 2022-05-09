@@ -2,7 +2,7 @@ package org.freshmarker.core;
 
 import ftl.Node;
 
-public class UnsupportedBuiltInException extends ProcessException{
+public class UnsupportedBuiltInException extends ProcessException {
 
   public UnsupportedBuiltInException(String message) {
     super(message);
