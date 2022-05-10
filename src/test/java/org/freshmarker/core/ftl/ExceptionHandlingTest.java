@@ -11,6 +11,7 @@ import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.StringTemplateLoader;
 import org.freshmarker.core.UnsupportedBuiltInException;
+import org.freshmarker.core.WrongTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,6 +48,16 @@ class ExceptionHandlingTest {
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
     assertEquals("unsupported builtin 'upper_case' for TemplateBoolean at test:1:7 '${true?upper_case}'",
+        exception.getMessage());
+  }
+
+  @Test
+  void wrongTypeError() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "test: ${!test}");
+    Template template = configuration.getTemplate("test");
+    Map<String, Object> dataModel = Map.of("test", 42);
+    WrongTypeException exception = assertThrows(WrongTypeException.class, () -> template.process(dataModel));
+    assertEquals("expected TemplateBoolean but is TemplateNumber (org.freshmarker.core.model.number.IntegerNumber@49) at test:1:7 '${!test}'",
         exception.getMessage());
   }
 

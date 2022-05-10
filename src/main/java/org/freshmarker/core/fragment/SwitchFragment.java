@@ -47,6 +47,8 @@ public class SwitchFragment implements Fragment {
           .orElseThrow(() -> new WrongTypeException("not a primitive type", node));
     } catch (UnsupportedBuiltInException e) {
       throw new UnsupportedBuiltInException(e.getMessage(), node, e);
+    }catch (WrongTypeException e) {
+      throw new WrongTypeException(e.getMessage(), node, e);
     }
   }
 }

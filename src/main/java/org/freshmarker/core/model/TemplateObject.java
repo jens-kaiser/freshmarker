@@ -40,6 +40,6 @@ public interface TemplateObject {
     if (type.isInstance(result)) {
       return type.cast(result);
     }
-    throw new WrongTypeException("expected " + type + " but is " + result.getClass().getSimpleName() + " (" + result + ")");
+    throw new WrongTypeException("expected " + type.getSimpleName() + " but is " + result.getClass().getSimpleName() + " (" + result + ")");
   }
 }

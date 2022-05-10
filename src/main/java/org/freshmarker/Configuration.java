@@ -17,6 +17,7 @@ import java.util.function.Function;
 import org.freshmarker.core.BaseEnvironment;
 import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
 import org.freshmarker.core.TemplateSource;
@@ -59,7 +60,7 @@ public final class Configuration {
 
   public Configuration() {
     locale = Locale.getDefault();
-    templateLoader = name -> {throw new IllegalArgumentException("no template loader configured");};
+    templateLoader = name -> {throw new ProcessException("no template loader configured");};
 
     mapper.put(String.class, o -> new TemplateString((String) o));
     mapper.put(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));

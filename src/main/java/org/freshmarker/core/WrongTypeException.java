@@ -12,4 +12,7 @@ public class WrongTypeException extends ProcessException {
     super(message, node);
   }
 
+  public WrongTypeException(String message, Node node, Throwable cause) {
+    super(message, node, cause);
+  }
 }

@@ -64,7 +64,7 @@ public class BaseEnvironment implements Environment {
     if (!o.getClass().isPrimitive() && !o.getClass().getName().startsWith("java")) {
       return new TemplateBean(beanProvider.provide(o, this));
     }
-    throw new IllegalArgumentException("unsupported data type: " + o.getClass());
+    throw new UnsupportedDataTypeException("unsupported data type: " + o.getClass());
   }
 
   @Override
