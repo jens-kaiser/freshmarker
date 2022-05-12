@@ -9,7 +9,9 @@ import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
+import ftl.ast.OutputFormatBlock;
 import ftl.ast.Root;
+import ftl.ast.STRING_LITERAL;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
@@ -18,6 +20,7 @@ import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.ListFragment;
+import org.freshmarker.core.fragment.OutputFormatFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.model.TemplateMarkup;
@@ -125,6 +128,15 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     TemplateObject expression = ftl.getChild(5).accept(interpolationBuilder, null);
 
     input.addFragment(new SettingFragment(identifier.getImage(), expression));
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(OutputFormatBlock ftl, BlockFragment input) {
+    STRING_LITERAL format = (STRING_LITERAL) ftl.getChild(3);
+    BlockFragment block = ftl.getChild(5).accept(this, new BlockFragment());
+    String image = format.getImage();
+    input.addFragment(new OutputFormatFragment(block, image.substring(1, image.length() -1)));
     return input;
   }
 }

@@ -336,6 +336,8 @@ TOKEN :
     <BLANK : "\n" | "\r" | "\t" | " "> : FTL_EXPRESSION
     |
     <CLOSE_TAG : (<BLANK>)* (">" | "]") > : TEMPLATE_TEXT
+    |
+    <OUTPUT_FORMAT : "outputformat">
 ;
 
 <FTL_DIRECTIVE, FTL_EXPRESSION> TOKEN :
@@ -489,7 +491,6 @@ Stop #StopInstruction :
     LooseTagEnd
 ;
 
-
 Compress #CompressBlock : 
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <COMPRESS><CLOSE_TAG>
@@ -533,6 +534,16 @@ EscapeBlock :
     <CLOSE_TAG>
     Block
     DirectiveEnd("escape")
+;
+
+OutputFormatBlock :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <OUTPUT_FORMAT>
+    <BLANK>
+    <STRING_LITERAL>
+    <CLOSE_TAG>
+    Block
+    DirectiveEnd("outputformat")
 ;
 
 Include #IncludeInstruction :
@@ -793,7 +804,8 @@ TopLevelDirective #void :
      SCAN 2 NoEscapeBlock |
      SCAN 2 Visit |
      SCAN 2 Recurse |
-     SCAN 2 FallBack
+     SCAN 2 FallBack |
+     SCAN 2 OutputFormatBlock
    )
 ;
 
@@ -997,6 +1009,15 @@ INJECT SettingInstruction :
       return (O)visitor.visit(this, input);
    }
 }
+
+INJECT OutputFormatBlock :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
 
 INJECT Expression :
   import org.freshmarker.core.ftl.ExpressionVisitor;

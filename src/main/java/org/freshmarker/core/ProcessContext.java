@@ -8,8 +8,11 @@ import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.StringFormatter;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.core.output.UndefinedOutputFormat;
 
 public class ProcessContext {
+
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
   private Environment environment;
@@ -17,17 +20,19 @@ public class ProcessContext {
   private final Map<Object, Map<Object, Object>> stores = new HashMap<>();
   private final Map<BuiltInKey, BuiltIn> builtIns;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
+  private final Map<String, OutputFormat> outputs;
 
   public ProcessContext(Environment environment, Writer writer, Map<BuiltInKey, BuiltIn> builtIns,
-      Map<Class<? extends TemplateObject>, Formatter> formatter) {
+      Map<Class<? extends TemplateObject>, Formatter> formatter, Map<String, OutputFormat> outputs) {
     this.environment = environment;
     this.writer = writer;
     this.builtIns = builtIns;
     this.formatter = formatter;
+    this.outputs = outputs;
   }
 
   public ProcessContext(Environment environment, ProcessContext parent) {
-    this(environment, parent.getWriter(), parent.builtIns, parent.formatter);
+    this(environment, parent.getWriter(), parent.builtIns, parent.formatter, parent.outputs);
   }
 
   public Environment getEnvironment() {
@@ -56,5 +61,9 @@ public class ProcessContext {
 
   public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
     return formatter.getOrDefault(type, STRING_FORMATTER);
+  }
+
+  public OutputFormat getOutputFormat(String name) {
+    return outputs.getOrDefault(name, UndefinedOutputFormat.INSTANCE);
   }
 }

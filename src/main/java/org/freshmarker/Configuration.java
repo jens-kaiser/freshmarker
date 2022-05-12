@@ -129,7 +129,7 @@ public final class Configuration {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
     BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, mapper, locale, format);
     BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
-    return new ProcessContext(environment, writer, builtIns, formatter);
+    return new ProcessContext(environment, writer, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
   }
 
   public void setLocale(Locale locale) {
