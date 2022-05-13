@@ -51,6 +51,13 @@ class OutputFormatTest {
     assertEquals("test: <>\"'&lt;&gt;&quot;&#39;<>\"'", template.process(Map.of("content", "<>\"'")));
   }
 
+  @Test
+  void noEscHtmlOutputFormatBlock() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${content}<#outputformat 'HTML'>${content?noEsc}</#outputformat>${content}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: <>\"'<>\"'<>\"'", template.process(Map.of("content", "<>\"'")));
+  }
+
   @ParameterizedTest
   @CsvSource({
       "HTML,<>\"',test: <>\"'",

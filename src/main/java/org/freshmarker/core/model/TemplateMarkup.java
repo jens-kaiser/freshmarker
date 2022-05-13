@@ -31,18 +31,20 @@ public class TemplateMarkup implements TemplateObject {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    TemplateObject templateObject = content;
-    TemplateObject previous;
-    do {
-      previous = templateObject;
-      templateObject = templateObject.evaluateToObject(context);
-    } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup()
-        && previous != templateObject);
+    TemplateObject templateObject = getTemplateObject(context);
     if (templateObject.isMarkup()) {
       return templateObject.evaluate(context, TemplateString.class);
     }
     Environment environment = context.getEnvironment();
     String result = context.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale());
     return outputFormat.escape(environment, result);
+  }
+
+  private TemplateObject getTemplateObject(ProcessContext context) {
+    TemplateObject templateObject = content;
+    do {
+      templateObject = templateObject.evaluateToObject(context);
+    } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
+    return templateObject;
   }
 }
