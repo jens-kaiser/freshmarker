@@ -9,7 +9,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -42,6 +44,10 @@ import org.freshmarker.core.output.NoEscapeFormat;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.UndefinedOutputFormat;
 import org.freshmarker.core.plugin.PluginProvider;
+import org.freshmarker.core.providers.BeanTemplateObjectProvider;
+import org.freshmarker.core.providers.CompoundTemplateObjectProvider;
+import org.freshmarker.core.providers.MappingTemplateObjectProvider;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +56,13 @@ public final class Configuration {
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
   private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-  private final Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
   private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
   private final Map<String, OutputFormat> outputs = new HashMap<>();
+  private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
   private TemplateLoader templateLoader;
   private Locale locale;
+  private final List<TemplateObjectProvider> providers = new ArrayList<>(
+      List.of(mappingTemplateObjectProvider, new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
 
   private String outputFormat = "undefined";
 
@@ -62,6 +70,7 @@ public final class Configuration {
     locale = Locale.getDefault();
     templateLoader = name -> {throw new ProcessException("no template loader configured");};
 
+    Map<Class<?>, Function<Object, TemplateObject>> mapper = mappingTemplateObjectProvider.getMapper();
     mapper.put(String.class, o -> new TemplateString((String) o));
     mapper.put(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));
     mapper.put(Integer.class, o -> new TemplateNumber(new IntegerNumber((Integer) o)));
@@ -91,12 +100,13 @@ public final class Configuration {
   }
 
   public void registerPlugin(PluginProvider provider) {
-    logger.info("register builtins: {}", provider.getClass().getSimpleName());
+    logger.info("register plugin: {}", provider.getClass().getSimpleName());
     provider.registerBuildIn(builtIns);
-    logger.info("register formatter: {}", provider.getClass().getSimpleName());
     provider.registerFormatter(formatter);
-    logger.info("register mapper: {}", provider.getClass().getSimpleName());
-    provider.registerMapper(mapper);
+    provider.registerMapper(mappingTemplateObjectProvider.getMapper());
+    List<TemplateObjectProvider> list = new ArrayList<>();
+    provider.registerTemplateObjectProvider(list);
+    providers.addAll(providers.size() - 2, list);
   }
 
   public void registerTemplateLoader(TemplateLoader templateLoader) {
@@ -127,7 +137,7 @@ public final class Configuration {
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, mapper, locale, format);
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format);
     BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
     return new ProcessContext(environment, writer, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
   }

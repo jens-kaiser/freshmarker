@@ -3,30 +3,25 @@ package org.freshmarker.core;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Function;
-import org.freshmarker.core.model.TemplateBean;
-import org.freshmarker.core.model.TemplateBeanProvider;
-import org.freshmarker.core.model.TemplateListSequence;
+import java.util.Objects;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplateEnum;
 import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 
 public class BaseEnvironment implements Environment {
 
-  private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
   private final Map<String, Object> dataModel;
-  private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
   private final Locale locale;
-
+  private final List<TemplateObjectProvider> providers;
   private final OutputFormat outputFormat;
 
-  public BaseEnvironment(Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
-      Locale locale, OutputFormat outputFormat) {
+  public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Locale locale,
+      OutputFormat outputFormat) {
     this.dataModel = dataModel;
-    this.mapper = mapper;
     this.locale = locale;
     this.outputFormat = outputFormat;
+    this.providers = providers;
   }
 
   @Override
@@ -46,25 +41,8 @@ public class BaseEnvironment implements Environment {
     if (o instanceof TemplateObject) {
       return (TemplateObject) o;
     }
-    if (o instanceof List) {
-      List<Object> values = (List<Object>) o;
-      return new TemplateListSequence(values);
-    }
-    if (o instanceof Map) {
-      Map<String, Object> values = (Map<String, Object>) o;
-      return new TemplateBean(values);
-    }
-    if (o instanceof Enum<?>) {
-      return new TemplateEnum<>((Enum)o);
-    }
-    Function<Object, TemplateObject> mapping = mapper.get(o.getClass());
-    if (mapping != null) {
-      return mapping.apply(o);
-    }
-    if (!o.getClass().isPrimitive() && !o.getClass().getName().startsWith("java")) {
-      return new TemplateBean(beanProvider.provide(o, this));
-    }
-    throw new UnsupportedDataTypeException("unsupported data type: " + o.getClass());
+    return providers.stream().map(p -> p.provide(this, o)).filter(Objects::nonNull)
+        .findFirst().orElseThrow(() -> new UnsupportedDataTypeException("unsupported data type: " + o.getClass()));
   }
 
   @Override

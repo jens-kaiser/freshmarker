@@ -1,11 +1,13 @@
 package org.freshmarker.core.plugin;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 
 public interface PluginProvider {
 
@@ -18,6 +20,11 @@ public interface PluginProvider {
   }
 
   default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
+
+  }
+
+
+  default void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {
 
   }
 }
