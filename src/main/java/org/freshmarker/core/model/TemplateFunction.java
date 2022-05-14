@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.UnsupportedBuiltInException;
 
 public class TemplateFunction implements TemplateExpression {
 
@@ -18,6 +19,14 @@ public class TemplateFunction implements TemplateExpression {
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateObject result = expression.evaluateToObject(context);
-    return context.getBuiltIn(result.getClass(), name).apply(result, parameter, context);
+    try {
+      return context.getBuiltIn(result.getClass(), name).apply(result, parameter, context);
+    } catch (UnsupportedBuiltInException e) {
+      if (!(result instanceof TemplateLooper)) {
+        throw e;
+      }
+      result = result.evaluateToObject(context);
+      return context.getBuiltIn(result.getClass(), name).apply(result, parameter, context);
+    }
   }
 }
