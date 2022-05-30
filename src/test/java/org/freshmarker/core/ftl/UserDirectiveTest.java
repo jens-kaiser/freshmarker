@@ -33,16 +33,28 @@ class UserDirectiveTest {
       "test: <@log level='info' message='test'/>, test: <!-- test -->",
       "test: <@log level='warn' message='test'/>, test: <!-- TEST -->",
   })
-  void logDirective(String templateSource, String expected) throws ParseException, IOException {
+  void logDirectiveXML(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
     Template template = configuration.getTemplate("test");
     assertEquals(expected, template.process(Map.of()));
   }
 
   @ParameterizedTest
+  @CsvSource({
+      "test: <@log level='info' message='test'/>, test: #////#test#////#",
+      "test: <@log level='warn' message='test'/>, test: #////#TEST#////#",
+  })
+  void logDirectiveADOC(String templateSource, String expected) throws ParseException, IOException {
+    templateLoader.putTemplate("test", templateSource);
+    configuration.setOutputFormat("ADOC");
+    Template template = configuration.getTemplate("test");
+    assertEquals(expected.replace('#', '\n'), template.process(Map.of()));
+  }
+
+  @ParameterizedTest
   @CsvSource(value = {
       "test: <@oneliner>1; 2; 3;</@oneliner>,test: 1;  2;  3; ",
-      "test: <@oneliner><#list values as v>${v};</#list></@oneliner>,test: 1; 2; 3; ",
+      "test: <@oneliner><#list values as v>${v}<#if v?has_next>;</#if></#list></@oneliner>,test: 1; 2; 3",
   }, ignoreLeadingAndTrailingWhitespace=false)
   void oneLiner(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource.replace(";", ";\n"));
