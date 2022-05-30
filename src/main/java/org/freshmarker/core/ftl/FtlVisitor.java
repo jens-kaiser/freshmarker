@@ -11,15 +11,19 @@ import ftl.ast.FTLHeader;
 import ftl.ast.IfStatement;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
+import ftl.ast.NamedArgsList;
 import ftl.ast.OutputFormatBlock;
 import ftl.ast.Root;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
+import ftl.ast.UserDirective;
 
 public interface FtlVisitor<I, O> {
-  default O handleWithException(Object expression) {
-    throw new UnsupportedOperationException("unsupported: " + expression.getClass());
+
+  default O handleWithException(Node node) {
+    throw new UnsupportedOperationException(
+        "unsupported: " + node.getClass().getSimpleName() + " at " + node.getLocation() + " '" + node.getSource() + "'");
   }
 
   default O visit(Node ftl, I input) {
@@ -78,7 +82,19 @@ public interface FtlVisitor<I, O> {
     return handleWithException(ftl);
   }
 
-  default O visit (SettingInstruction ftl, I input) { return handleWithException(ftl); }
+  default O visit(SettingInstruction ftl, I input) {
+    return handleWithException(ftl);
+  }
 
-  default O visit (OutputFormatBlock ftl, I input) { return handleWithException(ftl); }
+  default O visit(OutputFormatBlock ftl, I input) {
+    return handleWithException(ftl);
+  }
+
+  default O visit(UserDirective ftl, I input) {
+    return handleWithException(ftl);
+  }
+
+  default O visit(NamedArgsList ftl, I input) {
+    return handleWithException(ftl);
+  }
 }

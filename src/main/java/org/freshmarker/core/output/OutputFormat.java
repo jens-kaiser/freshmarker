@@ -6,4 +6,9 @@ import org.freshmarker.core.model.primitive.TemplateString;
 public interface OutputFormat {
 
   TemplateString escape(Environment environment, String value);
+
+  default TemplateString comment(Environment environment, String value) {
+    return new TemplateString("");
+  }
+
 }

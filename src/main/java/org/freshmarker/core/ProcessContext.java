@@ -44,7 +44,7 @@ public class ProcessContext {
   }
 
   public Writer getWriter() {
-    return writer;
+    return environment.getWriter();
   }
 
   public Map<Object, Object> getStore(Object key) {

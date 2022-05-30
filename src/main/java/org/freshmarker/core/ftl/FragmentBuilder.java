@@ -15,6 +15,10 @@ import ftl.ast.STRING_LITERAL;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
+import ftl.ast.UserDirective;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.IfFragment;
@@ -23,6 +27,7 @@ import org.freshmarker.core.fragment.ListFragment;
 import org.freshmarker.core.fragment.OutputFormatFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
+import org.freshmarker.core.fragment.UserDirectiveFragment;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
@@ -133,7 +138,27 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     STRING_LITERAL format = (STRING_LITERAL) ftl.getChild(3);
     BlockFragment block = ftl.getChild(5).accept(this, new BlockFragment());
     String image = format.getImage();
-    input.addFragment(new OutputFormatFragment(block, image.substring(1, image.length() -1)));
+    input.addFragment(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(UserDirective ftl, BlockFragment input) {
+    logger.debug("user directive: {}", ftl.children().stream().map(Object::getClass).collect(Collectors.toList()));
+    IDENTIFIER directive = (IDENTIFIER) ftl.getChild(1);
+    HashMap<String, TemplateObject> namedArgs = new HashMap<>();
+    ftl.getChild(2).accept(new NamedArgsBuilder(), namedArgs);
+    logger.debug("user directive: {} {}", directive, namedArgs);
+    Node node =  ftl.children().stream().skip(2)
+        .dropWhile(
+            n -> n.getTokenType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains(n.getTokenType()))
+        .skip(1).findFirst().orElse(null);
+    BlockFragment body = null;
+    if (node != null) {
+      body = node.accept(this, new BlockFragment());
+    }
+    logger.debug("user directive: {} {}", node, body);
+    input.addFragment(new UserDirectiveFragment(directive.getImage(), namedArgs, body));
     return input;
   }
 }

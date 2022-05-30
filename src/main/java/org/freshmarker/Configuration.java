@@ -25,6 +25,9 @@ import org.freshmarker.core.TemplateNotFoundException;
 import org.freshmarker.core.TemplateSource;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.directive.LoggingDirective;
+import org.freshmarker.core.directive.OneLinerDirective;
+import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -63,6 +66,7 @@ public final class Configuration {
   private Locale locale;
   private final List<TemplateObjectProvider> providers = new ArrayList<>(
       List.of(mappingTemplateObjectProvider, new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
+  private final Map<String, UserDirective> userDirectives = new HashMap<>();
 
   private String outputFormat = "undefined";
 
@@ -93,6 +97,12 @@ public final class Configuration {
     outputs.put("CSS", NoEscapeFormat.INSTANCE);
 
     registerPlugins();
+    registerUserDirectives();
+  }
+
+  private void registerUserDirectives() {
+    userDirectives.put("log", new LoggingDirective());
+    userDirectives.put("oneliner", new OneLinerDirective());
   }
 
   private void registerPlugins() {
@@ -137,7 +147,7 @@ public final class Configuration {
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format);
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, writer);
     BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
     return new ProcessContext(environment, writer, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
   }
