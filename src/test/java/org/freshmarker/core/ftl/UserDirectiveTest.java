@@ -10,6 +10,8 @@ import java.util.Map;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.StringTemplateLoader;
+import org.freshmarker.core.directive.LoggingDirective;
+import org.freshmarker.core.directive.OneLinerDirective;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,6 +37,7 @@ class UserDirectiveTest {
   })
   void logDirectiveXML(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
+    configuration.registerUserDirective( "log", new LoggingDirective());
     Template template = configuration.getTemplate("test");
     assertEquals(expected, template.process(Map.of()));
   }
@@ -46,6 +49,7 @@ class UserDirectiveTest {
   })
   void logDirectiveADOC(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
+    configuration.registerUserDirective( "log", new LoggingDirective());
     configuration.setOutputFormat("ADOC");
     Template template = configuration.getTemplate("test");
     assertEquals(expected.replace('#', '\n'), template.process(Map.of()));
@@ -58,6 +62,7 @@ class UserDirectiveTest {
   }, ignoreLeadingAndTrailingWhitespace=false)
   void oneLiner(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource.replace(";", ";\n"));
+    configuration.registerUserDirective( "oneliner", new OneLinerDirective());
     Template template = configuration.getTemplate("test");
     assertEquals(expected, template.process(Map.of("values", List.of(1,2,3))));
   }

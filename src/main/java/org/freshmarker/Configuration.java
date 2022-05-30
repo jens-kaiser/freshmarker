@@ -99,12 +99,10 @@ public final class Configuration {
     outputs.put("ADOC", AsciiDocOutputFormat.INSTANCE);
 
     registerPlugins();
-    registerUserDirectives();
   }
 
-  private void registerUserDirectives() {
-    userDirectives.put("log", new LoggingDirective());
-    userDirectives.put("oneliner", new OneLinerDirective());
+  public void registerUserDirective(String name, UserDirective directive) {
+    userDirectives.put(name, directive);
   }
 
   private void registerPlugins() {
@@ -119,6 +117,9 @@ public final class Configuration {
     List<TemplateObjectProvider> list = new ArrayList<>();
     provider.registerTemplateObjectProvider(list);
     providers.addAll(providers.size() - 2, list);
+    Map<String, UserDirective> additionalDirectives = new HashMap<>();
+    provider.registerUserDirective(additionalDirectives);
+    userDirectives.putAll(additionalDirectives);
   }
 
   public void registerTemplateLoader(TemplateLoader templateLoader) {
