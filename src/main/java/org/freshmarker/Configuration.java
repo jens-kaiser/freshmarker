@@ -42,6 +42,7 @@ import org.freshmarker.core.model.number.ShortNumber;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.output.AsciiDocOutputFormat;
 import org.freshmarker.core.output.HtmlOutputFormat;
 import org.freshmarker.core.output.NoEscapeFormat;
 import org.freshmarker.core.output.OutputFormat;
@@ -95,6 +96,7 @@ public final class Configuration {
     outputs.put("JavaScript", NoEscapeFormat.INSTANCE);
     outputs.put("JSON", NoEscapeFormat.INSTANCE);
     outputs.put("CSS", NoEscapeFormat.INSTANCE);
+    outputs.put("ADOC", AsciiDocOutputFormat.INSTANCE);
 
     registerPlugins();
     registerUserDirectives();
