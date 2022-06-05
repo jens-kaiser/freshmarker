@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.DelegatingOutputFormat;
 import org.freshmarker.core.output.OutputFormat;
@@ -45,6 +46,9 @@ public class TemplateMarkup implements TemplateObject {
     do {
       templateObject = templateObject.evaluateToObject(context);
     } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
+    if (templateObject == TemplateNull.NULL) {
+      throw new ProcessException("null");
+    }
     return templateObject;
   }
 }

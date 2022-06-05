@@ -113,7 +113,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
       Node child = expression.getChild(3);
     if (child instanceof PositionalArgsList) {
-      child.accept(new ParameterListBuilder(), parameter);
+      child.accept(new PositionalArgsListBuilder(), parameter);
     } else {
       parameter.add(child.accept(this, null));
     }

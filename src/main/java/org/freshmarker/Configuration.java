@@ -25,8 +25,6 @@ import org.freshmarker.core.TemplateNotFoundException;
 import org.freshmarker.core.TemplateSource;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.directive.LoggingDirective;
-import org.freshmarker.core.directive.OneLinerDirective;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -143,7 +141,7 @@ public final class Configuration {
       if (ftlHeader != null) {
         logger.info("ftl header: {}", ftlHeader.getLocation());
       }
-      root.accept(new FragmentBuilder(), template.getRootFragment());
+      root.accept(new FragmentBuilder(template), template.getRootFragment());
       return template;
     }
   }
