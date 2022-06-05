@@ -1,7 +1,6 @@
-package org.freshmarker.core.ftl;
+package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.fragment.Fragment;
 
 public class NestedInstructionFragment implements Fragment {
 

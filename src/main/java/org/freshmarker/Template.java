@@ -8,13 +8,9 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.WrapperEnvironment;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.BlockFragment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public final class Template {
-
-  private final Logger log = LoggerFactory.getLogger(Template.class);
 
   private final BlockFragment rootFragment = new BlockFragment();
   private final Configuration configuration;
@@ -30,12 +26,7 @@ public final class Template {
       @Override
       public UserDirective getDirective(String name) {
         UserDirective userDirective = userDirectives.get(name);
-        if (userDirective != null) {
-        log.info("get user directive from template: {}", name);
-          return userDirective;
-        }
-        log.info("get user directive from environment: {}", name);
-        return super.getDirective(name);
+        return userDirective != null ? userDirective : super.getDirective(name);
       }
     });
     rootFragment.process(context);

@@ -67,4 +67,12 @@ class MacroTest {
     Template template = configuration.getTemplate("test");
     assertEquals("1 test\n2 test\n3 test\n", template.process(Map.of()));
   }
+
+  @Test
+  void generateMacroWithDefaultValue() throws IOException, ParseException {
+    templateLoader.putTemplate("test",
+        "<#macro entry count=4><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry>test</@entry>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("1 test\n2 test\n3 test\n4 test\n", template.process(Map.of()));
+  }
 }

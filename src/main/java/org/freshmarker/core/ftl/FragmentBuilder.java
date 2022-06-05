@@ -32,6 +32,7 @@ import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.ListFragment;
+import org.freshmarker.core.fragment.NestedInstructionFragment;
 import org.freshmarker.core.fragment.OutputFormatFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
