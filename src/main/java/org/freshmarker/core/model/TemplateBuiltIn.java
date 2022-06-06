@@ -4,13 +4,13 @@ import java.util.List;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.UnsupportedBuiltInException;
 
-public class TemplateFunction implements TemplateExpression {
+public class TemplateBuiltIn implements TemplateExpression {
 
   private final String name;
   private final TemplateObject expression;
   private final List<TemplateObject> parameter;
 
-  public TemplateFunction(String name, TemplateObject expression, List<TemplateObject> parameter) {
+  public TemplateBuiltIn(String name, TemplateObject expression, List<TemplateObject> parameter) {
     this.name = name;
     this.expression = expression;
     this.parameter = parameter;

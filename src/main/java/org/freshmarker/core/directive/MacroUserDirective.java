@@ -10,6 +10,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrapperEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
+import org.freshmarker.core.fragment.TemplateReturnException;
 import org.freshmarker.core.ftl.ParameterHolder;
 import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
@@ -43,7 +44,10 @@ public class MacroUserDirective implements UserDirective {
         return Optional.ofNullable(body);
       }
     });
-    block.process(context);
+    try {
+      block.process(context);
+    } catch (TemplateReturnException ignored) {
+    }
   }
 
   private Map<String, TemplateObject> evaluateParameterValues(Map<String, TemplateObject> args) {

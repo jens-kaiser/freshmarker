@@ -16,23 +16,21 @@ public class ProcessContext {
   private static final StringFormatter STRING_FORMATTER = new StringFormatter();
 
   private Environment environment;
-  private final Writer writer;
   private final Map<Object, Map<Object, Object>> stores = new HashMap<>();
   private final Map<BuiltInKey, BuiltIn> builtIns;
   private final Map<Class<? extends TemplateObject>, Formatter> formatter;
   private final Map<String, OutputFormat> outputs;
 
-  public ProcessContext(Environment environment, Writer writer, Map<BuiltInKey, BuiltIn> builtIns,
+  public ProcessContext(Environment environment, Map<BuiltInKey, BuiltIn> builtIns,
       Map<Class<? extends TemplateObject>, Formatter> formatter, Map<String, OutputFormat> outputs) {
     this.environment = environment;
-    this.writer = writer;
     this.builtIns = builtIns;
     this.formatter = formatter;
     this.outputs = outputs;
   }
 
   public ProcessContext(Environment environment, ProcessContext parent) {
-    this(environment, parent.getWriter(), parent.builtIns, parent.formatter, parent.outputs);
+    this(environment, parent.builtIns, parent.formatter, parent.outputs);
   }
 
   public Environment getEnvironment() {

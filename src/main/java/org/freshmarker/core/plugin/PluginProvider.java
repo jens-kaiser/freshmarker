@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Function;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
@@ -29,6 +30,10 @@ public interface PluginProvider {
   }
 
   default void registerUserDirective(Map<String, UserDirective> directives) {
+
+  }
+
+  default void registerFunction(Map<String, TemplateFunction> functions) {
 
   }
 }

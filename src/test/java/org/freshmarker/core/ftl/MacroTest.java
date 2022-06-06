@@ -61,6 +61,14 @@ class MacroTest {
   }
 
   @Test
+  void generateMacroWithReturn() throws IOException, ParseException {
+    templateLoader.putTemplate("test",
+        "<#macro test>ABC<#return/>DEF</#macro><@test/>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("ABC", template.process(Map.of()));
+  }
+
+  @Test
   void generateComplexMacro() throws IOException, ParseException {
     templateLoader.putTemplate("test",
         "<#macro entry count><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry count=3>test</@entry>");

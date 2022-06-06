@@ -15,6 +15,7 @@ import ftl.ast.MacroDefinition;
 import ftl.ast.NamedArgsList;
 import ftl.ast.NestedInstruction;
 import ftl.ast.OutputFormatBlock;
+import ftl.ast.ReturnInstruction;
 import ftl.ast.Root;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
@@ -103,4 +104,6 @@ public interface FtlVisitor<I, O> {
   default O visit(MacroDefinition ftl, I input) { return handleWithException(ftl); }
 
   default O visit(NestedInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(ReturnInstruction ftl, I input) { return handleWithException(ftl); }
 }

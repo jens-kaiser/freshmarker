@@ -8,6 +8,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.WrapperEnvironment;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.BlockFragment;
+import org.freshmarker.core.fragment.TemplateReturnException;
 
 
 public final class Template {
@@ -29,7 +30,10 @@ public final class Template {
         return userDirective != null ? userDirective : super.getDirective(name);
       }
     });
-    rootFragment.process(context);
+    try {
+      rootFragment.process(context);
+    } catch (TemplateReturnException ignored) {
+    }
   }
 
   public String process(Map<String, Object> dataModel) {

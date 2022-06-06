@@ -12,6 +12,7 @@ import ftl.ast.ListInstruction;
 import ftl.ast.MacroDefinition;
 import ftl.ast.NestedInstruction;
 import ftl.ast.OutputFormatBlock;
+import ftl.ast.ReturnInstruction;
 import ftl.ast.Root;
 import ftl.ast.STRING_LITERAL;
 import ftl.ast.SettingInstruction;
@@ -34,6 +35,7 @@ import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.ListFragment;
 import org.freshmarker.core.fragment.NestedInstructionFragment;
 import org.freshmarker.core.fragment.OutputFormatFragment;
+import org.freshmarker.core.fragment.ReturnInstructionFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
@@ -222,6 +224,12 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   @Override
   public BlockFragment visit(NestedInstruction ftl, BlockFragment input) {
     input.addFragment(new NestedInstructionFragment());
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(ReturnInstruction ftl, BlockFragment input) {
+    input.addFragment(new ReturnInstructionFragment());
     return input;
   }
 }
