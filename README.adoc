@@ -29,10 +29,11 @@
 
 | If/ElseIf/Else |
 | Swich/Case/Default | Without Break/Fallthrough
-| Interpolation | Dot-Key, Dynamic-Key, Built-ins, Exists
+| Interpolation | Dot-Key, Dynamic-Key, Built-ins, Method Call, Exists
 | Interpolation: Dynamic Key| Sequence, Range
 | Interpolation: Dot Key | With Identifier on Beans and Maps
 | Interpolation: List | Sequence, Range (not right unlimited)
+| Macro | With Return and Nested, but without Nested Loop Variables
 |===
 
 == Built-ins
