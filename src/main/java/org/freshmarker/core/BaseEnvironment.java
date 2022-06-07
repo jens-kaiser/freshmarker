@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
@@ -19,16 +20,18 @@ public class BaseEnvironment implements Environment {
   private final List<TemplateObjectProvider> providers;
   private final OutputFormat outputFormat;
   private final Map<String, UserDirective> userDirectives;
+  private final Map<String, TemplateFunction> functions;
   private final Writer writer;
 
   public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Locale locale,
-      OutputFormat outputFormat,
-      Map<String, UserDirective> userDirectives, Writer writer) {
+      OutputFormat outputFormat, Map<String, UserDirective> userDirectives,
+      Map<String, TemplateFunction> functions, Writer writer) {
     this.dataModel = dataModel;
     this.locale = locale;
     this.outputFormat = outputFormat;
     this.providers = providers;
     this.userDirectives = userDirectives;
+    this.functions = functions;
     this.writer = writer;
   }
 
@@ -66,6 +69,12 @@ public class BaseEnvironment implements Environment {
   public UserDirective getDirective(String name) {
     return Optional.ofNullable(userDirectives.get(name))
         .orElseThrow(() -> new ProcessException("unknown directive: " + name));
+  }
+
+  @Override
+  public TemplateFunction getFunction(String name) {
+    return Optional.ofNullable(functions.get(name))
+        .orElseThrow(() -> new ProcessException("unknown function: " + name));
   }
 
   @Override

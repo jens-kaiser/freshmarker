@@ -3,6 +3,7 @@ package org.freshmarker.core;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Optional;
+import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
@@ -19,6 +20,8 @@ public interface Environment {
   OutputFormat getOutputFormat();
 
   UserDirective getDirective(String name);
+
+  TemplateFunction getFunction(String name);
 
   Writer getWriter();
 

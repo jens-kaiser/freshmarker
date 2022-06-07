@@ -3,6 +3,7 @@ package org.freshmarker.core;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Optional;
+import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
@@ -34,6 +35,11 @@ public abstract class WrapperEnvironment implements Environment {
   @Override
   public UserDirective getDirective(String name) {
     return wrapped.getDirective(name);
+  }
+
+  @Override
+  public TemplateFunction getFunction(String name) {
+    return wrapped.getFunction(name);
   }
 
   @Override

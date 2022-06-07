@@ -25,6 +25,7 @@ import org.freshmarker.core.TemplateNotFoundException;
 import org.freshmarker.core.TemplateSource;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -66,6 +67,7 @@ public final class Configuration {
   private final List<TemplateObjectProvider> providers = new ArrayList<>(
       List.of(mappingTemplateObjectProvider, new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
   private final Map<String, UserDirective> userDirectives = new HashMap<>();
+  private final Map<String, TemplateFunction> functions = new HashMap<>();
 
   private String outputFormat = "undefined";
 
@@ -103,6 +105,10 @@ public final class Configuration {
     userDirectives.put(name, directive);
   }
 
+  public void registerFunction(String name, TemplateFunction function) {
+    functions.put(name, function);
+  }
+
   private void registerPlugins() {
     ServiceLoader.load(PluginProvider.class).forEach(this::registerPlugin);
   }
@@ -118,6 +124,9 @@ public final class Configuration {
     Map<String, UserDirective> additionalDirectives = new HashMap<>();
     provider.registerUserDirective(additionalDirectives);
     userDirectives.putAll(additionalDirectives);
+    Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
+    provider.registerFunction(additionalFunctions);
+    functions.putAll(additionalFunctions);
   }
 
   public void registerTemplateLoader(TemplateLoader templateLoader) {
@@ -148,9 +157,10 @@ public final class Configuration {
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, writer);
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives,
+        functions, writer);
     BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
-    return new ProcessContext(environment, writer, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
+    return new ProcessContext(environment, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
   }
 
   public void setLocale(Locale locale) {
