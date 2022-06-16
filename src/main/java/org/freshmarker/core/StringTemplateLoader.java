@@ -23,14 +23,21 @@ public class StringTemplateLoader implements TemplateLoader {
   private static class StringTemplateSource implements TemplateSource {
 
     final String content;
+    final String name;
 
     public StringTemplateSource(String name, String content) {
+      this.name = name;
       this.content = content;
     }
 
     @Override
     public Reader getReader(Charset encoding) {
       return new StringReader(content);
+    }
+
+    @Override
+    public String getName() {
+      return name;
     }
   }
 }

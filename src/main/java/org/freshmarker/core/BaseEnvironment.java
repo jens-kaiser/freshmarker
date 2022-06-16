@@ -1,31 +1,38 @@
 package org.freshmarker.core;
 
+import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Function;
-import org.freshmarker.core.model.TemplateBean;
-import org.freshmarker.core.model.TemplateBeanProvider;
-import org.freshmarker.core.model.TemplateListSequence;
+import java.util.Objects;
+import java.util.Optional;
+import org.freshmarker.core.directive.TemplateFunction;
+import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 
 public class BaseEnvironment implements Environment {
 
-  private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
   private final Map<String, Object> dataModel;
-  private final Map<Class<?>, Function<Object, TemplateObject>> mapper;
   private final Locale locale;
-
+  private final List<TemplateObjectProvider> providers;
   private final OutputFormat outputFormat;
+  private final Map<String, UserDirective> userDirectives;
+  private final Map<String, TemplateFunction> functions;
+  private final Writer writer;
 
-  public BaseEnvironment(Map<String, Object> dataModel, Map<Class<?>, Function<Object, TemplateObject>> mapper,
-      Locale locale, OutputFormat outputFormat) {
+  public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Locale locale,
+      OutputFormat outputFormat, Map<String, UserDirective> userDirectives,
+      Map<String, TemplateFunction> functions, Writer writer) {
     this.dataModel = dataModel;
-    this.mapper = mapper;
     this.locale = locale;
     this.outputFormat = outputFormat;
+    this.providers = providers;
+    this.userDirectives = userDirectives;
+    this.functions = functions;
+    this.writer = writer;
   }
 
   @Override
@@ -45,22 +52,8 @@ public class BaseEnvironment implements Environment {
     if (o instanceof TemplateObject) {
       return (TemplateObject) o;
     }
-    if (o instanceof List) {
-      List<Object> values = (List<Object>) o;
-      return new TemplateListSequence(values);
-    }
-    if (o instanceof Map) {
-      Map<String, Object> values = (Map<String, Object>) o;
-      return new TemplateBean(values);
-    }
-    Function<Object, TemplateObject> mapping = mapper.get(o.getClass());
-    if (mapping != null) {
-      return mapping.apply(o);
-    }
-    if (!o.getClass().isPrimitive() && !o.getClass().getName().startsWith("java")) {
-      return new TemplateBean(beanProvider.provide(o, this));
-    }
-    throw new IllegalArgumentException("unsupported data type: " + o.getClass());
+    return providers.stream().map(p -> p.provide(this, o)).filter(Objects::nonNull)
+        .findFirst().orElseThrow(() -> new UnsupportedDataTypeException("unsupported data type: " + o.getClass()));
   }
 
   @Override
@@ -70,5 +63,22 @@ public class BaseEnvironment implements Environment {
 
   public OutputFormat getOutputFormat() {
     return outputFormat;
+  }
+
+  @Override
+  public UserDirective getDirective(String name) {
+    return Optional.ofNullable(userDirectives.get(name))
+        .orElseThrow(() -> new ProcessException("unknown directive: " + name));
+  }
+
+  @Override
+  public TemplateFunction getFunction(String name) {
+    return Optional.ofNullable(functions.get(name))
+        .orElseThrow(() -> new ProcessException("unknown function: " + name));
+  }
+
+  @Override
+  public Writer getWriter() {
+    return writer;
   }
 }

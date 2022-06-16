@@ -3,7 +3,7 @@ package org.freshmarker.core.fragment;
 import java.util.Locale;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.SettingEnvironent;
+import org.freshmarker.core.SettingEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
@@ -24,15 +24,14 @@ public class SettingFragment implements Fragment {
   @Override
   public void process(ProcessContext context) {
     TemplateObject setting = expression.evaluateToObject(context);
-    switch (name) {
-      case "locale":
-        String value = setting.evaluate(context, TemplateString.class).getValue();
-        Locale locale = Locale.forLanguageTag(value);
-        if (locale == null) {
-          throw new ProcessException("unknown locale: " + value);
-        }
-        context.setEnvironment(new SettingEnvironent(context.getEnvironment(), locale));
-        logger.info("new locale: {}", locale);
+    if ("locale".equals(name)) {
+      String value = setting.evaluate(context, TemplateString.class).getValue();
+      Locale locale = Locale.forLanguageTag(value);
+      if (locale == null) {
+        throw new ProcessException("unknown locale: " + value);
+      }
+      context.setEnvironment(new SettingEnvironment(context.getEnvironment(), locale, null));
+      logger.info("new locale: {}", locale);
     }
   }
 }

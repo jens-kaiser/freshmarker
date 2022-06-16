@@ -10,6 +10,10 @@ public class TemplateVariable implements TemplateExpression {
     this.name = name;
   }
 
+  public String getName() {
+    return name;
+  }
+
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
     return context.getEnvironment().getValue(name);

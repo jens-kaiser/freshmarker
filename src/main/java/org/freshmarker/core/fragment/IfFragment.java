@@ -3,6 +3,8 @@ package org.freshmarker.core.fragment;
 import java.util.ArrayList;
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.UnsupportedBuiltInException;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public class IfFragment implements Fragment {
@@ -15,8 +17,17 @@ public class IfFragment implements Fragment {
 
   @Override
   public void process(ProcessContext context) {
-    fragments.stream()
-        .filter(f -> f.getConditional().evaluateToObject(context) == TemplateBoolean.TRUE)
+    fragments.stream().filter(f -> filterByConditional(context, f))
         .findFirst().ifPresent(f -> f.process(context));
+  }
+
+  private boolean filterByConditional(ProcessContext context, ConditionalFragment conditionalFragment) {
+    try {
+      return conditionalFragment.getConditional().evaluate(context, TemplateBoolean.class) == TemplateBoolean.TRUE;
+    } catch (UnsupportedBuiltInException e) {
+      throw new UnsupportedBuiltInException(e.getMessage(), conditionalFragment.getNode(), e);
+    } catch (WrongTypeException e) {
+      throw new WrongTypeException(e.getMessage(), conditionalFragment.getNode(), e);
+    }
   }
 }
