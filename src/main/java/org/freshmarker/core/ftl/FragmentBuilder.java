@@ -114,8 +114,16 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     logger.debug("list: {}", ftl);
     TemplateObject list = ftl.getChild(3).accept(interpolationBuilder, null);
     IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(5);
-    BlockFragment block = ftl.getChild(7).accept(this, new BlockFragment());
-    input.addFragment(new ListFragment(list, identifier.getImage(), block));
+    BlockFragment block;
+    String looper;
+    if (ftl.getChild(6).getTokenType() == TokenType.COMMA) {
+      looper = ((IDENTIFIER) ftl.getChild(7)).getImage();
+      block = ftl.getChild(9).accept(this, new BlockFragment());
+    } else {
+      looper = null;
+      block = ftl.getChild(7).accept(this, new BlockFragment());
+    }
+    input.addFragment(new ListFragment(list, identifier.getImage(), looper, block));
     return input;
   }
 

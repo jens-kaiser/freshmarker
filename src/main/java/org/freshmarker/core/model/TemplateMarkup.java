@@ -30,10 +30,7 @@ public class TemplateMarkup implements TemplateObject {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    TemplateObject templateObject = content;
-    do {
-      templateObject = templateObject.evaluateToObject(context);
-    } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
+    TemplateObject templateObject = content.evaluateToObject(context);
     if (templateObject.isMarkup()) {
       return templateObject.evaluate(context, TemplateString.class);
     }

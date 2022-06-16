@@ -665,6 +665,7 @@ List #ListInstruction :
     Expression
     <AS>
     <IDENTIFIER>
+    [ <COMMA> <IDENTIFIER> ]
     <CLOSE_TAG>
     Block
     DirectiveEnd("list")

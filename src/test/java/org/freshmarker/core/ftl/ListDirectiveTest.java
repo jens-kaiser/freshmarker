@@ -27,7 +27,7 @@ class ListDirectiveTest {
   @Test
   void loopIndex() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s>${s?index}. ${s}\n</#list>");
+        "test: <#list sequence as s,l>${l?index}. ${s}\n</#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: 0. a\n1. b\n2. c\n3. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
   }
@@ -35,7 +35,7 @@ class ListDirectiveTest {
   @Test
   void hasNext() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s>${s?has_next} </#list>");
+        "test: <#list sequence as s,l>${l?has_next} </#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: yes no ", template.process(Map.of("sequence", List.of("a", "b"))));
   }
@@ -43,7 +43,7 @@ class ListDirectiveTest {
   @Test
   void itemParity() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s>${s?item_parity} </#list>");
+        "test: <#list sequence as s,l>${l?item_parity} </#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: odd even odd even ", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
   }
@@ -51,7 +51,7 @@ class ListDirectiveTest {
   @Test
   void itemParityCap() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s>${s?item_parity_cap} </#list>");
+        "test: <#list sequence as s,l>${l?item_parity_cap} </#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: Odd Even Odd Even ", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
   }
@@ -59,14 +59,14 @@ class ListDirectiveTest {
   @Test
   void itemCycle() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s>${s?item_cycle(1, 2, 3)} </#list>");
+        "test: <#list sequence as s,l>${l?item_cycle(1, 2, 3)} </#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: 1 2 3 1 ", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
   }
 
   @Test
   void firstLast() throws ParseException, IOException {
-    templateLoader.putTemplate("test", "test: <#list sequence as s>(${s?is_first}.${s?is_last})</#list>");
+    templateLoader.putTemplate("test", "test: <#list sequence as s,l>(${l?is_first}.${l?is_last})</#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: (yes.no)(no.no)(no.no)(no.yes)",
         template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
