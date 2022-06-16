@@ -70,3 +70,13 @@
 | c | Enum | Enum name
 | ordinal | Enum | Enum ordinal
 |===
+
+== Built-in Variables
+
+|===
+| Name | Description | Type
+|lang | the language part of the current locale | String
+|country | the country part of the current locale | String
+|locale | the current locale | String
+|now | the current date-time | DateTime
+|===

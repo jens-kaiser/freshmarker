@@ -24,6 +24,8 @@ public class TemplateBuiltInVariable implements TemplateExpression {
         return new TemplateLocalDateTime(LocalDateTime.now());
       case "locale":
         return new TemplateString(context.getEnvironment().getLocale().toString());
+      case "country":
+        return new TemplateString(context.getEnvironment().getLocale().getCountry());
       case "lang":
         return new TemplateString(context.getEnvironment().getLocale().getLanguage());
       default:

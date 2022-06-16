@@ -31,6 +31,7 @@ class BuiltInVariableTest {
   @CsvSource({
       "test: ${.lang},test: de",
       "test: ${.locale},test: de_DE",
+      "test: ${.country},test: DE",
   })
   void locale(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
