@@ -7,9 +7,11 @@ import java.nio.charset.Charset;
 
 public interface TemplateSource extends Closeable {
 
-  Reader getReader( Charset charset);
+  Reader getReader( Charset charset) throws TemplateNotFoundException;
 
   default void close() throws IOException {
 
   }
+
+  String getName();
 }

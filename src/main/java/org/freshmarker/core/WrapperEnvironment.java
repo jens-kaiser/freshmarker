@@ -1,6 +1,11 @@
 package org.freshmarker.core;
 
+import java.io.Writer;
 import java.util.Locale;
+import java.util.Optional;
+import org.freshmarker.core.directive.TemplateFunction;
+import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 
@@ -25,5 +30,30 @@ public abstract class WrapperEnvironment implements Environment {
   @Override
   public OutputFormat getOutputFormat() {
     return wrapped.getOutputFormat();
+  }
+
+  @Override
+  public UserDirective getDirective(String name) {
+    return wrapped.getDirective(name);
+  }
+
+  @Override
+  public TemplateFunction getFunction(String name) {
+    return wrapped.getFunction(name);
+  }
+
+  @Override
+  public Writer getWriter() {
+    return wrapped.getWriter();
+  }
+
+  @Override
+  public TemplateObject getValue(String name) {
+    return wrapped.getValue(name);
+  }
+
+  @Override
+  public Optional<Fragment> getNestedContent() {
+    return wrapped.getNestedContent();
   }
 }

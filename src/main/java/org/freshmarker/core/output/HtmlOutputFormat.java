@@ -40,4 +40,9 @@ public class HtmlOutputFormat implements OutputFormat {
     }
     return new TemplateString(builder.toString());
   }
+
+  @Override
+  public TemplateString comment(Environment environment, String value) {
+    return new TemplateString("<!-- " + value + " -->");
+  }
 }

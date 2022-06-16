@@ -24,6 +24,7 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
@@ -335,7 +336,9 @@ TOKEN :
     |
     <BLANK : "\n" | "\r" | "\t" | " "> : FTL_EXPRESSION
     |
-    <CLOSE_TAG : (<BLANK>)* (">" | "]") > : TEMPLATE_TEXT
+    <CLOSE_TAG : (<BLANK>)* (">" | "]" ) > : TEMPLATE_TEXT
+    |
+    <OUTPUT_FORMAT : "outputformat">
 ;
 
 <FTL_DIRECTIVE, FTL_EXPRESSION> TOKEN :
@@ -489,7 +492,6 @@ Stop #StopInstruction :
     LooseTagEnd
 ;
 
-
 Compress #CompressBlock : 
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <COMPRESS><CLOSE_TAG>
@@ -533,6 +535,16 @@ EscapeBlock :
     <CLOSE_TAG>
     Block
     DirectiveEnd("escape")
+;
+
+OutputFormatBlock :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <OUTPUT_FORMAT>
+    <BLANK>
+    <STRING_LITERAL>
+    <CLOSE_TAG>
+    Block
+    DirectiveEnd("outputformat")
 ;
 
 Include #IncludeInstruction :
@@ -793,7 +805,8 @@ TopLevelDirective #void :
      SCAN 2 NoEscapeBlock |
      SCAN 2 Visit |
      SCAN 2 Recurse |
-     SCAN 2 FallBack
+     SCAN 2 FallBack |
+     SCAN 2 OutputFormatBlock
    )
 ;
 
@@ -816,7 +829,7 @@ UserDirective :
        <CLOSE_EMPTY_TAG>
        |
        (
-          <CLOSE_TAG>
+          ( <CLOSE_TAG> | <GT> )
           Block
           (<END_USER_DIRECTIVE1>|<END_USER_DIRECTIVE2>)
        )
@@ -991,6 +1004,55 @@ INJECT ListInstruction :
 }
 
 INJECT SettingInstruction :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
+INJECT OutputFormatBlock :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
+
+INJECT UserDirective :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
+INJECT NamedArgsList :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
+INJECT MacroDefinition :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
+INJECT NestedInstruction :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
+INJECT ReturnInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
    public <I, O> O accept(FtlVisitor visitor, I input) {
@@ -1222,3 +1284,10 @@ INJECT PositionalArgsList :
    }
 }
 
+INJECT ParameterList :
+  import org.freshmarker.core.ftl.ExpressionVisitor;
+{
+   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}

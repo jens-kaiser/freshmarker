@@ -1,12 +1,14 @@
 package org.freshmarker.core.ftl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import ftl.ParseException;
 import java.io.IOException;
 import java.util.Map;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.StringTemplateLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,5 +49,13 @@ class BeanInterpolationTest {
     templateLoader.putTemplate("test", "${bean.name} ${bean.active}");
     Template template = configuration.getTemplate("test");
     assertEquals("Bean Name yes", template.process(Map.of("bean", new TestBean("Bean Name", true))));
+  }
+
+  @Test
+  void generateWithUnknownBeanAttribute() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "${bean.value} ${bean.active}");
+    Template template = configuration.getTemplate("test");
+    Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
+    assertThrows(ProcessException.class, () -> template.process(data));
   }
 }
