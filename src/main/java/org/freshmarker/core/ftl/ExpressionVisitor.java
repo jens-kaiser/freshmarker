@@ -23,6 +23,7 @@ import ftl.ast.NotExpression;
 import ftl.ast.NullLiteral;
 import ftl.ast.NumberLiteral;
 import ftl.ast.OrExpression;
+import ftl.ast.ParameterList;
 import ftl.ast.Parenthesis;
 import ftl.ast.PositionalArgsList;
 import ftl.ast.PrimaryExpression;
@@ -156,4 +157,6 @@ public interface ExpressionVisitor<I, O> {
   default O visit(PositionalArgsList expression, I input)  {
     return handleWithException(expression);
   }
+
+  default O visit(ParameterList expression, I input) { return handleWithException(expression); }
 }

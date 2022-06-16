@@ -9,7 +9,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -17,10 +19,14 @@ import java.util.function.Function;
 import org.freshmarker.core.BaseEnvironment;
 import org.freshmarker.core.BufferedEnvironment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.TemplateLoader;
 import org.freshmarker.core.TemplateNotFoundException;
+import org.freshmarker.core.TemplateSource;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.directive.TemplateFunction;
+import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -35,11 +41,16 @@ import org.freshmarker.core.model.number.ShortNumber;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.output.AsciiDocOutputFormat;
 import org.freshmarker.core.output.HtmlOutputFormat;
 import org.freshmarker.core.output.NoEscapeFormat;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.UndefinedOutputFormat;
 import org.freshmarker.core.plugin.PluginProvider;
+import org.freshmarker.core.providers.BeanTemplateObjectProvider;
+import org.freshmarker.core.providers.CompoundTemplateObjectProvider;
+import org.freshmarker.core.providers.MappingTemplateObjectProvider;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,18 +59,23 @@ public final class Configuration {
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
   private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-  private final Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
   private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
   private final Map<String, OutputFormat> outputs = new HashMap<>();
+  private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
   private TemplateLoader templateLoader;
   private Locale locale;
+  private final List<TemplateObjectProvider> providers = new ArrayList<>(
+      List.of(mappingTemplateObjectProvider, new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
+  private final Map<String, UserDirective> userDirectives = new HashMap<>();
+  private final Map<String, TemplateFunction> functions = new HashMap<>();
 
   private String outputFormat = "undefined";
 
   public Configuration() {
     locale = Locale.getDefault();
-    templateLoader = name -> {throw new IllegalArgumentException("no template loader configured");};
+    templateLoader = name -> {throw new ProcessException("no template loader configured");};
 
+    Map<Class<?>, Function<Object, TemplateObject>> mapper = mappingTemplateObjectProvider.getMapper();
     mapper.put(String.class, o -> new TemplateString((String) o));
     mapper.put(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));
     mapper.put(Integer.class, o -> new TemplateNumber(new IntegerNumber((Integer) o)));
@@ -80,8 +96,17 @@ public final class Configuration {
     outputs.put("JavaScript", NoEscapeFormat.INSTANCE);
     outputs.put("JSON", NoEscapeFormat.INSTANCE);
     outputs.put("CSS", NoEscapeFormat.INSTANCE);
+    outputs.put("ADOC", AsciiDocOutputFormat.INSTANCE);
 
     registerPlugins();
+  }
+
+  public void registerUserDirective(String name, UserDirective directive) {
+    userDirectives.put(name, directive);
+  }
+
+  public void registerFunction(String name, TemplateFunction function) {
+    functions.put(name, function);
   }
 
   private void registerPlugins() {
@@ -89,12 +114,19 @@ public final class Configuration {
   }
 
   public void registerPlugin(PluginProvider provider) {
-    logger.info("register builtins: {}", provider.getClass().getSimpleName());
+    logger.info("register plugin: {}", provider.getClass().getSimpleName());
     provider.registerBuildIn(builtIns);
-    logger.info("register formatter: {}", provider.getClass().getSimpleName());
     provider.registerFormatter(formatter);
-    logger.info("register mapper: {}", provider.getClass().getSimpleName());
-    provider.registerMapper(mapper);
+    provider.registerMapper(mappingTemplateObjectProvider.getMapper());
+    List<TemplateObjectProvider> list = new ArrayList<>();
+    provider.registerTemplateObjectProvider(list);
+    providers.addAll(providers.size() - 2, list);
+    Map<String, UserDirective> additionalDirectives = new HashMap<>();
+    provider.registerUserDirective(additionalDirectives);
+    userDirectives.putAll(additionalDirectives);
+    Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
+    provider.registerFunction(additionalFunctions);
+    functions.putAll(additionalFunctions);
   }
 
   public void registerTemplateLoader(TemplateLoader templateLoader) {
@@ -106,9 +138,11 @@ public final class Configuration {
   }
 
   public Template getTemplate(String name, Charset charset) throws ParseException, IOException {
-    try (Reader reader = templateLoader.getTemplate(name).map(t -> t.getReader(charset))
-        .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name))) {
+    try (TemplateSource templateSource = templateLoader.getTemplate(name)
+        .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name));
+        Reader reader = templateSource.getReader(charset)) {
       FTLParser parser = new FTLParser(reader);
+      parser.setInputSource(templateSource.getName());
       parser.Root();
       Root root = (Root) parser.rootNode();
       Template template = new Template(this);
@@ -116,16 +150,17 @@ public final class Configuration {
       if (ftlHeader != null) {
         logger.info("ftl header: {}", ftlHeader.getLocation());
       }
-      root.accept(new FragmentBuilder(), template.getRootFragment());
+      root.accept(new FragmentBuilder(template), template.getRootFragment());
       return template;
     }
   }
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, mapper, locale, format);
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives,
+        functions, writer);
     BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
-    return new ProcessContext(environment, writer, builtIns, formatter);
+    return new ProcessContext(environment, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
   }
 
   public void setLocale(Locale locale) {

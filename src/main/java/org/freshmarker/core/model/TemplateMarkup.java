@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.DelegatingOutputFormat;
 import org.freshmarker.core.output.OutputFormat;
@@ -14,6 +15,7 @@ public class TemplateMarkup implements TemplateObject {
   public TemplateMarkup(TemplateObject content) {
     this(content, DelegatingOutputFormat.INSTANCE);
   }
+
   public TemplateMarkup(TemplateObject content, OutputFormat outputFormat) {
     if (content.isMarkup()) {
       this.content = ((TemplateMarkup) content).content;
@@ -30,12 +32,23 @@ public class TemplateMarkup implements TemplateObject {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    TemplateObject templateObject = content.evaluateToObject(context);
+    TemplateObject templateObject = getTemplateObject(context);
     if (templateObject.isMarkup()) {
       return templateObject.evaluate(context, TemplateString.class);
     }
     Environment environment = context.getEnvironment();
     String result = context.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale());
     return outputFormat.escape(environment, result);
+  }
+
+  private TemplateObject getTemplateObject(ProcessContext context) {
+    TemplateObject templateObject = content;
+    do {
+      templateObject = templateObject.evaluateToObject(context);
+    } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
+    if (templateObject == TemplateNull.NULL) {
+      throw new ProcessException("null");
+    }
+    return templateObject;
   }
 }

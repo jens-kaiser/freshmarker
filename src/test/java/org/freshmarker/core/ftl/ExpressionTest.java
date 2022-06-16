@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ftl.ParseException;
 import java.io.IOException;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
@@ -84,5 +85,24 @@ class ExpressionTest {
     templateLoader.putTemplate("test", "test: ${(" + expression + ")?c}");
     Template template = configuration.getTemplate("test");
     assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+      "4 == (test?ordinal), true",
+      "4 != (test?ordinal), false",
+      "4 <= (test?ordinal), true",
+      "3 < (test?ordinal), true",
+      "4 >= (test?ordinal), true",
+      "5 > (test?ordinal), true",
+      "4 lte (test?ordinal), true",
+      "3 lt (test?ordinal), true",
+      "4 gte (test?ordinal), true",
+      "5 gt (test?ordinal), true"
+  })
+  void relationWithEnum(String expression, boolean result) throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${(" + expression + ")?c}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: " + result, template.process(Map.of("test", StandardOpenOption.CREATE)));
   }
 }

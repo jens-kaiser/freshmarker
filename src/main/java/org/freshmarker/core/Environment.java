@@ -1,6 +1,11 @@
 package org.freshmarker.core;
 
+import java.io.Writer;
 import java.util.Locale;
+import java.util.Optional;
+import org.freshmarker.core.directive.TemplateFunction;
+import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 
@@ -13,4 +18,14 @@ public interface Environment {
   Locale getLocale();
 
   OutputFormat getOutputFormat();
+
+  UserDirective getDirective(String name);
+
+  TemplateFunction getFunction(String name);
+
+  Writer getWriter();
+
+  default Optional<Fragment> getNestedContent() {
+    return Optional.empty();
+  }
 }
