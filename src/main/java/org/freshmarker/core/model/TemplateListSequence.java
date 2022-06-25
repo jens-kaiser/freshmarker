@@ -3,7 +3,6 @@ package org.freshmarker.core.model;
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 
 public class TemplateListSequence implements TemplateSequence {
 
@@ -25,6 +24,10 @@ public class TemplateListSequence implements TemplateSequence {
 
   public TemplateListSequence slice(int min, int max) {
     return new TemplateListSequence(sequence.subList(min, max));
+  }
+
+  public TemplateListSequence slice(int min) {
+    return new TemplateListSequence(sequence.subList(min, sequence.size()));
   }
 
   @Override

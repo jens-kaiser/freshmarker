@@ -38,7 +38,7 @@ public class TemplateLooper implements TemplateObject {
   }
 
   public TemplateBoolean hasNext() {
-    return isLast().not();
+    return size == index + 1 ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
   }
 
   public void increment() {

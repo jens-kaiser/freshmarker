@@ -73,4 +73,15 @@ class StringInterpolationTest {
     Template template = configuration.getTemplate("test");
     assertEquals(expected, template.process(Map.of("text", "text")));
   }
+
+  @ParameterizedTest
+  @CsvSource({
+      "test: ${text[2..3]},test: CD",
+      "test: ${text[2..]},test: CDEF",
+  })
+  void interpolationSlices(String templateSource, String expected) throws ParseException, IOException {
+    templateLoader.putTemplate("test", templateSource);
+    Template template = configuration.getTemplate("test");
+    assertEquals(expected, template.process(Map.of("text", "ABCDEF")));
+  }
 }
