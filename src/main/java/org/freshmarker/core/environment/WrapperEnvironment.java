@@ -1,8 +1,9 @@
-package org.freshmarker.core;
+package org.freshmarker.core.environment;
 
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Optional;
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.Fragment;

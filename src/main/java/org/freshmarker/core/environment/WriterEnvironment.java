@@ -1,6 +1,7 @@
-package org.freshmarker.core;
+package org.freshmarker.core.environment;
 
 import java.io.Writer;
+import org.freshmarker.core.Environment;
 
 public class WriterEnvironment extends WrapperEnvironment {
 

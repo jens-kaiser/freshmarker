@@ -5,7 +5,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.WrapperEnvironment;
+import org.freshmarker.core.environment.WrapperEnvironment;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.TemplateReturnException;

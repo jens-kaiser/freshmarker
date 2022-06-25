@@ -2,7 +2,7 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.SettingEnvironment;
+import org.freshmarker.core.environment.SettingEnvironment;
 
 public class OutputFormatFragment implements Fragment {
 

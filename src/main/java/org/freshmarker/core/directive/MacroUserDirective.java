@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.WrapperEnvironment;
+import org.freshmarker.core.environment.WrapperEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;

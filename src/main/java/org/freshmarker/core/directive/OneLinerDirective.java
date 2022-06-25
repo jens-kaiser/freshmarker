@@ -4,9 +4,10 @@ import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.WriterEnvironment;
+import org.freshmarker.core.environment.WriterEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.model.TemplateObject;
 
@@ -40,6 +41,9 @@ public class OneLinerDirective implements UserDirective {
       throw new ProcessException("one-liner body missing");
     }
     FlattenFilterWriter writer = new FlattenFilterWriter(context.getWriter());
-    body.process(new ProcessContext(new WriterEnvironment(writer, context.getEnvironment()), context));
+    Environment environment = context.getEnvironment();
+    context.setEnvironment(new WriterEnvironment(writer, context.getEnvironment()));
+    body.process(context);
+    context.setEnvironment(environment);
   }
 }

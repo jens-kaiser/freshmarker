@@ -1,5 +1,6 @@
-package org.freshmarker.core;
+package org.freshmarker.core.environment;
 
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 

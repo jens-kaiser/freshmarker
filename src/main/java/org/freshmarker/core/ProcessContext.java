@@ -29,10 +29,6 @@ public class ProcessContext {
     this.outputs = outputs;
   }
 
-  public ProcessContext(Environment environment, ProcessContext parent) {
-    this(environment, parent.builtIns, parent.formatter, parent.outputs);
-  }
-
   public Environment getEnvironment() {
     return environment;
   }

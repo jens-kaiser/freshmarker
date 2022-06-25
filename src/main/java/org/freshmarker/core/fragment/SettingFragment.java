@@ -3,7 +3,7 @@ package org.freshmarker.core.fragment;
 import java.util.Locale;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.SettingEnvironment;
+import org.freshmarker.core.environment.SettingEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
