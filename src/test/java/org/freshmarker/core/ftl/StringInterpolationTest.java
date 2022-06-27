@@ -61,6 +61,12 @@ class StringInterpolationTest {
     assertEquals("test: 8 4", template.process(Map.of("text", "  text  ")));
   }
 
+  @Test
+  void interpolationDynamicKey() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${text[2]} ${text[3]}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: x t", template.process(Map.of("text", "text")));
+  }
   @ParameterizedTest
   @CsvSource({
       "test: ${text?contains('ex')},test: yes",

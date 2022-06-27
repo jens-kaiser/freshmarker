@@ -25,10 +25,10 @@ public class TemplateSlice implements TemplateObject {
     } else if (value instanceof TemplateListSequence) {
       return handleSequence(context, templateRange, (TemplateListSequence) value);
     }
-    throw new UnsupportedDataTypeException("sliceing not supported on " + value.getClass().getSimpleName());
+    throw new UnsupportedDataTypeException("slicing not supported on " + value.getClass().getSimpleName());
   }
 
-  private TemplateObject handleSequence(ProcessContext context, TemplateRange templateRange,
+  private TemplateListSequence handleSequence(ProcessContext context, TemplateRange templateRange,
       TemplateListSequence templateListSequence) {
     TemplateNumber lower = templateRange.getLower().evaluate(context, TemplateNumber.class);
     int min = lower.getValue().getNumber().intValue();

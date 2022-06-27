@@ -28,6 +28,8 @@ public class TemplateBuiltInVariable implements TemplateExpression {
         return new TemplateString(context.getEnvironment().getLocale().getCountry());
       case "lang":
         return new TemplateString(context.getEnvironment().getLocale().getLanguage());
+      case "version":
+        return new TemplateString("1.0");
       default:
         throw new IllegalStateException("Unexpected value: " + name);
     }

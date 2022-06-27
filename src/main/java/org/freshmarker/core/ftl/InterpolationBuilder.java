@@ -78,6 +78,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   }
 
   @Override
+  public TemplateObject visit(DefaultToExpression expression, Object input) {
+    TemplateObject base = expression.children().get(0).accept(this, input);
+    TemplateObject defaultTo = expression.children().get(2).accept(this, input);
+    return new TemplateDefault(base, defaultTo);
+  }
+
+  @Override
   public TemplateObject visit(PrimaryExpression expression, Object input) {
     logger.info("visit primary expression: {}", expression);
     return handlePrimaryAndBase(input, expression.children());

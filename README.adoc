@@ -29,10 +29,11 @@
 
 | If/ElseIf/Else |
 | Swich/Case/Default | Without Break/Fallthrough
-| Interpolation | Dot-Key, Dynamic-Key, Built-ins, Method Call, Exists
-| Interpolation: Dynamic Key| Sequence, Range
+| Interpolation | Dot-Key, Dynamic-Key, Built-ins, Method Call, Exists, Default value operator
+| Interpolation: Dynamic Key| Sequence, Range, String
 | Interpolation: Dot Key | With Identifier on Beans and Maps
 | Interpolation: List | Sequence, Range (not right unlimited)
+| Interpolation: Default value operator | No implicit (missing) value
 | Macro | With Return and Nested, but without Nested Loop Variables
 |===
 

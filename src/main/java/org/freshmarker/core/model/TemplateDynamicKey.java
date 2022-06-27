@@ -3,6 +3,7 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
+import org.freshmarker.core.model.primitive.TemplateString;
 
 public class TemplateDynamicKey implements TemplateExpression {
 
@@ -18,6 +19,11 @@ public class TemplateDynamicKey implements TemplateExpression {
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
     TemplateObject templateObject = sequence.evaluateToObject(context);
+    int beginIndex = index.getValue().getNumber().intValue();
+    if (templateObject instanceof TemplateString) {
+      String value = ((TemplateString) templateObject).getValue();
+      return new  TemplateString(value.substring(beginIndex, beginIndex + 1));
+    }
     if (templateObject instanceof TemplateRange) {
       TemplateRange range = (TemplateRange) templateObject;
       TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
@@ -32,6 +38,6 @@ public class TemplateDynamicKey implements TemplateExpression {
       throw new ProcessException("index out of range: " + result.getValue() + " " + upper.getValue());
     }
     TemplateListSequence list = (TemplateListSequence) templateObject;
-    return list.get(context, index.getValue().getNumber().intValue());
+    return list.get(context, beginIndex);
   }
 }
