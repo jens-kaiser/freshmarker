@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.Node;
 import ftl.Token;
+import ftl.ast.Assignment;
 import ftl.ast.Block;
 import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
@@ -21,6 +22,7 @@ import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
 import ftl.ast.UserDirective;
+import ftl.ast.VarInstruction;
 
 public interface FtlVisitor<I, O> {
 
@@ -106,4 +108,8 @@ public interface FtlVisitor<I, O> {
   default O visit(NestedInstruction ftl, I input) { return handleWithException(ftl); }
 
   default O visit(ReturnInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(Assignment ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(VarInstruction ftl, I input) { return handleWithException(ftl); }
 }

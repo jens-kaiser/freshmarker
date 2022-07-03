@@ -19,10 +19,12 @@ import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
 import ftl.ast.UserDirective;
+import ftl.ast.VarInstruction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
@@ -39,6 +41,7 @@ import org.freshmarker.core.fragment.ReturnInstructionFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
+import org.freshmarker.core.fragment.VariableFragment;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
@@ -219,6 +222,31 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
       return image.substring(1, image.length() - 1);
     }
     throw new ParsingException("missing identifier or string literal at " + node.getChild(6).getLocation());
+  }
+
+
+  @Override
+  public BlockFragment visit(Assignment ftl, BlockFragment input) {
+    TokenType type = ftl.getChild(1).getTokenType();
+    if (type != TokenType.SET) {
+      throw new ParsingException("assignment type " + type + " not supported");
+    }
+    String name = getName(ftl.getChild(3));
+    if (ftl.getChildCount() != 7) {
+      throw new ParsingException("only one assignment supported");
+    }
+    input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), true));
+    return input;
+  }
+
+  @Override
+  public BlockFragment visit(VarInstruction ftl, BlockFragment input) {
+    String name = getName(ftl.getChild(3));
+    if (ftl.getChildCount() != 7) {
+      throw new ParsingException("only one assignment supported");
+    }
+    input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), false));
+    return input;
   }
 
   @Override

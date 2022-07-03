@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
+import org.freshmarker.core.Environment;
 import java.util.function.Function;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.BufferedEnvironment;
@@ -27,6 +28,7 @@ import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -159,7 +161,7 @@ public final class Configuration {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
     BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives,
         functions, writer);
-    BufferedEnvironment environment = new BufferedEnvironment(baseEnvironment);
+    Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
     return new ProcessContext(environment, Map.copyOf(builtIns), Map.copyOf(formatter), Map.copyOf(outputs));
   }
 

@@ -4,12 +4,12 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 
-public class ListEnvironent extends WrapperEnvironment {
+public class ListEnvironment extends WrapperEnvironment {
 
   private final TemplateLooper looper;
   private final String identifier;
 
-  public ListEnvironent(Environment wrapped, String identifier, TemplateLooper looper) {
+  public ListEnvironment(Environment wrapped, String identifier, TemplateLooper looper) {
     super(wrapped);
     this.looper = looper;
     this.identifier = identifier;

@@ -57,4 +57,9 @@ public abstract class WrapperEnvironment implements Environment {
   public Optional<Fragment> getNestedContent() {
     return wrapped.getNestedContent();
   }
+
+  @Override
+  public void setVariable(String name, TemplateObject value) {
+    wrapped.setVariable(name, value);
+  }
 }

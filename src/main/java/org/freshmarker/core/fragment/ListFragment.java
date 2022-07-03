@@ -1,9 +1,10 @@
 package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.environment.ListEnvironent;
+import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
@@ -28,7 +29,7 @@ public class ListFragment implements Fragment {
         .orElseThrow(() -> new ProcessException("no number"));
     TemplateLooper looper = new TemplateLooper(sequence, size);
     Environment environment = context.getEnvironment();
-    ListEnvironent listEnvironment = new ListEnvironent(context.getEnvironment(), identifier, looper);
+    Environment listEnvironment = new VariableEnvironment(new ListEnvironment(context.getEnvironment(), identifier, looper));
     context.setEnvironment(listEnvironment);
     for (int i = 0; i < size; i++) {
       block.process(context);

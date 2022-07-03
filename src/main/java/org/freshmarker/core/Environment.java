@@ -28,4 +28,8 @@ public interface Environment {
   default Optional<Fragment> getNestedContent() {
     return Optional.empty();
   }
+
+  default void setVariable(String name, TemplateObject value) {
+    throw new UnsupportedOperationException();
+  }
 }
