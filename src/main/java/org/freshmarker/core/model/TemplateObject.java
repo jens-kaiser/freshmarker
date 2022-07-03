@@ -21,7 +21,7 @@ public interface TemplateObject {
     return false;
   }
 
-  default Optional<TemplatePrimitive<?>> asPrimitive() {
+  default <T> Optional<TemplatePrimitive<T>> asPrimitive() {
     return Optional.empty();
   }
 
