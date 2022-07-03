@@ -8,6 +8,7 @@ import ftl.ast.BaseExpression;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
+import ftl.ast.DefaultToExpression;
 import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
 import ftl.ast.EqualityExpression;
