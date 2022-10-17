@@ -16,8 +16,9 @@
 |Duration|`Duration`|TemplateDuration
 |Period|`Period`|TemplatePeriod
 |Sequence|Lists|TemplateListSequence
-|Map|Maps|TemplateMap
-|Bean|Beans|TemplateBeanMap
+|Map|Maps|TemplateBean
+|Bean|Beans|TemplateBean
+|Record|Records|TemplateBean
 |Enum|Enums|TemplateEnum
 |Null|-|TemplateNull
 |===
