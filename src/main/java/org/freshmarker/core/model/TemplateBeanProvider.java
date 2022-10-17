@@ -24,68 +24,8 @@ public class TemplateBeanProvider {
   private final Map<Class<?>, Map<String, Method>> beans = new HashMap<>();
 
   public Map<String, Object> provide(Object bean, Environment environment) {
-    final Map<String, Method> methods = getMethodMap(bean);
-    return new AbstractMap<>() {
-      @Override
-      public Set<Entry<String, Object>> entrySet() {
-        return new AbstractSet<>() {
-          @Override
-          public int size() {
-            return methods.size();
-          }
-
-          @Override
-          public Iterator<Entry<String, Object>> iterator() {
-            return new Iterator<>() {
-              private final Iterator<Entry<String, Method>> iter = methods.entrySet().iterator();
-
-              @Override
-              public void remove() {
-                throw new UnsupportedOperationException("remove() is not supported");
-              }
-
-              @Override
-              public Entry<String, Object> next() {
-                final Entry<String, Method> e = iter.next();
-                final Method m = e.getValue();
-
-                return new Entry<>() {
-                  @Override
-                  public String getKey() {
-                    return e.getKey();
-                  }
-
-                  @Override
-                  public Object getValue() {
-                    try {
-                      return environment.mapObject(m.invoke(bean));
-                    } catch (InvocationTargetException ite) {
-                      throw new IllegalArgumentException(ite.getTargetException());
-                    } catch (IllegalAccessException iae) {
-                      throw new IllegalArgumentException(iae);
-                    }
-                  }
-
-                  @Override
-                  public Object setValue(Object value) {
-                    throw new UnsupportedOperationException("setValue() is not supported");
-                  }
-                };
-              }
-
-              @Override
-              public boolean hasNext() {
-                return iter.hasNext();
-              }
-            };
-          }
-        };
-      }
-    };
-  }
-
-  private Map<String, Method> getMethodMap(Object bean) {
-    return beans.computeIfAbsent(bean.getClass(), b -> collectMethods(bean));
+    final Map<String, Method> methods = beans.computeIfAbsent(bean.getClass(), b -> collectMethods(bean));
+    return new AbstractReflectionsMap(methods, environment, bean);
   }
 
   private Map<String, Method> collectMethods(Object bean) {

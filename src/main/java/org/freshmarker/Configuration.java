@@ -52,6 +52,7 @@ import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.core.providers.BeanTemplateObjectProvider;
 import org.freshmarker.core.providers.CompoundTemplateObjectProvider;
 import org.freshmarker.core.providers.MappingTemplateObjectProvider;
+import org.freshmarker.core.providers.RecordTemplateObjectProvider;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public final class Configuration {
   private TemplateLoader templateLoader;
   private Locale locale;
   private final List<TemplateObjectProvider> providers = new ArrayList<>(
-      List.of(mappingTemplateObjectProvider, new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
+      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
   private final Map<String, UserDirective> userDirectives = new HashMap<>();
   private final Map<String, TemplateFunction> functions = new HashMap<>();
 
