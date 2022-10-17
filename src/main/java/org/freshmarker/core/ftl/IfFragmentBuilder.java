@@ -13,11 +13,12 @@ import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
-  private final InterpolationBuilder interpolationBuilder = new InterpolationBuilder();
+  private final InterpolationBuilder interpolationBuilder;
   private final FragmentBuilder fragmentBuilder;
 
   IfFragmentBuilder(FragmentBuilder fragmentBuilder) {
     this.fragmentBuilder = fragmentBuilder;
+    interpolationBuilder = fragmentBuilder.getInterpolationBuilder();
   }
 
   @Override

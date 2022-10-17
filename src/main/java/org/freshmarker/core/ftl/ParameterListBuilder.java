@@ -19,6 +19,12 @@ public class ParameterListBuilder implements
 
   private static final Logger log = LoggerFactory.getLogger(ParameterListBuilder.class);
 
+  private final InterpolationBuilder interpolationBuilder;
+
+  public ParameterListBuilder(InterpolationBuilder interpolationBuilder) {
+    this.interpolationBuilder = interpolationBuilder;
+  }
+
   @Override
   public List<ParameterHolder> visit(Token expression, List<ParameterHolder> input) {
     log.debug("parameters: {}", input);
@@ -48,7 +54,7 @@ public class ParameterListBuilder implements
       }
       if (children.get(index).getTokenType() == TokenType.EQUALS) {
         index++;
-        TemplateObject defaultValue = children.get(index).accept(new InterpolationBuilder(), null);
+        TemplateObject defaultValue = children.get(index).accept(interpolationBuilder, null);
         input.add(new ParameterHolder(name, defaultValue));
         index++;
       } else if (children.get(index).getTokenType() == TokenType.ELLIPSIS) {

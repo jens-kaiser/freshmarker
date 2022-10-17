@@ -17,12 +17,13 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
 
   private static final Logger logger = LoggerFactory.getLogger(SwitchFragmentBuilder.class);
 
-  private final InterpolationBuilder interpolationBuilder = new InterpolationBuilder();
+  private final InterpolationBuilder interpolationBuilder;
 
   private final FragmentBuilder fragmentBuilder;
 
   public SwitchFragmentBuilder(FragmentBuilder fragmentBuilder) {
     this.fragmentBuilder = fragmentBuilder;
+    interpolationBuilder = fragmentBuilder.getInterpolationBuilder();
   }
 
   @Override

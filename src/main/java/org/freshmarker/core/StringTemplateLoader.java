@@ -20,24 +20,11 @@ public class StringTemplateLoader implements TemplateLoader {
     cache.put(name, new StringTemplateSource(name, content));
   }
 
-  private static class StringTemplateSource implements TemplateSource {
-
-    final String content;
-    final String name;
-
-    public StringTemplateSource(String name, String content) {
-      this.name = name;
-      this.content = content;
-    }
+  private record StringTemplateSource(String name, String content) implements TemplateSource {
 
     @Override
-    public Reader getReader(Charset encoding) {
-      return new StringReader(content);
+      public Reader getReader(Charset encoding) {
+        return new StringReader(content);
+      }
     }
-
-    @Override
-    public String getName() {
-      return name;
-    }
-  }
 }

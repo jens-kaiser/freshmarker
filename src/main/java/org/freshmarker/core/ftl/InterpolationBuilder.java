@@ -26,7 +26,10 @@ import ftl.ast.UnaryPlusMinusExpression;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.freshmarker.core.InterpolationListener;
+import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltInVariable;
+import org.freshmarker.core.model.TemplateDefault;
 import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
@@ -51,6 +54,12 @@ import org.slf4j.LoggerFactory;
 public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateObject> {
 
   private static final Logger logger = LoggerFactory.getLogger(InterpolationBuilder.class);
+
+  private final InterpolationListener listener;
+
+  public InterpolationBuilder(InterpolationListener listener) {
+    this.listener = listener;
+  }
 
   @Override
   public TemplateObject visit(Token expression, Object input) {
@@ -125,7 +134,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     List<TemplateObject> parameter = new ArrayList<>();
     Node child = expression.getChild(3);
     if (child instanceof PositionalArgsList) {
-      child.accept(new PositionalArgsListBuilder(), parameter);
+      child.accept(new PositionalArgsListBuilder(listener), parameter);
     } else {
       parameter.add(child.accept(this, null));
     }
@@ -212,12 +221,16 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
   @Override
   public TemplateObject visit(NotExpression expression, Object input) {
-    return new TemplateNegative(expression.getChild(1).accept(this, null));
+    TemplateObject subExpression = expression.getChild(1).accept(this, null);
+    if (subExpression instanceof TemplateBooleanExpression) {
+      return ((TemplateBooleanExpression) subExpression).not();
+    }
+    return new TemplateNegative(subExpression);
   }
 
   @Override
   public TemplateObject visit(BuiltinVariable expression, Object input) {
-    return new TemplateBuiltInVariable( expression.getLastToken().getImage());
+    return new TemplateBuiltInVariable(expression.getLastToken().getImage());
   }
 
   @Override
@@ -231,7 +244,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   public TemplateObject visit(EqualityExpression expression, Object input) {
     TemplateObject left = expression.getChild(0).accept(this, null);
     TemplateObject right = expression.getChild(2).accept(this, null);
-    return new TemplateEquality(((Token) expression.getChild(1)).getType(), left, right);
+    TokenType equality = expression.getChild(1).getTokenType();
+    TemplateEquality result = new TemplateEquality(left, right);
+    if (equality == TokenType.NOT_EQUALS) {
+      return result.not();
+    }
+    return result;
   }
 
   @Override
@@ -239,7 +257,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     logger.debug("visit unary plus minus expression: {}", expression);
     Token token = (Token) expression.getChild(0);
     TemplateObject templateObject = expression.getChild(1).accept(this, null);
-    return token.getType() == TokenType.PLUS ? templateObject : new TemplateSign(templateObject);
+    if (token.getType() == TokenType.PLUS) {
+      return templateObject;
+    }
+    return templateObject.asNumber().<TemplateObject>map(TemplateNumber::negate)
+        .orElseGet(() -> new TemplateSign(templateObject));
   }
 
   @Override
@@ -253,7 +275,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     Node child = expression.getChild(1);
     logger.debug("child: {}", child.getClass());
     if (child instanceof PositionalArgsList) {
-      child.accept(new PositionalArgsListBuilder(), parameter);
+      child.accept(new PositionalArgsListBuilder(listener), parameter);
     } else {
       parameter.add(child.accept(this, null));
     }

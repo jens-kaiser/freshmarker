@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import org.freshmarker.core.Environment;
 import java.util.function.Function;
+import org.freshmarker.core.InterpolationListener;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.BufferedEnvironment;
 import org.freshmarker.core.ProcessContext;
@@ -71,6 +72,8 @@ public final class Configuration {
       List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
   private final Map<String, UserDirective> userDirectives = new HashMap<>();
   private final Map<String, TemplateFunction> functions = new HashMap<>();
+
+  private InterpolationListener interpolationListener;
 
   private String outputFormat = "undefined";
 
@@ -145,7 +148,7 @@ public final class Configuration {
         .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name));
         Reader reader = templateSource.getReader(charset)) {
       FTLParser parser = new FTLParser(reader);
-      parser.setInputSource(templateSource.getName());
+      parser.setInputSource(templateSource.name());
       parser.Root();
       Root root = (Root) parser.rootNode();
       Template template = new Template(this);
@@ -153,7 +156,8 @@ public final class Configuration {
       if (ftlHeader != null) {
         logger.info("ftl header: {}", ftlHeader.getLocation());
       }
-      root.accept(new FragmentBuilder(template), template.getRootFragment());
+      FragmentBuilder fragmentBuilder = new FragmentBuilder(template, interpolationListener);
+      root.accept(fragmentBuilder, template.getRootFragment());
       return template;
     }
   }
@@ -172,5 +176,9 @@ public final class Configuration {
 
   public void setOutputFormat(String outputFormat) {
     this.outputFormat = outputFormat;
+  }
+
+  public void setInterpolationListener(InterpolationListener interpolationListener) {
+    this.interpolationListener = interpolationListener;
   }
 }

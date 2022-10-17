@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import ftl.FTLConstants.TokenType;
 import ftl.Node;
 import ftl.Token;
+import ftl.ast.Assignment;
 import ftl.ast.Block;
 import ftl.ast.FTLHeader;
 import ftl.ast.IDENTIFIER;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.freshmarker.Template;
+import org.freshmarker.core.InterpolationListener;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.fragment.BlockFragment;
@@ -51,12 +53,16 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
   private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
-  private final InterpolationBuilder interpolationBuilder = new InterpolationBuilder();
+  private final InterpolationBuilder interpolationBuilder;
 
   private final Template template;
 
-  public FragmentBuilder(Template template) {
+  private final InterpolationListener listener;
+
+  public FragmentBuilder(Template template, InterpolationListener listener) {
     this.template = template;
+    this.listener = listener;
+    interpolationBuilder = new InterpolationBuilder(listener);
   }
 
   @Override
@@ -124,6 +130,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   @Override
   public BlockFragment visit(Interpolation ftl, BlockFragment input) {
     TemplateObject interpolation = ftl.getChild(1).accept(interpolationBuilder, null);
+    Optional.ofNullable(listener).ifPresent(x -> x.evaluatedInterpolation(ftl.getSource(), interpolation));
     input.addFragment(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
     return input;
   }
@@ -158,7 +165,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   public BlockFragment visit(UserDirective ftl, BlockFragment input) {
     IDENTIFIER directive = (IDENTIFIER) ftl.getChild(1);
     HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-    ftl.getChild(2).accept(new NamedArgsBuilder(), namedArgs);
+    ftl.getChild(2).accept(new NamedArgsBuilder(interpolationBuilder), namedArgs);
     logger.debug("user directive: {} {}", directive, namedArgs);
     Node node = ftl.children().stream().skip(2)
         .dropWhile(
@@ -200,7 +207,8 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     if (ftl.getChild(parameterListIndex).getTokenType() == TokenType.CLOSE_TAG) {
       return Collections.emptyList();
     }
-    return ftl.getChild(parameterListIndex).accept(new ParameterListBuilder(), new ArrayList<ParameterHolder>());
+    return ftl.getChild(parameterListIndex)
+        .accept(new ParameterListBuilder(interpolationBuilder), new ArrayList<ParameterHolder>());
   }
 
   private int getParameterListIndex(MacroDefinition ftl) {
@@ -259,5 +267,9 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   public BlockFragment visit(ReturnInstruction ftl, BlockFragment input) {
     input.addFragment(new ReturnInstructionFragment());
     return input;
+  }
+
+  public InterpolationBuilder getInterpolationBuilder() {
+    return interpolationBuilder;
   }
 }
