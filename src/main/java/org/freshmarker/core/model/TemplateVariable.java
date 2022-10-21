@@ -16,6 +16,10 @@ public class TemplateVariable implements TemplateExpression {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    return context.getEnvironment().getValue(name);
+    TemplateObject value = context.getEnvironment().getValue(name);
+    if (value instanceof TemplateLoopVariable loopVariable) {
+      return loopVariable.evaluateToObject(context);
+    }
+    return value;
   }
 }

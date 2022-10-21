@@ -132,9 +132,11 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
   @Override
   public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
     TemplateObject list = ftl.getChild(3).accept(interpolationBuilder, null);
-    IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(5);
-    BlockFragment block = ftl.getChild(7).accept(this, new BlockFragment());
-    input.addFragment(new ListFragment(list, identifier.getImage(), block));
+    String identifier = ((IDENTIFIER) ftl.getChild(5)).getImage();
+    int blockIndex = ftl.getChild(6).getTokenType() == TokenType.COMMA ? 9 : 7;
+    String looperIdentifier = blockIndex == 9 ? ((IDENTIFIER) ftl.getChild(7)).getImage() : null;
+    BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
+    input.addFragment(new ListFragment(list, identifier, looperIdentifier, block));
     return input;
   }
 

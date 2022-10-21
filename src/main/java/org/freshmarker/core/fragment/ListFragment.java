@@ -5,6 +5,7 @@ import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.VariableEnvironment;
+import org.freshmarker.core.model.TemplateLoopVariable;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
@@ -14,11 +15,13 @@ public class ListFragment implements Fragment {
 
   private final TemplateObject list;
   private final String identifier;
+  private final String looperIdentifier;
   private final BlockFragment block;
 
-  public ListFragment(TemplateObject list, String identifier, BlockFragment block) {
+  public ListFragment(TemplateObject list, String identifier, String looperIdentifier, BlockFragment block) {
     this.list = list;
     this.identifier = identifier;
+    this.looperIdentifier = looperIdentifier;
     this.block = block;
   }
 
@@ -28,8 +31,9 @@ public class ListFragment implements Fragment {
     int size = sequence.size(context).asNumber().map(TemplateNumber::asInt)
         .orElseThrow(() -> new ProcessException("no number"));
     TemplateLooper looper = new TemplateLooper(sequence, size);
+    TemplateLoopVariable loopVariable = new TemplateLoopVariable(looper);
     Environment environment = context.getEnvironment();
-    Environment listEnvironment = new VariableEnvironment(new ListEnvironment(context.getEnvironment(), identifier, looper));
+    Environment listEnvironment = new VariableEnvironment(new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper, loopVariable));
     context.setEnvironment(listEnvironment);
     for (int i = 0; i < size; i++) {
       block.process(context);

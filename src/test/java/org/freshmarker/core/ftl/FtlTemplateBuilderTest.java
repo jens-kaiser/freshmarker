@@ -81,12 +81,12 @@ class FtlTemplateBuilderTest {
   @Test
   void generateMultiListDirectives() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "<#list list as s>" +
-               "<#list 1..2 as s>" +
+        "<#list list as s, l>" +
+               "<#list 1..2 as s, l>" +
                "<#if s % 2 == 0>${s} is even<#else>${s} is odd</#if>" +
-               "<#if s?has_next>, </#if>" +
+               "<#if l?has_next>, </#if>" +
                "</#list>" +
-               "<#if s?is_last>.<#else>, </#if>" +
+               "<#if l?is_last>.<#else>, </#if>" +
                "</#list>");
     Template template = configuration.getTemplate("test");
     Map<String, Object> dataModel = Map.of("list", List.of(1,2,3,4));
