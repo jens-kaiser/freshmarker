@@ -69,13 +69,14 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
   @Override
   public BlockFragment visit(Token ftl, BlockFragment input) {
+    String image = ftl.getImage();
     if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
-      input.addFragment(new ConstantFragment(ftl.getImage()));
+      input.addFragment(new ConstantFragment(image));
     } else if (ftl.getType() == TokenType.WHITESPACE) {
-      if (" ".equals(ftl.getImage())) {
+      if (" ".equals(image)) {
         input.addFragment(ONE_WHITESPACE);
       } else {
-        input.addFragment(new ConstantFragment(ftl.getImage()));
+        input.addFragment(new ConstantFragment(image));
       }
     }
     return input;

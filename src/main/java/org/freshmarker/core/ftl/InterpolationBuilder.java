@@ -55,27 +55,18 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   @Override
   public TemplateObject visit(Token expression, Object input) {
     String image = expression.getImage();
-    switch (expression.getType()) {
-      case TRUE:
-        return TemplateBoolean.TRUE;
-      case FALSE:
-        return TemplateBoolean.FALSE;
-      case INTEGER:
-        return new TemplateNumber(Integer.parseInt(image));
-      case DECIMAL:
-        return new TemplateNumber(Double.parseDouble(image));
-      case STRING_LITERAL:
-        return new TemplateString(image.substring(1, image.length() - 1));
-      case RAW_STRING:
-        return new TemplateString(image.substring(2, image.length() - 1));
-      case IDENTIFIER:
-        return new TemplateVariable(expression.getImage());
-      case EXISTS_OPERATOR:
-        return new TemplateExists((TemplateObject) input);
-      default:
-        throw new IllegalArgumentException(
-            "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
-    }
+    return switch (expression.getType()) {
+      case TRUE -> TemplateBoolean.TRUE;
+      case FALSE -> TemplateBoolean.FALSE;
+      case INTEGER -> new TemplateNumber(Integer.parseInt(image));
+      case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
+      case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
+      case RAW_STRING -> new TemplateString(image.substring(2, image.length() - 1));
+      case IDENTIFIER -> new TemplateVariable(expression.getImage());
+      case EXISTS_OPERATOR -> new TemplateExists((TemplateObject) input);
+      default -> throw new IllegalArgumentException(
+          "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
+    };
   }
 
   @Override

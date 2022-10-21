@@ -16,8 +16,7 @@ public class TemplateDotKey implements TemplateExpression {
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateObject templateObject = map.evaluateToObject(context);
-    if (templateObject instanceof TemplateMap) {
-      TemplateMap templateMap = (TemplateMap) templateObject;
+    if (templateObject instanceof TemplateMap templateMap) {
       return templateMap.get(context, dotKey);
     }
     throw new ProcessException("index out of range");
