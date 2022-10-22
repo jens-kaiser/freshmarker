@@ -10,8 +10,8 @@
 |Number|`long`, `int`, `short`, `byte`|TemplateNumber
 |Number|`Double`, `Float`, `double`, `float`|TemplateNumber
 |Boolean|`Boolean`, `boolean`|TemplateBoolean
-|DateTime|`LocalDateTime`, `Date`|TemplateDate
-|Date|`LocalDate`, `java.sql.Date`|TemplateDateTime
+|DateTime|`LocalDateTime`, `Date`|TemplateDateTime
+|Date|`LocalDate`, `java.sql.Date`|TemplateDate
 |Time|`LocalTime`, `java.sql.Time`|TemplateTime
 |Duration|`Duration`|TemplateDuration
 |Period|`Period`|TemplatePeriod
@@ -29,10 +29,10 @@
 | Name | Comment
 
 | If/ElseIf/Else |
-| Swich/Case/Default | Without Break/Fallthrough
+| Switch/Case/Default | Without Break/Fallthrough
 | Interpolation | Dot-Key, Dynamic-Key, Built-ins, Method Call, Exists, Default value operator
 | Interpolation: Dynamic Key| Sequence, Range, String
-| Interpolation: Dot Key | With Identifier on Beans and Maps
+| Interpolation: Dot Key | With Identifier on Beans, Records and Maps
 | Interpolation: List | Sequence, Range (not right unlimited)
 | Interpolation: Default value operator | No implicit (missing) value
 | Macro | With Return and Nested, but without Nested Loop Variables
@@ -82,3 +82,11 @@
 |locale | the current locale | String
 |now | the current date-time | DateTime
 |===
+
+== FreshMarker List Syntax
+[code]
+----
+<#list ancestors as ancestor, looper>
+  ${looper.counter} ${ancestor.givenname} ${ancestor.surname}
+</#list>
+----
