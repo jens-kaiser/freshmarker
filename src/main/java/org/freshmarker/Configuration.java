@@ -1,7 +1,10 @@
 package org.freshmarker;
 
+import ftl.FTLConstants.TokenType;
 import ftl.FTLParser;
+import ftl.Node;
 import ftl.ParseException;
+import ftl.Token;
 import ftl.ast.FTLHeader;
 import ftl.ast.Root;
 import java.io.IOException;
@@ -15,10 +18,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
-import org.freshmarker.core.Environment;
+import java.util.Set;
 import java.util.function.Function;
-import org.freshmarker.core.environment.BaseEnvironment;
-import org.freshmarker.core.environment.BufferedEnvironment;
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.TemplateLoader;
@@ -28,6 +30,8 @@ import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.environment.BufferedEnvironment;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -68,7 +72,8 @@ public final class Configuration {
   private TemplateLoader templateLoader;
   private Locale locale;
   private final List<TemplateObjectProvider> providers = new ArrayList<>(
-      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
+      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(),
+          new BeanTemplateObjectProvider()));
   private final Map<String, UserDirective> userDirectives = new HashMap<>();
   private final Map<String, TemplateFunction> functions = new HashMap<>();
 

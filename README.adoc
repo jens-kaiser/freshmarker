@@ -1,5 +1,7 @@
 = FreshMarker
 
+A simple template engine for Java 17 loosely based on the FreeMarker template syntax.
+
 == Template Types
 
 |===
