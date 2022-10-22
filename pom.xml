@@ -6,7 +6,42 @@
 
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
+  <url>https://gitlab.com/schegge/freshmarker.git</url>
+  <name>FreshMarker</name>
+  <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 and supports the java.time API and Records.</description>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Jens Kaiser</name>
+      <email>schegge42@gmail.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://gitlab.com/schegge/freshmarker.git</url>
+    <connection>scm:git:https://gitlab.com/schegge/freshmarker.git</connection>
+    <developerConnection>scm:git:https://gitlab.com/schegge/freshmarker.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
   <properties>
     <java.version>17</java.version>
