@@ -26,7 +26,9 @@ import ftl.ast.UnaryPlusMinusExpression;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltInVariable;
+import org.freshmarker.core.model.TemplateDefault;
 import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
@@ -203,12 +205,16 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
   @Override
   public TemplateObject visit(NotExpression expression, Object input) {
-    return new TemplateNegative(expression.getChild(1).accept(this, null));
+    TemplateObject subExpression = expression.getChild(1).accept(this, null);
+    if (subExpression instanceof TemplateBooleanExpression templateBooleanExpression) {
+      return templateBooleanExpression.not();
+    }
+    return new TemplateNegative(subExpression);
   }
 
   @Override
   public TemplateObject visit(BuiltinVariable expression, Object input) {
-    return new TemplateBuiltInVariable( expression.getLastToken().getImage());
+    return new TemplateBuiltInVariable(expression.getLastToken().getImage());
   }
 
   @Override
@@ -222,7 +228,9 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   public TemplateObject visit(EqualityExpression expression, Object input) {
     TemplateObject left = expression.getChild(0).accept(this, null);
     TemplateObject right = expression.getChild(2).accept(this, null);
-    return new TemplateEquality(((Token) expression.getChild(1)).getType(), left, right);
+    TokenType equality = expression.getChild(1).getTokenType();
+    TemplateEquality result = new TemplateEquality(left, right);
+    return equality == TokenType.NOT_EQUALS ? result.not() : result;
   }
 
   @Override
@@ -230,7 +238,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     logger.debug("visit unary plus minus expression: {}", expression);
     Token token = (Token) expression.getChild(0);
     TemplateObject templateObject = expression.getChild(1).accept(this, null);
-    return token.getType() == TokenType.PLUS ? templateObject : new TemplateSign(templateObject);
+    if (token.getType() == TokenType.PLUS) {
+      return templateObject;
+    }
+    return templateObject.asNumber().<TemplateObject>map(TemplateNumber::negate)
+        .orElseGet(() -> new TemplateSign(templateObject));
   }
 
   @Override
