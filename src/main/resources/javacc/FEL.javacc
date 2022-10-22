@@ -44,7 +44,7 @@ INJECT FELParser : {
 INCLUDE JAVA_IDENTIFIER_DEF
 
 SKIP :
-    <EXP_WHITE_SPACE : (" "|"\t"|"\n"|"\r")+>
+    <EXP_WHITE_SPACE : (" "|"\t"|"\n")+>
 ;
 
 MORE :

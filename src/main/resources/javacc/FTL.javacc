@@ -31,57 +31,13 @@
 PARSER_PACKAGE="ftl";
 NODE_PACKAGE="ftl.ast";
 DEFAULT_LEXICAL_STATE="TEMPLATE_TEXT";
+PRESERVE_LINE_ENDINGS=false;
 
 INJECT FTLParser :
     import java.io.*;
     import java.util.*;
 {
 
-    static final boolean DUMPTREE = false;
-
-    static public void main(String[] args) throws Exception {
-        if (args.length == 0) {
-            usage();
-            System.exit(-1);
-        }
-        java.util.List<File> files = new java.util.ArrayList<File>();
-        for (String arg : args) {
-            File file = new File(arg);
-            if (file.isDirectory()) {
-                for (File f : file.listFiles()) {
-                    if (f.getName().endsWith(".ftl")) {
-                        files.add(f);
-                    }
-                }
-            } else {
-                files.add(file);
-            }
-        }
-        for (File f : files) {
-            checkFTLFile(f, false);
-        }
-    }
-
-    static public void checkFTLFile(File inputFile, boolean dumpTree) {
-        FTLParser parser = null;
-        try {
-            parser = new FTLParser(inputFile.toPath());
-            parser.Root();
-        }
-        catch (Exception e) {
-            System.err.println("Error parsing " + inputFile);
-            e.printStackTrace();
-            return;
-        }
-        System.err.println("File " + inputFile + " parsed successfully.");
-        if (dumpTree) {
-            parser.rootNode().dump("---");
-       }
-    }
-
-    static public void usage() {
-        System.err.println("Usage: java ftl.FTLParser <filenames>");
-    }
 }
 
 INJECT LEXER_CLASS :
@@ -113,7 +69,6 @@ INJECT LEXER_CLASS :
             if (tok.getType() == TokenType.WHITESPACE) {
                 String img = tok.getImage();
                 int idx = img.indexOf('\n');
-                if (idx <0) idx = img.indexOf('\r');
                 if (idx >=0) {
                     tok.setImage(img.substring(++idx));
                     tok.setBeginOffset(tok.getBeginOffset()+idx);
@@ -334,7 +289,7 @@ TOKEN :
     |
     <BLOCKNOTRIM : "nt_lines">
     |
-    <BLANK : "\n" | "\r" | "\t" | " "> : FTL_EXPRESSION
+    <BLANK : "\n" | "\t" | " "> : FTL_EXPRESSION
     |
     <CLOSE_TAG : (<BLANK>)* (">" | "]" ) > : TEMPLATE_TEXT
     |
