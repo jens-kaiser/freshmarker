@@ -166,15 +166,15 @@ public final class Configuration {
 
   private void cleanUpWhitespaces(Root root) {
     root.getAllTokens(false).stream().filter(t -> t.getType() == TokenType.WHITESPACE)
-        .forEach(this::simplifyWhitespaces);
+        .forEach(this::normalizeWhitespaces);
     List<Token> currentLine = new ArrayList<>();
     root.getAllTokens(false).forEach(token -> cleanUpLine(currentLine, token));
   }
 
-  private void simplifyWhitespaces(Token token) {
+  private void normalizeWhitespaces(Token token) {
     String image = token.getImage();
     int index = image.indexOf("\n");
-    if (index == -1 || index == image.length() -1) {
+    if (index == -1 || index == image.length() - 1) {
       return;
     }
     int beginOffset = token.getBeginOffset();

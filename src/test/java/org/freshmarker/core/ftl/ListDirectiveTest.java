@@ -153,4 +153,19 @@ class ListDirectiveTest {
         template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
   }
 
+  @Test
+  void additionalLineRemoval2() throws ParseException, IOException {
+    templateLoader.putTemplate("test",
+        """
+            <#list sequence as s, l>
+              ${s.key} ${s.value}
+            </#list>
+            """);
+    Template template = configuration.getTemplate("test");
+    assertEquals("""
+              a b
+              c d
+            """,
+        template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
+  }
 }
