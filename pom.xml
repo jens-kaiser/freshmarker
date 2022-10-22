@@ -88,6 +88,31 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>C:\Program Files\AdoptOpenJDK\jdk-11.0.5.10-hotspot\bin\java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <mainClass>com.javacc.Main</mainClass>
+                <argument>-jdk11</argument>
+                <argument>-d</argument>
+                <argument>${project.build.directory}/generated-sources</argument>
+                <argument>src/main/resources/javacc/FTL.javacc</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
