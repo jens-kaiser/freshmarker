@@ -6,7 +6,7 @@
 
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1-SNAPSHOT</version>
   <url>https://gitlab.com/schegge/freshmarker.git</url>
   <name>FreshMarker</name>
   <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 and supports the java.time API and Records.</description>
@@ -111,17 +111,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <encoding>UTF-8</encoding>
-          <compilerArgument>-proc:none</compilerArgument>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
@@ -249,6 +238,16 @@
               <Built-By>jaz</Built-By>
             </manifestEntries>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
     </plugins>
