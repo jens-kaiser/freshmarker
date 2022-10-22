@@ -6,7 +6,7 @@
 
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <url>https://gitlab.com/schegge/freshmarker.git</url>
   <name>FreshMarker</name>
   <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 and supports the java.time API and Records.</description>
@@ -183,7 +183,7 @@
                 <limit>
                   <counter>COMPLEXITY</counter>
                   <value>COVEREDRATIO</value>
-                  <minimum>0.60</minimum>
+                  <minimum>0.25</minimum>
                 </limit>
               </limits>
             </rule>
