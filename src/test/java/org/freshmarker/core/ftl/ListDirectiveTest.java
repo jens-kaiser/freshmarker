@@ -94,19 +94,16 @@ class ListDirectiveTest {
   void recordLoop() throws ParseException, IOException {
     templateLoader.putTemplate("test",
         """
-            test  \s
-              <#list sequence as s, l> \s
+            test
+              <#list sequence as s, l>
               ${l?index}. ${s.key} ${s.value}
-            </#list>   \s
+            </#list>
             """);
     Template template = configuration.getTemplate("test");
     assertEquals("""
-            test  \s
-               \s
+            test
               0. a b
-             \s
               1. c d
-               \s
             """,
         template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
   }
@@ -116,6 +113,7 @@ class ListDirectiveTest {
     templateLoader.putTemplate("test",
         """
             test  \s
+            
               <#list sequence as s, l> \s
               ${l?index}. ${s.key} ${s.value}
             </#list>   \s
@@ -123,9 +121,36 @@ class ListDirectiveTest {
     Template template = configuration.getTemplate("test");
     assertEquals("""
             test  \s
+                   
               0. a b
               1. c d
             """,
         template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
   }
+
+  @Test
+  void additionalLineRemoval() throws ParseException, IOException {
+    templateLoader.putTemplate("test",
+        """
+            test
+            <#list sequence as s, l>
+              ${l?index}. ${s.key} ${s.value}
+            </#list>
+
+            <#list sequence as s, l>
+              ${l?index}. ${s.key} ${s.value}
+            </#list>
+            """);
+    Template template = configuration.getTemplate("test");
+    assertEquals("""
+            test              
+              0. a b
+              1. c d
+
+              0. a b
+              1. c d
+            """,
+        template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
+  }
+
 }
