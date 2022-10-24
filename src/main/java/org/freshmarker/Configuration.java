@@ -1,10 +1,7 @@
 package org.freshmarker;
 
-import ftl.FTLConstants.TokenType;
 import ftl.FTLParser;
-import ftl.Node;
 import ftl.ParseException;
-import ftl.Token;
 import ftl.ast.FTLHeader;
 import ftl.ast.Root;
 import java.io.IOException;
@@ -18,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.function.Function;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
@@ -153,7 +149,7 @@ public final class Configuration {
       parser.setInputSource(templateSource.getName());
       parser.Root();
       Root root = (Root) parser.rootNode();
-      cleanUpWhitespaces(root);
+      new TokenLineNormalizer().normalize(root);
       Template template = new Template(this);
       FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
       if (ftlHeader != null) {
@@ -162,68 +158,6 @@ public final class Configuration {
       root.accept(new FragmentBuilder(template), template.getRootFragment());
       return template;
     }
-  }
-
-  private void cleanUpWhitespaces(Root root) {
-    root.getAllTokens(false).stream().filter(t -> t.getType() == TokenType.WHITESPACE)
-        .forEach(this::normalizeWhitespaces);
-    List<Token> currentLine = new ArrayList<>();
-    root.getAllTokens(false).forEach(token -> cleanUpLine(currentLine, token));
-  }
-
-  private void normalizeWhitespaces(Token token) {
-    String image = token.getImage();
-    int index = image.indexOf("\n");
-    if (index == -1 || index == image.length() - 1) {
-      return;
-    }
-    int beginOffset = token.getBeginOffset();
-    int endOffset = token.getEndOffset();
-    Node parent = token.getParent();
-    int tokenIndex = parent.indexOf(token);
-    parent.removeChild(token);
-    int start = beginOffset;
-    for (int i = 0; i < image.length(); i++) {
-      char c = image.charAt(i);
-      if (c == '\n') {
-        parent.addChild(tokenIndex, newToken(token, start, beginOffset + i + 1));
-        tokenIndex++;
-        start = beginOffset + i + 1;
-      }
-    }
-    if (start <= endOffset) {
-      parent.addChild(tokenIndex, newToken(token, start, endOffset));
-    }
-  }
-
-  private Token newToken(Token token, int beginOffset, int endOffset) {
-    return Token.newToken(TokenType.WHITESPACE, token.getTokenSource(), beginOffset, endOffset);
-  }
-
-  private void cleanUpLine(List<Token> currentLine, Token token) {
-    if (token.getType() != TokenType.WHITESPACE || !token.getImage().endsWith("\n")) {
-      currentLine.add(token);
-      return;
-    }
-    if (currentLine.isEmpty()) {
-      return;
-    }
-    if (Set.of(TokenType.INTERPOLATE, TokenType.PRINTABLE_CHARS).contains(currentLine.get(0).getType())) {
-      currentLine.clear();
-      return;
-    }
-    if (currentLine.stream().skip(1).anyMatch(
-        t -> Set.of(TokenType.WHITESPACE, TokenType.INTERPOLATE, TokenType.PRINTABLE_CHARS)
-            .contains(t.getTokenType()))) {
-      currentLine.clear();
-      return;
-    }
-    Token firstToken = currentLine.get(0);
-    if (firstToken.getType() == TokenType.WHITESPACE) {
-      firstToken.getParent().removeChild(firstToken);
-    }
-    token.getParent().removeChild(token);
-    currentLine.clear();
   }
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
