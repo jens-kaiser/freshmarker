@@ -11,59 +11,39 @@ import java.util.Set;
 
 class TokenLineNormalizer {
 
-  private static final Set<TokenType> NON_TAG_TOKEN_TYPES = Set.of(TokenType.WHITESPACE, TokenType.INTERPOLATE,
-      TokenType.PRINTABLE_CHARS);
+  private static final Set<TokenType> NON_TAG_TOKEN_TYPES = Set.of(TokenType.INTERPOLATE, TokenType.PRINTABLE_CHARS);
 
   private boolean containNonTag;
-  private boolean firstNonTag;
   private Token first;
 
-  private void clean() {
-    first = null;
-    containNonTag = false;
-    firstNonTag = false;
-  }
-
   public void normalize(Root root) {
-    List<Token> allTokens = root.getAllTokens(false);
-    allTokens.stream().map(this::normalizeWhitespaces).flatMap(List::stream).forEach(this::cleanUpLine);
+    root.getAllTokens(false).forEach(this::normalizeWhitespaces);
   }
 
-  private void addToken(Token token) {
-    if (first == null) {
-      first = token;
-      firstNonTag = token.getType() == TokenType.PRINTABLE_CHARS || token.getType() == TokenType.INTERPOLATE;
+  private void cleanUpLine(Token whitespaceToken) {
+    if (!whitespaceToken.getImage().endsWith("\n")) {
+      addWhitespaceTokenToLine(whitespaceToken);
       return;
     }
-    containNonTag = containNonTag || NON_TAG_TOKEN_TYPES.contains(token.getType());
-  }
-
-  private Optional<Token> getFirstAsWhitespace() {
-    return Optional.ofNullable(first).filter(f -> f.getType() == TokenType.WHITESPACE);
-  }
-
-  private void cleanUpLine(Token token) {
-    if (token.getType() != TokenType.WHITESPACE || !token.getImage().endsWith("\n")) {
-      addToken(token);
-      return;
-    }
-    if (first == null || firstNonTag || containNonTag) {
-      clean();
+    if (first == null || containNonTag) {
+      clearLine();
       return;
     }
     getFirstAsWhitespace().ifPresent(f -> f.getParent().removeChild(f));
-    token.getParent().removeChild(token);
-    clean();
+    whitespaceToken.getParent().removeChild(whitespaceToken);
+    clearLine();
   }
 
-  private List<Token> normalizeWhitespaces(Token token) {
+  private void normalizeWhitespaces(Token token) {
     if (token.getType() != TokenType.WHITESPACE) {
-      return List.of(token);
+      addNonWhitespaceTokenToLine(token);
+      return;
     }
     String image = token.getImage();
     int index = image.indexOf("\n");
     if (index == -1 || index == image.length() - 1) {
-      return List.of(token);
+      cleanUpLine(token);
+      return;
     }
     int beginOffset = token.getBeginOffset();
     int endOffset = token.getEndOffset();
@@ -87,7 +67,26 @@ class TokenLineNormalizer {
       list.add(newToken);
       parent.addChild(tokenIndex, newToken);
     }
-    return list;
+    list.forEach(this::cleanUpLine);
+  }
+
+  private void clearLine() {
+    first = null;
+    containNonTag = false;
+  }
+
+  private void addWhitespaceTokenToLine(Token token) {
+    containNonTag = first != null;
+    first = first == null ? token : first;
+  }
+
+  private void addNonWhitespaceTokenToLine(Token token) {
+    containNonTag = containNonTag || NON_TAG_TOKEN_TYPES.contains(token.getType());
+    first = first == null ? token : first;
+  }
+
+  private Optional<Token> getFirstAsWhitespace() {
+    return Optional.ofNullable(first).filter(f -> f.getType() == TokenType.WHITESPACE);
   }
 
   private Token newToken(Token token, int beginOffset, int endOffset) {
