@@ -2,6 +2,41 @@
 
 A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 and supports the java.time API and Records.
 
+== Usage
+
+
+[source,xml]
+----
+<dependency>
+  <groupId>de.schegge</groupId>
+  <artifactId>freshmarker</artifactId>
+  <version>0.2.3</versio>
+</dependency>
+----
+
+== Examples
+
+.Simple Example
+[source,java]
+----
+Configuration configuration = new Configuration();
+Template template = configuration.getTemplate("test", "temporal=${temporal}, path=${path.size}");
+String result = template.process(Map.of("temporal", LocalTime.of(12, 30), "path", Path.of("text.pdf")));
+----
+
+.List with loop Variable
+[source,java]
+----
+templateLoader.putTemplate("ancestors-loop",
+    """
+    <#list ancestors as ancestor, loop>
+      ${loop?index}. ${ancestor.givenname} ${ancestor.surename}
+    </#list>
+    """);
+Template template = configuration.getTemplate("ancestors-loop");
+String result = template.process(Map.of("ancestors", ancestorService.ancestorsByFamily("Kaiser")));
+----
+
 == Template Types
 
 |===

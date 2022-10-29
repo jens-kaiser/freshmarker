@@ -6,6 +6,7 @@ import ftl.ast.FTLHeader;
 import ftl.ast.Root;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -145,8 +146,13 @@ public final class Configuration {
     try (TemplateSource templateSource = templateLoader.getTemplate(name)
         .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name));
         Reader reader = templateSource.getReader(charset)) {
+     return getTemplate(name, reader);
+    }
+  }
+
+  public Template getTemplate(String name, Reader reader) throws ParseException {
       FTLParser parser = new FTLParser(reader);
-      parser.setInputSource(templateSource.getName());
+      parser.setInputSource(name);
       parser.Root();
       Root root = (Root) parser.rootNode();
       new TokenLineNormalizer().normalize(root);
@@ -157,7 +163,10 @@ public final class Configuration {
       }
       root.accept(new FragmentBuilder(template), template.getRootFragment());
       return template;
-    }
+  }
+
+  public Template getTemplate(String name, String content) throws ParseException {
+    return getTemplate(name, new StringReader(content));
   }
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
