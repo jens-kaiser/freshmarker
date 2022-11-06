@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import org.freshmarker.core.Environment;
 
-class AbstractReflectionsMap extends AbstractMap<String, Object> {
+class BaseReflectionsMap extends AbstractMap<String, Object> {
 
   private final Map<String, Method> methods;
   private final Environment environment;
   private final Object bean;
 
-  public AbstractReflectionsMap(Map<String, Method> methods, Environment environment, Object bean) {
+  public BaseReflectionsMap(Map<String, Method> methods, Environment environment, Object bean) {
     this.methods = methods;
     this.environment = environment;
     this.bean = bean;

@@ -11,16 +11,15 @@ import org.freshmarker.core.Environment;
 
 public class TemplateRecordProvider {
 
-  private final Map<Class<?>, Map<String, Method>> beans = new HashMap<>();
+  private final Map<Class<?>, Map<String, Method>> records = new HashMap<>();
 
-  public Map<String, Object> provide(Object bean, Environment environment) {
-    final Map<String, Method> methods = beans.computeIfAbsent(bean.getClass(), b -> collectMethods(bean));
-    beans.put(bean.getClass(), methods);
-    return new AbstractReflectionsMap(methods, environment, bean);
+  public Map<String, Object> provide(Object recordObject, Environment environment) {
+    Map<String, Method> methods = records.computeIfAbsent(recordObject.getClass(), b -> collectMethods(recordObject));
+    return new BaseReflectionsMap(methods, environment, recordObject);
   }
 
-  private Map<String, Method> collectMethods(Object bean) {
-    return Stream.of(bean.getClass().getRecordComponents())
+  private Map<String, Method> collectMethods(Object recordObject) {
+    return Stream.of(recordObject.getClass().getRecordComponents())
         .collect(toMap(RecordComponent::getName, RecordComponent::getAccessor));
   }
 }

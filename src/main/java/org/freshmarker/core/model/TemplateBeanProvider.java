@@ -7,14 +7,9 @@ import java.beans.FeatureDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
@@ -25,7 +20,7 @@ public class TemplateBeanProvider {
 
   public Map<String, Object> provide(Object bean, Environment environment) {
     final Map<String, Method> methods = beans.computeIfAbsent(bean.getClass(), b -> collectMethods(bean));
-    return new AbstractReflectionsMap(methods, environment, bean);
+    return new BaseReflectionsMap(methods, environment, bean);
   }
 
   private Map<String, Method> collectMethods(Object bean) {
