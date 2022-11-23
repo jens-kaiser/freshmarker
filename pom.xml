@@ -6,10 +6,12 @@
 
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.2.4</version>
+  <version>0.2.5-SNAPSHOT</version>
   <url>https://gitlab.com/schegge/freshmarker.git</url>
   <name>FreshMarker</name>
-  <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 and supports the java.time API and Records.</description>
+  <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17
+    and supports the java.time API and Records.
+  </description>
 
   <licenses>
     <license>
@@ -71,7 +73,12 @@
       <artifactId>holidays</artifactId>
       <version>0.1.7</version>
     </dependency>
-
+    <dependency>
+      <groupId>javacc21</groupId>
+      <artifactId>javacc21</artifactId>
+      <version>220206</version>
+      <optional>true</optional>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -85,8 +92,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <configuration>
-        </configuration>
         <executions>
           <execution>
             <id>flatten</id>
@@ -94,6 +99,9 @@
             <goals>
               <goal>flatten</goal>
             </goals>
+            <configuration>
+              <flattenMode>oss</flattenMode>
+            </configuration>
           </execution>
         </executions>
       </plugin>
