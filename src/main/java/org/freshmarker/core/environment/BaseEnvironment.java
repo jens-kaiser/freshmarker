@@ -52,10 +52,16 @@ public class BaseEnvironment implements Environment {
     if (o == null) {
       return TemplateNull.NULL;
     }
-    if (o instanceof TemplateObject) {
-      return (TemplateObject) o;
+    if (o instanceof TemplateObject templateObject) {
+      return templateObject;
     }
-    return providers.stream().map(p -> p.provide(this, o)).filter(Objects::nonNull)
+    Object current;
+    if (o instanceof TemplateObjectSupplier templateObject) {
+      current = templateObject.get();
+    } else {
+      current = o;
+    }
+    return providers.stream().map(p -> p.provide(this, current)).filter(Objects::nonNull)
         .findFirst().orElseThrow(() -> new UnsupportedDataTypeException("unsupported data type: " + o.getClass()));
   }
 

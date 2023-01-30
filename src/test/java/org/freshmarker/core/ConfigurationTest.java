@@ -27,7 +27,7 @@ class ConfigurationTest {
   }
 
   @Test
-  void getStringTemplate() throws ParseException, IOException {
+  void getStringTemplate() throws ParseException {
     Configuration configuration = new Configuration();
     Template template = configuration.getTemplate("test", "test: ${temporal}");
     assertNotNull(template);
