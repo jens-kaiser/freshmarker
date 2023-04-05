@@ -5,5 +5,4 @@ org.freshmarker.core.plugin.TemporalPluginProvider
 org.freshmarker.core.plugin.DatePluginProvider
 org.freshmarker.core.plugin.FileAndPathPluginProvider
 org.freshmarker.core.plugin.LooperPluginProvider
-org.freshmarker.core.plugin.HolidayPluginProvider
 org.freshmarker.core.plugin.EnumPluginProvider
