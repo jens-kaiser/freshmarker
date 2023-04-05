@@ -69,11 +69,6 @@
       <version>1.2.11</version>
     </dependency>
     <dependency>
-      <groupId>de.schegge</groupId>
-      <artifactId>holidays</artifactId>
-      <version>0.1.7</version>
-    </dependency>
-    <dependency>
       <groupId>javacc21</groupId>
       <artifactId>javacc21</artifactId>
       <version>220206</version>
