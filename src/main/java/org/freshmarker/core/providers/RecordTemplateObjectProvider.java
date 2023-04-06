@@ -14,6 +14,6 @@ public class RecordTemplateObjectProvider implements TemplateObjectProvider {
     if (!o.getClass().isRecord()) {
       return null;
     }
-    return new TemplateBean(recordProvider.provide(o, environment));
+    return new TemplateBean(recordProvider.provide(o, environment), o.getClass());
   }
 }

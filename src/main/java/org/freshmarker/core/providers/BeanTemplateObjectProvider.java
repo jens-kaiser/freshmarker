@@ -12,7 +12,7 @@ public class BeanTemplateObjectProvider implements TemplateObjectProvider {
   @Override
   public TemplateObject provide(Environment environment, Object o) {
     if (!o.getClass().isPrimitive() && !o.getClass().getName().startsWith("java")) {
-      return new TemplateBean(beanProvider.provide(o, environment));
+      return new TemplateBean(beanProvider.provide(o, environment), o.getClass());
     }
     return null;
   }

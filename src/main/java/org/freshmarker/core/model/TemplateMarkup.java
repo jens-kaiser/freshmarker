@@ -44,7 +44,11 @@ public class TemplateMarkup implements TemplateObject {
   private TemplateObject getTemplateObject(ProcessContext context) {
     TemplateObject templateObject = content;
     do {
+      TemplateObject last = templateObject;
       templateObject = templateObject.evaluateToObject(context);
+      if (last == templateObject && templateObject.isMap()) {
+        throw new ProcessException("recursive evaluation detected. Unsupported primitive? " + ((TemplateBean)templateObject).getType());
+      }
     } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
     if (templateObject == TemplateNull.NULL) {
       throw new ProcessException("null");
