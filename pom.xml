@@ -69,12 +69,6 @@
       <version>1.2.11</version>
     </dependency>
     <dependency>
-      <groupId>javacc21</groupId>
-      <artifactId>javacc21</artifactId>
-      <version>220206</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${junit.jupiter.version}</version>
@@ -121,32 +115,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
-          <execution>
-            <id>copy</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <artifactItems>
-            <artifactItem>
-              <groupId>javacc21</groupId>
-              <artifactId>javacc21</artifactId>
-              <version>220206</version>
-              <type>jar</type>
-              <overWrite>false</overWrite>
-              <outputDirectory>${project.build.directory}</outputDirectory>
-            </artifactItem>
-          </artifactItems>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>3.3.0</version>
@@ -179,7 +147,7 @@
               <executable>C:\Program Files\Microsoft\jdk-17.0.5.8-hotspot\bin\java</executable>
               <arguments>
                 <argument>-classpath</argument>
-                <argument>${project.build.directory}/javacc21-220206.jar</argument>
+                <argument>${project.basedir}/src/main/lib/javacc21-220206.jar</argument>
                 <argument>com.javacc.Main</argument>
                 <argument>-jdk11</argument>
                 <argument>-d</argument>
