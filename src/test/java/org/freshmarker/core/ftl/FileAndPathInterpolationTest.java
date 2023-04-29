@@ -74,6 +74,6 @@ class FileAndPathInterpolationTest {
         "file", Path.of("src/main/resources/javacc/FEL.javacc").toFile(),
         "missingFile", Path.of("src/main/resources/javacc/FEL2.javacc").toFile()
     );
-    assertEquals(expected, template.process(dataModel));
+    assertEquals(expected, template.process(dataModel).replace('/', '\\'));
   }
 }
