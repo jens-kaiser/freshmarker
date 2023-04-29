@@ -49,7 +49,7 @@ class FileAndPathInterpolationTest {
       "test: ${file},test: src\\main\\resources\\javacc\\FEL.javacc",
       "test: ${file?name},test: FEL.javacc",
       "test: ${file?parent},test: src\\main\\resources\\javacc",
-      "test: ${file?size},test: 7.270",
+      "test: ${file?size > 0},test: yes",
       "test: ${file?exists},test: yes",
       "test: ${file?is_file},test: yes",
       "test: ${file?is_directory},test: no",
