@@ -36,5 +36,5 @@ pages:
       - public
   only:
    - master
-   - develop
+
    
