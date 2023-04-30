@@ -27,9 +27,6 @@ public class SettingFragment implements Fragment {
     if ("locale".equals(name)) {
       String value = setting.evaluate(context, TemplateString.class).getValue();
       Locale locale = Locale.forLanguageTag(value);
-      if (locale == null) {
-        throw new ProcessException("unknown locale: " + value);
-      }
       context.setEnvironment(new SettingEnvironment(context.getEnvironment(), locale, null));
       logger.info("new locale: {}", locale);
     }
