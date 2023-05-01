@@ -41,13 +41,17 @@ public class TemplateMarkup implements TemplateObject {
     return outputFormat.escape(environment, result);
   }
 
+  public Class<?> getType() {
+    return getClass();
+  }
+
   private TemplateObject getTemplateObject(ProcessContext context) {
     TemplateObject templateObject = content;
     do {
       TemplateObject last = templateObject;
       templateObject = templateObject.evaluateToObject(context);
-      if (last == templateObject && templateObject.isMap()) {
-        throw new ProcessException("recursive evaluation detected. Unsupported primitive? " + ((TemplateBean)templateObject).getType());
+      if (last == templateObject && !templateObject.isPrimitive()) {
+        throw new ProcessException("missing reduction detected. Unsupported primitive? " + templateObject.getModelType());
       }
     } while (templateObject != TemplateNull.NULL && !templateObject.isPrimitive() && !templateObject.isMarkup());
     if (templateObject == TemplateNull.NULL) {

@@ -47,4 +47,8 @@ public class TemplatePrimitive<P> implements TemplateObject {
   public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
+
+  public Class<?> getModelType() {
+    return value.getClass();
+  }
 }

@@ -46,4 +46,8 @@ public interface TemplateObject {
     }
     throw new WrongTypeException("expected " + type.getSimpleName() + " but is " + result.getClass().getSimpleName() + " (" + result + ")");
   }
+
+  default Class<?> getModelType() {
+    return getClass();
+  }
 }

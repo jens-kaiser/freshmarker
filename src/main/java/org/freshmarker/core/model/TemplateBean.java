@@ -23,7 +23,8 @@ public class TemplateBean implements TemplateMap {
         return result == null ? TemplateNull.NULL : context.getEnvironment().mapObject(result);
     }
 
-    public Class<?> getType() {
+    @Override
+    public Class<?> getModelType() {
         return type;
     }
 

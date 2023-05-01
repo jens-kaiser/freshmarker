@@ -1,6 +1,7 @@
 package org.freshmarker.core.ftl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import ftl.ParseException;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.StringTemplateLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +27,15 @@ class ListDirectiveTest {
   }
 
   @Test
+  void output() throws ParseException, IOException {
+    Template template = configuration.getTemplate("test", "test: ${sequence}");
+    assertThrows(ProcessException.class, () -> template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
+  }
+
+  @Test
   void loopIndex() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "test: <#list sequence as s, l>${l?index}. ${s}\n</#list>");
+            "test: <#list sequence as s, l>${l?index}. ${s}\n</#list>");
     Template template = configuration.getTemplate("test");
     assertEquals("test: 0. a\n1. b\n2. c\n3. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
   }
