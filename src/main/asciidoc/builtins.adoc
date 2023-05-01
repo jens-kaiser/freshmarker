@@ -57,6 +57,18 @@ This Built-In converts a text in its lowercase form.
 |the quick brown fox jumps over the lazy dog
 |===
 
+==== `capitalize` Built-In
+
+This Built-In converts the first letter of each word to uppercase.
+A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabetic}*)\b`
+
+|===
+|Input | Output
+
+|The quick brown Fox jumps over the lazy Dog
+|The Quick Brown Fox Jumps Over The Lazy Dog
+|===
+
 ==== `camelCase` Built-In
 
 This Built-In converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
@@ -188,7 +200,6 @@ TBD
 TBD
 
 === Boolean Built-Ins
-
 
 ==== `c` (computer language) Built-In
 
