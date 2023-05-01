@@ -3,6 +3,7 @@ package org.freshmarker.core.model.primitive;
 import java.util.Optional;
 
 public class TemplateString extends TemplatePrimitive<String> {
+  public static final TemplateString EMPTY = new TemplateString("");
 
   public TemplateString(String value) {
     super(value);

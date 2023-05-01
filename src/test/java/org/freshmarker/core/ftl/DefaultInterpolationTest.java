@@ -24,10 +24,12 @@ class DefaultInterpolationTest {
   }
 
   @ParameterizedTest
-  @CsvSource({
+  @CsvSource(value = {
       "test: ${test1!'empty'},test: empty",
       "test: ${test2!'empty'},test: test",
-  })
+      "test: ${test3!42},test: 42",
+      "test: ${test4!},'test: '",
+  } )
   void exists(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
     Template template = configuration.getTemplate("test");
