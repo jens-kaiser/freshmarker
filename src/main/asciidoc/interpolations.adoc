@@ -38,7 +38,7 @@ if no value for `example` is given.
 
 The _exists_ operator evaluates to `true` if the value exists and it evaluates to `false` if the value is missing.
 
-.Example with exist operator
+.Example with _exists_ operator
 [source,java]
 ----
 private final Configuration configuration = new Configuration();
