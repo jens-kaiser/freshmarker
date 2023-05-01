@@ -54,5 +54,3 @@ The interpolation consists of the variable `example`, the _exists_ operator `??`
 The _exists_ operator is called on the missing value `example` and the result is `false`.
 The boolean built-in returns the first parameter on `true` and the second parameter on `false`.
 In this example the second parameter `'World'` is returned and the result of the whole interpolation is `World`.
-
-
