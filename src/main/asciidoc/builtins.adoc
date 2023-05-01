@@ -13,7 +13,7 @@ System.out.println(template.process(Map.of("example", "world")));
 In the above example the built-in `upper_case` is called on the current value `world` of the interpolation.
 The built-in converts a text to its uppercase form.
 
-since the capitalization can only be changed for text, the execution of this built-in on other types such as numbers or dates is forbidden. In general, all built-ins are assigned to a type and an exception is thrown if a wrong type is used.
+Since the capitalization can only be changed for text, the execution of this built-in on other types such as numbers or dates is forbidden. In general, all built-ins are assigned to a type and an exception is thrown if a wrong type is used.
 
 if a built-in seems to apply to multiple types, it's because each type has a built-in with the same name.
 
