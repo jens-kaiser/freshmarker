@@ -71,7 +71,7 @@ class StringInterpolationTest {
   @CsvSource({
       "test: ${text?contains('ex')},test: yes",
       "test: ${text?contains('EX')},test: no",
-      "test: ${text?ends_with('xt')},test: yes",
+      "test: ${text?endsWith('xt')},test: yes",
       "test: ${text?ends_with('XT')},test: no",
   })
   void interpolationContainsAndEndWith(String templateSource, String expected) throws ParseException, IOException {
