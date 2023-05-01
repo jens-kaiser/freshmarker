@@ -21,4 +21,4 @@ include::interpolations.adoc[]
 
 include::builtins.adoc[]
 
-include::directives.adoc[]
+//include::directives.adoc[]

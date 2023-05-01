@@ -42,3 +42,24 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 |Enum|Enums
 |Null|-
 |===
+
+=== Lazy Values
+
+Normally the values are written directly into the model.
+Sometimes the cost of creating optional values is quite high.
+In that case it would be a waste to calculate the values if they are not used.
+However, since FreshMarker needs the values in the model, a compromise is made.
+Instead of calculating the values immediately and placing them in the map, the calculation is inserted into the model as a `TemplateObjectSupplier`.
+Their actual values are lazy evaluated only when accessed during processing.
+
+.Example lazy values
+[source,java]
+----
+Map<String, Object> model = Map.of(
+        "familyTree", TemplateObjectSupplier.of(() -> fetchTreeFromDataBase(name)),
+        "name", "Kayser"
+    );
+template.process(model)
+----
+
+In the example above, the familyTree value is lazy evaluated, when the variable is accessed during template processing.

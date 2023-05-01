@@ -25,14 +25,11 @@ public class DatePluginProvider implements PluginProvider {
 
   private static final SimpleDateFormat COMPUTER_AUDIENCE = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 
-  private static final BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(
-      TemplateClassicDateTime.class);
+  private static final BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
 
-  private static final BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(
-      TemplateClassicDate.class);
+  private static final BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
 
-  private static final BuiltInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuiltInKeyBuilder<>(
-      TemplateClassicTime.class);
+  private static final BuiltInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicTime.class);
 
   @Override
   public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
