@@ -1,0 +1,22 @@
+= FreshMarker
+
+== Introduction
+
+FreshMarker is a simple, embedded Java 17 Template-Engine, which is inspired by FreeMarker.
+Most of the basic concepts are the same.
+
+FreshMarker's area of application is the processing of simple templates with reduced programming features.
+Despite reduced programming features, FreshMarker is open to new data types and built-ins.
+In particular, the lack of modern data types like `LocalDate` in FreeMarker was the reason for the implementation of FreshMarker.
+
+include::usage.adoc[]
+
+include::templates.adoc[]
+
+include::model.adoc[]
+
+include::interpolations.adoc[]
+
+include::builtins.adoc[]
+
+include::directives.adoc[]

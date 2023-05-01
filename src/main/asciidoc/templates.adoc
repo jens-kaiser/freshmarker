@@ -1,0 +1,56 @@
+== Templates
+
+A template engine generates output by creating a representation of a model using instructions in a template.
+
+This complicated sentence can be better explained with a small example.
+
+.Example Template
+[source]
+----
+Hello ${example}!
+----
+
+The example template contains tree parts. A first literal text fragment ``Hello ``, an interpolation fragment `${name}` and a
+second literal text fragment `!`. Literal text means the fragment is not interpreted in any particular way
+footnote:[This is an example in the introduction, sometimes it's different, of course.].
+
+=== Interpolations
+
+The interpolation is a fragment, which is filled with data from the model.
+The name `example` in the curly brackets is the name by which a value in the model can be identified.
+
+.Example Model
+[source,java]
+----
+Map<String, Object> model = Map.of("example", "World");
+----
+
+The example model contains a value `World` with the name `example`.
+
+When the example template is processed, the template engine produces the output `Hello World!` based on the example model.
+
+=== Directives
+
+In addition, there is the possibility of hiding fragments in the template or repeating them several times.
+There are special constructs for this, called directives.
+
+.Example Template with directive
+[source]
+----
+<#if example=='World'>
+Hello ${example}!
+<#else>
+Hallo ${example}!
+</#if>
+----
+
+Directives look like HTML tags with a # before the tag name.
+In this example, the English `Hello` is only written if the value is `World`.
+In all other cases the German `Hallo` is written.
+
+=== Built-Ins
+
+The last important template concept is the built-in. The result of an interpolation is changed by the built-ins.
+The interpolation from the last example produces the output `World` from the value `World`.
+If the interpolation is extended to `${example?uppercase}` then the interpolation produces `WORLD`.
+In this case the built-in uppercase has been added. Depending on the type of value, a wide variety of built-ins can be used.

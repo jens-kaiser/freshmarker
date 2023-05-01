@@ -1,0 +1,33 @@
+== Built-Ins
+
+Built-Ins are interpolation operations which are called on the current value of the interpolation.
+
+.Example with `upper_case` built-in
+[source,java]
+----
+private final Configuration configuration = new Configuration();
+private Template template = configuration.getTemplate("test", "HELLO ${example?upper_case}!");
+System.out.println(template.process(Map.of("example", "world")));
+----
+
+In the above example the built-in `upper_case` is called on the current value `world` of the interpolation.
+The built-in converts a text to its uppercase form.
+
+since the capitalization can only be changed for text, the execution of this built-in on other types such as numbers or dates is forbidden. In general, all built-ins are assigned to a type and an exception is thrown if a wrong type is used.
+
+if a built-in seems to apply to multiple types, it's because each type has a built-in with the same name.
+
+It is possible to use more than one built-in in an interpolation.
+The built-ins are called from left to right on the current value of the interpolation-
+
+.Example with two built-ins
+[source,java]
+----
+private final Configuration configuration = new Configuration();
+private Template template = configuration.getTemplate("test", "HELLO ${example?upper_case?lowercase}!");
+System.out.println(template.process(Map.of("example", "WorlD")));
+----
+
+In the example above the `upper_case` built-in is called on the current value `WorlD`.
+The second built-in `lower_case` is called on the current value `WORLD`, which is the result of `upper_case`.
+the result of the interpolation is the result `world` of the second built-in.

@@ -1,0 +1,44 @@
+== Model
+
+The template engine needs data to fill the interpolations.
+Because it is an embedded Java engine, normal Java classes are used.
+A map is always used as the model for calling the engine.
+
+By default, the template engine supports `String`, Number like `Integer`, `Long`, `Double` and `Float`, `Boolean` and Date Types as base types.
+In addition, the engine also knows `List`, `Map`, Sequences, Records and Beans.
+
+The top level model is a `Map<String, Object>`, which contains the top level value by their names.
+
+.Example Model
+[source,java]
+----
+Map<String, Object> model = Map.of("father", father, "mother", mother);
+----
+
+The following tables show all model types supported by FreshMarker.
+Because FreshMarker can be extended, there are more types available
+footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `InternationalPhoneNumber` support.].
+
+.Supported Model Types
+|===
+|Type | Java Type(s)
+
+|String|`String`
+|Number|`Long`, `Integer`, `Short`, `Byte`
+|Number|`long`, `int`, `short`, `byte`
+|Number|`Double`, `Float`, `double`, `float`
+|Boolean|`Boolean`, `boolean`
+|DateTime|`LocalDateTime`, `Date`
+|Date|`LocalDate`, `java.sql.Date`
+|Time|`LocalTime`, `java.sql.Time`
+|Duration|`Duration`
+|File|`File`
+|Path|`Path`
+|Period|`Period`
+|Sequence|Lists
+|Map|Maps
+|Bean|Beans
+|Record|Top-Level Records
+|Enum|Enums
+|Null|-
+|===

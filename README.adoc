@@ -52,6 +52,8 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 |Time|`LocalTime`, `java.sql.Time`|TemplateTime
 |Duration|`Duration`|TemplateDuration
 |Period|`Period`|TemplatePeriod
+|File|`File`|TemplateFile
+|Path|`Path`|TemplatePath
 |Sequence|Lists|TemplateListSequence
 |Map|Maps|TemplateBean
 |Bean|Beans|TemplateBean

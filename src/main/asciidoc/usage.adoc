@@ -1,0 +1,32 @@
+== Usage
+
+Using the template engine is very easy.
+First the configuration has to be generated and then a template instance has to be created with its help.
+Finally, the template is processed with the data from the model. The return value of the process method is the result of template processing.
+
+.Example Engine Call
+[source,java]
+----
+private final Configuration configuration = new Configuration();
+private Template template = configuration.getTemplate("test", "Hello ${example}!");
+System.out.println(template.process(Map.of("example", "World")));
+----
+
+There are a few design decisions to consider when using the template engine.
+
+The configuration is complex to generate and should therefore not be generated for each template.
+
+There are many ways in your own application to provide the configuration only once. A simple _Spring Boot_ variant is shown in the example.
+
+.Spring Boot Integration
+[source,java]
+----
+@Bean
+public Configuration freshmarker() {
+    return new Configuration();
+}
+----
+
+The Template instance is not thread safe, so it must not be shared between different threads. The result is unpredictable.
+
+Also, the model must be static, the values should not change during processing. This can lead to surprising results.
