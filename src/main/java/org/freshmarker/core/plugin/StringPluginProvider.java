@@ -1,6 +1,9 @@
 package org.freshmarker.core.plugin;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
@@ -29,6 +32,34 @@ public class StringPluginProvider implements PluginProvider {
   @BuiltInMethod
   public static TemplateString lowerCase(TemplateString value, ProcessContext context) {
     return new TemplateString(value.getValue().toLowerCase(context.getEnvironment().getLocale()));
+  }
+
+  @BuiltInMethod
+  public static TemplateString camelCase(TemplateString value, ProcessContext context) {
+    StringBuilder result = new StringBuilder();
+    Matcher matcher = Pattern.compile("(\\p{Lower}+)[_-](\\p{Lower})").matcher(value.getValue().toLowerCase(context.getEnvironment().getLocale()));
+    while (matcher.find()) {
+      String group1 = matcher.group(1);
+      String group2 = matcher.group(2);
+      matcher.appendReplacement(result, group1.toLowerCase() + group2.toUpperCase());
+    }
+    matcher.appendTail(result);
+    return new TemplateString(result.toString());
+  }
+
+  @BuiltInMethod
+  public static TemplateString kebabCase(TemplateString value, ProcessContext context) {
+    return new TemplateString(value.getValue().replaceAll("(\\p{Lower})(\\p{Upper}+)", "$1-$2").toLowerCase(context.getEnvironment().getLocale()));
+  }
+
+  @BuiltInMethod
+  public static TemplateString snakeCase(TemplateString value, ProcessContext context) {
+    return new TemplateString(value.getValue().replaceAll("(\\p{Lower})(\\p{Upper}+)", "$1_$2").toLowerCase(context.getEnvironment().getLocale()));
+  }
+
+  @BuiltInMethod
+  public static TemplateString screamingSnakeCase(TemplateString value, ProcessContext context) {
+    return new TemplateString(value.getValue().replaceAll("(\\p{Lower})(\\p{Upper}+)", "$1_$2").toUpperCase(context.getEnvironment().getLocale()));
   }
 
   @BuiltInMethod

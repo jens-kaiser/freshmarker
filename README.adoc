@@ -84,6 +84,10 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 
 | upper_case | String | uppercase by current locale
 | lower_case | String | lowercase by current locale
+| camelCase | String | from _kebab-case_ or snake_case_
+| kebabCase | String | from _camelCase_
+| snake_case | String | from _camelCase_
+| screaming_snake_case | String | from _camelCase_
 | trim | String |
 | length | String |
 | contains | String |

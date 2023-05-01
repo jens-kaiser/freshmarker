@@ -90,4 +90,30 @@ class StringInterpolationTest {
     Template template = configuration.getTemplate("test");
     assertEquals(expected, template.process(Map.of("text", "ABCDEF")));
   }
+
+  @ParameterizedTest
+  @CsvSource({
+          "test: ${text?camelCase},kebab-case,test: kebabCase",
+          "test: ${text?camelCase},SCREAMING-KEBAB-CASE, test: screamingKebabCase",
+          "test: ${text?camelCase},snake_case,test: snakeCase",
+          "test: ${text?camelCase},SCREAMING_SNAKE_CASE, test: screamingSnakeCase",
+  })
+  void camelCase(String templateSource, String input, String expected) throws ParseException {
+    Template template = configuration.getTemplate("test", templateSource);
+    assertEquals(expected, template.process(Map.of("text", input)));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+          "snake_case,thisIsATest,test: this_is_atest",
+          "snake_case,thisIsAnAsapTest, test: this_is_an_asap_test",
+          "screaming_snake_case,thisIsATest,test: THIS_IS_ATEST",
+          "screaming_snake_case,thisIsAnAsapTest, test: THIS_IS_AN_ASAP_TEST",
+          "kebabCase,thisIsATest,test: this-is-atest",
+          "kebabCase,thisIsAnAsapTest, test: this-is-an-asap-test",
+  })
+  void developerCases(String builtIn, String input, String expected) throws ParseException {
+    Template template = configuration.getTemplate("test", "test: ${text?" + builtIn + "}");
+    assertEquals(expected, template.process(Map.of("text", input)));
+  }
 }

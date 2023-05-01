@@ -18,7 +18,8 @@ Since the capitalization can only be changed for text, the execution of this bui
 if a built-in seems to apply to multiple types, it's because each type has a built-in with the same name.
 
 It is possible to use more than one built-in in an interpolation.
-The built-ins are called from left to right on the current value of the interpolation-
+The built-ins are called from left to right on the current value of the interpolation.
+This means a built-inn is called on the result of a previous built-in or the initial value.
 
 .Example with two built-ins
 [source,java]
@@ -31,3 +32,28 @@ System.out.println(template.process(Map.of("example", "WorlD")));
 In the example above the `upper_case` built-in is called on the current value `WorlD`.
 The second built-in `lower_case` is called on the current value `WORLD`, which is the result of `upper_case`.
 the result of the interpolation is the result `world` of the second built-in.
+
+=== String Built-Ins
+
+==== `uppercase` Built-In
+
+This Built-In converts a text in its uppercase form.
+
+==== `lowercase` Built-In
+
+This Built-In converts a text in its lowercase form.
+
+==== `camelCase` Built-In
+
+This Built-In converts a text from _snake_case_ or _kebab-case_ to _camelCase_.
+The result may look strange is the input is in some other format.
+
+==== `snake_case` Built-In
+
+This Built-In converts a text from _camelCase_ to _snake_case_.
+The result may look strange is the input is in some other format.
+
+==== `kebab_case` Built-In
+
+This Built-In converts a text from _camelCase_ to _kebab-case_.
+The result may look strange is the input is in some other format.
