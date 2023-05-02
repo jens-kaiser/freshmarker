@@ -205,7 +205,7 @@ TBD
 
 This Built-In converts a boolean to the string literals `true` or `false`.
 
-=== `then` Built-In
+==== `then` Built-In
 
 This Built-In returns its first parameter the value is `true` or the second parameter if the value is  `false`.
 
@@ -219,7 +219,7 @@ m|${false?then(23, 42)}
 m|42
 |===
 
-=== `string` Built-In
+==== `string` Built-In
 
 This Built-In returns its first string parameter the value is `true` or the second string parameter if the value is  `false`.
 The `string` Built-In is replaceable by the `then` Built-In.
@@ -232,3 +232,119 @@ m|Fox
 m|${false?string('Fox', 'Dog')}
 m|Dog
 |===
+
+=== Date-Time Built-Ins
+
+==== `date` Built-In
+
+This Built-In returns the date part of the value.
+
+==== `time` Built-In
+
+This Built-In returns the time part of the value.
+
+==== `c` (computer language) Built-In
+
+This Built-In returns a timestamp string of the value.
+
+=== Date Built-Ins
+
+==== `date` Built-In
+
+This Built-In returns the date part of the value.
+
+==== `c` (computer language) Built-In
+
+This Built-In returns a timestamp string of the value.
+
+=== Time Built-Ins
+
+==== `time` Built-In
+
+This Built-In returns the time part of the value.
+
+==== `c` (computer language) Built-In
+
+This Built-In returns a timestamp string of the value.
+
+=== Enum Built-Ins
+
+==== `ordinal` Built-In
+
+This Built-In returns the ordinal of the value.
+
+==== `c` (computer language) Built-In
+
+This Built-In returns the name of the value.
+
+=== File and Path Built-Ins
+
+==== `exists` Built-In
+
+This Built-In returns true, if the file/path in the value exists.
+
+==== `is_directory` Built-In
+
+This Built-In returns true, if the file/path in the value is a directory.
+
+==== `is_file` Built-In
+
+This Built-In returns true, if the file/path in the value is a file.
+
+==== `can_execute` Built-In
+
+This Built-In returns true, if the file/path in the value can be executed.
+
+==== `can_read` Built-In
+
+This Built-In returns true, if the file/path in the value can be read.
+
+==== `can_write` Built-In
+
+This Built-In returns true, if the file/path in the value can be write.
+
+==== `size` Built-In
+
+This Built-In returns the size of the file/path in the value.
+
+==== `name` Built-In
+
+This Built-In returns the name of the file/path in the value.
+
+==== `parent` Built-In
+
+This Built-In returns the parent file/path of the value.
+
+=== Looper Built-Ins
+
+==== `index` Built-In
+
+This Built-In returns the index (starting with zero) of the current loop value.
+
+==== `counter` Built-In
+
+This Built-In returns the counter (starting with one) of the current loop value.
+
+==== `is_first` Built-In
+
+This Built-In returns `true`, if the current loop value is the first one and `false` otherwise.
+
+==== `is_last` Built-In
+
+This Built-In returns `true`, if the current loop value is the last one and `false` otherwise.
+
+==== `item_parity` Built-In
+
+This Built-In returns `even`, if the current loop counter is even and `odd` otherwise.
+
+==== `item_parity_cap` Built-In
+
+This Built-In returns `Even`, if the current loop counter is even and `Odd` otherwise.
+
+==== `item_cycle` Built-In
+
+TBD
+
+==== `has_next` Built-In
+
+This Built-In returns `false`, if the current loop value is the last one and `true` otherwise.
