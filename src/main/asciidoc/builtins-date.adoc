@@ -4,7 +4,7 @@ The Built-Ins in the examples operate on the `java.time.LocalDate` respectively 
 
 ==== `date` Built-In
 
-This Built-In returns the date part of the value.
+This built-in returns the date part of the value.
 
 |===
 | Interpolation | Output | Type
@@ -16,7 +16,7 @@ m|1968-08-24
 
 ==== `c` (computer language) Built-In
 
-This Built-In returns a timestamp string of the value.
+This built-in returns a timestamp string of the value.
 
 |===
 | Interpolation | Output | Type

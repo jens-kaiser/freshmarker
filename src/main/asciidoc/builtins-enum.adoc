@@ -4,7 +4,7 @@ The Built-Ins in the examples operate on the enum value `java.nio.file.StandardC
 
 ==== `ordinal` Built-In
 
-This Built-In returns the ordinal of the value.
+This built-in returns the ordinal of the value.
 
 |===
 | Interpolation | Output | Type
@@ -16,7 +16,7 @@ m|2
 
 ==== `c` (computer language) Built-In
 
-This Built-In returns the name of the value.
+This built-in returns the name of the value.
 
 |===
 | Interpolation | Output | Type

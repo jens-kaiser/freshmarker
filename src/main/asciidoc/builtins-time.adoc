@@ -4,7 +4,7 @@ The Built-Ins in the examples operate on the `java.time.LocalTime` respectively 
 
 ==== `time` Built-In
 
-This Built-In returns the time part of the value.
+This built-in returns the time part of the value.
 
 |===
 | Interpolation | Output | Type
@@ -16,7 +16,7 @@ m|12:34:56
 
 ==== `c` (computer language) Built-In
 
-This Built-In returns a timestamp string of the value.
+This built-in returns a timestamp string of the value.
 
 |===
 | Interpolation | Output | Type

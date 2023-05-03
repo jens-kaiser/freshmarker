@@ -2,7 +2,7 @@
 
 ==== `uppercase` Built-In
 
-This Built-In converts a text in its uppercase form.
+This built-in converts a text in its uppercase form.
 
 |===
 |Input | Output
@@ -13,7 +13,7 @@ This Built-In converts a text in its uppercase form.
 
 ==== `lowercase` Built-In
 
-This Built-In converts a text in its lowercase form.
+This built-in converts a text in its lowercase form.
 
 |===
 |Input | Output
@@ -24,7 +24,7 @@ This Built-In converts a text in its lowercase form.
 
 ==== `capitalize` Built-In
 
-This Built-In converts the first letter of each word to uppercase.
+This built-in converts the first letter of each word to uppercase.
 A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabetic}*)\b`
 
 |===
@@ -36,7 +36,7 @@ A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabeti
 
 ==== `camelCase` Built-In
 
-This Built-In converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
+This built-in converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
 The result may look strange is the input is in some other format.
 
 |===
@@ -51,7 +51,7 @@ m|theQuickBrownFoxJumpsOverTheLazyDog
 
 ==== `snake_case` Built-In
 
-This Built-In converts a text from _camelCase_ to _snake_case_.
+This built-in converts a text from _camelCase_ to _snake_case_.
 The result may look strange is the input is in some other format.
 
 |===
@@ -63,7 +63,7 @@ m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
 
 ==== `screaming_snake_case` Built-In
 
-This Built-In converts a text from _camelCase_ to _screaming_snake_case_.
+This built-in converts a text from _camelCase_ to _screaming_snake_case_.
 The result may look strange is the input is in some other format.
 
 |===
@@ -75,7 +75,7 @@ m|THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG
 
 ==== `kebab_case` Built-In
 
-This Built-In converts a text from _camelCase_ to _kebab-case_.
+This built-in converts a text from _camelCase_ to _kebab-case_.
 The result may look strange is the input is in some other format.
 
 |===
@@ -87,7 +87,7 @@ m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
 
 ==== `trim` Built-In
 
-This Built-In removes leading and trailing whitespaces from the text.
+This built-in removes leading and trailing whitespaces from the text.
 The examples uses `␣` as an replacement for the whitespace.
 
 |===
@@ -99,7 +99,7 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 
 ==== `contains` Built-In
 
-This Built-In return `true` if the text contains the specified parameter, otherwise `false`.
+This built-in return `true` if the text contains the specified parameter, otherwise `false`.
 
 |===
 |Interpolation | Output
@@ -113,7 +113,7 @@ m|false
 
 ==== `endsWith` Built-In
 
-This Built-In return `true` if the text ends with the specified parameter, otherwise `false`.
+This built-in return `true` if the text ends with the specified parameter, otherwise `false`.
 
 |===
 |Interpolation | Output
@@ -127,7 +127,7 @@ m|false
 
 ==== `toBoolean` Built-In
 
-This Built-In return `true` if the text is `true` and `false` if it is `false`.
+This built-in return `true` if the text is `true` and `false` if it is `false`.
 
 |===
 |Interpolation | Output
@@ -144,7 +144,7 @@ m|${'gonzo'?toBoolean}
 
 ==== `length` Built-In
 
-This Built-In return the length of the text.
+This built-in return the length of the text.
 
 |===
 |Interpolation | Output
@@ -163,3 +163,4 @@ TBD
 ==== `noEsc` Built-In
 
 TBD
+

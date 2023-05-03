@@ -2,11 +2,11 @@
 
 ==== `c` (computer language) Built-In
 
-This Built-In converts a boolean to the string literals `true` or `false`.
+This built-in converts a boolean to the string literals `true` or `false`.
 
 ==== `then` Built-In
 
-This Built-In returns its first parameter the value is `true` or the second parameter if the value is  `false`.
+This built-in returns its first parameter the value is `true` or the second parameter if the value is  `false`.
 
 |===
 |Interpolation | Output
@@ -20,7 +20,7 @@ m|42
 
 ==== `string` Built-In
 
-This Built-In returns its first string parameter the value is `true` or the second string parameter if the value is  `false`.
+This built-in returns its first string parameter the value is `true` or the second string parameter if the value is  `false`.
 The `string` Built-In is replaceable by the `then` Built-In.
 
 |===

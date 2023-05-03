@@ -2,36 +2,36 @@
 
 ==== `exists` Built-In
 
-This Built-In returns true, if the file/path in the value exists.
+This built-in returns true, if the file/path in the value exists.
 
 ==== `is_directory` Built-In
 
-This Built-In returns true, if the file/path in the value is a directory.
+This built-in returns true, if the file/path in the value is a directory.
 
 ==== `is_file` Built-In
 
-This Built-In returns true, if the file/path in the value is a file.
+This built-in returns true, if the file/path in the value is a file.
 
 ==== `can_execute` Built-In
 
-This Built-In returns true, if the file/path in the value can be executed.
+This built-in returns true, if the file/path in the value can be executed.
 
 ==== `can_read` Built-In
 
-This Built-In returns true, if the file/path in the value can be read.
+This built-in returns true, if the file/path in the value can be read.
 
 ==== `can_write` Built-In
 
-This Built-In returns true, if the file/path in the value can be write.
+This built-in returns true, if the file/path in the value can be write.
 
 ==== `size` Built-In
 
-This Built-In returns the size of the file/path in the value.
+This built-in returns the size of the file/path in the value.
 
 ==== `name` Built-In
 
-This Built-In returns the name of the file/path in the value.
+This built-in returns the name of the file/path in the value.
 
 ==== `parent` Built-In
 
-This Built-In returns the parent file/path of the value.
+This built-in returns the parent file/path of the value.
