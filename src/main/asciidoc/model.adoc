@@ -21,27 +21,30 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 
 .Supported Model Types
 |===
-|Type | Java Type(s)
+|Type | Java Type(s) | Primitive type
 
-|String|`String`
-|Number|`Long`, `Integer`, `Short`, `Byte`
-|Number|`long`, `int`, `short`, `byte`
-|Number|`Double`, `Float`, `double`, `float`
-|Boolean|`Boolean`, `boolean`
-|DateTime|`LocalDateTime`, `Date`
-|Date|`LocalDate`, `java.sql.Date`
-|Time|`LocalTime`, `java.sql.Time`
-|Duration|`Duration`
-|File|`File`
-|Path|`Path`
-|Period|`Period`
-|Sequence|Lists
-|Map|Maps
-|Bean|Beans
-|Record|Top-Level Records
-|Enum|Enums
-|Null|-
+|String|`String`|yes
+|Number|`Long`, `Integer`, `Short`, `Byte`|yes
+|Number|`long`, `int`, `short`, `byte`|yes
+|Number|`Double`, `Float`, `double`, `float`|yes
+|Boolean|`Boolean`, `boolean`|yes
+|DateTime|`LocalDateTime`, `Date`|yes
+|Date|`LocalDate`, `java.sql.Date`|yes
+|Time|`LocalTime`, `java.sql.Time`|yes
+|Duration|`Duration`|yes
+|File|`File`|yes
+|Path|`Path`|yes
+|Period|`Period`|yes
+|Sequence|Lists|no
+|Map|Maps|no
+|Bean|Beans|no
+|Record|Top-Level Records|no
+|Enum|Enums|yes
+|Null|-|yes
 |===
+
+All primitive types, except Null, have a default representation via their `toString` method.
+This must be considered with the enums, because the `toString` method can be overwritten.
 
 === Lazy Values
 
@@ -62,4 +65,4 @@ Map<String, Object> model = Map.of(
 template.process(model)
 ----
 
-In the example above, the familyTree value is lazy evaluated, when the variable is accessed during template processing.
+In the example above, the `familyTree` value is lazy evaluated, when the variable is accessed during template processing.

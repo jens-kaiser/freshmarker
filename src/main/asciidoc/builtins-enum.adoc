@@ -1,6 +1,6 @@
 === Enum Built-Ins
 
-The Built-Ins in the examples operate on the enum value `StandardCopyOption.ATOMIC_MOVE`.
+The Built-Ins in the examples operate on the enum value `java.nio.file.StandardCopyOption.ATOMIC_MOVE`.
 
 ==== `ordinal` Built-In
 
