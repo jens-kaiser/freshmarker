@@ -1,0 +1,27 @@
+=== Date Built-Ins
+
+The Built-Ins in the examples operate on the `java.time.LocalDate` respectively `java.sql.Date` value `1968-08-24`.
+
+==== `date` Built-In
+
+This Built-In returns the date part of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|1968-08-24
+|date
+|===
+
+==== `c` (computer language) Built-In
+
+This Built-In returns a timestamp string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|1968-08-24
+|string
+|===

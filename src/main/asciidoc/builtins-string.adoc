@@ -1,0 +1,165 @@
+=== String Built-Ins
+
+==== `uppercase` Built-In
+
+This Built-In converts a text in its uppercase form.
+
+|===
+|Input | Output
+
+|The quick brown Fox jumps over the lazy Dog
+|THE QUICK BROWN FOX JUMPS OVER THE LAYZ DOG
+|===
+
+==== `lowercase` Built-In
+
+This Built-In converts a text in its lowercase form.
+
+|===
+|Input | Output
+
+|The quick brown Fox jumps over the lazy Dog
+|the quick brown fox jumps over the lazy dog
+|===
+
+==== `capitalize` Built-In
+
+This Built-In converts the first letter of each word to uppercase.
+A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabetic}*)\b`
+
+|===
+|Input | Output
+
+|The quick brown Fox jumps over the lazy Dog
+|The Quick Brown Fox Jumps Over The Lazy Dog
+|===
+
+==== `camelCase` Built-In
+
+This Built-In converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
+The result may look strange is the input is in some other format.
+
+|===
+|Input | Output
+
+m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
+m|theQuickBrownFoxJumpsOverTheLazyDog
+
+m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
+m|theQuickBrownFoxJumpsOverTheLazyDog
+|===
+
+==== `snake_case` Built-In
+
+This Built-In converts a text from _camelCase_ to _snake_case_.
+The result may look strange is the input is in some other format.
+
+|===
+|Input | Output
+
+m|theQuickBrownFoxJumpsOverTheLazyDog
+m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
+|===
+
+==== `screaming_snake_case` Built-In
+
+This Built-In converts a text from _camelCase_ to _screaming_snake_case_.
+The result may look strange is the input is in some other format.
+
+|===
+|Input | Output
+
+m|theQuickBrownFoxJumpsOverTheLazyDog
+m|THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG
+|===
+
+==== `kebab_case` Built-In
+
+This Built-In converts a text from _camelCase_ to _kebab-case_.
+The result may look strange is the input is in some other format.
+
+|===
+|Input | Output
+
+m|theQuickBrownFoxJumpsOverTheLazyDog
+m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
+|===
+
+==== `trim` Built-In
+
+This Built-In removes leading and trailing whitespaces from the text.
+The examples uses `␣` as an replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `contains` Built-In
+
+This Built-In return `true` if the text contains the specified parameter, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|${'The quick brown Fox jumps over the lazy Dog'?contains('Fox')}
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?contains('Cat')}
+m|false
+|===
+
+==== `endsWith` Built-In
+
+This Built-In return `true` if the text ends with the specified parameter, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|${'The quick brown Fox jumps over the lazy Dog'?endsWith('Fox')}
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?ends_with('Cat')}
+m|false
+|===
+
+==== `toBoolean` Built-In
+
+This Built-In return `true` if the text is `true` and `false` if it is `false`.
+
+|===
+|Interpolation | Output
+
+m|${'true'?toBoolean}
+m|true
+
+m|${'false'?to_boolean}
+m|false
+
+m|${'gonzo'?toBoolean}
+| This is an error.
+|===
+
+==== `length` Built-In
+
+This Built-In return the length of the text.
+
+|===
+|Interpolation | Output
+
+m|${'true'?length}
+m|4
+
+m|${'false'?length}
+m|5
+|===
+
+==== `esc` Built-In
+
+TBD
+
+==== `noEsc` Built-In
+
+TBD

@@ -1,0 +1,27 @@
+=== Time Built-Ins
+
+The Built-Ins in the examples operate on the `java.time.LocalTime` respectively `java.sql.Time` value `12:34:56`.
+
+==== `time` Built-In
+
+This Built-In returns the time part of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|12:34:56
+|time
+|===
+
+==== `c` (computer language) Built-In
+
+This Built-In returns a timestamp string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|12:34:56
+|string
+|===

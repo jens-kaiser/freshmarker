@@ -1,0 +1,33 @@
+=== Looper Built-Ins
+
+==== `index` Built-In
+
+This Built-In returns the index (starting with zero) of the current loop value.
+
+==== `counter` Built-In
+
+This Built-In returns the counter (starting with one) of the current loop value.
+
+==== `is_first` Built-In
+
+This Built-In returns `true`, if the current loop value is the first one and `false` otherwise.
+
+==== `is_last` Built-In
+
+This Built-In returns `true`, if the current loop value is the last one and `false` otherwise.
+
+==== `item_parity` Built-In
+
+This Built-In returns `even`, if the current loop counter is even and `odd` otherwise.
+
+==== `item_parity_cap` Built-In
+
+This Built-In returns `Even`, if the current loop counter is even and `Odd` otherwise.
+
+==== `item_cycle` Built-In
+
+TBD
+
+==== `has_next` Built-In
+
+This Built-In returns `false`, if the current loop value is the last one and `true` otherwise.

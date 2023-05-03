@@ -1,0 +1,27 @@
+=== Enum Built-Ins
+
+The Built-Ins in the examples operate on the enum value `StandardCopyOption.ATOMIC_MOVE`.
+
+==== `ordinal` Built-In
+
+This Built-In returns the ordinal of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${enum?ordinal}
+m|2
+|number
+|===
+
+==== `c` (computer language) Built-In
+
+This Built-In returns the name of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${enum?c}
+m|ATOMIC_MOVE
+|number
+|===

@@ -1,0 +1,34 @@
+=== Boolean Built-Ins
+
+==== `c` (computer language) Built-In
+
+This Built-In converts a boolean to the string literals `true` or `false`.
+
+==== `then` Built-In
+
+This Built-In returns its first parameter the value is `true` or the second parameter if the value is  `false`.
+
+|===
+|Interpolation | Output
+
+m|${true?then(23, 42)}
+m|23
+
+m|${false?then(23, 42)}
+m|42
+|===
+
+==== `string` Built-In
+
+This Built-In returns its first string parameter the value is `true` or the second string parameter if the value is  `false`.
+The `string` Built-In is replaceable by the `then` Built-In.
+
+|===
+|Interpolation | Output
+
+m|${true?string('Fox', 'Dog')}
+m|Fox
+
+m|${false?string('Fox', 'Dog')}
+m|Dog
+|===
