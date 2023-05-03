@@ -2,27 +2,57 @@
 
 ==== `index` Built-In
 
-This Built-In returns the index (starting with zero) of the current loop value.
+This Built-In returns the index (starting with zero) of the current loop value as a number value.
+
+|===
+|Template |Output
+
+a|
+----
+<#list (1..10) as s, l>${l?index}</#list>
+----
+m|0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+|===
 
 ==== `counter` Built-In
 
-This Built-In returns the counter (starting with one) of the current loop value.
+This Built-In returns the counter (starting with one) of the current loop value as a number value.
+
+|===
+|Template |Output
+
+a|
+----
+<#list (1..10) as s, l>${l?counter}</#list>
+----
+m|1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+|===
 
 ==== `is_first` Built-In
 
-This Built-In returns `true`, if the current loop value is the first one and `false` otherwise.
+This Built-In returns the boolean value `true`, if the current loop value is the first one and `false` otherwise.
+
+|===
+|Template |Output
+
+a|
+----
+<#list (1..10) as s, l>${l?is_first}</#list>
+----
+m|true, false, false, false, false, false, false, false, false, false,
+|===
 
 ==== `is_last` Built-In
 
-This Built-In returns `true`, if the current loop value is the last one and `false` otherwise.
+This Built-In returns the boolean value `true`, if the current loop value is the last one and `false` otherwise.
 
 ==== `item_parity` Built-In
 
-This Built-In returns `even`, if the current loop counter is even and `odd` otherwise.
+This Built-In returns the string value `even`, if the current loop counter is even and `odd` otherwise.
 
 ==== `item_parity_cap` Built-In
 
-This Built-In returns `Even`, if the current loop counter is even and `Odd` otherwise.
+This Built-In returns the string value `Even`, if the current loop counter is even and `Odd` otherwise.
 
 ==== `item_cycle` Built-In
 
