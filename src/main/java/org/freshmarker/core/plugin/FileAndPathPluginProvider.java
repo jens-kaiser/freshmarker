@@ -30,15 +30,15 @@ public class FileAndPathPluginProvider implements PluginProvider {
     register(builtIns, FILE_BUILDER.of("size"), (x, y, e) -> processFile(x, File::length, e));
     register(builtIns, FILE_BUILDER.of("name"), (x, y, e) -> processFile(x, File::getName, e));
     register(builtIns, FILE_BUILDER.of("parent"), (x, y, e) -> processFile(x, File::getParentFile, e));
-    register(builtIns, PATH_BUILDER.of("exists"), (x, y, e) -> processPath(x, File::exists, e));
-    register(builtIns, PATH_BUILDER.of("is_directory"), (x, y, e) -> processPath(x, File::isDirectory, e));
-    register(builtIns, PATH_BUILDER.of("is_file"), (x, y, e) -> processPath(x, File::isFile, e));
-    register(builtIns, PATH_BUILDER.of("can_execute"), (x, y, e) -> processPath(x, File::canExecute, e));
-    register(builtIns, PATH_BUILDER.of("can_read"), (x, y, e) -> processPath(x, File::canRead, e));
-    register(builtIns, PATH_BUILDER.of("can_write"), (x, y, e) -> processPath(x, File::canWrite, e));
-    register(builtIns, PATH_BUILDER.of("size"), (x, y, e) -> processPath(x, File::length, e));
-    register(builtIns, PATH_BUILDER.of("name"), (x, y, e) -> processPath(x, File::getName, e));
-    register(builtIns, PATH_BUILDER.of("parent"), (x, y, e) -> processPath(x, File::getParentFile, e));
+    register(builtIns, PATH_BUILDER.of("exists"), (x, y, e) -> processFilePath(x, File::exists, e));
+    register(builtIns, PATH_BUILDER.of("is_directory"), (x, y, e) -> processFilePath(x, File::isDirectory, e));
+    register(builtIns, PATH_BUILDER.of("is_file"), (x, y, e) -> processFilePath(x, File::isFile, e));
+    register(builtIns, PATH_BUILDER.of("can_execute"), (x, y, e) -> processFilePath(x, File::canExecute, e));
+    register(builtIns, PATH_BUILDER.of("can_read"), (x, y, e) -> processFilePath(x, File::canRead, e));
+    register(builtIns, PATH_BUILDER.of("can_write"), (x, y, e) -> processFilePath(x, File::canWrite, e));
+    register(builtIns, PATH_BUILDER.of("size"), (x, y, e) -> processFilePath(x, File::length, e));
+    register(builtIns, PATH_BUILDER.of("name"), (x, y, e) -> processPath(x, Path::getFileName, e));
+    register(builtIns, PATH_BUILDER.of("parent"), (x, y, e) -> processPath(x, Path::getParent, e));
   }
 
   private void register(Map<BuiltInKey, BuiltIn> buildIns, BuiltInKey builtInKey, BuiltInFunction function) {
@@ -57,9 +57,14 @@ public class FileAndPathPluginProvider implements PluginProvider {
     return context.getEnvironment().mapObject(function.apply(input));
   }
 
-  private TemplateObject processPath(TemplateObject value, Function<File, ?> function, ProcessContext context) {
+  private TemplateObject processFilePath(TemplateObject value, Function<File, ?> function, ProcessContext context) {
     Path input = ((TemplatePath) value).getValue();
     Function<Path, File> convert = Path::toFile;
     return context.getEnvironment().mapObject(convert.andThen(function).apply(input));
+  }
+  private TemplateObject processPath(TemplateObject value, Function<Path, ?> function, ProcessContext context) {
+    Path input = ((TemplatePath) value).getValue();
+    Function<Path, File> convert = Path::toFile;
+    return context.getEnvironment().mapObject(function.apply(input));
   }
 }

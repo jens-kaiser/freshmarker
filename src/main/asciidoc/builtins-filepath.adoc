@@ -1,37 +1,114 @@
 === File and Path Built-Ins
 
+WARNING: if these built-ins are used carelessly, third parties may receive information about files on the server.
+
+The Built-Ins in the examples operate on the `java.io.File` respectively `java.nio.file.Path` value `/src/main/asciidoc/manual.adoc`.
+
 ==== `exists` Built-In
 
 This built-in returns true, if the file/path in the value exists.
+
+|===
+| Interpolation | Output | Type
+
+m|${file?exists}
+m|true
+|boolean
+|===
 
 ==== `is_directory` Built-In
 
 This built-in returns true, if the file/path in the value is a directory.
 
+|===
+| Interpolation | Output | Type
+
+m|${file?is_directory}
+m|false
+|boolean
+|===
+
 ==== `is_file` Built-In
 
 This built-in returns true, if the file/path in the value is a file.
+
+|===
+| Interpolation | Output | Type
+
+m|${file?is_file}
+m|true
+|boolean
+|===
 
 ==== `can_execute` Built-In
 
 This built-in returns true, if the file/path in the value can be executed.
 
+|===
+| Interpolation | Output | Type
+
+m|${file?can_execute}
+m|false
+|boolean
+|===
+
 ==== `can_read` Built-In
 
 This built-in returns true, if the file/path in the value can be read.
+
+|===
+| Interpolation | Output | Type
+
+m|${file?can_read}
+m|true
+|boolean
+|===
 
 ==== `can_write` Built-In
 
 This built-in returns true, if the file/path in the value can be write.
 
+|===
+| Interpolation | Output | Type
+
+m|${file?can_write}
+m|true
+|boolean
+|===
+
 ==== `size` Built-In
 
 This built-in returns the size of the file/path in the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${file?size}
+m|764
+|number
+|===
 
 ==== `name` Built-In
 
 This built-in returns the name of the file/path in the value.
 
+|===
+| Interpolation | Output | Type
+
+m|${file?name}
+m|manual.adoc
+|string
+|===
+
 ==== `parent` Built-In
 
 This built-in returns the parent file/path of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${file?parent}
+m|/src/main/asciidoc
+|file/path
+|===
+
