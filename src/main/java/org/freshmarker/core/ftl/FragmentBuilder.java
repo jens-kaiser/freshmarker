@@ -105,8 +105,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
   @Override
   public BlockFragment visit(Text ftl, BlockFragment input) {
-    ftl.getAllTokens(false).stream().map(Token::getImage).map(ConstantFragment::new)
-        .forEach(input::addFragment);
+    ftl.getAllTokens(false).stream().map(Token::getImage).map(ConstantFragment::new).forEach(input::addFragment);
     return input;
   }
 

@@ -19,23 +19,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SettingTest {
   private Configuration configuration;
-  private StringTemplateLoader templateLoader;
 
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
     configuration.setLocale(Locale.GERMANY);
-    templateLoader = new StringTemplateLoader();
-    configuration.registerTemplateLoader(templateLoader);
   }
 
   @ParameterizedTest
-  @CsvSource(value = {
-      "test: ${42.23} - <#setting locale=\"en_US\">${42.23};test: 42,23 - 42.23",
-  }, delimiterString = ";")
+  @CsvSource(value = "test: ${42.23} - <#setting locale=\"en_US\">${42.23};test: 42,23 - 42.23", delimiterString = ";")
   void setting(String templateSource, String expected) throws ParseException, IOException {
-    templateLoader.putTemplate("test", templateSource);
-    Template template = configuration.getTemplate("test");
+    Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of()));
   }
 }

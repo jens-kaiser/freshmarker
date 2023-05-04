@@ -1,1 +1,105 @@
 == Directives
+
+=== If/ElseIf/Else Directive
+
+This directive generates conditional output. The expression in the `if` and `elseif` tag
+is evaluated to a boolean value. If the value is `true` the corresponding block is evaluated.
+If the expression cannot evaluated to a boolean value an exception is thrown.
+
+[source]
+----
+<#if text??>
+${text}
+</#if>
+----
+
+[source]
+----
+<#if number >= 100>
+greater equal hundred
+<#else>
+less hundred
+</#if>
+----
+
+[source]
+----
+<#if number >= 100>
+greater equal hundred
+<#elseif number > 10>
+greater ten
+</#if>
+----
+
+[source]
+----
+<#if number >= 100>
+greater equal hundred
+<#elseif number > 10>
+greater ten
+<#else>
+less ten
+</#if>
+----
+
+=== Switch/Case/Default Directive
+
+----
+<#switch color>
+<#case 'RED'>#FF0000
+<#case 'GREEN'>#00FF00
+<#case 'BLUE'>#0000FF
+<#default>${color}
+</#switch>
+----
+
+=== List Directive
+
+[source]
+----
+<#list sequence as s>
+${s}
+</#list>
+----
+
+[source]
+----
+<#list sequence as s, l>
+${l?index}. ${s}
+</#list>
+----
+
+=== Var/Set Directive
+
+[source]
+----
+<#var test='eins'/>
+<#set test='zwei'/>
+<#set test='drei'/>
+----
+
+=== Output-Format Directive
+
+TBD
+
+=== Setting Directive
+
+[source]
+----
+<#setting locale="de_DE">
+${42.23}
+<#setting locale="en_US">
+${42.23}
+----
+
+=== Macro Directive
+
+TBD
+
+=== User Directive
+
+[source]
+----
+<@log level='info' message='test'/>
+----
+

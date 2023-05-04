@@ -14,13 +14,8 @@ Despite reduced programming features, FreshMarker is open to new data types and 
 In particular, the lack of modern data types like `LocalDate` in FreeMarker was the reason for the implementation of FreshMarker.
 
 include::usage.adoc[]
-
 include::templates.adoc[]
-
 include::model.adoc[]
-
 include::interpolations.adoc[]
-
 include::builtins.adoc[]
-
-//include::directives.adoc[]
+include::directives.adoc[]
