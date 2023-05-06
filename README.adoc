@@ -94,6 +94,7 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 | ends_with | String |
 | boolean | String |
 | c    | DateTime, Date, Time |
+| string | DateTime, Date, Time | Not for the legacy temporal types
 | date | DateTime, Date |
 | time | DateTime, Time |
 | c    | Boolean |

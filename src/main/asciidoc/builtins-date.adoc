@@ -25,3 +25,16 @@ m|${temporal?c}
 m|1968-08-24
 |string
 |===
+
+==== `string` Built-In
+
+This built-in returns a formatted string of the value.
+footnote:[Not for the legacy temporal types]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?string('dd. MMMM yyyy')}
+m|24. August 1968
+|string
+|===
