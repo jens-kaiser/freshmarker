@@ -4,6 +4,8 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.environment.SettingEnvironment;
 
+import java.util.Map;
+
 public class OutputFormatFragment implements Fragment {
 
   private final BlockFragment content;
@@ -17,7 +19,7 @@ public class OutputFormatFragment implements Fragment {
   @Override
   public void process(ProcessContext context) {
     Environment environment = context.getEnvironment();
-    context.setEnvironment(new SettingEnvironment(environment, null, context.getOutputFormat(format)));
+    context.setEnvironment(new SettingEnvironment(environment, null, context.getOutputFormat(format), Map.of()));
     content.process(context);
     context.setEnvironment(environment);
   }

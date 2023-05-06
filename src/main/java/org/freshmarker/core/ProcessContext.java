@@ -13,19 +13,14 @@ import org.freshmarker.core.output.UndefinedOutputFormat;
 
 public class ProcessContext {
 
-  private static final StringFormatter STRING_FORMATTER = new StringFormatter();
-
   private Environment environment;
   private final Map<Object, Map<Object, Object>> stores = new HashMap<>();
   private final Map<BuiltInKey, BuiltIn> builtIns;
-  private final Map<Class<? extends TemplateObject>, Formatter> formatter;
   private final Map<String, OutputFormat> outputs;
 
-  public ProcessContext(Environment environment, Map<BuiltInKey, BuiltIn> builtIns,
-      Map<Class<? extends TemplateObject>, Formatter> formatter, Map<String, OutputFormat> outputs) {
+  public ProcessContext(Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs) {
     this.environment = environment;
     this.builtIns = builtIns;
-    this.formatter = formatter;
     this.outputs = outputs;
   }
 
@@ -51,10 +46,6 @@ public class ProcessContext {
       throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
     }
     return result;
-  }
-
-  public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-    return formatter.getOrDefault(type, STRING_FORMATTER);
   }
 
   public OutputFormat getOutputFormat(String name) {

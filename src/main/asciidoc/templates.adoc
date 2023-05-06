@@ -53,4 +53,4 @@ In all other cases the German `Hallo` is written.
 The last important template concept is the built-in. The result of an interpolation is changed by the built-ins.
 The interpolation from the last example produces the output `World` from the value `World`.
 If the interpolation is extended to `${example?uppercase}` then the interpolation produces `WORLD`.
-In this case the built-in uppercase has been added. Depending on the type of value, a wide variety of built-ins can be used.
+In this case the built-in `upper_case` has been added. Depending on the type of value, a wide variety of built-ins can be used.

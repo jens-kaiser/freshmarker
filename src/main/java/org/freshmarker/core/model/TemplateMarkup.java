@@ -37,7 +37,7 @@ public class TemplateMarkup implements TemplateObject {
       return templateObject.evaluate(context, TemplateString.class);
     }
     Environment environment = context.getEnvironment();
-    String result = context.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale());
+    String result = environment.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale());
     return outputFormat.escape(environment, result);
   }
 

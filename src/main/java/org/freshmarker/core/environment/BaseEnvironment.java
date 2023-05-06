@@ -11,6 +11,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
@@ -25,10 +26,11 @@ public class BaseEnvironment implements Environment {
   private final Map<String, UserDirective> userDirectives;
   private final Map<String, TemplateFunction> functions;
   private final Writer writer;
+  private final Map<Class<? extends TemplateObject>, Formatter> formatter;
 
   public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Locale locale,
-      OutputFormat outputFormat, Map<String, UserDirective> userDirectives,
-      Map<String, TemplateFunction> functions, Writer writer) {
+                         OutputFormat outputFormat, Map<String, UserDirective> userDirectives,
+                         Map<String, TemplateFunction> functions, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter) {
     this.dataModel = dataModel;
     this.locale = locale;
     this.outputFormat = outputFormat;
@@ -36,6 +38,7 @@ public class BaseEnvironment implements Environment {
     this.userDirectives = userDirectives;
     this.functions = functions;
     this.writer = writer;
+    this.formatter = formatter;
   }
 
   @Override
@@ -89,5 +92,9 @@ public class BaseEnvironment implements Environment {
   @Override
   public Writer getWriter() {
     return writer;
+  }
+
+  public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
+    return formatter.getOrDefault(type, (o, l) -> o.toString());
   }
 }
