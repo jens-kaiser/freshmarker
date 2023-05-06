@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
@@ -61,5 +62,10 @@ public abstract class WrapperEnvironment implements Environment {
   @Override
   public void setVariable(String name, TemplateObject value) {
     wrapped.setVariable(name, value);
+  }
+
+  @Override
+  public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
+    return wrapped.getFormatter(type);
   }
 }
