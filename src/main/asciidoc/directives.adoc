@@ -4,8 +4,9 @@
 
 This directive generates conditional output. The expression in the `if` and `elseif` tag
 is evaluated to a boolean value. If the value is `true` the corresponding block is evaluated.
-If the expression cannot evaluated to a boolean value an exception is thrown.
+If the expression cannot evaluate to a boolean value an exception is thrown.
 
+.Example with only the `if` part
 [source]
 ----
 <#if text??>
@@ -13,24 +14,9 @@ ${text}
 </#if>
 ----
 
-[source]
-----
-<#if number >= 100>
-greater equal hundred
-<#else>
-less hundred
-</#if>
-----
+The `elseif` and `else` part are optional and can be dismissed.
 
-[source]
-----
-<#if number >= 100>
-greater equal hundred
-<#elseif number > 10>
-greater ten
-</#if>
-----
-
+.Example with all parts
 [source]
 ----
 <#if number >= 100>
@@ -44,6 +30,7 @@ less ten
 
 === Switch/Case/Default Directive
 
+[source]
 ----
 <#switch color>
 <#case 'RED'>#FF0000
