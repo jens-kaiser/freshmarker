@@ -42,7 +42,7 @@ m|1968-08-24T12:34:56
 ==== `string` Built-In
 
 This built-in returns a formatted string of the value.
-footnote:[Not for the legacy temporal types]
+footnote:legacyTemporal[Not for the legacy temporal types]
 
 |===
 | Interpolation | Output | Type

@@ -29,7 +29,7 @@ m|12:34:56
 ==== `string` Built-In
 
 This built-in returns a formatted string of the value.
-footnote:[Not for the legacy temporal types]
+footnote:legacyTemporal[]
 
 |===
 | Interpolation | Output | Type
