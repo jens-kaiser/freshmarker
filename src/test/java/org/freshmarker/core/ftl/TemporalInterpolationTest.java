@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 import java.util.Map;
 
 import org.freshmarker.core.ProcessException;
@@ -46,7 +48,7 @@ class TemporalInterpolationTest {
 
     @Test
     void interpolationLocalDateString() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy')}");
+        Template template = configuration.getTemplate("test", "test: ${temporal?string('d. MMMM yyyy')}");
         String result = template.process(Map.of("temporal", LocalDate.of(1968, Month.AUGUST, 24)));
         assertEquals("test: 24. August 1968", result);
     }
@@ -149,12 +151,81 @@ class TemporalInterpolationTest {
         assertEquals("test: PT43M", result);
     }
 
-  @Test
-  void interpolationPeriod() throws ParseException, IOException {
-    templateLoader.putTemplate("test", "test: ${temporal}");
-    Template template = configuration.getTemplate("test");
-    String result = template.process(Map.of("temporal", Period.of(2, 4, 1)));
-    assertEquals("test: P2Y4M1D", result);
-  }
-}
+    @Test
+    void interpolationPeriod() throws ParseException, IOException {
+        templateLoader.putTemplate("test", "test: ${temporal}");
+        Template template = configuration.getTemplate("test");
+        String result = template.process(Map.of("temporal", Period.of(2, 4, 1)));
+        assertEquals("test: P2Y4M1D", result);
+    }
 
+    @Test
+    void interpolationZonedDateTime() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin"))));
+        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", result);
+    }
+
+    @Test
+    void interpolationZonedDateTimeComputerAudience() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin"))));
+        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", result);
+    }
+
+    @Test
+    void interpolationZonedDateTimeString() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin"))));
+        assertEquals("test: 24. August 1968 12:30", result);
+    }
+
+    @Test
+    void interpolationInstant() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
+        assertEquals("test: 1968-08-24 11:30:45 UTC", result);
+    }
+
+    @Test
+    void interpolationInstantComputerAudience() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
+        assertEquals("test: 1968-08-24T11:30:45Z", result);
+    }
+
+    @Test
+    void interpolationInstantString() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
+        assertEquals("test: 24. August 1968 11:30", result);
+    }
+
+    @Test
+    void interpolationLocalDateTimeAtZone() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
+        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", result);
+    }
+
+    @Test
+    void interpolationLocalDateTimeAtZoneC() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')?c}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
+        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", result);
+    }
+
+    @Test
+    void interpolationInstantAtZone() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")).toInstant()));
+        assertEquals("test: 1968-08-24 01:30:45 Europe/Berlin", result);
+    }
+
+    @Test
+    void interpolationZonedDateTimeAtZone() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")).toInstant()));
+        assertEquals("test: 1968-08-24 01:30:45 Europe/Berlin", result);
+    }
+}
