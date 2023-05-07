@@ -51,3 +51,15 @@ m|${temporal?string('dd. MMMM yyyy hh:mm')}
 m|24. August 1968
 |string
 |===
+
+==== `at_zone` Built-In
+
+This built-in returns a temporal at the given time zone of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?at_zone('Europe/Berlin')}
+m|1968-08-24 12:30:45 Europe/Berlin
+|date time (TemplateZonedDateTime)
+|===
