@@ -15,4 +15,15 @@ public class TemplateZonedDateTime extends TemplatePrimitive<ZonedDateTime> impl
     return new TemplateZonedDateTime(getValue().withZoneSameInstant(zoneId));
   }
 
+  public TemplateLocalTime toLocalTime() {
+    return new TemplateLocalTime(getValue().toLocalTime());
+  }
+
+  public TemplateLocalDate toLocalDate() {
+    return new TemplateLocalDate(getValue().toLocalDate());
+  }
+
+  public TemplateLocalDateTime toLocalDateTime() {
+    return new TemplateLocalDateTime(getValue().toLocalDateTime());
+  }
 }

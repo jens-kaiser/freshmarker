@@ -2,7 +2,7 @@
 
 === If/ElseIf/Else Directive
 
-This directive generates conditional output. The expression in the `if` and `elseif` tag
+This directive generates conditional output. The expression in the `if` and `elseif` statement
 is evaluated to a boolean value. If the value is `true` the corresponding block is evaluated.
 If the expression cannot evaluate to a boolean value an exception is thrown.
 
@@ -30,6 +30,13 @@ less ten
 
 === Switch/Case/Default Directive
 
+This directive generates conditional output.
+But unlike the _If Directive_, only one expression int the `switch` statement is evaluated.
+Each `case` statement handles a possible outcome of the evaluation.
+If none of the specified `case` statements match, then the `default` statement is used.
+
+NOTE: the FreshMarker _Switch Directive_ does not support fall-through, so `break` statements are unnecessary.
+
 [source]
 ----
 <#switch color>
@@ -42,11 +49,61 @@ less ten
 
 === List Directive
 
+The _List Directives_ processes its body for each element of a sequence.
+The sequence can be either a list or a range.
+A list is a sequence of values of any model type.
+A range is defined by a lower and a non-mandatory upper numerical limit.
+
+A list directive exists in two variants.
+The first variant defines the sequence and the name of the item variable in the block.
+The second variant defines the sequence, the name of the item variable in the block and a loop variable with metadata of the current loop iteration.
+
+.List Directive example with a list
 [source]
 ----
 <#list sequence as s>
-${s}
+${s} Marx
 </#list>
+----
+
+In the above example, each element from the list is simply output followed by the word `Marx`.
+If the list contains `Chico`, `Harpo`, `Groucho`, `Gummo` and `Zeppo` then the result is a five-line listing of the Marx brothers.
+
+The next example the interpolation `${s}` is preceded by the interpolation `${l?counter}`.
+
+.List Directive example with a list and a loop variable
+[source]
+----
+<#list sequence as s, l>
+${l?counter}. ${s} Marx
+</#list>
+----
+
+Because `l` is the name of the loop variable, the first interpolation evaluates to the counter of the current item in the list.
+
+[source]
+----
+1. Chico Marx
+2. Harpo Marx
+3. Groucho Marx
+4. Gummo Marx
+5. Zeppo Marx
+----
+
+.List Directive example with a range
+[source]
+----
+<#list 1..5 as s>
+${s}*${s}=${s*s}
+</#list>
+----
+
+[source]
+----
+1*1=1
+2*2=4
+3*3=9
+4*4=16
 ----
 
 [source]

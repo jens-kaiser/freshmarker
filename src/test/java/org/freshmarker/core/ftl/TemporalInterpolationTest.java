@@ -184,7 +184,7 @@ class TemporalInterpolationTest {
     void interpolationInstant() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
         String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
-        assertEquals("test: 1968-08-24 11:30:45 UTC", result);
+        assertEquals("test: 1968-08-24 11:30:45 Z", result);
     }
 
     @Test
