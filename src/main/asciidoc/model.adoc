@@ -36,6 +36,8 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 |Path|`Path`|yes
 |Period|`Period`|yes
 |Sequence|Lists|no
+|Range|-|no
+|Slice|-|no
 |Map|Maps|no
 |Bean|Beans|no
 |Record|Top-Level Records|no

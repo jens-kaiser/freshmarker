@@ -14,5 +14,4 @@ public class TemplateInstant extends TemplatePrimitive<Instant> implements Templ
   public TemplateZonedDateTime atZone(ZoneId zoneId) {
     return new TemplateZonedDateTime(getValue().atZone(zoneId));
   }
-
 }

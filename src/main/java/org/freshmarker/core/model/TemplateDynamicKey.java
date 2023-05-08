@@ -20,12 +20,11 @@ public class TemplateDynamicKey implements TemplateExpression {
     TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
     TemplateObject templateObject = sequence.evaluateToObject(context);
     int beginIndex = index.getValue().getNumber().intValue();
-    if (templateObject instanceof TemplateString) {
-      String value = ((TemplateString) templateObject).getValue();
+    if (templateObject instanceof TemplateString templateString) {
+      String value = templateString.getValue();
       return new  TemplateString(value.substring(beginIndex, beginIndex + 1));
     }
-    if (templateObject instanceof TemplateRange) {
-      TemplateRange range = (TemplateRange) templateObject;
+    if (templateObject instanceof TemplateRange range) {
       TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
       TemplateNumber result = lower.add(index);
       if (range.isRightUnlimited()) {
