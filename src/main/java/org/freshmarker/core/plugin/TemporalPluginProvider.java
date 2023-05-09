@@ -69,6 +69,8 @@ public class TemporalPluginProvider implements PluginProvider {
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue())));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("at_zone"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateZonedDateTime) x).atZone(getZoneId(y, e))));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"), new FunctionalBuiltIn(
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(((TemplateZonedDateTime) x).getValue().getZone().toString())));
 
         builtIns.put(DATE_TIME_BUILDER.of("date"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate())));
