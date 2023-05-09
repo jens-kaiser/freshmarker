@@ -90,26 +90,35 @@ Because `l` is the name of the loop variable, the first interpolation evaluates 
 5. Zeppo Marx
 ----
 
+The List Directives works also on numeric ranges.
+Although `FreshMarker` also masters right-open ranges, List Directives are not allowed to use them.
+
 .List Directive example with a range
 [source]
 ----
 <#list 1..5 as s>
-${s}*${s}=${s*s}
+${s} * ${s} = ${s*s}
 </#list>
 ----
 
-[source]
-----
-1*1=1
-2*2=4
-3*3=9
-4*4=16
-----
+The current item in the above example is any integer value from 1 to 4 inclusive.
+The result is a list of square value equations.
 
 [source]
 ----
-<#list sequence as s, l>
-${l?index}. ${s}
+1 * 1 = 1
+2 * 2 = 4
+3 * 3 = 9
+4 * 4 = 16
+----
+
+Because the limits of a range do not have to be constants, a List Directive can also be used to mimic a for loop.
+
+.List Directive example with variable range limits
+[source]
+----
+<#list a..b as s>
+${s} * ${s} = ${s*s}
 </#list>
 ----
 
