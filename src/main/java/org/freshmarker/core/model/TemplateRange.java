@@ -15,6 +15,9 @@ public class TemplateRange implements TemplateSequence {
   private final TemplateObject lower;
   private final TemplateObject upper;
 
+  private int lowerNumber;
+  private int upperNumber;
+
   public TemplateRange(boolean lengthLimited, boolean rightUnlimited, TemplateObject lower, TemplateObject upper) {
     this.lengthLimited = lengthLimited;
     this.rightUnlimited = rightUnlimited;
@@ -46,8 +49,9 @@ public class TemplateRange implements TemplateSequence {
   @Override
   public TemplateObject get(ProcessContext context, int index) {
     logger.info("get: {}", index);
-    int lowerNumber = lower.evaluate(context, TemplateNumber.class).asInt();
-    return new TemplateNumber(lowerNumber + index);
+    lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
+    upperNumber = upperNumber != 0 ? upperNumber : upper.evaluate(context, TemplateNumber.class).asInt();
+    return new TemplateNumber(lowerNumber < upperNumber ? lowerNumber  + index : lowerNumber - index);
   }
 
   @Override

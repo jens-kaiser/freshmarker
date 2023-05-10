@@ -122,6 +122,7 @@ ${s} * ${s} = ${s*s}
 </#list>
 ----
 
+
 === Var/Set Directive
 
 [source]

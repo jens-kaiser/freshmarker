@@ -94,6 +94,20 @@ class ListDirectiveTest {
     assertEquals("test: 1234", template.process(Map.of()));
   }
 
+  @Test
+  void variableRange() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: <#list a..b as s>${s}</#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: 2345678", template.process(Map.of("a",2, "b", 8)));
+  }
+
+  @Test
+  void variableEgnar() throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: <#list a..b as s>${s}</#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: 8765432", template.process(Map.of("a",8, "b", 2)));
+  }
+
   public record Complex(String key, String value) {
 
   }
