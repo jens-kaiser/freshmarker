@@ -30,7 +30,7 @@ public class TemplateDynamicKey implements TemplateExpression {
                 return lower.add(index);
             }
             TemplateNumber upper = range.getUpper().evaluate(context, TemplateNumber.class);
-            if (Math.abs(lower.asInt() - upper.asInt()) >= index.asInt()) {
+            if (Math.abs(lower.asInt() - upper.asInt()) <= index.asInt()) {
                 throw new ProcessException("index out of range: " + index);
             }
             TemplateNumber result;
