@@ -1,51 +1,22 @@
 package org.freshmarker.core.model;
 
-import java.util.List;
-import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
-public class TemplateLooper implements TemplateObject {
+import java.util.List;
 
-  private final TemplateSequence sequence;
-  private final int size;
-  private int index;
+public interface TemplateLooper extends TemplateObject {
+    TemplateNumber getIndex();
 
-  public TemplateLooper(TemplateSequence sequence, int size) {
-    this.sequence = sequence;
-    this.size = size;
-  }
+    TemplateNumber getCounter();
 
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    return sequence.get(context, index);
-  }
+    TemplateBoolean isFirst();
 
-  public TemplateNumber getIndex() {
-    return new TemplateNumber(index);
-  }
+    TemplateBoolean isLast();
 
-  public TemplateNumber getCounter() {
-    return new TemplateNumber(index + 1);
-  }
+    TemplateBoolean hasNext();
 
-  public TemplateBoolean isFirst() {
-    return index == 0 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
-  }
+    void increment();
 
-  public TemplateBoolean isLast() {
-    return size == index + 1 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
-  }
-
-  public TemplateBoolean hasNext() {
-    return size == index + 1 ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
-  }
-
-  public void increment() {
-    index++;
-  }
-
-  public TemplateObject cycle(List<TemplateObject> cycle) {
-    return cycle.get(index % cycle.size());
-  }
+    TemplateObject cycle(List<TemplateObject> cycle);
 }

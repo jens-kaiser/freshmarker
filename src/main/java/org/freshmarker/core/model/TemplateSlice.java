@@ -19,17 +19,15 @@ public class TemplateSlice implements TemplateObject {
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateRange templateRange = range.evaluate(context, TemplateRange.class);
     TemplateObject value = sequence.evaluateToObject(context);
-    if (value instanceof TemplateString) {
-      return handleSequence(context, templateRange, (TemplateString) value);
-
-    } else if (value instanceof TemplateListSequence) {
-      return handleSequence(context, templateRange, (TemplateListSequence) value);
+    if (value instanceof TemplateString templateString) {
+      return handleSequence(context, templateRange, templateString);
+    } else if (value instanceof TemplateListSequence templateListSequence) {
+      return handleSequence(context, templateRange, templateListSequence);
     }
     throw new UnsupportedDataTypeException("slicing not supported on " + value.getClass().getSimpleName());
   }
 
-  private TemplateListSequence handleSequence(ProcessContext context, TemplateRange templateRange,
-      TemplateListSequence templateListSequence) {
+  private TemplateListSequence handleSequence(ProcessContext context, TemplateRange templateRange, TemplateListSequence templateListSequence) {
     TemplateNumber lower = templateRange.getLower().evaluate(context, TemplateNumber.class);
     int min = lower.getValue().getNumber().intValue();
     if (templateRange.isRightUnlimited()) {
@@ -44,8 +42,7 @@ public class TemplateSlice implements TemplateObject {
     return templateListSequence.slice(min, max);
   }
 
-  private TemplateString handleSequence(ProcessContext context, TemplateRange templateRange,
-      TemplateString templateString) {
+  private TemplateString handleSequence(ProcessContext context, TemplateRange templateRange, TemplateString templateString) {
     TemplateNumber lower = templateRange.getLower().evaluate(context, TemplateNumber.class);
     String value = templateString.getValue();
     int min = lower.getValue().getNumber().intValue();

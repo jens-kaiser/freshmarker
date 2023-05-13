@@ -3,65 +3,104 @@ package org.freshmarker.core.plugin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInMethod;
-import org.freshmarker.core.model.TemplateLooper;
+import org.freshmarker.core.model.TemplateHashLooper;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateSequenceLooper;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 public class LooperPluginProvider implements PluginProvider {
 
-  private static final List<TemplateObject> ITEM_PARITYTY = List.of(new TemplateString("odd"),
-      new TemplateString("even"));
+    private static final List<TemplateObject> ITEM_PARITYTY = List.of(new TemplateString("odd"), new TemplateString("even"));
 
-  private static final List<TemplateObject> ITEM_PARITYTY_CAP = List.of(new TemplateString("Odd"),
-      new TemplateString("Even"));
+    private static final List<TemplateObject> ITEM_PARITYTY_CAP = List.of(new TemplateString("Odd"), new TemplateString("Even"));
 
-  @Override
-  public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-    new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
-  }
+    @Override
+    public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
+        new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
+    }
 
-  @BuiltInMethod
-  public static TemplateNumber index(TemplateLooper value) {
-    return value.getIndex();
-  }
+    @BuiltInMethod
+    public static TemplateNumber index(TemplateSequenceLooper value) {
+        return value.getIndex();
+    }
 
-  @BuiltInMethod
-  public static TemplateNumber counter(TemplateLooper value) {
-    return value.getCounter();
-  }
+    @BuiltInMethod
+    public static TemplateNumber index(TemplateHashLooper value) {
+        return value.getIndex();
+    }
 
-  @BuiltInMethod
-  public static TemplateBoolean isFirst(TemplateLooper value) {
-    return value.isFirst();
-  }
+    @BuiltInMethod
+    public static TemplateNumber counter(TemplateSequenceLooper value) {
+        return value.getCounter();
+    }
 
-  @BuiltInMethod
-  public static TemplateBoolean isLast(TemplateLooper value) {
-    return value.isLast();
-  }
+    @BuiltInMethod
+    public static TemplateNumber counter(TemplateHashLooper value) {
+        return value.getCounter();
+    }
 
-  @BuiltInMethod
-  public static TemplateString itemParity(TemplateLooper value) {
-    return (TemplateString) value.cycle(ITEM_PARITYTY);
-  }
+    @BuiltInMethod
+    public static TemplateBoolean isFirst(TemplateSequenceLooper value) {
+        return value.isFirst();
+    }
 
-  @BuiltInMethod
-  public static TemplateString itemParityCap(TemplateLooper value) {
-    return (TemplateString) value.cycle(ITEM_PARITYTY_CAP);
-  }
+    @BuiltInMethod
+    public static TemplateBoolean isFirst(TemplateHashLooper value) {
+        return value.isFirst();
+    }
 
-  @BuiltInMethod
-  public static TemplateObject itemCycle(TemplateLooper value, TemplateObject... cycle) {
-    return value.cycle(Arrays.asList(cycle));
-  }
+    @BuiltInMethod
+    public static TemplateBoolean isLast(TemplateSequenceLooper value) {
+        return value.isLast();
+    }
 
-  @BuiltInMethod
-  public static TemplateBoolean hasNext(TemplateLooper value) {
-    return value.hasNext();
-  }
+    @BuiltInMethod
+    public static TemplateBoolean isLast(TemplateHashLooper value) {
+        return value.isLast();
+    }
+
+    @BuiltInMethod
+    public static TemplateString itemParity(TemplateSequenceLooper value) {
+        return (TemplateString) value.cycle(ITEM_PARITYTY);
+    }
+
+    @BuiltInMethod
+    public static TemplateString itemParity(TemplateHashLooper value) {
+        return (TemplateString) value.cycle(ITEM_PARITYTY);
+    }
+
+    @BuiltInMethod
+    public static TemplateString itemParityCap(TemplateSequenceLooper value) {
+        return (TemplateString) value.cycle(ITEM_PARITYTY_CAP);
+    }
+
+    @BuiltInMethod
+    public static TemplateString itemParityCap(TemplateHashLooper value) {
+        return (TemplateString) value.cycle(ITEM_PARITYTY_CAP);
+    }
+
+    @BuiltInMethod
+    public static TemplateObject itemCycle(TemplateSequenceLooper value, TemplateObject... cycle) {
+        return value.cycle(Arrays.asList(cycle));
+    }
+
+    @BuiltInMethod
+    public static TemplateObject itemCycle(TemplateHashLooper value, TemplateObject... cycle) {
+        return value.cycle(Arrays.asList(cycle));
+    }
+
+    @BuiltInMethod
+    public static TemplateBoolean hasNext(TemplateSequenceLooper value) {
+        return value.hasNext();
+    }
+    @BuiltInMethod
+    public static TemplateBoolean hasNext(TemplateHashLooper value) {
+        return value.hasNext();
+    }
 }

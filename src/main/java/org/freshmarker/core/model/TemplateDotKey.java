@@ -19,6 +19,6 @@ public class TemplateDotKey implements TemplateExpression {
     if (templateObject instanceof TemplateMap templateMap) {
       return templateMap.get(context, dotKey);
     }
-    throw new ProcessException("index out of range");
+    throw new ProcessException("index out of range: " + dotKey + " " + templateObject);
   }
 }

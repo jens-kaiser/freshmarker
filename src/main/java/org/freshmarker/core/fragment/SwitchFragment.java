@@ -43,11 +43,10 @@ public class SwitchFragment implements Fragment {
 
   private TemplatePrimitive<?> evaluatePrimitive(TemplateObject conditional, ProcessContext context, Node node) {
     try {
-      return conditional.evaluateToObject(context).asPrimitive()
-          .orElseThrow(() -> new WrongTypeException("not a primitive type", node));
+      return conditional.evaluateToObject(context).asPrimitive().orElseThrow(() -> new WrongTypeException("not a primitive type", node));
     } catch (UnsupportedBuiltInException e) {
       throw new UnsupportedBuiltInException(e.getMessage(), node, e);
-    }catch (WrongTypeException e) {
+    } catch (WrongTypeException e) {
       throw new WrongTypeException(e.getMessage(), node, e);
     }
   }

@@ -34,7 +34,6 @@ class SliceAndRangeInterpolationTest {
   void interpolationSliceRightUnbound() throws ParseException, IOException {
     templateLoader.putTemplate("test", "test: ${list[2..][1]}");
     Template template = configuration.getTemplate("test");
-    template.process(Map.of("list", List.of(1,2,3,4,5,6,7)));
     assertEquals("test: 4", template.process(Map.of("list", List.of(1,2,3,4,5,6,7))));
   }
 

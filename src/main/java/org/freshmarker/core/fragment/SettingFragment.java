@@ -1,5 +1,7 @@
 package org.freshmarker.core.fragment;
 
+import ftl.Node;
+import ftl.ast.SettingInstruction;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.SettingEnvironment;
@@ -31,9 +33,12 @@ public class SettingFragment implements Fragment {
     private final String name;
     private final TemplateObject expression;
 
-    public SettingFragment(String name, TemplateObject expression) {
+    private final Node ftl;
+
+    public SettingFragment(String name, TemplateObject expression, SettingInstruction ftl) {
         this.name = name;
         this.expression = expression;
+        this.ftl = ftl;
     }
 
     @Override
@@ -70,6 +75,6 @@ public class SettingFragment implements Fragment {
             logger.info("new date-time format: {}", value);
             return;
         }
-        throw new ProcessException("unknown setting: " + name);
+        throw new ProcessException("unknown setting: " + name, ftl);
     }
 }
