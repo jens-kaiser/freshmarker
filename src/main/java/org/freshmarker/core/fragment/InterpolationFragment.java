@@ -25,7 +25,7 @@ public class InterpolationFragment implements Fragment {
       TemplateString templateObject = (TemplateString) expression.evaluateToObject(context);
       context.getWriter().write(templateObject.getValue());
     } catch (IOException e) {
-      throw new ProcessException(e.getMessage(), e);
+      throw new ProcessException(e.getMessage(), ftl, e);
     } catch (UnsupportedBuiltInException e) {
       throw new UnsupportedBuiltInException(e.getMessage(), ftl, e);
     } catch (WrongTypeException e) {

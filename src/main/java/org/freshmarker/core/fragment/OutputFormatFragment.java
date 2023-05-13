@@ -8,19 +8,22 @@ import java.util.Map;
 
 public class OutputFormatFragment implements Fragment {
 
-  private final BlockFragment content;
-  private final String format;
+    private final BlockFragment content;
+    private final String format;
 
-  public OutputFormatFragment(BlockFragment content, String format) {
-    this.content = content;
-    this.format = format;
-  }
+    public OutputFormatFragment(BlockFragment content, String format) {
+        this.content = content;
+        this.format = format;
+    }
 
-  @Override
-  public void process(ProcessContext context) {
-    Environment environment = context.getEnvironment();
-    context.setEnvironment(new SettingEnvironment(environment, null, context.getOutputFormat(format), Map.of()));
-    content.process(context);
-    context.setEnvironment(environment);
-  }
+    @Override
+    public void process(ProcessContext context) {
+        Environment environment = context.getEnvironment();
+        context.setEnvironment(new SettingEnvironment(environment, null, context.getOutputFormat(format), Map.of()));
+        try {
+            content.process(context);
+        } finally {
+            context.setEnvironment(environment);
+        }
+    }
 }

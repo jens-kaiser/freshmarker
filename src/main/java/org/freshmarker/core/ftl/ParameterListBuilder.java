@@ -38,7 +38,7 @@ public class ParameterListBuilder implements
       IDENTIFIER identifier = (IDENTIFIER) children.get(index);
       String name = identifier.getImage();
       if (names.contains(name)) {
-        throw new ParsingException("non unique parameter name at " + identifier.getLocation());
+        throw new ParsingException("non unique parameter name", identifier);
       }
       names.add(name);
       index++;
@@ -52,7 +52,7 @@ public class ParameterListBuilder implements
         input.add(new ParameterHolder(name, defaultValue));
         index++;
       } else if (children.get(index).getTokenType() == TokenType.ELLIPSIS) {
-        throw new ParsingException("ellipsis not supported at " + children.get(index).getLocation());
+        throw new ParsingException("ellipsis not supported", children.get(index));
       } else {
         input.add(new ParameterHolder(name, null));
       }

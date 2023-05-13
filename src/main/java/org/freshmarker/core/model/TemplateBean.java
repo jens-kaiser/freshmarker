@@ -24,6 +24,11 @@ public class TemplateBean implements TemplateMap {
     }
 
     @Override
+    public Map<String, Object> map() {
+        return map;
+    }
+
+    @Override
     public Class<?> getModelType() {
         return type;
     }

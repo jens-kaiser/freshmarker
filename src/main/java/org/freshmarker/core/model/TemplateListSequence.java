@@ -34,4 +34,8 @@ public class TemplateListSequence implements TemplateSequence {
   public TemplateObject evaluateToObject(ProcessContext context) {
     return this;
   }
+
+  public List<Object> getSequence(ProcessContext context) {
+    return sequence;
+  }
 }

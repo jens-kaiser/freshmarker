@@ -1,15 +1,14 @@
 package org.freshmarker.core;
 
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.formatter.StringFormatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.UndefinedOutputFormat;
+
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProcessContext {
 

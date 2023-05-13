@@ -30,11 +30,13 @@ class BooleanInterpolationTest {
   @CsvSource({
       "test: ${true},test: yes",
       "test: ${false},test: no",
+      "test: ${!false},test: yes",
+      "test: ${!flag},test: no",
   })
   void interpolationConstant(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource);
     Template template = configuration.getTemplate("test");
-    assertEquals(expected, template.process(Map.of()));
+    assertEquals(expected, template.process(Map.of("flag", true)));
   }
 
   @ParameterizedTest

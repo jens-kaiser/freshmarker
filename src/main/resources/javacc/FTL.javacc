@@ -631,7 +631,7 @@ List #ListInstruction :
     <LIST><BLANK>
     Expression
     <AS>
-    <IDENTIFIER>
+    (<IDENTIFIER> | <OPEN_PAREN> <IDENTIFIER> <COMMA> <IDENTIFIER> <CLOSE_PAREN>)
     [ <COMMA> <IDENTIFIER> ]
     <CLOSE_TAG>
     Block

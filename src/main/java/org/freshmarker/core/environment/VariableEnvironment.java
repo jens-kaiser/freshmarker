@@ -24,9 +24,6 @@ public class VariableEnvironment extends WrapperEnvironment {
   @Override
   public TemplateObject getValue(String name) {
     TemplateObject result = dataModel.get(name);
-    if (result != null) {
-      return result;
-    }
-    return wrapped.getValue(name);
+    return result != null ? result : wrapped.getValue(name);
   }
 }

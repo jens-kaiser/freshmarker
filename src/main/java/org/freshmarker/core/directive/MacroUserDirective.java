@@ -56,13 +56,13 @@ public class MacroUserDirective implements UserDirective {
     }
     Map<String, TemplateObject> values = new HashMap<>();
     for (ParameterHolder parameterHolder : parameterList) {
-      TemplateObject value = args.get(parameterHolder.getName());
-      log.debug("macro parameter value: {} {}", parameterHolder.getName(), value);
-      value = value == null ? parameterHolder.getDefaultValue() : value;
+      TemplateObject value = args.get(parameterHolder.name());
+      log.debug("macro parameter value: {} {}", parameterHolder.name(), value);
+      value = value == null ? parameterHolder.defaultValue() : value;
       if (value == null) {
-        throw new ProcessException("missing parameter " + parameterHolder.getName());
+        throw new ProcessException("missing parameter " + parameterHolder.name());
       }
-      values.put(parameterHolder.getName(), value);
+      values.put(parameterHolder.name(), value);
     }
     return values;
   }

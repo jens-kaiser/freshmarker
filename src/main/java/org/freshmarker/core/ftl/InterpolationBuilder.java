@@ -41,6 +41,8 @@ import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateOperation;
 import org.freshmarker.core.model.TemplateRange;
 import org.freshmarker.core.model.TemplateRelational;
+import org.freshmarker.core.model.TemplateRightLimitedRange;
+import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.TemplateSign;
 import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
@@ -153,10 +155,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
   public TemplateObject visit(RangeExpression expression, Object input) {
     TemplateObject left = expression.getChild(0).accept(this, null);
     if (expression.getChildCount() < 3) {
-      return new TemplateRange(false, true, left, TemplateNull.NULL);
+      return new TemplateRightUnlimitedRange(left);
     }
     TemplateObject right = expression.getChild(2).accept(this, null);
-    return new TemplateRange(false, false, left, right);
+    return new TemplateRightLimitedRange(left, right);
   }
 
   @Override
@@ -243,8 +245,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     if (token.getType() == TokenType.PLUS) {
       return templateObject;
     }
-    return templateObject.asNumber().<TemplateObject>map(TemplateNumber::negate)
-        .orElseGet(() -> new TemplateSign(templateObject));
+    return templateObject.asNumber().<TemplateObject>map(TemplateNumber::negate).orElseGet(() -> new TemplateSign(templateObject));
   }
 
   @Override
