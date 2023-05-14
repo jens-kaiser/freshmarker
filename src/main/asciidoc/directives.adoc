@@ -57,7 +57,7 @@ The second variant defines the sequence, the name of the item variable in the bl
 
 IMPORTANT: Although _FreeMarker_ and _FreshMaker_ are similar, the list directive syntax differs. _FreeMarker_ does not know a separate loop variable. The syntax here conflicts with the _FreeMarker_ syntax for hashes.
 
-=== List Directive with a list
+==== List Directive with a list
 
 A list is a sequence of values of any model type.
 
@@ -93,7 +93,7 @@ Because `l` is the name of the loop variable, the first interpolation evaluates 
 5. Zeppo Marx
 ----
 
-=== List Directive with a range
+==== List Directive with a range
 
 A range is defined by a lower and a non-mandatory upper numerical limit.
 Although `FreshMarker` also masters right-open ranges, List Directives are not allowed to use them.
@@ -138,7 +138,7 @@ For the value `3` in `a` and `1` in `b` the following result is generated.
 1 * 1 = 1
 ----
 
-=== List Directive with a hash
+==== List Directive with a hash
 
 A hash is a sequence of key-value pairs. The key is a string and the value is any model type.
 
