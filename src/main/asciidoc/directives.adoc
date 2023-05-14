@@ -49,14 +49,17 @@ NOTE: the FreshMarker _Switch Directive_ does not support fall-through, so `brea
 
 === List Directive
 
-The _List Directives_ processes its body for each element of a sequence.
-The sequence can be either a list or a range.
-A list is a sequence of values of any model type.
-A range is defined by a lower and a non-mandatory upper numerical limit.
-
+The _List Directives_ processes its body for each element of a sequence. The sequence can be either a list, a hash or a range.
 A list directive exists in two variants.
 The first variant defines the sequence and the name of the item variable in the block.
+
 The second variant defines the sequence, the name of the item variable in the block and a loop variable with metadata of the current loop iteration.
+
+IMPORTANT: Although _FreeMarker_ and _FreshMaker_ are similar, the list directive syntax differs. _FreeMarker_ does not know a separate loop variable. The syntax here conflicts with the _FreeMarker_ syntax for hashes.
+
+=== List Directive with a list
+
+A list is a sequence of values of any model type.
 
 .List Directive example with a list
 [source]
@@ -90,7 +93,9 @@ Because `l` is the name of the loop variable, the first interpolation evaluates 
 5. Zeppo Marx
 ----
 
-The List Directives works also on numeric ranges.
+=== List Directive with a range
+
+A range is defined by a lower and a non-mandatory upper numerical limit.
 Although `FreshMarker` also masters right-open ranges, List Directives are not allowed to use them.
 
 .List Directive example with a range
@@ -101,7 +106,7 @@ ${s} * ${s} = ${s*s}
 </#list>
 ----
 
-The current item in the above example is any integer value from 1 to 4 inclusive.
+The current item in the above example is any integer value from 1 to 5 inclusive.
 The result is a list of square value equations.
 
 [source]
@@ -110,6 +115,7 @@ The result is a list of square value equations.
 2 * 2 = 4
 3 * 3 = 9
 4 * 4 = 16
+5 * 5 = 25
 ----
 
 Because the limits of a range do not have to be constants, a List Directive can also be used to mimic a for loop.
@@ -122,6 +128,37 @@ ${s} * ${s} = ${s*s}
 </#list>
 ----
 
+This example loops through all values between numeric variable `a` and numeric variable `b`.
+For the value `3` in `a` and `1` in `b` the following result is generated.
+
+[source]
+----
+3 * 3 = 9
+2 * 2 = 4
+1 * 1 = 1
+----
+
+=== List Directive with a hash
+
+A hash is a sequence of key-value pairs. The key is a string and the value is any model type.
+
+For a hash the item is a key-value pair in parentheses.
+
+.List Directive example with a hash
+[source]
+----
+<#list map as (key, value)>
+${key}->${value}
+</#list>
+----
+
+.List Directive example with a hash and a loop variable
+[source]
+----
+<#list map as (key, value), l>
+${l?counter}. ${key}->${value}
+</#list>
+----
 
 === Var/Set Directive
 

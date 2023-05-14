@@ -32,6 +32,10 @@ class BeanInterpolationTest {
       return name;
     }
 
+    public String getDescription() {
+      return name;
+    }
+
     public boolean isActive() {
       return active;
     }
@@ -49,6 +53,13 @@ class BeanInterpolationTest {
     templateLoader.putTemplate("test", "${bean.name} ${bean.active}");
     Template template = configuration.getTemplate("test");
     assertEquals("Bean Name yes", template.process(Map.of("bean", new TestBean("Bean Name", true))));
+  }
+
+  @Test
+  void generateWithBeanList() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "<#list bean as (key, value)>${key} ${value}, </#list>");
+    Template template = configuration.getTemplate("test");
+    assertEquals("name Bean Name, active yes, description Bean Name, ", template.process(Map.of("bean", new TestBean("Bean Name", true))));
   }
 
   @Test
