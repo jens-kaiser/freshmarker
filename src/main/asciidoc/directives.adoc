@@ -49,11 +49,7 @@ NOTE: the FreshMarker _Switch Directive_ does not support fall-through, so `brea
 
 === List Directive
 
-The _List Directives_ processes its body for each element of a sequence. The sequence can be either a list, a hash or a range.
-A list directive exists in two variants.
-The first variant defines the sequence and the name of the item variable in the block.
-
-The second variant defines the sequence, the name of the item variable in the block and a loop variable with metadata of the current loop iteration.
+The _List Directives_ processes its body for each element of a sequence. The sequence can be either a list, a hash or a range. A list directive defines the sequence and the name of the item variable in the block. In addition, an optional loop variable containing meta information of the current loop iteration can also be specified.
 
 IMPORTANT: Although _FreeMarker_ and _FreshMaker_ are similar, the list directive syntax differs. _FreeMarker_ does not know a separate loop variable. The syntax here conflicts with the _FreeMarker_ syntax for hashes.
 
@@ -142,7 +138,7 @@ For the value `3` in `a` and `1` in `b` the following result is generated.
 
 A hash is a sequence of key-value pairs. The key is a string and the value is any model type.
 
-For a hash the item is a key-value pair in parentheses.
+For a hash the item in the List Directive is a key-value pair in parentheses.
 
 .List Directive example with a hash
 [source]
@@ -151,6 +147,8 @@ For a hash the item is a key-value pair in parentheses.
 ${key}->${value}
 </#list>
 ----
+
+NOTE: In addition to the Java Map types, Java Beans are also interpreted as a hash. It is not only possible to iterate over the elements of a Map, but also over the attributes of a Bean.
 
 .List Directive example with a hash and a loop variable
 [source]
