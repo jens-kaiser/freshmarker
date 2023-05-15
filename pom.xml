@@ -6,7 +6,7 @@
 
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.4.1</version>
+  <version>0.4.2</version>
   <url>https://gitlab.com/schegge/freshmarker.git</url>
   <name>FreshMarker</name>
   <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17
@@ -58,13 +58,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>javacc21</groupId>
-      <artifactId>javacc21</artifactId>
-      <version>220206</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/lib/javacc21-220206.jar</systemPath>
-    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -311,6 +304,15 @@
           <target>${java.version}</target>
           <encoding>UTF-8</encoding>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>javacc21</groupId>
+            <artifactId>javacc21</artifactId>
+            <version>220206</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/lib/javacc21-220206.jar</systemPath>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

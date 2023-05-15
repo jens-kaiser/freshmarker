@@ -1,6 +1,5 @@
 package org.freshmarker.core.ftl;
 
-import com.javacc.parser.tree.UnaryExpression;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.AdditiveExpression;
@@ -75,10 +74,6 @@ public interface ExpressionVisitor<I, O> {
   }
 
   default O visit(MultiplicativeExpression expression, I input) {
-    return handleWithException(expression);
-  }
-
-  default O visit(UnaryExpression expression, I input) {
     return handleWithException(expression);
   }
 
