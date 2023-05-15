@@ -17,8 +17,11 @@ public class TemplateDynamicKey implements TemplateExpression {
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
-        TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
         TemplateObject templateObject = sequence.evaluateToObject(context);
+        if (templateObject == TemplateNull.NULL) {
+            return templateObject;
+        }
+        TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
         int beginIndex = index.getValue().getNumber().intValue();
         if (templateObject instanceof TemplateString templateString) {
             String value = templateString.getValue();

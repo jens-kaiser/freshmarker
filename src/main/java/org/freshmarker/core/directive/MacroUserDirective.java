@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.WrapperEnvironment;
@@ -30,8 +32,8 @@ public class MacroUserDirective implements UserDirective {
 
   @Override
   public void execute(ProcessContext context, Map<String, TemplateObject> args, BlockFragment body) {
-    Map<String, TemplateObject> values = evaluateParameterValues(args);
-    log.info("macro parameter values: {}", values);
+    Map<String, TemplateObject> values = evaluateParameterValues(args, context);
+    Environment environment = context.getEnvironment();
     context.setEnvironment(new WrapperEnvironment(context.getEnvironment()) {
       @Override
       public TemplateObject getValue(String name) {
@@ -47,10 +49,12 @@ public class MacroUserDirective implements UserDirective {
     try {
       block.process(context);
     } catch (TemplateReturnException ignored) {
+    } finally {
+      context.setEnvironment(environment);
     }
   }
 
-  private Map<String, TemplateObject> evaluateParameterValues(Map<String, TemplateObject> args) {
+  private Map<String, TemplateObject> evaluateParameterValues(Map<String, TemplateObject> args, ProcessContext context) {
     if (parameterList.isEmpty()) {
       return Collections.emptyMap();
     }
@@ -62,7 +66,7 @@ public class MacroUserDirective implements UserDirective {
       if (value == null) {
         throw new ProcessException("missing parameter " + parameterHolder.name());
       }
-      values.put(parameterHolder.name(), value);
+      values.put(parameterHolder.name(), value.evaluateToObject(context));
     }
     return values;
   }

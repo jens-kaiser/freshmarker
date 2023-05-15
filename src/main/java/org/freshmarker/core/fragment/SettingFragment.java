@@ -44,37 +44,43 @@ public class SettingFragment implements Fragment {
     @Override
     public void process(ProcessContext context) {
         TemplateObject setting = expression.evaluateToObject(context);
-        if ("locale".equals(name)) {
-            String value = setting.evaluate(context, TemplateString.class).getValue();
-            Locale locale = Locale.forLanguageTag(value);
-            context.setEnvironment(new SettingEnvironment(context.getEnvironment(), locale, null, null));
-            logger.info("new locale: {}", locale);
-            return;
+        switch (name) {
+            case "locale" -> processLocale(context, setting);
+            case "date_format" -> processDateFormat(context, setting);
+            case "time_format" -> processTimeFormat(context, setting);
+            case "datetime_format" -> processDateTimeFormat(context, setting);
+            default -> throw new ProcessException("unknown setting: " + name, ftl);
         }
-        if ("date_format".equals(name)) {
-            String value = setting.evaluate(context, TemplateString.class).getValue();
-            Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
-                    TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
-            context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
-            logger.info("new date format: {}", value);
-            return;
-        }
-        if ("time_format".equals(name)) {
-            String value = setting.evaluate(context, TemplateString.class).getValue();
-            Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
-                    TemplateLocalTime.class, new TimeFormatter(value), TemplateClassicTime.class, new ClassicTimeFormatter(value));
-            context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
-            logger.info("new time format: {}", value);
-            return;
-        }
-        if ("datetime_format".equals(name)) {
-            String value = setting.evaluate(context, TemplateString.class).getValue();
-            Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
-                    TemplateLocalDateTime.class, new DateTimeFormatter(value), TemplateClassicDateTime.class, new ClassicDateTimeFormatter(value));
-            context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
-            logger.info("new date-time format: {}", value);
-            return;
-        }
-        throw new ProcessException("unknown setting: " + name, ftl);
+    }
+
+    private static void processDateTimeFormat(ProcessContext context, TemplateObject setting) {
+        String value = setting.evaluate(context, TemplateString.class).getValue();
+        Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
+                TemplateLocalDateTime.class, new DateTimeFormatter(value), TemplateClassicDateTime.class, new ClassicDateTimeFormatter(value));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
+        logger.info("new date-time format: {}", value);
+    }
+
+    private static void processTimeFormat(ProcessContext context, TemplateObject setting) {
+        String value = setting.evaluate(context, TemplateString.class).getValue();
+        Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
+                TemplateLocalTime.class, new TimeFormatter(value), TemplateClassicTime.class, new ClassicTimeFormatter(value));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
+        logger.info("new time format: {}", value);
+    }
+
+    private static void processDateFormat(ProcessContext context, TemplateObject setting) {
+        String value = setting.evaluate(context, TemplateString.class).getValue();
+        Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
+                TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
+        logger.info("new date format: {}", value);
+    }
+
+    private static void processLocale(ProcessContext context, TemplateObject setting) {
+        String value = setting.evaluate(context, TemplateString.class).getValue();
+        Locale locale = Locale.forLanguageTag(value);
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), locale, null, null));
+        logger.info("new locale: {}", locale);
     }
 }

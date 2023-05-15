@@ -1,37 +1,32 @@
 package org.freshmarker.core.model;
 
-import java.time.LocalDateTime;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 
+import java.time.LocalDateTime;
+
 public class TemplateBuiltInVariable implements TemplateExpression {
 
-  private final String name;
+    private final String name;
 
-  public TemplateBuiltInVariable(String name) {
-    this.name = name;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    switch (name) {
-      case "now":
-        return new TemplateLocalDateTime(LocalDateTime.now());
-      case "locale":
-        return new TemplateString(context.getEnvironment().getLocale().toString());
-      case "country":
-        return new TemplateString(context.getEnvironment().getLocale().getCountry());
-      case "lang":
-        return new TemplateString(context.getEnvironment().getLocale().getLanguage());
-      case "version":
-        return new TemplateString("1.0");
-      default:
-        throw new IllegalStateException("Unexpected value: " + name);
+    public TemplateBuiltInVariable(String name) {
+        this.name = name;
     }
-  }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        return switch (name) {
+            case "now" -> new TemplateLocalDateTime(LocalDateTime.now());
+            case "locale" -> new TemplateString(context.getEnvironment().getLocale().toString());
+            case "country" -> new TemplateString(context.getEnvironment().getLocale().getCountry());
+            case "lang" -> new TemplateString(context.getEnvironment().getLocale().getLanguage());
+            case "version" -> new TemplateString("1.0");
+            default -> throw new IllegalStateException("Unexpected value: " + name);
+        };
+    }
 }

@@ -5,7 +5,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
 
 public class UserDirectiveFragment implements Fragment {
-
   private final String directive;
   private final Map<String, TemplateObject> namedArgs;
   private final BlockFragment body;

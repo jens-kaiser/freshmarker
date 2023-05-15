@@ -196,7 +196,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         String name = getName(ftl.getChild(3));
         List<ParameterHolder> parameterList = getParameterHolders(ftl);
         Fragment block = getFragment(ftl);
-        logger.debug("type={}, name={}, block={}", type, name, block);
+        logger.debug("macro directive: type={}, name={}, block={}", type, name, block);
         template.getUserDirectives().put(name, new MacroUserDirective(block, parameterList));
         return input;
     }
@@ -249,7 +249,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), true));
+        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), true, ftl.getChild(5)));
         return input;
     }
 
@@ -259,7 +259,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), false));
+        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), false, ftl.getChild(5)));
         return input;
     }
 
