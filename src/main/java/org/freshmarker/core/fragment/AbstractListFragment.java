@@ -22,8 +22,8 @@ public abstract class AbstractListFragment<T> implements Fragment {
 
     protected void processLoop(ProcessContext context, AbstractTemplateLooper<T> looper, Environment hashEnvironment) {
         Environment environment = context.getEnvironment();
-        context.setEnvironment(new VariableEnvironment(hashEnvironment));
         try {
+            context.setEnvironment(new VariableEnvironment(hashEnvironment));
             for (int i = 0; i < looper.size(); i++) {
                 block.process(context);
                 looper.increment();
