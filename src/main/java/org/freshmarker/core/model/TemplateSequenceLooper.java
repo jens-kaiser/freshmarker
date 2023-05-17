@@ -6,8 +6,8 @@ import java.util.List;
 
 public class TemplateSequenceLooper extends AbstractTemplateLooper<Object> {
 
-  public TemplateSequenceLooper(List<Object> sequence, int size) {
-    super(sequence, size);
+  public TemplateSequenceLooper(List<Object> sequence) {
+    super(sequence);
   }
 
   @Override

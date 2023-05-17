@@ -21,6 +21,6 @@ include::model.adoc[]
 
 include::interpolations.adoc[]
 
-include::builtins.adoc[]
+include::builtins/builtins.adoc[]
 
-include::directives.adoc[]
+include::directives/directives.adoc[]

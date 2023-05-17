@@ -37,10 +37,10 @@ import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.HashListFragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
-import org.freshmarker.core.fragment.ListFragment;
 import org.freshmarker.core.fragment.NestedInstructionFragment;
 import org.freshmarker.core.fragment.OutputFormatFragment;
 import org.freshmarker.core.fragment.ReturnInstructionFragment;
+import org.freshmarker.core.fragment.SequenceListFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
@@ -140,13 +140,13 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
             int blockIndex = ftl.getChild(10).getTokenType() == TokenType.COMMA ? 13 : 11;
             String looperIdentifier = blockIndex == 13 ? ((IDENTIFIER) ftl.getChild(11)).getImage() : null;
             BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
-            input.addFragment(new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block));
+            input.addFragment(new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block, ftl));
         } else {
             String identifier = ((IDENTIFIER) ftl.getChild(5)).getImage();
             int blockIndex = ftl.getChild(6).getTokenType() == TokenType.COMMA ? 9 : 7;
             String looperIdentifier = blockIndex == 9 ? ((IDENTIFIER) ftl.getChild(7)).getImage() : null;
             BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
-            input.addFragment(new ListFragment(list, identifier, looperIdentifier, block));
+            input.addFragment(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
         }
         return input;
     }

@@ -18,5 +18,7 @@ public interface TemplateLooper extends TemplateObject {
 
     void increment();
 
+    int size();
+
     TemplateObject cycle(List<TemplateObject> cycle);
 }

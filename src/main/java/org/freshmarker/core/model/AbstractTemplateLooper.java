@@ -7,12 +7,10 @@ import java.util.List;
 
 public abstract class AbstractTemplateLooper<T> implements TemplateLooper {
     protected final List<T> sequence;
-    protected final int size;
     protected int index;
 
-    public AbstractTemplateLooper(List<T> sequence, int size) {
+    public AbstractTemplateLooper(List<T> sequence) {
         this.sequence = sequence;
-        this.size = size;
     }
 
     public TemplateNumber getIndex() {
@@ -28,15 +26,19 @@ public abstract class AbstractTemplateLooper<T> implements TemplateLooper {
     }
 
     public TemplateBoolean isLast() {
-        return size == index + 1 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return sequence.size() == index + 1 ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
     }
 
     public TemplateBoolean hasNext() {
-        return size == index + 1 ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
+        return sequence.size() == index + 1 ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
     }
 
     public void increment() {
         index++;
+    }
+
+    public int size() {
+        return sequence.size();
     }
 
     public TemplateObject cycle(List<TemplateObject> cycle) {

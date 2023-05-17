@@ -7,12 +7,12 @@ import java.util.Map.Entry;
 
 public class TemplateHashLooper extends AbstractTemplateLooper<Entry<String, Object>> {
 
-  public TemplateHashLooper(List<Entry<String, Object>> sequence) {
-    super(sequence, sequence.size());
-  }
+    public TemplateHashLooper(List<Entry<String, Object>> sequence) {
+        super(sequence);
+    }
 
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    return new TemplateHash(sequence.get(index));
-  }
+    @Override
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        return new TemplateHash(sequence.get(index));
+    }
 }
