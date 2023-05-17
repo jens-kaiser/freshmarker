@@ -69,8 +69,7 @@ public final class Configuration {
   private TemplateLoader templateLoader;
   private Locale locale;
   private final List<TemplateObjectProvider> providers = new ArrayList<>(
-      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(),
-          new BeanTemplateObjectProvider()));
+      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
   private final Map<String, UserDirective> userDirectives = new HashMap<>();
   private final Map<String, TemplateFunction> functions = new HashMap<>();
 
