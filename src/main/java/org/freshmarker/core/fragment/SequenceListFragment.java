@@ -4,10 +4,8 @@ import ftl.ast.ListInstruction;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.ListEnvironment;
-import org.freshmarker.core.model.TemplateLoopVariable;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
-import org.freshmarker.core.model.TemplateSequenceLoopVariable;
 import org.freshmarker.core.model.TemplateSequenceLooper;
 
 import java.util.List;
@@ -26,8 +24,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
         try {
             List<Object> objectList = ((TemplateSequence) list.evaluateToObject(context)).getSequence(context);
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
-            TemplateLoopVariable loopVariable = new TemplateSequenceLoopVariable(looper);
-            ListEnvironment wrapped = new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper, loopVariable);
+            ListEnvironment wrapped = new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper);
             processLoop(context, looper, wrapped);
         } catch (RuntimeException e) {
             throw new ProcessException(e.getMessage(), ftl, e);

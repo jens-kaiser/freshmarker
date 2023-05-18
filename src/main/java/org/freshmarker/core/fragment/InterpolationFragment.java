@@ -24,12 +24,12 @@ public class InterpolationFragment implements Fragment {
     try {
       TemplateString templateObject = (TemplateString) expression.evaluateToObject(context);
       context.getWriter().write(templateObject.getValue());
-    } catch (IOException e) {
-      throw new ProcessException(e.getMessage(), ftl, e);
     } catch (UnsupportedBuiltInException e) {
       throw new UnsupportedBuiltInException(e.getMessage(), ftl, e);
     } catch (WrongTypeException e) {
       throw new WrongTypeException(e.getMessage(), ftl, e);
+    } catch (IOException | ProcessException e) {
+      throw new ProcessException(e.getMessage(), ftl, e);
     }
   }
 }
