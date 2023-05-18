@@ -29,7 +29,7 @@ String result = template.process(Map.of("temporal", LocalTime.of(12, 30), "path"
 ----
 templateLoader.putTemplate("ancestors-loop",
     """
-    <#list ancestors as ancestor, loop>
+    <#list ancestors as ancestor with loop>
       ${loop?index}. ${ancestor.givenname} ${ancestor.surename}
     </#list>
     """);
