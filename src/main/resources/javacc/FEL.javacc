@@ -146,6 +146,8 @@ TOKEN :
     |
     <USING : "using">
     |
+    <WITH : "with">
+    |
     <INTEGER : (["0"-"9"])+>
     |
     <DECIMAL : <INTEGER> "." <INTEGER>>

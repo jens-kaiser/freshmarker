@@ -10,7 +10,7 @@ A simple template engine based loosely on the FreeMarker syntax. FreshMarker is 
 <dependency>
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.3.0</versio>
+  <version>0.5.0</versio>
 </dependency>
 ----
 
@@ -72,7 +72,7 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 | Interpolation | Dot-Key, Dynamic-Key, Built-ins, Method Call, Exists, Default value operator
 | Interpolation: Dynamic Key| Sequence, Range, String
 | Interpolation: Dot Key | With Identifier on Beans, Records and Maps
-| Interpolation: List | Sequence, Range (not right unlimited)
+| Interpolation: List | Sequence, Range (not right unlimited), Hash and Bean
 | Interpolation: Default value operator | No implicit (missing) value
 | Macro | With Return and Nested, but without Nested Loop Variables
 |===
@@ -127,10 +127,10 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 |now | the current date-time | DateTime
 |===
 
-== FreshMarker List Syntax
+== FreshMarker list syntax with loop variable
 [code]
 ----
-<#list ancestors as ancestor, looper>
+<#list ancestors as ancestor with looper>
   ${looper.counter} ${ancestor.givenname} ${ancestor.surname}
 </#list>
 ----

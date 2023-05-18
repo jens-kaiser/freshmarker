@@ -81,8 +81,8 @@ class FtlTemplateBuilderTest {
   @Test
   void generateMultiListDirectives() throws ParseException, IOException {
     templateLoader.putTemplate("test",
-        "<#list list as s, l>" +
-               "<#list 1..2 as s, l>" +
+        "<#list list as s with l>" +
+               "<#list 1..2 as s with l>" +
                "<#if s % 2 == 0>${s} is even<#else>${s} is odd</#if>" +
                "<#if l?has_next>, </#if>" +
                "</#list>" +

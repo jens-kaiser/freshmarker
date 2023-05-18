@@ -58,7 +58,7 @@ class UserDirectiveTest {
   @ParameterizedTest
   @CsvSource(value = {
       "test <@oneliner>1; 2; 3;</@oneliner>:test 1;  2;  3; ",
-      "test <@oneliner><#list values as v,l>${v}<#if l?has_next>;</#if></#list></@oneliner>:test 1; 2; 3",
+      "test <@oneliner><#list values as v with l>${v}<#if l?has_next>;</#if></#list></@oneliner>:test 1; 2; 3",
   }, ignoreLeadingAndTrailingWhitespace=false, delimiterString = ":")
   void oneLiner(String templateSource, String expected) throws ParseException, IOException {
     templateLoader.putTemplate("test", templateSource.replace(";", ";\n"));

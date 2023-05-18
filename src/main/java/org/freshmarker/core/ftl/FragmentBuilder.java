@@ -134,18 +134,20 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     @Override
     public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
         TemplateObject list = ftl.getChild(3).accept(interpolationBuilder, null);
-        if (ftl.getChild(5).getTokenType() == TokenType.OPEN_PAREN) {
-            String keyIdentifier = ((IDENTIFIER) ftl.getChild(6)).getImage();
-            String valueIdentifier = ((IDENTIFIER) ftl.getChild(8)).getImage();
-            int blockIndex = ftl.getChild(10).getTokenType() == TokenType.COMMA ? 13 : 11;
-            String looperIdentifier = blockIndex == 13 ? ((IDENTIFIER) ftl.getChild(11)).getImage() : null;
-            BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
+        int looperIndex = ftl.getChild(6).getTokenType() == TokenType.COMMA ? 9 : 7;
+        int blockIndex = looperIndex;
+        String looperIdentifier = null;
+        if (ftl.getChild(looperIndex - 1).getTokenType() == TokenType.WITH) {
+            looperIdentifier = ((IDENTIFIER) ftl.getChild(looperIndex)).getImage();
+            blockIndex += 2;
+        }
+        BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
+        if (ftl.getChild(6).getTokenType() == TokenType.COMMA) {
+            String keyIdentifier = ((IDENTIFIER) ftl.getChild(5)).getImage();
+            String valueIdentifier = ((IDENTIFIER) ftl.getChild(7)).getImage();
             input.addFragment(new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block, ftl));
         } else {
             String identifier = ((IDENTIFIER) ftl.getChild(5)).getImage();
-            int blockIndex = ftl.getChild(6).getTokenType() == TokenType.COMMA ? 9 : 7;
-            String looperIdentifier = blockIndex == 9 ? ((IDENTIFIER) ftl.getChild(7)).getImage() : null;
-            BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
             input.addFragment(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
         }
         return input;

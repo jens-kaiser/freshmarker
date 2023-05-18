@@ -631,14 +631,15 @@ List #ListInstruction :
     <LIST><BLANK>
     Expression
     <AS>
-    (<IDENTIFIER> | <OPEN_PAREN> <IDENTIFIER> <COMMA> <IDENTIFIER> <CLOSE_PAREN>)
+    <IDENTIFIER>
     [ <COMMA> <IDENTIFIER> ]
+    [ <WITH> <IDENTIFIER> ]
     <CLOSE_TAG>
     Block
     DirectiveEnd("list")
 ;
 
-ForEach #ForEachInstruction : 
+ForEach #ForEachInstruction :
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <FOREACH><BLANK>
     <IDENTIFIER>

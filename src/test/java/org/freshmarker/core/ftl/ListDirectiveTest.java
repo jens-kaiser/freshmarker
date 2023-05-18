@@ -41,7 +41,7 @@ class ListDirectiveTest {
     @Test
     void loopIndex() throws ParseException, IOException {
         templateLoader.putTemplate("test",
-                "test: <#list sequence as s, l>${l?index}. ${s}\n</#list>");
+                "test: <#list sequence as s with l>${l?index}. ${s}\n</#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test: 0. a\n1. b\n2. c\n3. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
     }
@@ -49,7 +49,7 @@ class ListDirectiveTest {
     @Test
     void emptyList() throws ParseException, IOException {
         templateLoader.putTemplate("test",
-                "test:\n<#list sequence as s, l>\n${l?index}. ${s}\n</#list>");
+                "test:\n<#list sequence as s with l>\n${l?index}. ${s}\n</#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test:\n", template.process(Map.of("sequence", List.of())));
     }
@@ -57,7 +57,7 @@ class ListDirectiveTest {
     @Test
     void hasNext() throws ParseException, IOException {
         templateLoader.putTemplate("test",
-                "test: <#list sequence as s, l>${l?has_next} </#list>");
+                "test: <#list sequence as s with l>${l?has_next} </#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test: yes no ", template.process(Map.of("sequence", List.of("a", "b"))));
     }
@@ -65,7 +65,7 @@ class ListDirectiveTest {
     @Test
     void itemParity() throws ParseException, IOException {
         templateLoader.putTemplate("test",
-                "test: <#list sequence as s, l>${l?item_parity} </#list>");
+                "test: <#list sequence as s with l>${l?item_parity} </#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test: odd even odd even ", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
     }
@@ -73,7 +73,7 @@ class ListDirectiveTest {
     @Test
     void itemParityCap() throws ParseException, IOException {
         templateLoader.putTemplate("test",
-                "test: <#list sequence as s, l>${l?item_parity_cap} </#list>");
+                "test: <#list sequence as s with l>${l?item_parity_cap} </#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test: Odd Even Odd Even ", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
     }
@@ -81,14 +81,14 @@ class ListDirectiveTest {
     @Test
     void itemCycle() throws ParseException, IOException {
         templateLoader.putTemplate("test",
-                "test: <#list sequence as s, l>${l?item_cycle(1, 2, 3)} </#list>");
+                "test: <#list sequence as s with l>${l?item_cycle(1, 2, 3)} </#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test: 1 2 3 1 ", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
     }
 
     @Test
     void firstLast() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: <#list sequence as s, l>(${l?is_first}.${l?is_last})</#list>");
+        templateLoader.putTemplate("test", "test: <#list sequence as s with l>(${l?is_first}.${l?is_last})</#list>");
         Template template = configuration.getTemplate("test");
         assertEquals("test: (yes.no)(no.no)(no.no)(no.yes)",
                 template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
@@ -124,7 +124,7 @@ class ListDirectiveTest {
         templateLoader.putTemplate("test",
                 """
                         test
-                          <#list sequence as s, l>
+                          <#list sequence as s with l>
                           ${l?index}. ${s.key} ${s.value}
                         </#list>
                         """);
@@ -143,7 +143,7 @@ class ListDirectiveTest {
                 """
                         test  \s
                                     
-                          <#list sequence as s, l> \s
+                          <#list sequence as s with l> \s
                           ${l?index}. ${s.key} ${s.value}
                         </#list>   \s
                         """);
@@ -162,11 +162,11 @@ class ListDirectiveTest {
         templateLoader.putTemplate("test",
                 """
                         test
-                        <#list sequence as s, l>
+                        <#list sequence as s with l>
                           ${l?index}. ${s.key} ${s.value}
                         </#list>
 
-                        <#list sequence as s, l>
+                        <#list sequence as s with l>
                           ${l?index}. ${s.key} ${s.value}
                         </#list>
                         """);
@@ -186,7 +186,7 @@ class ListDirectiveTest {
     void additionalLineRemoval2() throws ParseException, IOException {
         templateLoader.putTemplate("test",
                 """
-                        <#list sequence as s, l>
+                        <#list sequence as s with l>
                           ${s.key} ${s.value}
                         </#list>
                         """);
@@ -200,14 +200,14 @@ class ListDirectiveTest {
 
     @Test
     void hashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as (k, v)>${k} ${v},</#list>");
+        Template template = configuration.getTemplate("test", "<#list hash as k, v>${k} ${v},</#list>");
         Map<String, String> map = Stream.of("a", "b", "c").collect(Collectors.toMap(Function.identity(), String::toUpperCase, (a, b) -> a, LinkedHashMap::new));
         assertEquals("a A,b B,c C,", template.process(Map.of("hash", map)));
     }
 
     @Test
     void hashListWithLooper() {
-        Template template = configuration.getTemplate("test", "<#list hash as (k, v), l>${l?counter} ${k} ${v},</#list>");
+        Template template = configuration.getTemplate("test", "<#list hash as k, v with l>${l?counter} ${k} ${v},</#list>");
         Map<String, String> map = Stream.of("a", "b", "c").collect(Collectors.toMap(Function.identity(), String::toUpperCase, (a, b) -> a, LinkedHashMap::new));
         assertEquals("1 a A,2 b B,3 c C,", template.process(Map.of("hash", map)));
     }
