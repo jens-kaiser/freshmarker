@@ -28,7 +28,8 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
         try {
             Map<String, Object> map = ((TemplateMap) list.evaluateToObject(context)).map();
             TemplateHashLooper looper = new TemplateHashLooper(List.copyOf(map.entrySet()));
-            processLoop(context, looper, new ListEnvironment(context.getEnvironment(), keyIdentifier, valueIdentifier, looperIdentifier, looper));
+            ListEnvironment hashEnvironment = new ListEnvironment(context.getEnvironment(), keyIdentifier, valueIdentifier, looperIdentifier, looper);
+            processLoop(context, hashEnvironment);
         } catch (RuntimeException e) {
             throw new ProcessException(e.getMessage(), ftl, e);
         }

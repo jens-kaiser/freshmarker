@@ -13,9 +13,11 @@ import java.util.Optional;
 
 public class ListEnvironment extends WrapperEnvironment {
     private final Map<String, TemplateObject> map = new HashMap<>();
+    private final TemplateLooper looper;
 
     private ListEnvironment(Environment wrapped, String looperIdentifier, TemplateLooper looper) {
         super(wrapped);
+        this.looper = looper;
         if (looperIdentifier != null) {
             map.put(looperIdentifier, looper);
         }
@@ -35,5 +37,9 @@ public class ListEnvironment extends WrapperEnvironment {
     @Override
     public TemplateObject getValue(String name) {
         return Optional.ofNullable(map.get(name)).orElseGet(() -> wrapped.getValue(name));
+    }
+
+    public TemplateLooper getLooper() {
+        return looper;
     }
 }

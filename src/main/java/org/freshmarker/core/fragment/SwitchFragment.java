@@ -4,6 +4,7 @@ import ftl.Node;
 import java.util.ArrayList;
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
@@ -48,6 +49,8 @@ public class SwitchFragment implements Fragment {
       throw new UnsupportedBuiltInException(e.getMessage(), node, e);
     } catch (WrongTypeException e) {
       throw new WrongTypeException(e.getMessage(), node, e);
+    } catch (ProcessException e) {
+      throw new ProcessException(e.getMessage(), node, e);
     }
   }
 }

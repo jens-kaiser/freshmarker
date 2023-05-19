@@ -3,8 +3,9 @@ package org.freshmarker.core.fragment;
 import ftl.ast.ListInstruction;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.environment.VariableEnvironment;
-import org.freshmarker.core.model.AbstractTemplateLooper;
+import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 
 public abstract class AbstractListFragment<T> implements Fragment {
@@ -20,11 +21,12 @@ public abstract class AbstractListFragment<T> implements Fragment {
         this.ftl = ftl;
     }
 
-    protected void processLoop(ProcessContext context, AbstractTemplateLooper<T> looper, Environment hashEnvironment) {
+    protected void processLoop(ProcessContext context, ListEnvironment hashEnvironment) {
         Environment environment = context.getEnvironment();
         try {
             context.setEnvironment(new VariableEnvironment(hashEnvironment));
-            for (int i = 0; i < looper.size(); i++) {
+            TemplateLooper looper = hashEnvironment.getLooper();
+            for (int i = 0, n = looper.size(); i < n; i++) {
                 block.process(context);
                 looper.increment();
             }

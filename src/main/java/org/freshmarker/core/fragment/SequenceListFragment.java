@@ -24,7 +24,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
         try {
             List<Object> objectList = ((TemplateSequence) list.evaluateToObject(context)).getSequence(context);
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
-            processLoop(context, looper, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper));
+            processLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper));
         } catch (RuntimeException e) {
             throw new ProcessException(e.getMessage(), ftl, e);
         }
