@@ -55,7 +55,7 @@ class BooleanInterpolationTest {
   }
 
   @Test
-  void interpolationNumercialThen() throws IOException, ParseException {
+  void interpolationNumericalThen() throws IOException, ParseException {
     templateLoader.putTemplate("test", "${100 + (x > y)?then(x, y)}");
     Template template = configuration.getTemplate("test");
     assertEquals("142", template.process(Map.of("var", true, "x", 42, "y", 23)));

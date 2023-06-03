@@ -1,12 +1,6 @@
 package org.freshmarker.core.ftl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import ftl.ParseException;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Map;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.StringTemplateLoader;
@@ -16,6 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExceptionHandlingTest {
 
@@ -64,37 +65,56 @@ class ExceptionHandlingTest {
   @Test
   void ifConditionError() throws IOException, ParseException {
     templateLoader.putTemplate("test",
-        "test: \n" +
-            "<#if text?contains('A')>\n" +
-            "${text}1\n" +
-            "<#elseif text?contains('BB')>\n" +
-            "${text}2\n" +
-            "<#else>\n" +
-            "${text}3\n" +
-            "</#if>");
+            """
+                    test:\s
+                    <#if text?contains('A')>
+                    ${text}1
+                    <#elseif text?contains('BB')>
+                    ${text}2
+                    <#else>
+                    ${text}3
+                    </#if>""");
     Template template = configuration.getTemplate("test");
     Map<String, Object> dataModel = Map.of("text", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'contains' for TemplateNumber at test:2:6 'text?contains('A')'",
-        exception.getMessage());
+    assertEquals("unsupported builtin 'contains' for TemplateNumber at test:2:6 'text?contains('A')'", exception.getMessage());
+  }
+
+  @Test
+  void elseIfConditionError() throws IOException, ParseException {
+    templateLoader.putTemplate("test",
+            """
+                    test:\s
+                    <#if text1?contains('A')>
+                    ${text1}1
+                    <#elseif text2?contains('B')>
+                    ${text2}2
+                    <#else>
+                    ${text}3
+                    </#if>""");
+    Template template = configuration.getTemplate("test");
+    Map<String, Object> dataModel = Map.of("text1", "B", "text2", 42);
+    UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class, () -> template.process(dataModel));
+    assertEquals("unsupported builtin 'contains' for TemplateNumber at test:4:10 'text2?contains('B')'", exception.getMessage());
   }
 
   @Test
   void ifBlockError() throws IOException, ParseException {
     templateLoader.putTemplate("test",
-        "test:\n" +
-            "<#if text?contains('A')>\n" +
-            "${text?xxx}1\n" +
-            "<#elseif text?contains('BB')>\n" +
-            "${text}2\n<#else>${text}3\n" +
-            "</#if>");
+            """
+                    test:
+                    <#if text?contains('A')>
+                    ${text?xxx}1
+                    <#elseif text?contains('BB')>
+                    ${text}2
+                    <#else>${text}3
+                    </#if>""");
     Template template = configuration.getTemplate("test");
     Map<String, Object> dataModel = Map.of("text", "A");
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'xxx' for TemplateString at test:3:1 '${text?xxx}'",
-        exception.getMessage());
+    assertEquals("unsupported builtin 'xxx' for TemplateString at test:3:1 '${text?xxx}'", exception.getMessage());
   }
 
   @Test
@@ -105,7 +125,6 @@ class ExceptionHandlingTest {
     Map<String, Object> dataModel = Map.of("text", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
-    assertEquals("unsupported builtin 'upper_case' for TemplateNumber at test:2:10 'text?upper_case'",
-        exception.getMessage());
+    assertEquals("unsupported builtin 'upper_case' for TemplateNumber at test:2:10 'text?upper_case'", exception.getMessage());
   }
 }

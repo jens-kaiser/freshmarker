@@ -67,6 +67,16 @@ class BeanInterpolationTest {
     templateLoader.putTemplate("test", "${bean.value} ${bean.active}");
     Template template = configuration.getTemplate("test");
     Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
-    assertThrows(ProcessException.class, () -> template.process(data));
+    ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
+    assertEquals("null at test:1:1 '${bean.value}'", processException.getMessage());
+  }
+
+  @Test
+  void invalidBeanAccess() throws IOException, ParseException {
+    templateLoader.putTemplate("test", "${bean}");
+    Template template = configuration.getTemplate("test");
+    Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
+    ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
+    assertEquals("missing reduction detected. Unsupported primitive? class org.freshmarker.core.ftl.BeanInterpolationTest$TestBean at test:1:1 '${bean}'", processException.getMessage());
   }
 }

@@ -32,7 +32,8 @@ class MethodCallTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "test: ${avg(10, 20)};test: 15",
+      "test: ${avg(10, 20)}<#-- -->;test: 15",
+      "test: ${avg(10, 20, 30, 40)}<#-- -->;test: 25",
       "test: ${abs(-10)};test: 10",
   }, delimiterString = ";")
   void avg(String templateSource, String expected) throws ParseException, IOException {

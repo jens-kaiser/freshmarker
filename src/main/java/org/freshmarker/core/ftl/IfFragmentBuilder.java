@@ -23,10 +23,10 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
   @Override
   public IfFragment visit(IfStatement ftl, IfFragment input) {
     IfFragment ifFragment = new IfFragment();
-    TemplateObject ifExpression = ftl.getChild(3).accept(interpolationBuilder, null);
+    Node expression = ftl.getChild(3);
+    TemplateObject ifExpression = expression.accept(interpolationBuilder, null);
     BlockFragment ifBlock = ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
-    ConditionalFragment ifPart = new ConditionalFragment(ifExpression, ifBlock, ftl.getChild(3));
-    ifFragment.addFragment(ifPart);
+    ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
     List<ElseIfBlock> elseIfParts = ftl.childrenOfType(ElseIfBlock.class);
     elseIfParts.forEach(elseIfPart -> elseIfPart.accept(this, ifFragment));
     ElseBlock elsePart = ftl.firstChildOfType(ElseBlock.class);
@@ -47,8 +47,9 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
   @Override
   public IfFragment visit(ElseBlock ftl, IfFragment input) {
-    BlockFragment ifBlock = ftl.getChild(3).accept(fragmentBuilder, new BlockFragment());
-    input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock, null));
+    Node expression = ftl.getChild(3);
+    BlockFragment ifBlock = expression.accept(fragmentBuilder, new BlockFragment());
+    input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock, expression));
     return input;
   }
 }
