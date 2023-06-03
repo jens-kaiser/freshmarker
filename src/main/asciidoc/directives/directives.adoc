@@ -33,7 +33,7 @@ less ten
 This directive generates conditional output.
 But unlike the _If Directive_, only one expression int the `switch` statement is evaluated.
 Each `case` statement handles a possible outcome of the evaluation.
-If none of the specified `case` statements match, then the `default` statement is used.
+If none of the specified `case` statements match, then the optional `default` statement is used.
 
 NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `break` statements are unnecessary.
 
