@@ -55,7 +55,7 @@ The interpolation from the last example produces the output `World` from the val
 If the interpolation is extended to `${example?uppercase}` then the interpolation produces `WORLD`.
 In this case the built-in `upper_case` has been added. Depending on the type of value, a wide variety of built-ins can be used.
 
-== Functions
+=== Functions
 
 Additional functionality can be added to the template-engine by custom Functions.
 
