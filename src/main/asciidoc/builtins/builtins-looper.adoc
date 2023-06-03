@@ -131,7 +131,7 @@ This built-in returns `false`, if the current loop value is the last one and `tr
 
 a|
 ----
-<#list (1..10) as s, l>${l?is_last}, </#list>
+<#list (1..10) as s, l>${l?has_next}, </#list>
 ----
 m|true, true, true, true, true, true, true, true, true, false,
 |===
