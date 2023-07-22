@@ -19,7 +19,7 @@ if a built-in seems to apply to multiple types, it's because each type has a bui
 
 It is possible to use more than one built-in in an interpolation.
 The built-ins are called from left to right on the current value of the interpolation.
-This means a built-inn is called on the result of a previous built-in or the initial value.
+This means a built-in is called on the result of a previous built-in or the initial value.
 
 .Example with two built-ins
 [source,java]

@@ -68,7 +68,7 @@ m|1968-08-24 12:30:45 Europe/Berlin
 ==== `zone` Built-In
 
 This built-in returns a string for the current time zone of the value.
-It is only available for the TemplateZonedDateTime type.
+It is only available for the `TemplateZonedDateTime` type.
 
 |===
 | Interpolation | Output | Type
