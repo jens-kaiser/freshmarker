@@ -31,7 +31,7 @@ less ten
 === Switch/Case/Default Directive
 
 This directive generates conditional output.
-But unlike the _If Directive_, only one expression int the `switch` statement is evaluated.
+But unlike the _If Directive_, only one expression in the `switch` statement is evaluated.
 Each `case` statement handles a possible outcome of the evaluation.
 If none of the specified `case` statements match, then the optional `default` statement is used.
 
