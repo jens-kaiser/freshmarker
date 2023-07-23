@@ -174,7 +174,7 @@ public final class Configuration {
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, functions, writer, Map.copyOf(formatter), modelSecurityGateway);
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, functions, writer, Map.copyOf(formatter));
     Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
     return new ProcessContext(environment, Map.copyOf(builtIns),  Map.copyOf(outputs));
   }
