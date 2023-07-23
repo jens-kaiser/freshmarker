@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 import org.freshmarker.core.Environment;
+import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.TemplateLoader;
@@ -68,12 +69,14 @@ public final class Configuration {
   private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
   private TemplateLoader templateLoader;
   private Locale locale;
+  private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
   private final List<TemplateObjectProvider> providers = new ArrayList<>(
-      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider()));
+      List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider(modelSecurityGateway)));
   private final Map<String, UserDirective> userDirectives = new HashMap<>();
   private final Map<String, TemplateFunction> functions = new HashMap<>();
 
   private String outputFormat = "undefined";
+
 
   public Configuration() {
     locale = Locale.getDefault();
@@ -102,6 +105,7 @@ public final class Configuration {
     outputs.put("CSS", NoEscapeFormat.INSTANCE);
     outputs.put("ADOC", AsciiDocOutputFormat.INSTANCE);
 
+    modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
     registerPlugins();
   }
 
@@ -170,7 +174,7 @@ public final class Configuration {
 
   public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
     OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, functions, writer, Map.copyOf(formatter));
+    BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, functions, writer, Map.copyOf(formatter), modelSecurityGateway);
     Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
     return new ProcessContext(environment, Map.copyOf(builtIns),  Map.copyOf(outputs));
   }
@@ -181,5 +185,9 @@ public final class Configuration {
 
   public void setOutputFormat(String outputFormat) {
     this.outputFormat = outputFormat;
+  }
+
+  public ModelSecurityGateway getSecurity() {
+    return modelSecurityGateway;
   }
 }
