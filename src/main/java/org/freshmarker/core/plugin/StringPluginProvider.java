@@ -1,24 +1,23 @@
 package org.freshmarker.core.plugin;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInMethod;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.freshmarker.core.output.NoEscapeFormat;
+import org.freshmarker.core.output.UndefinedOutputFormat;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringPluginProvider implements PluginProvider {
 
-    private static final Map<String, TemplateBoolean> BOOLEAN_MAP = Map.of("true", TemplateBoolean.TRUE, "false",
-            TemplateBoolean.FALSE);
+    private static final Map<String, TemplateBoolean> BOOLEAN_MAP = Map.of("true", TemplateBoolean.TRUE, "false", TemplateBoolean.FALSE);
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -95,7 +94,7 @@ public class StringPluginProvider implements PluginProvider {
 
     @BuiltInMethod
     public static TemplateMarkup noEsc(TemplateString value) {
-        return new TemplateMarkup(value, NoEscapeFormat.INSTANCE);
+        return new TemplateMarkup(value, UndefinedOutputFormat.INSTANCE);
     }
 
     @BuiltInMethod

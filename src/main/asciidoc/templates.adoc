@@ -117,26 +117,49 @@ without escaping, the script fragment is inserted and a more or less dangerous j
 
 FreshMarker's escape mechanism replaces the necessary meta characters of an output format to neutralize them.
 The following table lists the supported output formats and their meta character replacements.
+the last two lines indicate how comments can be inserted into the output using the @log directive.
 
 .Output Formate
 |===
-| Name | Meta Characters | Replacements
+| Name | Meta Characters | Replacements | Comment Prefix | Comment Suffix
 
 | HTML
 | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
+| `<!--`
+| ` -->`
 
 | XHTML
 | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
+| `<!-- `
+| ` -->`
 
 | XML  | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `\&apos;`;
+| `<!-- `
+| ` -->`
 
-| ADOC 2+| no escaping
-| undefined 2+| no escaping
-| plainText 2+| no escaping
-| JavaScript 2+| no escaping
-| CSS 2+| no escaping
-| JSON 2+| no escaping
+| ADOC
+2+| no escaping
+| `////\n`
+| `\n////\n`
+
+| plainText
+2+| no escaping
+2+| no comments
+
+| JavaScript
+2+| no escaping
+| `/* `
+| ` */`
+
+| CSS
+2+| no escaping
+| `/* `
+| ` */`
+
+| JSON
+2+| no escaping
+2+| no comments
 |===
