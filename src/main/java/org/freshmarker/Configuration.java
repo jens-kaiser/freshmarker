@@ -186,8 +186,4 @@ public final class Configuration {
   public void setOutputFormat(String outputFormat) {
     this.outputFormat = outputFormat;
   }
-
-  public ModelSecurityGateway getSecurity() {
-    return modelSecurityGateway;
-  }
 }
