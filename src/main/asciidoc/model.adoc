@@ -46,7 +46,7 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 |===
 
 All primitive types, except Null, have a default representation via their `toString` method.
-This must be considered with the enums, because the `toString` method can be overwritten.
+This must be considered with the enums, because the `toString` method can be overridden.
 
 === Lazy Values
 
@@ -83,4 +83,4 @@ configuration.getSecurity().addAllowedPackages(java.lang.annotation.Annotation.c
 configuration.getSecurity().addAllowedPackages("java.io");
 ----
 
-In the example above, the class `java.util.UUID` and all classes in the packages `java.lang.annotation` and `java.io` and all of there subpackages are allowed.
+In the example above, the class `java.util.UUID` and all classes in the packages `java.lang.annotation` and `java.io` and all of their subpackages are allowed.
