@@ -7,7 +7,7 @@ A map is always used as the model for calling the engine.
 By default, the template engine supports `String`, Number like `Integer`, `Long`, `Double` and `Float`, `Boolean` and Date Types as base types.
 In addition, the engine also knows `List`, `Map`, Sequences, Records and Beans.
 
-The top level model is a `Map<String, Object>`, which contains the top level value by their names.
+The top level model is a `Map<String, Object>`, which contains the top level values by their names.
 
 .Example Model
 [source,java]
