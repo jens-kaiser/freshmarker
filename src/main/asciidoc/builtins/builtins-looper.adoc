@@ -120,7 +120,18 @@ m|Odd, Even, Odd, Even, Odd, Even, Odd, Even, Odd, Even,
 
 ==== `item_cycle` Built-In
 
-TBD
+This built-in cycles throw the parameters for the current loop counter.
+It is useful for CSS class names.
+
+|===
+|Template |Output
+
+a|
+----
+<#list (1..10) as s, l>${l?item_cycle('one', 'two', 'three'}, </#list>
+----
+m|one, two, three, one, two, three, one, two, three, one,
+|===
 
 ==== `has_next` Built-In
 

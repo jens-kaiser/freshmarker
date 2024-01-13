@@ -16,7 +16,7 @@ m|1968-08-24
 
 ==== `c` (computer language) Built-In
 
-This built-in returns a timestamp string of the value.
+This built-in returns a date string of the value.
 
 |===
 | Interpolation | Output | Type
