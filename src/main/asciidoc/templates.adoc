@@ -10,7 +10,7 @@ This complicated sentence can be better explained with a small example.
 Hello ${example}!
 ----
 
-The example template contains tree parts. A first literal text fragment ``Hello ``, an interpolation fragment `${name}` and a
+The example template contains three parts. A first literal text fragment ``Hello ``, an interpolation fragment `${name}` and a
 second literal text fragment `!`. Literal text means the fragment is not interpreted in any particular way
 footnote:[This is an example in the introduction, sometimes it's different, of course.].
 
