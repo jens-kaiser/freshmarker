@@ -10,7 +10,6 @@ import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
 
-
 public final class Template {
 
   private final BlockFragment rootFragment = new BlockFragment();

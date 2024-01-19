@@ -76,7 +76,6 @@ public final class Configuration {
 
     private String outputFormat = "undefined";
 
-
     public Configuration() {
         locale = Locale.getDefault();
         templateLoader = name -> {

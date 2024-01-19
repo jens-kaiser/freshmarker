@@ -36,13 +36,7 @@ public class TemplateDynamicKey implements TemplateExpression {
             if (Math.abs(lower.asInt() - upper.asInt()) <= index.asInt()) {
                 throw new ProcessException("index out of range: " + index);
             }
-            TemplateNumber result;
-            if (lower.asInt() < upper.asInt()) {
-                result = lower.add(index);
-            } else {
-                result = lower.add(index.negate());
-            }
-            return result;
+            return lower.add(lower.asInt() < upper.asInt() ? index : index.negate());
         }
         TemplateListSequence list = (TemplateListSequence) templateObject;
         return list.get(context, beginIndex);

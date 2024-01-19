@@ -59,20 +59,14 @@ public abstract class AbstractCalculatingNumber<N extends Number> extends Number
     if (getType() == type) {
       return this;
     }
-    switch (type) {
-      case BYTE:
-        return new ByteNumber(wrapped.byteValue());
-      case SHORT:
-        return new ShortNumber(wrapped.shortValue());
-      case INTEGER:
-        return new IntegerNumber(wrapped.intValue());
-      case LONG:
-        return new LongNumber(wrapped.longValue());
-      case FLOAT:
-        return new FloatNumber(wrapped.floatValue());
-      case DOUBLE:
-        return new DoubleNumber(wrapped.doubleValue());
-      default:throw new ProcessException("unknwon type: " + type);
-    }
+      return switch (type) {
+          case BYTE -> new ByteNumber(wrapped.byteValue());
+          case SHORT -> new ShortNumber(wrapped.shortValue());
+          case INTEGER -> new IntegerNumber(wrapped.intValue());
+          case LONG -> new LongNumber(wrapped.longValue());
+          case FLOAT -> new FloatNumber(wrapped.floatValue());
+          case DOUBLE -> new DoubleNumber(wrapped.doubleValue());
+          default -> throw new ProcessException("unknwon type: " + type);
+      };
   }
 }

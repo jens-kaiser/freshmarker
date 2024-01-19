@@ -10,7 +10,8 @@ import org.freshmarker.core.model.TemplateObject;
 public class BeanTemplateObjectProvider implements TemplateObjectProvider {
 
     private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
-private final ModelSecurityGateway modelSecurityGateway;
+
+    private final ModelSecurityGateway modelSecurityGateway;
 
     public BeanTemplateObjectProvider(ModelSecurityGateway modelSecurityGateway) {
         this.modelSecurityGateway = modelSecurityGateway;
