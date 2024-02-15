@@ -32,6 +32,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
     return value.toString();
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof TemplatePrimitive<?> templatePrimitive) {
       return value.equals(templatePrimitive.value);
@@ -39,6 +40,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
     return false;
   }
 
+  @Override
   public int hashCode() {
     return value.hashCode();
   }
@@ -48,6 +50,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
     return this;
   }
 
+  @Override
   public Class<?> getModelType() {
     return value.getClass();
   }

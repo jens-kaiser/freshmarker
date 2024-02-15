@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class StringPluginProvider implements PluginProvider {
 
     private static final Map<String, TemplateBoolean> BOOLEAN_MAP = Map.of("true", TemplateBoolean.TRUE, "false", TemplateBoolean.FALSE);
+    private static final String LOWER_CASE_UPPER_CASES = "(\\p{javaLowerCase})(\\p{javaUpperCase}+)";
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -50,17 +51,17 @@ public class StringPluginProvider implements PluginProvider {
 
     @BuiltInMethod
     public static TemplateString kebabCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().replaceAll("(\\p{javaLowerCase})(\\p{javaUpperCase}+)", "$1-$2").toLowerCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getEnvironment().getLocale()));
     }
 
     @BuiltInMethod
     public static TemplateString snakeCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().replaceAll("(\\p{javaLowerCase})(\\p{javaUpperCase}+)", "$1_$2").toLowerCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getEnvironment().getLocale()));
     }
 
     @BuiltInMethod
     public static TemplateString screamingSnakeCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().replaceAll("(\\p{javaLowerCase})(\\p{javaUpperCase}+)", "$1_$2").toUpperCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getEnvironment().getLocale()));
     }
 
     @BuiltInMethod

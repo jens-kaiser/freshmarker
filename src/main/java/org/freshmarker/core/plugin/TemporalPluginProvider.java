@@ -41,6 +41,8 @@ public class TemporalPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateLocalDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalDateTime.class);
     private static final BuiltInKeyBuilder<TemplateLocalDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalDate.class);
     private static final BuiltInKeyBuilder<TemplateLocalTime> TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalTime.class);
+    private static final String AT_ZONE = "at_zone";
+    private static final String STRING = "string";
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -52,9 +54,9 @@ public class TemporalPluginProvider implements PluginProvider {
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(ZoneId.systemDefault()).toLocalTime()));
         builtIns.put(INSTANT_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(INSTANT_BUILDER.of("string"), new FunctionalBuiltIn(
+        builtIns.put(INSTANT_BUILDER.of(STRING), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> formatTemporal(y, e, ((TemplateInstant) x).getValue())));
-        builtIns.put(INSTANT_BUILDER.of("at_zone"), new FunctionalBuiltIn(
+        builtIns.put(INSTANT_BUILDER.of(AT_ZONE), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(getZoneId(y, e))));
 
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date_time"), new FunctionalBuiltIn(
@@ -65,9 +67,9 @@ public class TemporalPluginProvider implements PluginProvider {
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateZonedDateTime) x).toLocalTime()));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("string"), new FunctionalBuiltIn(
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of(STRING), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue())));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("at_zone"), new FunctionalBuiltIn(
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateZonedDateTime) x).atZone(getZoneId(y, e))));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(((TemplateZonedDateTime) x).getValue().getZone().toString())));
@@ -78,23 +80,23 @@ public class TemporalPluginProvider implements PluginProvider {
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime())));
         builtIns.put(DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(DATE_TIME_BUILDER.of("string"), new FunctionalBuiltIn(
+        builtIns.put(DATE_TIME_BUILDER.of(STRING), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> formatTemporal(y, e, ((TemplateLocalDateTime) x).getValue())));
-        builtIns.put(DATE_TIME_BUILDER.of("at_zone"), new FunctionalBuiltIn(
+        builtIns.put(DATE_TIME_BUILDER.of(AT_ZONE), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateLocalDateTime) x).atZone(getZoneId(y, e))));
 
         builtIns.put(DATE_BUILDER.of("date"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> x));
         builtIns.put(DATE_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(DATE_BUILDER.of("string"), new FunctionalBuiltIn(
+        builtIns.put(DATE_BUILDER.of(STRING), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> formatTemporal(y, e, ((TemplateLocalDate) x).getValue())));
 
         builtIns.put(TIME_BUILDER.of("time"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> x));
         builtIns.put(TIME_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(TIME_BUILDER.of("string"), new FunctionalBuiltIn(
+        builtIns.put(TIME_BUILDER.of(STRING), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> formatTemporal(y, e, ((TemplateLocalTime) x).getValue())));
     }
 
