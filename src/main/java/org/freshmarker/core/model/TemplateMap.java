@@ -13,10 +13,10 @@ public interface TemplateMap extends TemplateObject {
         return null;
     }
 
+    @Override
     default boolean isMap() {
         return true;
     }
 
     Map<String, Object> map();
-
 }

@@ -14,7 +14,7 @@ public abstract class AbstractListFragment<T> implements Fragment {
     protected final BlockFragment block;
     protected final ListInstruction ftl;
 
-    public AbstractListFragment(TemplateObject list, String looperIdentifier, BlockFragment block, ListInstruction ftl) {
+    protected AbstractListFragment(TemplateObject list, String looperIdentifier, BlockFragment block, ListInstruction ftl) {
         this.list = list;
         this.looperIdentifier = looperIdentifier;
         this.block = block;

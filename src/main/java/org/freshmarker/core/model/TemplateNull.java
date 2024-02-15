@@ -2,7 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 
-public class TemplateNull implements TemplateObject {
+public final class TemplateNull implements TemplateObject {
 
   public static final TemplateNull NULL = new TemplateNull();
 
