@@ -64,7 +64,6 @@ public class FileAndPathPluginProvider implements PluginProvider {
   }
   private TemplateObject processPath(TemplateObject value, Function<Path, ?> function, ProcessContext context) {
     Path input = ((TemplatePath) value).getValue();
-    Function<Path, File> convert = Path::toFile;
     return context.getEnvironment().mapObject(function.apply(input));
   }
 }
