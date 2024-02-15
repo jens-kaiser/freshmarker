@@ -10,7 +10,7 @@ public class NumberFormatter implements Formatter {
   private final LocaleLocal<NumberFormat> numberFormat;
 
   public NumberFormatter() {
-    this.numberFormat = LocaleLocal.withInitial(l -> NumberFormat.getNumberInstance(l));
+    this.numberFormat = LocaleLocal.withInitial(NumberFormat::getNumberInstance);
   }
 
   @Override
