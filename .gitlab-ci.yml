@@ -35,7 +35,7 @@ sonarcloud-check:
     paths:
       - .sonar/cache
   script:
-    - mvn verify sonar:sonar -Dsonar.projectKey=schegge_freshmarker
+    - mvn package sonar:sonar -Dsonar.projectKey=schegge_freshmarker
   only:
     - merge_requests
     - master
