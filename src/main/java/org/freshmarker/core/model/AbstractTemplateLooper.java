@@ -9,7 +9,7 @@ public abstract class AbstractTemplateLooper<T> implements TemplateLooper {
     protected final List<T> sequence;
     protected int index;
 
-    public AbstractTemplateLooper(List<T> sequence) {
+    protected AbstractTemplateLooper(List<T> sequence) {
         this.sequence = sequence;
     }
 

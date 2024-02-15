@@ -1,7 +1,5 @@
 package org.freshmarker.core.ftl;
 
-import static java.util.stream.Collectors.toList;
-
 import ftl.FTLConstants.TokenType;
 import ftl.Node;
 import ftl.Token;
@@ -29,8 +27,7 @@ public class ParameterListBuilder implements
   @Override
   public List<ParameterHolder> visit(ParameterList expression, List<ParameterHolder> input) {
     int index = 0;
-    List<Node> children = expression.children().stream().filter(p -> TokenType.COMMA != p.getTokenType())
-        .collect(toList());
+    List<Node> children = expression.children().stream().filter(p -> TokenType.COMMA != p.getTokenType()).toList();
     int maxChildren = children.size();
     Set<String> names = new HashSet<>();
     while (index < maxChildren) {
