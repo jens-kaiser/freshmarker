@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TemporalInterpolationTest {
 
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(1968, Month.AUGUST, 24, 12, 30, 45);
+    private static final Map<String, Object> TEMPORAL = Map.of("temporal", LOCAL_DATE_TIME);
+    public static final Map<String, Object> LOCAL_DATE = Map.of("temporal", LocalDate.of(1968, Month.AUGUST, 24));
 
     private Configuration configuration;
     private StringTemplateLoader templateLoader;
@@ -40,59 +42,63 @@ class TemporalInterpolationTest {
     void interpolationLocalDate() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", LocalDate.of(1968, Month.AUGUST, 24)));
+        String result = template.process(LOCAL_DATE);
         assertEquals("test: 1968-08-24", result);
     }
 
     @Test
     void interpolationLocalDateString() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string('d. MMMM yyyy')}");
-        String result = template.process(Map.of("temporal", LocalDate.of(1968, Month.AUGUST, 24)));
+        String result = template.process(LOCAL_DATE);
         assertEquals("test: 24. August 1968", result);
     }
 
     @Test
     void interpolationLocalDateStringMissingParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("temporal", LocalDate.of(1968, Month.AUGUST, 24))));
+        assertThrows(ProcessException.class, () -> template.process(LOCAL_DATE));
     }
 
     @Test
     void interpolationLocalDateStringInvalidParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string(format)}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42, "temporal", LocalDate.of(1968, Month.AUGUST, 24))));
+        Map<String, Object> dataModel = Map.of("format", 42, "temporal", LocalDate.of(1968, Month.AUGUST, 24));
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
     @Test
     void interpolationLocalTimeString() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string('hh:mm')}");
-        String result = template.process(Map.of("temporal", LocalTime.of(12, 34, 56)));
+        Map<String, Object> dataModel = Map.of("temporal", LocalTime.of(12, 34, 56));
+        String result = template.process(dataModel);
         assertEquals("test: 12:34", result);
     }
 
     @Test
     void interpolationLocalTimeStringMissingParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("temporal", LocalTime.of(12, 34, 56))));
+        Map<String, Object> dataModel = Map.of("temporal", LocalTime.of(12, 34, 56));
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
     @Test
     void interpolationLocalTimeStringInvalidParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string(format)}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42, "temporal", LocalTime.of(12, 34, 56))));
+        Map<String, Object> dataModel = Map.of("format", 42, "temporal", LocalTime.of(12, 34, 56));
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
     @Test
     void interpolationLocalDateTimeString() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
+        String result = template.process(TEMPORAL);
         assertEquals("test: 24. August 1968 12:30", result);
     }
 
     @Test
     void interpolationLocalDateTimeStringMissingParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("temporal", LOCAL_DATE_TIME)));
+        assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
     }
 
     @Test
@@ -113,104 +119,98 @@ class TemporalInterpolationTest {
     void interpolationLocalDateTime() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals("test: 1968-08-24 12:30:45", result);
+        assertEquals("test: 1968-08-24 12:30:45", template.process(TEMPORAL));
     }
 
     @Test
     void interpolationLocalDateTimeComputerAudience() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal?c}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals("test: 1968-08-24T12:30:45", result);
+        assertEquals("test: 1968-08-24T12:30:45", template.process(TEMPORAL));
     }
 
     @Test
     void interpolationLocalDateTimeToLocalDate() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal?date}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals("test: 1968-08-24", result);
+        assertEquals("test: 1968-08-24", template.process(TEMPORAL));
     }
 
     @Test
     void interpolationLocalDateTimeToLocalTime() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal?time}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals("test: 12:30:45", result);
+        assertEquals("test: 12:30:45", template.process(TEMPORAL));
     }
 
     @Test
     void interpolationDuration() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", Duration.of(43, ChronoUnit.MINUTES)));
-        assertEquals("test: PT43M", result);
+        Map<String, Object> dataModel = Map.of("temporal", Duration.of(43, ChronoUnit.MINUTES));
+        assertEquals("test: PT43M", template.process(dataModel));
     }
 
     @Test
     void interpolationPeriod() throws ParseException, IOException {
         templateLoader.putTemplate("test", "test: ${temporal}");
         Template template = configuration.getTemplate("test");
-        String result = template.process(Map.of("temporal", Period.of(2, 4, 1)));
-        assertEquals("test: P2Y4M1D", result);
+        Map<String, Object> dataModel = Map.of("temporal", Period.of(2, 4, 1));
+        assertEquals("test: P2Y4M1D", template.process(dataModel));
     }
 
     @Test
     void interpolationZonedDateTime() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin"))));
-        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", result);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")));
+        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", template.process(dataModel));
     }
 
     @Test
     void interpolationZonedDateTimeComputerAudience() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin"))));
-        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", result);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")));
+        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", template.process(dataModel));
     }
 
     @Test
     void interpolationZonedDateTimeString() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin"))));
-        assertEquals("test: 24. August 1968 12:30", result);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")));
+        assertEquals("test: 24. August 1968 12:30", template.process(dataModel));
     }
 
     @Test
     void interpolationInstant() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
-        assertEquals("test: 1968-08-24 11:30:45 Z", result);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant());
+        assertEquals("test: 1968-08-24 11:30:45 Z", template.process(dataModel));
     }
 
     @Test
     void interpolationInstantComputerAudience() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
-        assertEquals("test: 1968-08-24T11:30:45Z", result);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant());
+        assertEquals("test: 1968-08-24T11:30:45Z", template.process(dataModel));
     }
 
     @Test
     void interpolationInstantString() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant()));
-        assertEquals("test: 24. August 1968 11:30", result);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant());
+        assertEquals("test: 24. August 1968 11:30", template.process(dataModel));
     }
 
     @Test
     void interpolationLocalDateTimeAtZone() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", result);
+        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", template.process(TEMPORAL));
     }
 
     @Test
     void interpolationLocalDateTimeAtZoneC() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')?c}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", result);
+        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", template.process(TEMPORAL));
     }
 
     @Test
