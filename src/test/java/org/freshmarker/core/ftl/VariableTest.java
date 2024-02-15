@@ -21,7 +21,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class VariableTest {
   private Configuration configuration;
-  private StringTemplateLoader templateLoader;
 
   @BeforeEach
   public void setUp() {
@@ -47,7 +46,8 @@ class VariableTest {
   })
   void invalid(String templateSource) throws ParseException {
     Template template = configuration.getTemplate("test", templateSource);
-    assertThrows(ProcessException.class, () -> template.process(Map.of()));
+    Map<String, Object> dataModel = Map.of();
+    assertThrows(ProcessException.class, () -> template.process(dataModel));
   }
 
   @Test

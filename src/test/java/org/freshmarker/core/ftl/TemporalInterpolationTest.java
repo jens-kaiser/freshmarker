@@ -104,7 +104,8 @@ class TemporalInterpolationTest {
     @Test
     void interpolationLocalDateTimeStringInvalidParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string(format)}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42, "temporal", LOCAL_DATE_TIME)));
+        Map<String, Object> dataModel = Map.of("format", 42, "temporal", LOCAL_DATE_TIME);
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
     @Test
