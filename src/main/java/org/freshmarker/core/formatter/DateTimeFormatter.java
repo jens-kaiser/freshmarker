@@ -5,7 +5,6 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
-import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 
 public class DateTimeFormatter implements Formatter {
 

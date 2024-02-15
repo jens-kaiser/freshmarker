@@ -20,42 +20,24 @@ public class TemplateRelational implements TemplateBooleanExpression {
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateNumber leftValue = left.evaluate(context, TemplateNumber.class);
     TemplateNumber rightValue = right.evaluate(context, TemplateNumber.class);
-    switch (type) {
-      case LT:
-      case ALT_LT:
-        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() < 0);
-      case GT:
-      case ALT_GT:
-        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() > 0);
-      case LTE:
-      case ALT_LTE:
-        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() <= 0);
-      case GTE:
-      case ALT_GTE:
-        return TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() >= 0);
-      default:
-        throw new IllegalArgumentException("unsupported relation: " + type);
-    }
+      return switch (type) {
+          case LT, ALT_LT -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() < 0);
+          case GT, ALT_GT -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() > 0);
+          case LTE, ALT_LTE -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() <= 0);
+          case GTE, ALT_GTE -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() >= 0);
+          default -> throw new IllegalArgumentException("unsupported relation: " + type);
+      };
   }
 
   @Override
   public TemplateObject not() {
-    switch (type) {
-      case LT:
-      case ALT_LT:
-        return new TemplateRelational(TokenType.GTE, left, right);
-      case GT:
-      case ALT_GT:
-        return new TemplateRelational(TokenType.LTE, left, right);
-      case LTE:
-      case ALT_LTE:
-        return new TemplateRelational(TokenType.GT, left, right);
-      case GTE:
-      case ALT_GTE:
-        return new TemplateRelational(TokenType.LT, left, right);
-      default:
-        throw new IllegalArgumentException("unsupported relation: " + type);
-    }
+      return switch (type) {
+          case LT, ALT_LT -> new TemplateRelational(TokenType.GTE, left, right);
+          case GT, ALT_GT -> new TemplateRelational(TokenType.LTE, left, right);
+          case LTE, ALT_LTE -> new TemplateRelational(TokenType.GT, left, right);
+          case GTE, ALT_GTE -> new TemplateRelational(TokenType.LT, left, right);
+          default -> throw new IllegalArgumentException("unsupported relation: " + type);
+      };
   }
 
   public TokenType getType() {

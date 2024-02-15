@@ -60,7 +60,7 @@ public class BaseEnvironment implements Environment {
             return templateObject;
         }
         Object current;
-        if (o instanceof TemplateObjectSupplier templateObject) {
+        if (o instanceof TemplateObjectSupplier<?> templateObject) {
             current = templateObject.get();
         } else {
             current = o;
