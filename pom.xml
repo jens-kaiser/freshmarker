@@ -10,7 +10,7 @@
   <url>https://gitlab.com/schegge/freshmarker.git</url>
   <name>FreshMarker</name>
   <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17
-    and supports the java.time API and Records.
+    and supports the `java.time` API and Records.
   </description>
 
   <licenses>
@@ -55,9 +55,15 @@
     <hamcrest.version>2.2</hamcrest.version>
     <slf4j.version>2.0.3</slf4j.version>
     <jacoco.version>0.8.8</jacoco.version>
+    <sonar.organization>schegge</sonar.organization>
   </properties>
 
   <dependencies>
+    <!--dependency>
+      <groupId>org.congocc</groupId>
+      <artifactId>org.congocc.parser.generator</artifactId>
+      <version>2.0.0-RC5</version>
+    </dependency-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -74,29 +80,15 @@
       <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>de.schegge</groupId>
+      <artifactId>bytebuddytest</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>target/generated-sources</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
@@ -127,7 +119,8 @@
             </goals>
             <configuration>
               <sources>
-                <source>${project.build.directory}/generated-sources</source>
+                <source>${project.build.directory}/generated-sources/ccc</source>
+                <source>${project.build.directory}/generated-sources/jcc</source>
               </sources>
             </configuration>
           </execution>
@@ -151,7 +144,7 @@
                 <argument>com.javacc.Main</argument>
                 <argument>-jdk11</argument>
                 <argument>-d</argument>
-                <argument>${project.build.directory}/generated-sources</argument>
+                <argument>${project.build.directory}/generated-sources/jcc</argument>
                 <argument>src/main/resources/javacc/FTL.javacc</argument>
               </arguments>
             </configuration>
@@ -215,7 +208,7 @@
         <executions>
           <execution>
             <id>sign-artifacts</id>
-            <phase>verify</phase>
+            <phase>package</phase>
             <goals>
               <goal>sign</goal>
             </goals>
@@ -295,6 +288,23 @@
           </archive>
         </configuration>
       </plugin>
+      <!--plugin>
+        <groupId>org.congocc</groupId>
+        <artifactId>org.congocc.maven.plugin</artifactId>
+        <version>2.0.0-RC5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>ccc-generate</goal>
+            </goals>
+            <configuration>
+              <grammarFile>src/main/ccc/FreshMarker/FreshMarker.ccc</grammarFile>
+              <outputDir>target/generated-sources/ccc</outputDir>
+              <jdk>17</jdk>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
