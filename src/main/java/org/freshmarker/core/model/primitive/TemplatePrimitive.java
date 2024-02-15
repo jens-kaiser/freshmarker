@@ -33,8 +33,8 @@ public class TemplatePrimitive<P> implements TemplateObject {
   }
 
   public boolean equals(Object o) {
-    if (o instanceof TemplatePrimitive) {
-      return value.equals(((TemplatePrimitive<?>)o).value);
+    if (o instanceof TemplatePrimitive<?> templatePrimitive) {
+      return value.equals(templatePrimitive.value);
     }
     return false;
   }

@@ -20,18 +20,13 @@ public class BooleanPluginProvider implements PluginProvider {
     return new TemplateString(String.valueOf(value));
   }
 
-  @BuiltInMethod("then")
-  public static TemplateObject thenBuildIn(TemplateBoolean value, ProcessContext context, TemplateObject trueValue,
-      TemplateObject falseValue) {
-    if (value == TemplateBoolean.TRUE) {
-      return trueValue.evaluateToObject(context);
+    @BuiltInMethod("then")
+    public static TemplateObject thenBuildIn(TemplateBoolean value, ProcessContext context, TemplateObject trueValue, TemplateObject falseValue) {
+        return value == TemplateBoolean.TRUE ? trueValue.evaluateToObject(context) : falseValue.evaluateToObject(context);
     }
-    return falseValue.evaluateToObject(context);
-  }
 
-  @BuiltInMethod("string")
-  public static  TemplateString stringBuiltIn(TemplateBoolean value, TemplateString trueValue,
-      TemplateString falseValue) {
-    return value == TemplateBoolean.TRUE ? trueValue : falseValue;
-  }
+    @BuiltInMethod("string")
+    public static TemplateString stringBuiltIn(TemplateBoolean value, TemplateString trueValue, TemplateString falseValue) {
+        return value == TemplateBoolean.TRUE ? trueValue : falseValue;
+    }
 }

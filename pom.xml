@@ -173,7 +173,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -189,6 +189,7 @@
                   <groupId>javacc21</groupId>
                   <artifactId>javacc21</artifactId>
                   <version>220206</version>
+                  <systemPath>${project.basedir}/src/main/lib/javacc21-220206.jar</systemPath>
                 </additionalDependency>
               </additionalDependencies>
               <doclint>none</doclint>

@@ -8,6 +8,7 @@ import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.UndefinedOutputFormat;
 
 import java.util.Locale;
@@ -98,7 +99,9 @@ public class StringPluginProvider implements PluginProvider {
     }
 
     @BuiltInMethod
-    public static TemplateMarkup esc(TemplateString value, ProcessContext context) {
-        return new TemplateMarkup(value, context.getEnvironment().getOutputFormat());
+    public static TemplateMarkup esc(TemplateString value, ProcessContext context, TemplateString parameter) {
+        OutputFormat outputFormat = parameter.asString().map(String::valueOf).map(context::getOutputFormat)
+                .orElse(context.getEnvironment().getOutputFormat());
+        return new TemplateMarkup(value, outputFormat);
     }
 }

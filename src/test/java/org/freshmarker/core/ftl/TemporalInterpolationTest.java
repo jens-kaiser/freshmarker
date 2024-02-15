@@ -1,9 +1,12 @@
 package org.freshmarker.core.ftl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import ftl.ParseException;
+import org.freshmarker.Configuration;
+import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.StringTemplateLoader;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -14,15 +17,10 @@ import java.time.Month;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
 import java.util.Map;
 
-import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.StringTemplateLoader;
-import org.freshmarker.Configuration;
-import org.freshmarker.Template;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TemporalInterpolationTest {
 
@@ -62,7 +60,7 @@ class TemporalInterpolationTest {
     @Test
     void interpolationLocalDateStringInvalidParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string(format)}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42 , "temporal", LocalDate.of(1968, Month.AUGUST, 24))));
+        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42, "temporal", LocalDate.of(1968, Month.AUGUST, 24))));
     }
 
     @Test
@@ -81,7 +79,7 @@ class TemporalInterpolationTest {
     @Test
     void interpolationLocalTimeStringInvalidParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string(format)}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42 , "temporal", LocalTime.of(12, 34, 56))));
+        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42, "temporal", LocalTime.of(12, 34, 56))));
     }
 
     @Test
@@ -100,7 +98,7 @@ class TemporalInterpolationTest {
     @Test
     void interpolationLocalDateTimeStringInvalidParameter() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?string(format)}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42 , "temporal", LOCAL_DATE_TIME)));
+        assertThrows(ProcessException.class, () -> template.process(Map.of("format", 42, "temporal", LOCAL_DATE_TIME)));
     }
 
     @Test

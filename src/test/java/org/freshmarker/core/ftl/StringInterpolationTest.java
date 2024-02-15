@@ -23,6 +23,7 @@ class StringInterpolationTest {
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
+    configuration.setOutputFormat("HTML");
     templateLoader = new StringTemplateLoader();
     configuration.registerTemplateLoader(templateLoader);
   }
@@ -123,6 +124,16 @@ class StringInterpolationTest {
   })
   void developerCases(String builtIn, String input, String expected) throws ParseException {
     Template template = configuration.getTemplate("test", "test: ${text?" + builtIn + "}");
+    assertEquals(expected, template.process(Map.of("text", input)));
+  }
+  @ParameterizedTest
+  @CsvSource({
+          "'',1<2,test: 1&lt;2",
+          "?esc('HTML'),1<2,test: 1&lt;2",
+          "?noEsc,1<2,test: 1<2",
+  })
+  void escape(String builtIn, String input, String expected) throws ParseException {
+    Template template = configuration.getTemplate("test", "test: ${text" + builtIn + "}");
     assertEquals(expected, template.process(Map.of("text", input)));
   }
 }

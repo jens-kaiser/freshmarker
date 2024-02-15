@@ -57,8 +57,7 @@ class FtlTemplateBuilderTest {
 
   @Test
   void generateHtmlInterpolationEsc() throws ParseException, IOException {
-    templateLoader.putTemplate("test", "test: ${'<br/>'?esc}");
-    configuration.setOutputFormat("HTML");
+    templateLoader.putTemplate("test", "test: ${'<br/>'?esc('HTML')}");
     Template template = configuration.getTemplate("test");
     assertEquals("test: &lt;br/&gt;", template.process(Map.of()));
   }
