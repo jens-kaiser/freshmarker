@@ -1,6 +1,7 @@
 package org.freshmarker.core.ftl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import ftl.ParseException;
 import java.io.IOException;
@@ -58,6 +59,14 @@ class MacroTest {
         "<#macro entry label value>${label}=${value}</#macro><@entry label='label' value='value'/>");
     Template template = configuration.getTemplate("test");
     assertEquals("label=value", template.process(Map.of()));
+  }
+
+  @Test
+  void generateMacroWithInvalidParameters() throws IOException, ParseException {
+    templateLoader.putTemplate("test",
+            "<#macro entry label label>${label}=${value}</#macro><@entry label='label' value='value'/>");
+    ParsingException exception = assertThrows(ParsingException.class, () -> configuration.getTemplate("test"));
+    assertEquals("non unique parameter name at test:1:21 'label'", exception.getMessage());
   }
 
   @Test
