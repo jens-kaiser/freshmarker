@@ -30,12 +30,22 @@ class MacroTest {
             "<#macro comment><#nested/> <#nested/></#macro><@comment>Hurra</@comment>,Hurra Hurra",
             "<#macro entry label value>${label}=${value}</#macro><@entry label='label' value='value'/>,label=value",
             "<#macro test>ABC<#return/>DEF</#macro><@test/>,ABC",
-            "<#macro entry count><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry count=3>test</@entry>,1 test\n2 test\n3 test\n",
-            "<#macro entry count=4><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry>test</@entry>,1 test\n2 test\n3 test\n4 test\n"
     })
     void generateMacro(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("bean", Map.of())));
+    }
+
+    @Test
+    void generateComplexMacro() throws ParseException {
+        Template template = configuration.getTemplate("test", "<#macro entry count><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry count=3>test</@entry>");
+        assertEquals("1 test\n2 test\n3 test\n", template.process(Map.of()));
+    }
+
+    @Test
+    void generateMacroWithDefaultValue() throws ParseException {
+        Template template = configuration.getTemplate("test", "<#macro entry count=4><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry>test</@entry>");
+        assertEquals("1 test\n2 test\n3 test\n4 test\n", template.process(Map.of()));
     }
 
     @Test
