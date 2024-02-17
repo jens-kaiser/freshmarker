@@ -7,6 +7,8 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.StringTemplateLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -116,32 +118,16 @@ class TemporalInterpolationTest {
         assertEquals("test: 12:30:45", result);
     }
 
-    @Test
-    void interpolationLocalDateTime() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal}");
-        Template template = configuration.getTemplate("test");
-        assertEquals("test: 1968-08-24 12:30:45", template.process(TEMPORAL));
-    }
-
-    @Test
-    void interpolationLocalDateTimeComputerAudience() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal?c}");
-        Template template = configuration.getTemplate("test");
-        assertEquals("test: 1968-08-24T12:30:45", template.process(TEMPORAL));
-    }
-
-    @Test
-    void interpolationLocalDateTimeToLocalDate() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal?date}");
-        Template template = configuration.getTemplate("test");
-        assertEquals("test: 1968-08-24", template.process(TEMPORAL));
-    }
-
-    @Test
-    void interpolationLocalDateTimeToLocalTime() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal?time}");
-        Template template = configuration.getTemplate("test");
-        assertEquals("test: 12:30:45", template.process(TEMPORAL));
+    @ParameterizedTest
+    @CsvSource({
+            "${temporal},1968-08-24 12:30:45",
+            "${temporal?c},1968-08-24T12:30:45",
+            "${temporal?date},1968-08-24",
+            "${temporal?time},12:30:45"
+    })
+    void interpolationLocalDateTime(String templateString, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", "test: " + templateString);
+        assertEquals("test: " + expected, template.process(TEMPORAL));
     }
 
     @Test
