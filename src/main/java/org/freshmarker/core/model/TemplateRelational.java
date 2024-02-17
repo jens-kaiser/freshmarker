@@ -39,16 +39,4 @@ public class TemplateRelational implements TemplateBooleanExpression {
           default -> throw new IllegalArgumentException("unsupported relation: " + type);
       };
   }
-
-  public TokenType getType() {
-    return type;
-  }
-
-  public TemplateObject getLeft() {
-    return left;
-  }
-
-  public TemplateObject getRight() {
-    return right;
-  }
 }

@@ -89,6 +89,21 @@ class ExpressionTest {
 
   @ParameterizedTest
   @CsvSource({
+          "!(1 < 1), true",
+          "!(1 < 2), false",
+          "!(1 > 1), true",
+          "!(2 > 1), false",
+          "!(1 <= 1), false",
+          "!(2 >= 1), false",
+  })
+  void negatedRelation(String expression, boolean result) throws ParseException, IOException {
+    templateLoader.putTemplate("test", "test: ${(" + expression + ")?c}");
+    Template template = configuration.getTemplate("test");
+    assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
       "4 == (test?ordinal), true",
       "4 != (test?ordinal), false",
       "4 <= (test?ordinal), true",
@@ -105,4 +120,5 @@ class ExpressionTest {
     Template template = configuration.getTemplate("test");
     assertEquals("test: " + result, template.process(Map.of("test", StandardOpenOption.CREATE)));
   }
+
 }
