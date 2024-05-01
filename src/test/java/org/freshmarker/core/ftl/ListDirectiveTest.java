@@ -142,7 +142,7 @@ class ListDirectiveTest {
         templateLoader.putTemplate("test",
                 """
                         test  \s
-                                    
+                        
                           <#list sequence as s with l> \s
                           ${l?index}. ${s.key} ${s.value}
                         </#list>   \s
@@ -150,7 +150,7 @@ class ListDirectiveTest {
         Template template = configuration.getTemplate("test");
         assertEquals("""
                         test  \s
-                               
+                        
                           0. a b
                           1. c d
                         """,
@@ -172,7 +172,7 @@ class ListDirectiveTest {
                         """);
         Template template = configuration.getTemplate("test");
         assertEquals("""
-                        test              
+                        test
                           0. a b
                           1. c d
 

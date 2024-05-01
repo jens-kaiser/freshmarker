@@ -13,5 +13,5 @@ public interface TemplateSource extends Closeable {
 
   }
 
-  String getName();
+  String name();
 }

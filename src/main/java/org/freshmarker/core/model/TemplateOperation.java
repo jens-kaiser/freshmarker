@@ -32,19 +32,13 @@ public class TemplateOperation implements TemplateExpression {
     }
     TemplateNumber leftNumber = leftValue.evaluate(processContext, TemplateNumber.class);
     TemplateNumber rightNumber = rightValue.evaluate(processContext, TemplateNumber.class);
-    switch (op) {
-      case PLUS:
-        return leftNumber.add(rightNumber);
-      case MINUS:
-        return leftNumber.subtract(rightNumber);
-      case TIMES:
-        return leftNumber.multiply(rightNumber);
-      case DIVIDE:
-        return leftNumber.divide(rightNumber);
-      case PERCENT:
-        return leftNumber.modulo(rightNumber);
-      default:
-        throw new ProcessException("unsupported operation: " + op);
-    }
+      return switch (op) {
+          case PLUS -> leftNumber.add(rightNumber);
+          case MINUS -> leftNumber.subtract(rightNumber);
+          case TIMES -> leftNumber.multiply(rightNumber);
+          case DIVIDE -> leftNumber.divide(rightNumber);
+          case PERCENT -> leftNumber.modulo(rightNumber);
+          default -> throw new ProcessException("unsupported operation: " + op);
+      };
   }
 }

@@ -114,13 +114,13 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     @Override
     public BlockFragment visit(IfStatement ftl, BlockFragment input) {
-        input.addFragment(ftl.<Object, IfFragment>accept(new IfFragmentBuilder(this), null));
+        input.addFragment(ftl.accept(new IfFragmentBuilder(this), null));
         return input;
     }
 
     @Override
     public BlockFragment visit(SwitchInstruction ftl, BlockFragment input) {
-        input.addFragment(ftl.<Object, SwitchFragment>accept(new SwitchFragmentBuilder(this), null));
+        input.addFragment(ftl.accept(new SwitchFragmentBuilder(this), null));
         return input;
     }
 

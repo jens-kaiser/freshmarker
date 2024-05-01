@@ -840,11 +840,11 @@ INJECT Node :
   import org.freshmarker.core.ftl.ExpressionVisitor;
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   default <I, O> O accept(ExpressionVisitor visitor, I input) {
+   default <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 
-   default <I, O> O accept(FtlVisitor visitor, I input) {
+   default <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -853,11 +853,11 @@ INJECT Token :
   import org.freshmarker.core.ftl.ExpressionVisitor;
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -865,7 +865,7 @@ INJECT Token :
 INJECT FTLHeader :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -873,7 +873,7 @@ INJECT FTLHeader :
 INJECT Root :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -881,7 +881,7 @@ INJECT Root :
 INJECT Block :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -889,7 +889,7 @@ INJECT Block :
 INJECT Text :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -897,7 +897,7 @@ INJECT Text :
 INJECT ElseIfBlock :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -905,7 +905,7 @@ INJECT ElseIfBlock :
 INJECT ElseBlock :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -913,7 +913,7 @@ INJECT ElseBlock :
 INJECT IfStatement :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -921,7 +921,7 @@ INJECT IfStatement :
 INJECT SwitchInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -929,7 +929,7 @@ INJECT SwitchInstruction :
 INJECT CaseInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -937,7 +937,7 @@ INJECT CaseInstruction :
 INJECT DefaultInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -945,7 +945,7 @@ INJECT DefaultInstruction :
 INJECT Interpolation :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -953,7 +953,7 @@ INJECT Interpolation :
 INJECT ListInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -961,7 +961,7 @@ INJECT ListInstruction :
 INJECT SettingInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -969,7 +969,7 @@ INJECT SettingInstruction :
 INJECT OutputFormatBlock :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -978,7 +978,7 @@ INJECT OutputFormatBlock :
 INJECT UserDirective :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -986,7 +986,7 @@ INJECT UserDirective :
 INJECT NamedArgsList :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -994,7 +994,7 @@ INJECT NamedArgsList :
 INJECT MacroDefinition :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1002,7 +1002,7 @@ INJECT MacroDefinition :
 INJECT NestedInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1010,7 +1010,7 @@ INJECT NestedInstruction :
 INJECT ReturnInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1018,7 +1018,7 @@ INJECT ReturnInstruction :
 INJECT Assignment :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1026,7 +1026,7 @@ INJECT Assignment :
 INJECT VarInstruction :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
-   public <I, O> O accept(FtlVisitor visitor, I input) {
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1034,7 +1034,7 @@ INJECT VarInstruction :
 INJECT Expression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1042,7 +1042,7 @@ INJECT Expression :
 INJECT OrExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1050,7 +1050,7 @@ INJECT OrExpression :
 INJECT AndExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1058,7 +1058,7 @@ INJECT AndExpression :
 INJECT EqualityExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1066,7 +1066,7 @@ INJECT EqualityExpression :
 INJECT RelationalExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1074,7 +1074,7 @@ INJECT RelationalExpression :
 INJECT RangeExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1082,7 +1082,7 @@ INJECT RangeExpression :
 INJECT AdditiveExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1090,7 +1090,7 @@ INJECT AdditiveExpression :
 INJECT MultiplicativeExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1098,7 +1098,7 @@ INJECT MultiplicativeExpression :
 INJECT UnaryExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1106,7 +1106,7 @@ INJECT UnaryExpression :
 INJECT UnaryPlusMinusExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1114,7 +1114,7 @@ INJECT UnaryPlusMinusExpression :
 INJECT NotExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1122,7 +1122,7 @@ INJECT NotExpression :
 INJECT PrimaryExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1130,7 +1130,7 @@ INJECT PrimaryExpression :
 INJECT BaseExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1138,7 +1138,7 @@ INJECT BaseExpression :
 INJECT DefaultToExpression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1146,7 +1146,7 @@ INJECT DefaultToExpression :
 INJECT NumberLiteral :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1154,7 +1154,7 @@ INJECT NumberLiteral :
 INJECT HashLiteral :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1162,7 +1162,7 @@ INJECT HashLiteral :
 INJECT StringLiteral :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1170,7 +1170,7 @@ INJECT StringLiteral :
 INJECT BooleanLiteral :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1178,7 +1178,7 @@ INJECT BooleanLiteral :
 INJECT NullLiteral :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1186,7 +1186,7 @@ INJECT NullLiteral :
 INJECT ListLiteral :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1194,7 +1194,7 @@ INJECT ListLiteral :
 INJECT Parenthesis :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1202,7 +1202,7 @@ INJECT Parenthesis :
 INJECT BuiltinVariable :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1210,7 +1210,7 @@ INJECT BuiltinVariable :
 INJECT DotKey :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1218,7 +1218,7 @@ INJECT DotKey :
 INJECT DynamicKey :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1226,7 +1226,7 @@ INJECT DynamicKey :
 INJECT MethodInvoke :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1234,7 +1234,7 @@ INJECT MethodInvoke :
 INJECT BuiltIn :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1242,7 +1242,7 @@ INJECT BuiltIn :
 INJECT Exists :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1250,7 +1250,7 @@ INJECT Exists :
 INJECT PositionalArgsList :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }
@@ -1258,7 +1258,7 @@ INJECT PositionalArgsList :
 INJECT ParameterList :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
-   public <I, O> O accept(ExpressionVisitor visitor, I input) {
+   public <I, O> O accept(ExpressionVisitor<I, O> visitor, I input) {
       return (O)visitor.visit(this, input);
    }
 }

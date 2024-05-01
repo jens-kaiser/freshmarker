@@ -52,7 +52,7 @@ class NumberInterpolationTest {
       "test: ${-x};test: -42",
       "test: ${+x};test: 42",
   }, delimiterString = ";")
-  void interpolationByteExpression(String templateSource, String expected) throws ParseException, IOException {
+  void interpolationByteExpression(String templateSource, String expected) throws ParseException {
     Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of("x", (byte)42, "y", 42)));
   }
@@ -69,7 +69,7 @@ class NumberInterpolationTest {
           "test: ${-x};test: -42",
           "test: ${+x};test: 42",
   }, delimiterString = ";")
-  void interpolationShortExpression(String templateSource, String expected) throws ParseException, IOException {
+  void interpolationShortExpression(String templateSource, String expected) throws ParseException {
     Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of("x", (short)42, "y", 42)));
   }

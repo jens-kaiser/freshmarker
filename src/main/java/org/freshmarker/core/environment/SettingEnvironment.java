@@ -32,12 +32,7 @@ public class SettingEnvironment extends WrapperEnvironment {
     return format != null ? format : wrapped.getOutputFormat();
   }
 
-  @Override
-  public TemplateObject getValue(String name) {
-    return wrapped.getValue(name);
-  }
-
-  @Override
+    @Override
   public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
     Formatter formatter = formatters == null ? null : formatters.get(type);
     return formatter != null ? formatter : wrapped.getFormatter(type);

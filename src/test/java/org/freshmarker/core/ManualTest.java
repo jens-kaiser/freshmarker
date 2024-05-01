@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ManualTest {
 
     private Configuration configuration;
-    private StringTemplateLoader templateLoader;
 
     @BeforeEach
     public void setUp() {
@@ -22,7 +21,7 @@ class ManualTest {
     }
 
     @Test
-    void range() throws ParseException, IOException {
+    void range() throws ParseException {
         Template template = configuration.getTemplate("test", """
                 <#list 1..5 as s>
                 ${s} * ${s} = ${s*s}

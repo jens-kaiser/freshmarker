@@ -250,7 +250,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
   @Override
   public TemplateObject visit(MethodInvoke expression, Object input) {
-    String name = ((TemplateVariable) input).getName();
+    String name = ((TemplateVariable) input).name();
     logger.debug("method invoke: {}", name);
     if (expression.getChild(1).getTokenType() == TokenType.CLOSE_PAREN) {
       return new TemplateMethodCall(name, null);

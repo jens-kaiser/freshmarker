@@ -6,17 +6,7 @@ import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 
 import java.time.LocalDateTime;
 
-public class TemplateBuiltInVariable implements TemplateExpression {
-
-    private final String name;
-
-    public TemplateBuiltInVariable(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+public record TemplateBuiltInVariable(String name) implements TemplateExpression {
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {

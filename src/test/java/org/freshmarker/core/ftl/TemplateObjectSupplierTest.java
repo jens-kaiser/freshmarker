@@ -24,7 +24,7 @@ class TemplateObjectSupplierTest {
     }
 
     @Test
-    void test() throws ParseException, IOException {
+    void test() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${test}");
         assertEquals("test: eins", template.process(Map.of("test", (TemplateObjectSupplier<Object>) () -> "eins")));
         assertEquals("test: eins", template.process(Map.of("test", TemplateObjectSupplier.of(() -> "eins"))));

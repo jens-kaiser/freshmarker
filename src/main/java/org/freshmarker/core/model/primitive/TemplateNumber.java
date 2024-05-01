@@ -8,7 +8,7 @@ import org.freshmarker.core.model.number.IntegerNumber;
 public class TemplateNumber extends TemplatePrimitive<CalculatingNumber> {
 
   public enum Type {
-    BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE;
+    BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE
   }
 
   public TemplateNumber(CalculatingNumber value) {
