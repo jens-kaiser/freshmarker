@@ -26,8 +26,7 @@ public class TemplateBeanProvider {
   private Map<String, Method> collectMethods(Object bean) {
     try {
       BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
-      return Stream.of(beanInfo.getPropertyDescriptors()).collect(toMap(
-          FeatureDescriptor::getName, PropertyDescriptor::getReadMethod));
+      return Stream.of(beanInfo.getPropertyDescriptors()).collect(toMap(FeatureDescriptor::getName, PropertyDescriptor::getReadMethod));
     } catch (IntrospectionException e) {
       throw new ProcessException(e.getMessage(), e);
     }

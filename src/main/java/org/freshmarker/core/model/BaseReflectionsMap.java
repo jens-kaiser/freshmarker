@@ -69,10 +69,10 @@ class BaseReflectionsMap extends AbstractMap<String, Object> {
               public Object getValue() {
                 try {
                   return environment.mapObject(m.invoke(bean));
-                } catch (InvocationTargetException ite) {
-                  throw new IllegalArgumentException(ite.getTargetException());
-                } catch (IllegalAccessException iae) {
-                  throw new IllegalArgumentException(iae);
+                } catch (InvocationTargetException e) {
+                  throw new IllegalArgumentException(e.getTargetException());
+                } catch (IllegalAccessException e) {
+                  throw new IllegalArgumentException(e);
                 }
               }
 
