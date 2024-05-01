@@ -35,14 +35,12 @@ import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.HashListFragment;
-import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.NestedInstructionFragment;
 import org.freshmarker.core.fragment.OutputFormatFragment;
 import org.freshmarker.core.fragment.ReturnInstructionFragment;
 import org.freshmarker.core.fragment.SequenceListFragment;
 import org.freshmarker.core.fragment.SettingFragment;
-import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
 import org.freshmarker.core.fragment.VariableFragment;
 import org.freshmarker.core.model.TemplateMarkup;
@@ -53,8 +51,6 @@ import org.slf4j.LoggerFactory;
 public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
-
-    private final InterpolationBuilder interpolationBuilder = new InterpolationBuilder();
 
     private final Template template;
 
@@ -126,14 +122,14 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     @Override
     public BlockFragment visit(Interpolation ftl, BlockFragment input) {
-        TemplateObject interpolation = ftl.getChild(1).accept(interpolationBuilder, null);
+        TemplateObject interpolation = ftl.getChild(1).accept(InterpolationBuilder.INSTANCE, null);
         input.addFragment(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
         return input;
     }
 
     @Override
     public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
-        TemplateObject list = ftl.getChild(3).accept(interpolationBuilder, null);
+        TemplateObject list = ftl.getChild(3).accept(InterpolationBuilder.INSTANCE, null);
         int looperIndex = ftl.getChild(6).getTokenType() == TokenType.COMMA ? 9 : 7;
         int blockIndex = looperIndex;
         String looperIdentifier = null;
@@ -156,7 +152,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     @Override
     public BlockFragment visit(SettingInstruction ftl, BlockFragment input) {
         IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(3);
-        TemplateObject expression = ftl.getChild(5).accept(interpolationBuilder, null);
+        TemplateObject expression = ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null);
         input.addFragment(new SettingFragment(identifier.getImage(), expression, ftl));
         return input;
     }
@@ -174,7 +170,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     public BlockFragment visit(UserDirective ftl, BlockFragment input) {
         IDENTIFIER directive = (IDENTIFIER) ftl.getChild(1);
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-        ftl.getChild(2).accept(new NamedArgsBuilder(), namedArgs);
+        ftl.getChild(2).accept(NamedArgsBuilder.INSTANCE, namedArgs);
         logger.debug("user directive: {} {}", directive, namedArgs);
         Node node = ftl.children().stream().skip(2)
                 .dropWhile(
@@ -216,7 +212,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         if (ftl.getChild(parameterListIndex).getTokenType() == TokenType.CLOSE_TAG) {
             return Collections.emptyList();
         }
-        return ftl.getChild(parameterListIndex).accept(new ParameterListBuilder(), new ArrayList<ParameterHolder>());
+        return ftl.getChild(parameterListIndex).accept(ParameterListBuilder.INSTANCE, new ArrayList<>());
     }
 
     private int getParameterListIndex(MacroDefinition ftl) {
@@ -251,7 +247,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), true, ftl.getChild(5)));
+        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), true, ftl.getChild(5)));
         return input;
     }
 
@@ -261,7 +257,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(interpolationBuilder, null), false, ftl.getChild(5)));
+        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), false, ftl.getChild(5)));
         return input;
     }
 

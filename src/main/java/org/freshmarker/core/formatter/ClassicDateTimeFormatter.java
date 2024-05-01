@@ -12,7 +12,6 @@ public class ClassicDateTimeFormatter implements Formatter {
 
   public ClassicDateTimeFormatter(String pattern) {
     this.formatter = LocaleLocal.withInitial(l -> new SimpleDateFormat(pattern, l));
-
   }
 
   @Override

@@ -1,17 +1,22 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ast.PositionalArgsList;
-import java.util.List;
 import org.freshmarker.core.model.TemplateObject;
 
-public class PositionalArgsListBuilder implements
-    ExpressionVisitor<List<TemplateObject>, List<TemplateObject>> {
+import java.util.List;
 
-  @Override
-  public List<TemplateObject> visit(PositionalArgsList expression, List<TemplateObject> input) {
-    for (int i = 0; i < expression.getChildCount(); i += 2) {
-      input.add(expression.getChild(i).accept(new InterpolationBuilder(), null));
+public class PositionalArgsListBuilder implements ExpressionVisitor<List<TemplateObject>, List<TemplateObject>> {
+    public static final PositionalArgsListBuilder INSTANCE = new PositionalArgsListBuilder();
+
+    private PositionalArgsListBuilder() {
+        super();
     }
-    return input;
-  }
+
+    @Override
+    public List<TemplateObject> visit(PositionalArgsList expression, List<TemplateObject> input) {
+        for (int i = 0; i < expression.getChildCount(); i += 2) {
+            input.add(expression.getChild(i).accept(InterpolationBuilder.INSTANCE, null));
+        }
+        return input;
+    }
 }

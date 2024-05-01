@@ -1,12 +1,5 @@
 package org.freshmarker.core.environment;
 
-import java.io.Writer;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedDataTypeException;
@@ -17,6 +10,13 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.providers.TemplateObjectProvider;
+
+import java.io.Writer;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class BaseEnvironment implements Environment {
 
@@ -65,8 +65,8 @@ public class BaseEnvironment implements Environment {
         } else {
             current = o;
         }
-        return providers.stream().map(p -> p.provide(this, current)).filter(Objects::nonNull)
-                .findFirst().orElseThrow(() -> new UnsupportedDataTypeException("unsupported data type: " + o.getClass()));
+        return providers.stream().map(p -> p.provide(this, current)).filter(Objects::nonNull).findFirst()
+                .orElseThrow(() -> new UnsupportedDataTypeException("unsupported data type: " + o.getClass()));
     }
 
     @Override
@@ -80,14 +80,12 @@ public class BaseEnvironment implements Environment {
 
     @Override
     public UserDirective getDirective(String name) {
-        return Optional.ofNullable(userDirectives.get(name))
-                .orElseThrow(() -> new ProcessException("unknown directive: " + name));
+        return Optional.ofNullable(userDirectives.get(name)).orElseThrow(() -> new ProcessException("unknown directive: " + name));
     }
 
     @Override
     public TemplateFunction getFunction(String name) {
-        return Optional.ofNullable(functions.get(name))
-                .orElseThrow(() -> new ProcessException("unknown function: " + name));
+        return Optional.ofNullable(functions.get(name)).orElseThrow(() -> new ProcessException("unknown function: " + name));
     }
 
     @Override
