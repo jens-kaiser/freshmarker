@@ -573,7 +573,6 @@ TopLevelDirective #void :
      SCAN 2 Assignment |
      SCAN 2 Comment |
      SCAN 2 Embed |
-     SCAN 2 ForEach |
      SCAN 2 If |
      SCAN 2 List |
      SCAN 2 Include |
