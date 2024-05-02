@@ -16,15 +16,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class BooleanInterpolationTest {
   private Configuration configuration;
-  private StringTemplateLoader templateLoader;
 
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
-    configuration.setLocale(Locale.GERMANY);
-    templateLoader = new StringTemplateLoader();
-    configuration.registerTemplateLoader(templateLoader);
-  }
+    configuration.setLocale(Locale.GERMANY);}
 
   @ParameterizedTest
   @CsvSource({
@@ -33,9 +29,8 @@ class BooleanInterpolationTest {
       "test: ${!false},test: yes",
       "test: ${!flag},test: no",
   })
-  void interpolationConstant(String templateSource, String expected) throws ParseException, IOException {
-    templateLoader.putTemplate("test", templateSource);
-    Template template = configuration.getTemplate("test");
+  void interpolationConstant(String templateSource, String expected) throws ParseException {
+    Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of("flag", true)));
   }
 
@@ -48,16 +43,14 @@ class BooleanInterpolationTest {
       "test: ${var?then(text,'nein')};test: test",
       "test: ${(!var)?then('ja',text)};test: test",
   }, delimiterString = ";")
-  void interpolationBuildIn(String templateSource, String expected) throws ParseException, IOException {
-    templateLoader.putTemplate("test", templateSource);
-    Template template = configuration.getTemplate("test");
+  void interpolationBuildIn(String templateSource, String expected) throws ParseException {
+    Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of("var", true, "text", "test")));
   }
 
   @Test
-  void interpolationNumericalThen() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "${100 + (x > y)?then(x, y)}");
-    Template template = configuration.getTemplate("test");
+  void interpolationNumericalThen() throws ParseException {
+    Template template = configuration.getTemplate("test", "${100 + (x > y)?then(x, y)}");
     assertEquals("142", template.process(Map.of("var", true, "x", 42, "y", 23)));
   }
 }

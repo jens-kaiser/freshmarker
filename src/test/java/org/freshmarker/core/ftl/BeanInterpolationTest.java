@@ -1,82 +1,73 @@
 package org.freshmarker.core.ftl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import ftl.ParseException;
-import java.io.IOException;
-import java.util.Map;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.StringTemplateLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class BeanInterpolationTest {
 
-  private Configuration configuration;
-  private StringTemplateLoader templateLoader;
+    private Configuration configuration;
 
-  public static class TestBean {
+    public static class TestBean {
 
-    private final String name;
-    private final boolean active;
+        private final String name;
+        private final boolean active;
 
-    TestBean(String name, boolean active) {
-      this.name = name;
-      this.active = active;
+        TestBean(String name, boolean active) {
+            this.name = name;
+            this.active = active;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return name;
+        }
+
+        public boolean isActive() {
+            return active;
+        }
     }
 
-    public String getName() {
-      return name;
+    @BeforeEach
+    public void setUp() {
+        configuration = new Configuration();
     }
 
-    public String getDescription() {
-      return name;
+    @Test
+    void generateWithBean() throws ParseException {
+        Template template = configuration.getTemplate("test", "${bean.name} ${bean.active}");
+        assertEquals("Bean Name yes", template.process(Map.of("bean", new TestBean("Bean Name", true))));
     }
 
-    public boolean isActive() {
-      return active;
+    @Test
+    void generateWithBeanList() throws ParseException {Template template = configuration.getTemplate("test", "<#list bean as key, value>${key} ${value}, </#list>");
+        assertEquals("name Bean Name, active yes, description Bean Name, ", template.process(Map.of("bean", new TestBean("Bean Name", true))));
     }
-  }
 
-  @BeforeEach
-  public void setUp() {
-    configuration = new Configuration();
-    templateLoader = new StringTemplateLoader();
-    configuration.registerTemplateLoader(templateLoader);
-  }
+    @Test
+    void generateWithUnknownBeanAttribute() throws IOException, ParseException {Template template = configuration.getTemplate("test", "${bean.value} ${bean.active}");
+        Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
+        ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
+        assertEquals("null at test:1:1 '${bean.value}'", processException.getMessage());
+    }
 
-  @Test
-  void generateWithBean() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "${bean.name} ${bean.active}");
-    Template template = configuration.getTemplate("test");
-    assertEquals("Bean Name yes", template.process(Map.of("bean", new TestBean("Bean Name", true))));
-  }
-
-  @Test
-  void generateWithBeanList() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "<#list bean as key, value>${key} ${value}, </#list>");
-    Template template = configuration.getTemplate("test");
-    assertEquals("name Bean Name, active yes, description Bean Name, ", template.process(Map.of("bean", new TestBean("Bean Name", true))));
-  }
-
-  @Test
-  void generateWithUnknownBeanAttribute() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "${bean.value} ${bean.active}");
-    Template template = configuration.getTemplate("test");
-    Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
-    ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
-    assertEquals("null at test:1:1 '${bean.value}'", processException.getMessage());
-  }
-
-  @Test
-  void invalidBeanAccess() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "${bean}");
-    Template template = configuration.getTemplate("test");
-    Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
-    ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
-    assertEquals("missing reduction detected. Unsupported primitive? class org.freshmarker.core.ftl.BeanInterpolationTest$TestBean at test:1:1 '${bean}'", processException.getMessage());
-  }
+    @Test
+    void invalidBeanAccess() throws ParseException {
+        Template template = configuration.getTemplate("test", "${bean}");
+        Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
+        ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
+        assertEquals("missing reduction detected. Unsupported primitive? class org.freshmarker.core.ftl.BeanInterpolationTest$TestBean at test:1:1 '${bean}'", processException.getMessage());
+    }
 }

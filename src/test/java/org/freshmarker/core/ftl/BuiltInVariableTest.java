@@ -17,14 +17,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class BuiltInVariableTest {
   private Configuration configuration;
-  private StringTemplateLoader templateLoader;
 
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
     configuration.setLocale(Locale.GERMANY);
-    templateLoader = new StringTemplateLoader();
-    configuration.registerTemplateLoader(templateLoader);
   }
 
   @ParameterizedTest
@@ -34,15 +31,12 @@ class BuiltInVariableTest {
       "test: ${.country},test: DE",
   })
   void locale(String templateSource, String expected) throws ParseException, IOException {
-    templateLoader.putTemplate("test", templateSource);
-    Template template = configuration.getTemplate("test");
+    Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of()));
   }
 
   @Test
-  void now() throws ParseException, IOException {
-    templateLoader.putTemplate("test", "test: ${.now?date}");
-    Template template = configuration.getTemplate("test");
+  void now() throws ParseException, IOException {Template template = configuration.getTemplate("test", "test: ${.now?date}");
     assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
   }
 }

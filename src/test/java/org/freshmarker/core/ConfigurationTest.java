@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 class ConfigurationTest {
 
   @Test
-  void getSTemplate() throws ParseException, IOException {
+  void getTemplate() throws ParseException, IOException {
     Configuration configuration = new Configuration();
     StringTemplateLoader templateLoader = new StringTemplateLoader();
     templateLoader.putTemplate("test", "test: ${temporal}");
