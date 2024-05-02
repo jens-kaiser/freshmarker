@@ -4,7 +4,6 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.StringTemplateLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,19 +30,15 @@ class TemporalInterpolationTest {
     public static final Map<String, Object> LOCAL_DATE = Map.of("temporal", LocalDate.of(1968, Month.AUGUST, 24));
 
     private Configuration configuration;
-    private StringTemplateLoader templateLoader;
 
     @BeforeEach
     public void setUp() {
         configuration = new Configuration();
-        templateLoader = new StringTemplateLoader();
-        configuration.registerTemplateLoader(templateLoader);
     }
 
     @Test
-    void interpolationLocalDate() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal}");
-        Template template = configuration.getTemplate("test");
+    void interpolationLocalDate() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal}");
         String result = template.process(LOCAL_DATE);
         assertEquals("test: 1968-08-24", result);
     }
@@ -111,9 +106,8 @@ class TemporalInterpolationTest {
     }
 
     @Test
-    void interpolationLocalTime() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal}");
-        Template template = configuration.getTemplate("test");
+    void interpolationLocalTime() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal}");
         String result = template.process(Map.of("temporal", LocalTime.of(12, 30, 45)));
         assertEquals("test: 12:30:45", result);
     }
@@ -132,16 +126,14 @@ class TemporalInterpolationTest {
 
     @Test
     void interpolationDuration() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal}");
-        Template template = configuration.getTemplate("test");
+        Template template = configuration.getTemplate("test", "test: ${temporal}");
         Map<String, Object> dataModel = Map.of("temporal", Duration.of(43, ChronoUnit.MINUTES));
         assertEquals("test: PT43M", template.process(dataModel));
     }
 
     @Test
     void interpolationPeriod() throws ParseException, IOException {
-        templateLoader.putTemplate("test", "test: ${temporal}");
-        Template template = configuration.getTemplate("test");
+        Template template = configuration.getTemplate("test", "test: ${temporal}");
         Map<String, Object> dataModel = Map.of("temporal", Period.of(2, 4, 1));
         assertEquals("test: P2Y4M1D", template.process(dataModel));
     }
