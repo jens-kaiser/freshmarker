@@ -7,10 +7,6 @@ import ftl.ast.Root;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.TemplateLoader;
-import org.freshmarker.core.TemplateNotFoundException;
-import org.freshmarker.core.TemplateSource;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
@@ -44,12 +40,9 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +59,6 @@ public final class Configuration {
     private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
     private final Map<String, OutputFormat> outputs = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
-    private TemplateLoader templateLoader;
     private Locale locale;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
     private final List<TemplateObjectProvider> providers = new ArrayList<>(
@@ -78,10 +70,6 @@ public final class Configuration {
 
     public Configuration() {
         locale = Locale.getDefault();
-        templateLoader = name -> {
-            throw new ProcessException("no template loader configured");
-        };
-
         Map<Class<?>, Function<Object, TemplateObject>> mapper = mappingTemplateObjectProvider.getMapper();
         mapper.put(String.class, o -> new TemplateString((String) o));
         mapper.put(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));
@@ -138,22 +126,6 @@ public final class Configuration {
         Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
         provider.registerFunction(additionalFunctions);
         functions.putAll(additionalFunctions);
-    }
-
-    public void registerTemplateLoader(TemplateLoader templateLoader) {
-        this.templateLoader = templateLoader;
-    }
-
-    public Template getTemplate(String name) throws IOException, ParseException {
-        return getTemplate(name, StandardCharsets.UTF_8);
-    }
-
-    public Template getTemplate(String name, Charset charset) throws ParseException, IOException {
-        try (TemplateSource templateSource = templateLoader.getTemplate(name)
-                .orElseThrow(() -> new TemplateNotFoundException("template not found: " + name));
-             Reader reader = templateSource.getReader(charset)) {
-            return getTemplate(name, reader);
-        }
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
