@@ -21,14 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ExceptionHandlingTest {
 
   private Configuration configuration;
-  private StringTemplateLoader templateLoader;
 
   @BeforeEach
   public void setUp() {
     configuration = new Configuration();
     configuration.setLocale(Locale.GERMANY);
-    templateLoader = new StringTemplateLoader();
-    configuration.registerTemplateLoader(templateLoader);
   }
 
   @ParameterizedTest
@@ -37,14 +34,12 @@ class ExceptionHandlingTest {
       "test: ${false?string('ja','nein')",
   })
   void parseError(String templateSource) {
-    templateLoader.putTemplate("test", templateSource);
-    assertThrows(ParseException.class, () -> configuration.getTemplate("test"));
+    assertThrows(ParseException.class, () -> configuration.getTemplate("test", templateSource));
   }
 
   @Test
   void builtInTypeError() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "test: ${true?upper_case}");
-    Template template = configuration.getTemplate("test");
+    Template template = configuration.getTemplate("test", "test: ${true?upper_case}");
     Map<String, Object> dataModel = Map.of();
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
@@ -53,9 +48,8 @@ class ExceptionHandlingTest {
   }
 
   @Test
-  void wrongTypeError() throws IOException, ParseException {
-    templateLoader.putTemplate("test", "test: ${!test}");
-    Template template = configuration.getTemplate("test");
+  void wrongTypeError() throws ParseException {
+    Template template = configuration.getTemplate("test", "test: ${!test}");
     Map<String, Object> dataModel = Map.of("test", 42);
     WrongTypeException exception = assertThrows(WrongTypeException.class, () -> template.process(dataModel));
     assertEquals("expected TemplateBoolean but is TemplateNumber (org.freshmarker.core.model.number.IntegerNumber@49) at test:1:7 '${!test}'",
@@ -63,8 +57,8 @@ class ExceptionHandlingTest {
   }
 
   @Test
-  void ifConditionError() throws IOException, ParseException {
-    templateLoader.putTemplate("test",
+  void ifConditionError() throws ParseException {
+    Template template = configuration.getTemplate("test",
             """
                     test:\s
                     <#if text?contains('A')>
@@ -74,7 +68,6 @@ class ExceptionHandlingTest {
                     <#else>
                     ${text}3
                     </#if>""");
-    Template template = configuration.getTemplate("test");
     Map<String, Object> dataModel = Map.of("text", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
@@ -82,8 +75,8 @@ class ExceptionHandlingTest {
   }
 
   @Test
-  void elseIfConditionError() throws IOException, ParseException {
-    templateLoader.putTemplate("test",
+  void elseIfConditionError() throws ParseException {
+    Template template = configuration.getTemplate("test",
             """
                     test:\s
                     <#if text1?contains('A')>
@@ -93,15 +86,14 @@ class ExceptionHandlingTest {
                     <#else>
                     ${text}3
                     </#if>""");
-    Template template = configuration.getTemplate("test");
     Map<String, Object> dataModel = Map.of("text1", "B", "text2", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class, () -> template.process(dataModel));
     assertEquals("unsupported builtin 'contains' for TemplateNumber at test:4:10 'text2?contains('B')'", exception.getMessage());
   }
 
   @Test
-  void ifBlockError() throws IOException, ParseException {
-    templateLoader.putTemplate("test",
+  void ifBlockError() throws ParseException {
+    Template template = configuration.getTemplate("test",
             """
                     test:
                     <#if text?contains('A')>
@@ -110,7 +102,6 @@ class ExceptionHandlingTest {
                     ${text}2
                     <#else>${text}3
                     </#if>""");
-    Template template = configuration.getTemplate("test");
     Map<String, Object> dataModel = Map.of("text", "A");
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
@@ -118,10 +109,9 @@ class ExceptionHandlingTest {
   }
 
   @Test
-  void switchExpressionError() throws IOException, ParseException {
-    templateLoader.putTemplate("test",
-        "test:\n<#switch text?upper_case>\n<#case 'AAA'>${text}1\n<#case 'BBB'>${text}2\n</#switch>");
-    Template template = configuration.getTemplate("test");
+  void switchExpressionError() throws ParseException {
+    Template template = configuration.getTemplate("test",
+            "test:\n<#switch text?upper_case>\n<#case 'AAA'>${text}1\n<#case 'BBB'>${text}2\n</#switch>");
     Map<String, Object> dataModel = Map.of("text", 42);
     UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
         () -> template.process(dataModel));
