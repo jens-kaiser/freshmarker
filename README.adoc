@@ -27,13 +27,12 @@ String result = template.process(Map.of("temporal", LocalTime.of(12, 30), "path"
 .List with loop Variable
 [source,java]
 ----
-templateLoader.putTemplate("ancestors-loop",
+Template template = configuration.getTemplate("ancestors-loop",
     """
     <#list ancestors as ancestor with loop>
       ${loop?index}. ${ancestor.givenname} ${ancestor.surename}
     </#list>
     """);
-Template template = configuration.getTemplate("ancestors-loop");
 String result = template.process(Map.of("ancestors", ancestorService.ancestorsByFamily("Kaiser")));
 ----
 
