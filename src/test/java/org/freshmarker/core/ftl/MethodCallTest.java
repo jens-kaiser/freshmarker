@@ -16,13 +16,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 class MethodCallTest {
 
   private Configuration configuration;
-  private StringTemplateLoader templateLoader;
 
   @BeforeEach
   public void setUp() {
-    templateLoader = new StringTemplateLoader();
     configuration = new Configuration();
-    configuration.registerTemplateLoader(templateLoader);
     configuration.registerFunction("abs",
         (context, args) -> args.get(0).evaluateToObject(context).asNumber().map(TemplateNumber::abs).orElseThrow());
     configuration.registerFunction("avg",
@@ -36,9 +33,8 @@ class MethodCallTest {
       "test: ${avg(10, 20, 30, 40)}<#-- -->;test: 25",
       "test: ${abs(-10)};test: 10",
   }, delimiterString = ";")
-  void avg(String templateSource, String expected) throws ParseException, IOException {
-    templateLoader.putTemplate("test", templateSource);
-    Template template = configuration.getTemplate("test");
+  void avg(String templateSource, String expected) throws ParseException {
+    Template template = configuration.getTemplate("test", templateSource);
     assertEquals(expected, template.process(Map.of("test", "test")));
   }
 }
