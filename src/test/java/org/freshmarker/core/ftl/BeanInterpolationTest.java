@@ -52,12 +52,14 @@ class BeanInterpolationTest {
     }
 
     @Test
-    void generateWithBeanList() throws ParseException {Template template = configuration.getTemplate("test", "<#list bean as key, value>${key} ${value}, </#list>");
+    void generateWithBeanList() throws ParseException {
+        Template template = configuration.getTemplate("test", "<#list bean as key, value>${key} ${value}, </#list>");
         assertEquals("name Bean Name, active yes, description Bean Name, ", template.process(Map.of("bean", new TestBean("Bean Name", true))));
     }
 
     @Test
-    void generateWithUnknownBeanAttribute() throws IOException, ParseException {Template template = configuration.getTemplate("test", "${bean.value} ${bean.active}");
+    void generateWithUnknownBeanAttribute() throws IOException, ParseException {
+        Template template = configuration.getTemplate("test", "${bean.value} ${bean.active}");
         Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
         assertEquals("null at test:1:1 '${bean.value}'", processException.getMessage());
