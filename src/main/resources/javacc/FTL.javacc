@@ -185,8 +185,6 @@ TOKEN :
     |
     <INTERPOLATE : "${"> : FTL_EXPRESSION
     |
-    <NUMERICAL_INTERPOLATE : "#{"> : FTL_EXPRESSION
-    |
     <WHITESPACE : (["\n", "\r", "\t", " "])+>
     |
     <SPECIAL_CHAR : "$" | "<" | "[" >
@@ -225,15 +223,11 @@ TOKEN :
     |
     <ELSE : "else">
     |
-    <STOP : "stop">
-    |
     <CASE : "case">
     |
     <MACRO : "macro">
     |
     <LOCAL : "local">
-    |
-    <FLUSH : "flush">
     |
     <BREAK : "break">
     |
@@ -257,37 +251,15 @@ TOKEN :
     |
     <ELSEIF : "elseif">
     |
-    <ESCAPE : "escape">
-    |
-    <RECURSE : "recurse">
-    |
     <FUNCTION : "function">
     |
     <FALLBACK : "fallback">
     |
-    <NOESCAPE : "noescape">
-    |
     <SETTING : "setting">
-    |
-    <NOPARSE : "noparse">
     |
     <_INCLUDE : "include">
     |
-    <_ATTEMPT : "attempt">
-    |
     <FOREACH : "foreach">
-    |
-    <_RECOVER : "recover">
-    |
-    <COMPRESS : "compress">
-    |
-    <BLOCKTRIM : "t_lines">
-    |
-    <BLOCKTRIML : "lt_lines">
-    |
-    <BLOCKTRIMR : "rt_lines">
-    |
-    <BLOCKNOTRIM : "nt_lines">
     |
     <BLANK : "\n" | "\t" | " "> : FTL_EXPRESSION
     |
@@ -320,15 +292,9 @@ IdentifierOrStringLiteral :
     StringLiteral
 ;
 
-
 Interpolation :
     <INTERPOLATE>Expression<CLOSE_BRACE>
 ;
-
-NumericalInterpolation : 
-    <NUMERICAL_INTERPOLATE>Expression [<SEMICOLON><IDENTIFIER>]<CLOSE_BRACE>
-;
-
 
 Assignment :
 {
@@ -376,24 +342,10 @@ Setting #SettingInstruction :
     LooseTagEnd
 ;
 
-Attempt #AttemptRecover : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <_ATTEMPT><CLOSE_TAG>
-    Block
-    Recover
-;
-
 Comment #CommentBlock :
    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
    <COMMENT>
    <END_COMMENT>
-;
-
-NoParse #NoParseBlock :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <NOPARSE>
-    <CLOSE_TAG>{token_source.switchTo(LexicalState.NO_PARSE);}
-    <NOPARSE_END>
 ;
 
 Trim #TrimInstruction :
@@ -428,68 +380,11 @@ Break #BreakInstruction :
     LooseTagEnd
 ;
 
-Flush #FlushInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <FLUSH>LooseTagEnd
-;
-
 Return #ReturnInstruction :
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <RETURN>
     [<BLANK>Expression]
     LooseTagEnd
-;
-
-Stop #StopInstruction : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <STOP>
-    [<BLANK>Expression]
-    LooseTagEnd
-;
-
-Compress #CompressBlock : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <COMPRESS><CLOSE_TAG>
-    Block
-    DirectiveEnd("compress")
-;
-
-TrimBlock :
-{
-   String closeTag;
-}
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    (
-        <BLOCKTRIM> {closeTag = "t_lines";}
-        |
-        <BLOCKTRIML> {closeTag = "lt_lines";}
-        |
-        <BLOCKTRIMR> {closeTag = "rt_lines";}
-        |
-        <BLOCKNOTRIM> {closeTag = "nt_lines";}
-    )
-    <CLOSE_TAG>
-    Block
-    DirectiveEnd(closeTag)
-;
-
-NoEscapeBlock :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <NOESCAPE><CLOSE_TAG>
-    Block
-    DirectiveEnd("noescape")
-;
-
-EscapeBlock : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <ESCAPE>
-    <BLANK>
-    <IDENTIFIER>
-    <AS>
-    Expression
-    <CLOSE_TAG>
-    Block
-    DirectiveEnd("escape")
 ;
 
 OutputFormatBlock :
@@ -524,46 +419,6 @@ Import #ImportInstruction :
     Expression
     <AS>
     <IDENTIFIER>
-    LooseTagEnd
-;
-
-Visit #VisitInstruction : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <VISIT>
-    <BLANK>
-    Expression
-    [
-       <USING>
-       Expression
-       (
-           [<COMMA>]
-           Expression
-       )*
-    ]
-    LooseTagEnd
-;
-
-Recurse #RecurseInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <RECURSE>
-    (
-       LooseTagEnd
-       |
-       (
-          <BLANK>
-          [Expression]
-          [<USING>
-            Expression
-            ([<COMMA>] Expression)*
-          ]
-          LooseTagEnd
-       )
-    )
-;
-
-FallBack #FallBackInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <FALLBACK>
     LooseTagEnd
 ;
 
@@ -637,17 +492,6 @@ List #ListInstruction :
     <CLOSE_TAG>
     Block
     DirectiveEnd("list")
-;
-
-ForEach #ForEachInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <FOREACH><BLANK>
-    <IDENTIFIER>
-    <IN>
-    Expression
-    <CLOSE_TAG>
-    Block
-    DirectiveEnd("foreach")
 ;
 
 Nested #NestedInstruction : 
@@ -724,19 +568,10 @@ Text :
     )+
 ;
 
-Recover #RecoverBlock : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <_RECOVER><CLOSE_TAG>
-    Block
-    DirectiveEnd("attempt")
-;
-
 TopLevelDirective #void : 
    (
      SCAN 2 Assignment |
-     SCAN 2 Attempt |
      SCAN 2 Comment |
-     SCAN 2 Compress |
      SCAN 2 Embed |
      SCAN 2 ForEach |
      SCAN 2 If |
@@ -744,25 +579,16 @@ TopLevelDirective #void :
      SCAN 2 Include |
      SCAN 2 Import |
      SCAN 2 MacroDefinition |
-     SCAN 2 NoParse |
      Switch |
      SCAN 2 Setting |
      SCAN 2 Var|
      SCAN 2 Break |
      SCAN 2 Return |
-     SCAN 2 Stop |
-     SCAN 2 Flush |
      SCAN 2 Trim |
      SCAN 2 NoTrim |
      SCAN 2 LeftTrim |
      SCAN 2 RightTrim|
-     SCAN 2 TrimBlock |
      SCAN 2 Nested |
-     SCAN 2 EscapeBlock |
-     SCAN 2 NoEscapeBlock |
-     SCAN 2 Visit |
-     SCAN 2 Recurse |
-     SCAN 2 FallBack |
      SCAN 2 OutputFormatBlock
    )
 ;
@@ -800,8 +626,6 @@ Block :
      Text
      |
      Interpolation
-     |
-     NumericalInterpolation
      |
      UserDirective
      |
