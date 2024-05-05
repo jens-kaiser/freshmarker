@@ -24,36 +24,36 @@ class FileAndPathInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "test: ${path},test: src\\main\\resources\\javacc\\FEL.javacc",
-            "test: ${path?name},test: FEL.javacc",
-            "test: ${path?parent},test: src\\main\\resources\\javacc",
+            "test: ${path},test: src\\main\\ccc\\FreshMarker\\FEL.ccc",
+            "test: ${path?name},test: FEL.ccc",
+            "test: ${path?parent},test: src\\main\\ccc\\FreshMarker",
             "test: ${path?size > 0},test: yes",
             "test: ${path?exists},test: yes",
             "test: ${path?is_file},test: yes",
             "test: ${path?is_directory},test: no",
             "test: ${path?parent?is_directory},test: yes",
             "test: ${path?parent?is_file},test: no",
-            "test: ${missingPath},test: src\\main\\resources\\javacc\\FEL2.javacc",
-            "test: ${missingPath?name},test: FEL2.javacc",
-            "test: ${missingPath?parent},test: src\\main\\resources\\javacc",
+            "test: ${missingPath},test: src\\main\\ccc\\FreshMarker\\FEL2.ccc",
+            "test: ${missingPath?name},test: FEL2.ccc",
+            "test: ${missingPath?parent},test: src\\main\\ccc\\FreshMarker",
             "test: ${missingPath?size},test: 0",
             "test: ${missingPath?exists},test: no",
             "test: ${missingPath?is_file},test: no",
             "test: ${missingPath?is_directory},test: no",
             "test: ${missingPath?parent?is_directory},test: yes",
             "test: ${missingPath?parent?is_file},test: no",
-            "test: ${file},test: src\\main\\resources\\javacc\\FEL.javacc",
-            "test: ${file?name},test: FEL.javacc",
-            "test: ${file?parent},test: src\\main\\resources\\javacc",
+            "test: ${file},test: src\\main\\ccc\\FreshMarker\\FEL.ccc",
+            "test: ${file?name},test: FEL.ccc",
+            "test: ${file?parent},test: src\\main\\ccc\\FreshMarker",
             "test: ${file?size > 0},test: yes",
             "test: ${file?exists},test: yes",
             "test: ${file?is_file},test: yes",
             "test: ${file?is_directory},test: no",
             "test: ${file?parent?is_directory},test: yes",
             "test: ${file?parent?is_file},test: no",
-            "test: ${missingFile},test: src\\main\\resources\\javacc\\FEL2.javacc",
-            "test: ${missingFile?name},test: FEL2.javacc",
-            "test: ${missingFile?parent},test: src\\main\\resources\\javacc",
+            "test: ${missingFile},test: src\\main\\ccc\\FreshMarker\\FEL2.ccc",
+            "test: ${missingFile?name},test: FEL2.ccc",
+            "test: ${missingFile?parent},test: src\\main\\ccc\\FreshMarker",
             "test: ${missingFile?size},test: 0",
             "test: ${missingFile?exists},test: no",
             "test: ${missingFile?is_file},test: no",
@@ -64,10 +64,10 @@ class FileAndPathInterpolationTest {
     void interpolationConstant(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         Map<String, Object> dataModel = Map.of(
-                "path", Path.of("src/main/resources/javacc/FEL.javacc"),
-                "missingPath", Path.of("src/main/resources/javacc/FEL2.javacc"),
-                "file", Path.of("src/main/resources/javacc/FEL.javacc").toFile(),
-                "missingFile", Path.of("src/main/resources/javacc/FEL2.javacc").toFile()
+                "path", Path.of("src/main/ccc/FreshMarker/FEL.ccc"),
+                "missingPath", Path.of("src/main/ccc/FreshMarker/FEL2.ccc"),
+                "file", Path.of("src/main/ccc/FreshMarker/FEL.ccc").toFile(),
+                "missingFile", Path.of("src/main/ccc/FreshMarker/FEL2.ccc").toFile()
         );
         assertEquals(expected, template.process(dataModel).replace('/', '\\'));
     }

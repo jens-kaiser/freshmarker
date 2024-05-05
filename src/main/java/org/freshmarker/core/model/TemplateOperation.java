@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import ftl.FTLConstants.TokenType;
+import ftl.Token.TokenType;
 import java.util.Optional;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;

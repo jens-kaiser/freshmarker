@@ -1,6 +1,7 @@
 package org.freshmarker.core.ftl;
 
-import ftl.FTLConstants.TokenType;
+import ftl.Node.TerminalNode;
+import ftl.Token.TokenType;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.Assignment;
@@ -68,7 +69,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     @Override
     public BlockFragment visit(Token ftl, BlockFragment input) {
-        String image = ftl.getImage();
+        String image = ftl.toString();
         if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
             input.addFragment(new ConstantFragment(image));
         } else if (ftl.getType() == TokenType.WHITESPACE) {
@@ -104,7 +105,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     @Override
     public BlockFragment visit(Text ftl, BlockFragment input) {
-        ftl.getAllTokens(false).stream().map(Token::getImage).map(ConstantFragment::new).forEach(input::addFragment);
+        ftl.getAllTokens(false).stream().map(TerminalNode::toString).map(ConstantFragment::new).forEach(input::addFragment);
         return input;
     }
 
@@ -130,20 +131,20 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     @Override
     public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
         TemplateObject list = ftl.getChild(3).accept(InterpolationBuilder.INSTANCE, null);
-        int looperIndex = ftl.getChild(6).getTokenType() == TokenType.COMMA ? 9 : 7;
+        int looperIndex = ftl.getChild(6).getType() == TokenType.COMMA ? 9 : 7;
         int blockIndex = looperIndex;
         String looperIdentifier = null;
-        if (ftl.getChild(looperIndex - 1).getTokenType() == TokenType.WITH) {
-            looperIdentifier = ((IDENTIFIER) ftl.getChild(looperIndex)).getImage();
+        if (ftl.getChild(looperIndex - 1).getType() == TokenType.WITH) {
+            looperIdentifier = ((IDENTIFIER) ftl.getChild(looperIndex)).toString();
             blockIndex += 2;
         }
         BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
-        if (ftl.getChild(6).getTokenType() == TokenType.COMMA) {
-            String keyIdentifier = ((IDENTIFIER) ftl.getChild(5)).getImage();
-            String valueIdentifier = ((IDENTIFIER) ftl.getChild(7)).getImage();
+        if (ftl.getChild(6).getType() == TokenType.COMMA) {
+            String keyIdentifier = ftl.getChild(5).toString();
+            String valueIdentifier = ftl.getChild(7).toString();
             input.addFragment(new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block, ftl));
         } else {
-            String identifier = ((IDENTIFIER) ftl.getChild(5)).getImage();
+            String identifier = ftl.getChild(5).toString();
             input.addFragment(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
         }
         return input;
@@ -153,7 +154,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     public BlockFragment visit(SettingInstruction ftl, BlockFragment input) {
         IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(3);
         TemplateObject expression = ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null);
-        input.addFragment(new SettingFragment(identifier.getImage(), expression, ftl));
+        input.addFragment(new SettingFragment(identifier.toString(), expression, ftl));
         return input;
     }
 
@@ -161,7 +162,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     public BlockFragment visit(OutputFormatBlock ftl, BlockFragment input) {
         STRING_LITERAL format = (STRING_LITERAL) ftl.getChild(3);
         BlockFragment block = ftl.getChild(5).accept(this, new BlockFragment());
-        String image = format.getImage();
+        String image = format.toString();
         input.addFragment(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
         return input;
     }
@@ -173,21 +174,20 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         ftl.getChild(2).accept(NamedArgsBuilder.INSTANCE, namedArgs);
         logger.debug("user directive: {} {}", directive, namedArgs);
         Node node = ftl.children().stream().skip(2)
-                .dropWhile(
-                        n -> n.getTokenType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains(n.getTokenType()))
+                .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))
                 .skip(1).findFirst().orElse(null);
         BlockFragment body = null;
         if (node != null) {
             body = node.accept(this, new BlockFragment());
         }
         logger.debug("user directive: {} {}", node, body);
-        input.addFragment(new UserDirectiveFragment(directive.getImage(), namedArgs, body));
+        input.addFragment(new UserDirectiveFragment(directive.toString(), namedArgs, body));
         return input;
     }
 
     @Override
     public BlockFragment visit(MacroDefinition ftl, BlockFragment input) {
-        TokenType type = ftl.getChild(1).getTokenType();
+        TokenType type = (TokenType) ftl.getChild(1).getType();
         if (type != TokenType.MACRO) {
             return input;
         }
@@ -200,8 +200,8 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     }
 
     private Fragment getFragment(MacroDefinition ftl) {
-        if (ftl.getChild(ftl.getChildCount() - 1).getTokenType() == TokenType.CLOSE_EMPTY_TAG
-                || ftl.getChild(ftl.getChildCount() - 2).getTokenType() == TokenType.CLOSE_TAG) {
+        if (ftl.getChild(ftl.getChildCount() - 1).getType() == TokenType.CLOSE_EMPTY_TAG
+                || ftl.getChild(ftl.getChildCount() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
         return ftl.getChild(ftl.getChildCount() - 2).accept(this, new BlockFragment());
@@ -209,37 +209,37 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     private List<ParameterHolder> getParameterHolders(MacroDefinition ftl) {
         int parameterListIndex = getParameterListIndex(ftl);
-        if (ftl.getChild(parameterListIndex).getTokenType() == TokenType.CLOSE_TAG) {
+        if (ftl.getChild(parameterListIndex).getType() == TokenType.CLOSE_TAG) {
             return Collections.emptyList();
         }
         return ftl.getChild(parameterListIndex).accept(ParameterListBuilder.INSTANCE, new ArrayList<>());
     }
 
     private int getParameterListIndex(MacroDefinition ftl) {
-        if (ftl.getChild(4).getTokenType() != TokenType.OPEN_PAREN) {
+        if (ftl.getChild(4).getType() != TokenType.OPEN_PAREN) {
             return 4;
         }
-        if (ftl.getChild(6).getTokenType() != TokenType.CLOSE_PAREN) {
+        if (ftl.getChild(6).getType() != TokenType.CLOSE_PAREN) {
             throw new ProcessException("missing CLOSE_PAREN at " + ftl.getChild(6).getLocation());
         }
         return 5;
     }
 
     private String getName(Node node) {
-        if (node.getTokenType() == TokenType.IDENTIFIER) {
-            return ((IDENTIFIER) node).getImage();
+        if (node.getType() == TokenType.IDENTIFIER) {
+            return node.toString();
         }
-        if (node.getTokenType() == TokenType.STRING_LITERAL) {
-            String image = ((STRING_LITERAL) node).getImage();
+        if (node.getType() == TokenType.STRING_LITERAL) {
+            String image = node.getImage();
             return image.substring(1, image.length() - 1);
         }
-        throw new ParsingException("missing identifier or string literal", node.getChild(6));
+        throw new ParsingException("missing identifier or string literal", node.get(6));
     }
 
 
     @Override
     public BlockFragment visit(Assignment ftl, BlockFragment input) {
-        TokenType type = ftl.getChild(1).getTokenType();
+        TokenType type = (TokenType) ftl.getChild(1).getType();
         if (type != TokenType.SET) {
             throw new ParsingException("assignment type " + type + " not supported", ftl.getChild(1));
         }

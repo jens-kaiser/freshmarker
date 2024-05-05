@@ -1,6 +1,6 @@
 package org.freshmarker.core.ftl;
 
-import ftl.FTLConstants.TokenType;
+import ftl.Token.TokenType;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.AdditiveExpression;
@@ -65,7 +65,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(Token expression, Object input) {
-        String image = expression.getImage();
+        String image = expression.toString();
         return switch (expression.getType()) {
             case TRUE -> TemplateBoolean.TRUE;
             case FALSE -> TemplateBoolean.FALSE;
@@ -73,7 +73,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
             case RAW_STRING -> new TemplateString(image.substring(2, image.length() - 1));
-            case IDENTIFIER -> new TemplateVariable(expression.getImage());
+            case IDENTIFIER -> new TemplateVariable(expression.toString());
             case EXISTS_OPERATOR -> new TemplateExists((TemplateObject) input);
             default -> throw new IllegalArgumentException(
                     "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
@@ -124,7 +124,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         logger.info("visit builtin expression: {}", expression);
         Token buildInName = (Token) expression.getChild(1);
         if (expression.getChildCount() < 3) {
-            return new TemplateBuiltIn(buildInName.getImage(), (TemplateObject) input, List.of());
+            return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of());
         }
         List<TemplateObject> parameter = new ArrayList<>();
         Node child = expression.getChild(3);
@@ -134,7 +134,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             parameter.add(child.accept(this, null));
         }
         logger.info("parameters: {}", parameter);
-        return new TemplateBuiltIn(buildInName.getImage(), (TemplateObject) input, parameter);
+        return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, parameter);
     }
 
     @Override
@@ -148,7 +148,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(DotKey expression, Object input) {
-        String dotKey = expression.getLastToken().getImage();
+        Token lastToken = (Token)expression.getChild(expression.getChildCount() - 1);
+        String dotKey = lastToken.toString();
         logger.info("dotkey: {}", dotKey);
         return new TemplateDotKey((TemplateObject) input, dotKey);
     }
@@ -225,7 +226,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(BuiltinVariable expression, Object input) {
-        return new TemplateBuiltInVariable(expression.getLastToken().getImage());
+        Token lastToken = (Token)expression.getChild(expression.getChildCount() - 1);
+        return new TemplateBuiltInVariable(lastToken.toString());
     }
 
     @Override
@@ -239,7 +241,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(EqualityExpression expression, Object input) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        TokenType equality = expression.getChild(1).getTokenType();
+        TokenType equality = (TokenType) expression.getChild(1).getType();
         TemplateEquality result = new TemplateEquality(left, right);
         return equality == TokenType.NOT_EQUALS ? result.not() : result;
     }
@@ -259,7 +261,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(MethodInvoke expression, Object input) {
         String name = ((TemplateVariable) input).name();
         logger.debug("method invoke: {}", name);
-        if (expression.getChild(1).getTokenType() == TokenType.CLOSE_PAREN) {
+        if (expression.getChild(1).getType() == TokenType.CLOSE_PAREN) {
             return new TemplateMethodCall(name, null);
         }
         List<TemplateObject> parameter = new ArrayList<>();

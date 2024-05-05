@@ -19,7 +19,6 @@ class SimpleToStringMapperTest {
     public void setUp() {
         configuration = new Configuration();
         configuration.setLocale(Locale.GERMANY);
-        configuration.registerSimpleMapping(LeitwegId.class);
     }
 
     @ParameterizedTest
@@ -27,7 +26,8 @@ class SimpleToStringMapperTest {
             "Leitweg-Id: 04011000-1234512345-06,04011000-1234512345-06",
             "Leitweg-Id: 05711-06001-79,05711-06001-79",
     })
-    void parseError(String expected, String leitwegId) {
+    void renderLeitwegIdAsString(String expected, String leitwegId) {
+        configuration.registerSimpleMapping(LeitwegId.class);
         Template template = configuration.getTemplate("test", "Leitweg-Id: ${id}");
         assertEquals(expected, template.process(Map.of("id", LeitwegId.parse(leitwegId))));
     }

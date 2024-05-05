@@ -1,6 +1,6 @@
 package org.freshmarker;
 
-import ftl.FTLParser;
+import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.FTLHeader;
 import ftl.ast.Root;
@@ -40,6 +40,7 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -50,6 +51,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class Configuration {
 
@@ -133,7 +135,7 @@ public final class Configuration {
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
-        FTLParser parser = new FTLParser(reader);
+        FreshMarkerParser parser = new FreshMarkerParser(new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
         parser.setInputSource(name);
         parser.Root();
         Root root = (Root) parser.rootNode();

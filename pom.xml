@@ -6,7 +6,7 @@
 
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.5.1</version>
+  <version>0.5.2</version>
   <url>https://gitlab.com/schegge/freshmarker.git</url>
   <name>FreshMarker</name>
   <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17
@@ -59,11 +59,11 @@
   </properties>
 
   <dependencies>
-    <!--dependency>
+    <dependency>
       <groupId>org.congocc</groupId>
       <artifactId>org.congocc.parser.generator</artifactId>
       <version>2.0.0-RC5</version>
-    </dependency-->
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -123,31 +123,6 @@
                 <source>${project.build.directory}/generated-sources/ccc</source>
                 <source>${project.build.directory}/generated-sources/jcc</source>
               </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>java</executable>
-              <arguments>
-                <argument>-classpath</argument>
-                <argument>${project.basedir}/src/main/lib/javacc21-220206.jar</argument>
-                <argument>com.javacc.Main</argument>
-                <argument>-jdk11</argument>
-                <argument>-d</argument>
-                <argument>${project.build.directory}/generated-sources/jcc</argument>
-                <argument>src/main/resources/javacc/FTL.javacc</argument>
-              </arguments>
             </configuration>
           </execution>
         </executions>
@@ -291,19 +266,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.spdx</groupId>
-        <artifactId>spdx-maven-plugin</artifactId>
-        <version>0.6.5</version>
-        <executions>
-          <execution>
-            <id>build-spdx</id>
-            <goals>
-              <goal>createSPDX</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <!--plugin>
         <groupId>org.congocc</groupId>
         <artifactId>org.congocc.maven.plugin</artifactId>
         <version>2.0.0-RC5</version>
@@ -319,7 +281,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin-->
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -330,15 +292,6 @@
           <encoding>UTF-8</encoding>
           <parameters>true</parameters>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>javacc21</groupId>
-            <artifactId>javacc21</artifactId>
-            <version>220206</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/javacc21-220206.jar</systemPath>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>

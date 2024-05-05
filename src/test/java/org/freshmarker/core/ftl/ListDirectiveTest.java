@@ -139,6 +139,23 @@ class ListDirectiveTest {
     }
 
     @Test
+    void whitespaceRemoval2() throws ParseException {
+        Template template = configuration.getTemplate("test", """
+                test  \s
+                
+                  <#list sequence as s with l> \s
+                  ${l?index}. ${s.key} ${s.value}
+                </#list>   """);
+        assertEquals("""
+                        test  \s
+                        
+                          0. a b
+                          1. c d
+                        """,
+                template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
+    }
+
+    @Test
     void additionalLineRemoval() throws ParseException {
         Template template = configuration.getTemplate("test", """
                 test
