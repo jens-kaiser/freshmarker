@@ -80,6 +80,12 @@
       <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>de.schegge</groupId>
+      <artifactId>leitweg-id</artifactId>
+      <version>1.0.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -284,6 +290,19 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.spdx</groupId>
+        <artifactId>spdx-maven-plugin</artifactId>
+        <version>0.6.5</version>
+        <executions>
+          <execution>
+            <id>build-spdx</id>
+            <goals>
+              <goal>createSPDX</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <!--plugin>
         <groupId>org.congocc</groupId>
         <artifactId>org.congocc.maven.plugin</artifactId>
@@ -309,6 +328,7 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <encoding>UTF-8</encoding>
+          <parameters>true</parameters>
         </configuration>
         <dependencies>
           <dependency>

@@ -100,6 +100,10 @@ public final class Configuration {
         registerPlugins();
     }
 
+    public void registerSimpleMapping(Class<?> type) {
+        mappingTemplateObjectProvider.getMapper().put(type, x -> new TemplateString(x.toString()));
+    }
+
     public void registerUserDirective(String name, UserDirective directive) {
         userDirectives.put(name, directive);
     }

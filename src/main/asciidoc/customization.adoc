@@ -1,0 +1,44 @@
+== Customization
+
+=== Configuration
+
+=== Custom String Types
+
+Unknown Java classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered for this purpose.
+
+.Example with Leitweg-ID as String
+[source,java]
+----
+Configuration configuration = new Configuration();
+configuration.registerSimpleMapping(LeitwegId.class);
+
+Template template = configuration.getTemplate("id", "${id}!");
+LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
+System.out.println(template.process(Map.of("id", leitwegId)));
+----
+
+=== Custom Plug-Ins
+
+The plug-in mechanism is the core of _FreshMarker_'s modular extension concept. Plug-ins can be used to add new types, formatters, functions, user directives, built-ins and mappers.
+
+It is possible to create completely new template types or to add further features to existing ones.
+
+In addition to the existing plug-ins for the _FreshMarker_ basic types, you can also develop your own plug-ins.
+
+Plug-ins can be registered with FreshMarker via the `ServiceLoader` mechanism or via the `Configuration#registerPlugin` method.
+
+[source,java]
+----
+public interface PluginProvider {
+  default void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {}
+
+  default void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {}
+
+  default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {}
+
+  default void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {}
+
+  default void registerUserDirective(Map<String, UserDirective> directives) {}
+
+  default void registerFunction(Map<String, TemplateFunction> functions) {}
+----
