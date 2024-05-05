@@ -2,6 +2,8 @@
 
 === Configuration
 
+TBD
+
 === Custom String Types
 
 Unknown Java classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered for this purpose.
@@ -42,3 +44,5 @@ public interface PluginProvider {
 
   default void registerFunction(Map<String, TemplateFunction> functions) {}
 ----
+
+TBD
