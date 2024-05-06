@@ -25,7 +25,7 @@ class ExistsInterpolationTest {
             "test: ${test??},test: yes",
             "test: ${test2??},test: no",
     })
-    void exists(String templateSource, String expected) throws ParseException, IOException {
+    void exists(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test", "test")));
     }

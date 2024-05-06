@@ -125,14 +125,14 @@ class TemporalInterpolationTest {
     }
 
     @Test
-    void interpolationDuration() throws ParseException, IOException {
+    void interpolationDuration() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
         Map<String, Object> dataModel = Map.of("temporal", Duration.of(43, ChronoUnit.MINUTES));
         assertEquals("test: PT43M", template.process(dataModel));
     }
 
     @Test
-    void interpolationPeriod() throws ParseException, IOException {
+    void interpolationPeriod() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
         Map<String, Object> dataModel = Map.of("temporal", Period.of(2, 4, 1));
         assertEquals("test: P2Y4M1D", template.process(dataModel));

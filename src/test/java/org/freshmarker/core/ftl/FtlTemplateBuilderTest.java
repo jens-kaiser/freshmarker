@@ -24,7 +24,7 @@ class FtlTemplateBuilderTest {
     }
 
     @Test
-    void generateWithMap() throws IOException, ParseException {
+    void generateWithMap() throws ParseException {
         Template template = configuration.getTemplate("test", "${bean.name}");
         assertEquals("Bean Name", template.process(Map.of("bean", Map.of("name", "Bean Name"))));
     }

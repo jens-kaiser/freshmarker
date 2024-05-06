@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Map;
@@ -30,13 +29,13 @@ class BuiltInVariableTest {
             "test: ${.locale},test: de_DE",
             "test: ${.country},test: DE",
     })
-    void locale(String templateSource, String expected) throws ParseException, IOException {
+    void locale(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
 
     @Test
-    void now() throws ParseException, IOException {
+    void now() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${.now?date}");
         assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
     }

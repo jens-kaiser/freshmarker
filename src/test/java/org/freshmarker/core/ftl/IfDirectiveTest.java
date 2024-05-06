@@ -39,7 +39,7 @@ class IfDirectiveTest {
             "BBB, test: BBB2",
             "CCC, 'test: '",
     })
-    void ifElseif(String text, String expected) throws ParseException, IOException {
+    void ifElseif(String text, String expected) throws ParseException {
         Template template = configuration.getTemplate("test",
                 "test: <#if text?contains('A')>${text}1<#elseif text?contains('BB')>${text}2</#if>");
         assertEquals(expected, template.process(Map.of("text", text)));
@@ -51,7 +51,7 @@ class IfDirectiveTest {
             "BBB, test: BBB3",
             "CCC, test: CCC3",
     })
-    void ifElse(String text, String expected) throws ParseException, IOException {
+    void ifElse(String text, String expected) throws ParseException {
         Template template = configuration.getTemplate("test",
                 "test: <#if text?contains('A')>${text}1<#else>${text}3</#if>");
         assertEquals(expected, template.process(Map.of("text", text)));

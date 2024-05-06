@@ -62,21 +62,21 @@ class DateInterpolationTest {
     }
 
     @Test
-    void interpolationDateTimeComputerAudience() throws ParseException, IOException {
+    void interpolationDateTimeComputerAudience() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?c}");
         String result = template.process(Map.of("temporal", CALENDAR.getTime()));
         assertEquals("test: 1968-08-24T12:30:45", result);
     }
 
     @Test
-    void interpolationDateTimeToDate() throws ParseException, IOException {
+    void interpolationDateTimeToDate() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?date}");
         String result = template.process(Map.of("temporal", CALENDAR.getTime()));
         assertEquals("test: 1968-08-24", result);
     }
 
     @Test
-    void interpolationDateTimeToTime() throws ParseException, IOException {
+    void interpolationDateTimeToTime() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?time}");
         String result = template.process(Map.of("temporal", CALENDAR.getTime()));
         assertEquals("test: 12:30:45", result);

@@ -7,7 +7,6 @@ import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,7 +57,7 @@ class BeanInterpolationTest {
     }
 
     @Test
-    void generateWithUnknownBeanAttribute() throws IOException, ParseException {
+    void generateWithUnknownBeanAttribute() throws ParseException {
         Template template = configuration.getTemplate("test", "${bean.value} ${bean.active}");
         Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));

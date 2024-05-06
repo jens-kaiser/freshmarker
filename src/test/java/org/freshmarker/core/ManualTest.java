@@ -37,7 +37,7 @@ class ManualTest {
     }
 
     @Test
-    void variableRange() throws ParseException, IOException {
+    void variableRange() throws ParseException {
         Template template = configuration.getTemplate("test", """
                 <#list a..b as s>
                 ${s} * ${s} = ${s*s}

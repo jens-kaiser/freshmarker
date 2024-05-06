@@ -179,7 +179,7 @@ class ListDirectiveTest {
     }
 
     @Test
-    void additionalLineRemoval2() throws ParseException, IOException {
+    void additionalLineRemoval2() throws ParseException {
         Template template = configuration.getTemplate("test", """
                 <#list sequence as s with l>
                   ${s.key} ${s.value}

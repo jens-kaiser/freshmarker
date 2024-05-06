@@ -36,7 +36,7 @@ class ExpressionTest {
     }
 
     @Test
-    void stringConcatWithEmptyVars() throws ParseException, IOException {
+    void stringConcatWithEmptyVars() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
         assertEquals("test: HIJKLMNOP", template.process(Map.of("prefix", "", "suffix", "")));
     }
@@ -60,7 +60,7 @@ class ExpressionTest {
             "3 lte 1, false",
             "1 lte 3, true",
     })
-    void numberRelation(String expression, boolean result) throws ParseException, IOException {
+    void numberRelation(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
@@ -74,7 +74,7 @@ class ExpressionTest {
             "1 != 1, false",
             "1 != 2, true",
     })
-    void primitiveEquality(String expression, boolean result) throws ParseException, IOException {
+    void primitiveEquality(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
@@ -88,7 +88,7 @@ class ExpressionTest {
             "!(1 <= 1), false",
             "!(2 >= 1), false",
     })
-    void negatedRelation(String expression, boolean result) throws ParseException, IOException {
+    void negatedRelation(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
@@ -106,7 +106,7 @@ class ExpressionTest {
             "4 gte (test?ordinal), true",
             "5 gt (test?ordinal), true"
     })
-    void relationWithEnum(String expression, boolean result) throws ParseException, IOException {
+    void relationWithEnum(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("test", StandardOpenOption.CREATE)));
     }

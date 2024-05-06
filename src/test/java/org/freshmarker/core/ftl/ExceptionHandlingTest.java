@@ -37,7 +37,7 @@ class ExceptionHandlingTest {
     }
 
     @Test
-    void builtInTypeError() throws IOException, ParseException {
+    void builtInTypeError() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${true?upper_case}");
         Map<String, Object> dataModel = Map.of();
         UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
