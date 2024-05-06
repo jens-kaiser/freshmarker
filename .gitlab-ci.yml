@@ -11,8 +11,9 @@ cache:
 
 maven-build:
   stage: build
-  script: 
-    - mvn -Dmaven.javadoc.skip=true clean package -B
+  script:
+    - dir src/main/ccc/FreshMarker
+    - mvn -Dmaven.javadoc.skip=true package -B
     - cat target/site/jacoco/index.html
   coverage: '/Total.*?([0-9]{1,3})%/'
   artifacts:
