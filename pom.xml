@@ -164,13 +164,12 @@
             <configuration>
               <detectJavaApiLink>false</detectJavaApiLink>
               <encoding>UTF-8</encoding>
-              <excludePackageNames>com.javacc.parser.*</excludePackageNames>
+              <excludePackageNames>com.congo.*;freemarker.*;org.parsers.csharp.ppline</excludePackageNames>
               <additionalDependencies>
                 <additionalDependency>
-                  <groupId>javacc21</groupId>
-                  <artifactId>javacc21</artifactId>
-                  <version>220206</version>
-                  <systemPath>${project.basedir}/src/main/lib/javacc21-220206.jar</systemPath>
+                  <groupId>org.congocc</groupId>
+                  <artifactId>org.congocc.parser.generator</artifactId>
+                  <version>2.0.0-RC5</version>
                 </additionalDependency>
               </additionalDependencies>
               <doclint>none</doclint>
