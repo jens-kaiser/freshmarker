@@ -106,6 +106,10 @@ public final class Configuration {
         mappingTemplateObjectProvider.getMapper().put(type, x -> new TemplateString(x.toString()));
     }
 
+     public void registerSimpleMapping(Class<?> type, Function<Object, String> mapping) {
+        mappingTemplateObjectProvider.getMapper().put(type, x -> new TemplateString(mapping.appy(x)));
+    }
+
     public void registerUserDirective(String name, UserDirective directive) {
         userDirectives.put(name, directive);
     }
