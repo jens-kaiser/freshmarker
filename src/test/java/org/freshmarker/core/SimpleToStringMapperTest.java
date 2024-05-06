@@ -31,4 +31,15 @@ class SimpleToStringMapperTest {
         Template template = configuration.getTemplate("test", "Leitweg-Id: ${id}");
         assertEquals(expected, template.process(Map.of("id", LeitwegId.parse(leitwegId))));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "Leitweg-Id: <<04011000-1234512345-06>>,04011000-1234512345-06",
+            "Leitweg-Id: <<05711-06001-79>>,05711-06001-79",
+    })
+    void renderLeitwegIdAsStringWithExplizitMapper(String expected, String leitwegId) {
+        configuration.registerSimpleMapping(LeitwegId.class, x -> "<<" + x.toString() + ">>");
+        Template template = configuration.getTemplate("test", "Leitweg-Id: ${id}");
+        assertEquals(expected, template.process(Map.of("id", LeitwegId.parse(leitwegId))));
+    }
 }
