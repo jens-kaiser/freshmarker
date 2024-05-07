@@ -54,7 +54,7 @@
     <auto-service.version>1.0-rc6</auto-service.version>
     <hamcrest.version>2.2</hamcrest.version>
     <slf4j.version>2.0.3</slf4j.version>
-    <jacoco.version>0.8.8</jacoco.version>
+    <jacoco.version>0.8.11</jacoco.version>
     <sonar.organization>schegge</sonar.organization>
   </properties>
 
@@ -72,7 +72,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.12</version>
+      <version>1.5.6</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
