@@ -13,6 +13,7 @@ import java.util.Map;
 public class ProcessContext {
 
   private Environment environment;
+  private final Map<Object, Map<Object, Object>> stores = new HashMap<>();
   private final Map<BuiltInKey, BuiltIn> builtIns;
   private final Map<String, OutputFormat> outputs;
 
@@ -32,6 +33,10 @@ public class ProcessContext {
 
   public Writer getWriter() {
     return environment.getWriter();
+  }
+
+  public Map<Object, Object> getStore(Object key) {
+    return stores.computeIfAbsent(key, k -> new HashMap<>());
   }
 
   public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
