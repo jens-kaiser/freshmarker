@@ -2,6 +2,7 @@ package org.freshmarker.core.providers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.model.TemplateObject;
@@ -19,7 +20,7 @@ public class MappingTemplateObjectProvider implements TemplateObjectProvider {
     return null;
   }
 
-  public Map<Class<?>, Function<Object, TemplateObject>> getMapper() {
-    return mapper;
+  public void addMapper(Class<?> type, Function<Object, TemplateObject> mapping) {
+    mapper.put(type, Objects.requireNonNull(mapping));
   }
 }

@@ -18,6 +18,7 @@ import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.ftl.FragmentBuilder;
+import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.number.ByteNumber;
 import org.freshmarker.core.model.number.DoubleNumber;
@@ -49,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -72,15 +74,14 @@ public final class Configuration {
 
     public Configuration() {
         locale = Locale.getDefault();
-        Map<Class<?>, Function<Object, TemplateObject>> mapper = mappingTemplateObjectProvider.getMapper();
-        mapper.put(String.class, o -> new TemplateString((String) o));
-        mapper.put(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));
-        mapper.put(Integer.class, o -> new TemplateNumber(new IntegerNumber((Integer) o)));
-        mapper.put(Short.class, o -> new TemplateNumber(new ShortNumber((Short) o)));
-        mapper.put(Byte.class, o -> new TemplateNumber(new ByteNumber((Byte) o)));
-        mapper.put(Double.class, o -> new TemplateNumber(new DoubleNumber((Double) o)));
-        mapper.put(Float.class, o -> new TemplateNumber(new FloatNumber((Float) o)));
-        mapper.put(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
+        mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
+        mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));
+        mappingTemplateObjectProvider.addMapper(Integer.class, o -> new TemplateNumber(new IntegerNumber((Integer) o)));
+        mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber(new ShortNumber((Short) o)));
+        mappingTemplateObjectProvider.addMapper(Byte.class, o -> new TemplateNumber(new ByteNumber((Byte) o)));
+        mappingTemplateObjectProvider.addMapper(Double.class, o -> new TemplateNumber(new DoubleNumber((Double) o)));
+        mappingTemplateObjectProvider.addMapper(Float.class, o -> new TemplateNumber(new FloatNumber((Float) o)));
+        mappingTemplateObjectProvider.addMapper(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
 
         formatter.put(TemplateNumber.class, new NumberFormatter());
         formatter.put(TemplateBoolean.class, new BooleanFormatter("yes", "no"));
@@ -103,11 +104,15 @@ public final class Configuration {
     }
 
     public void registerSimpleMapping(Class<?> type) {
-        mappingTemplateObjectProvider.getMapper().put(type, x -> new TemplateString(x.toString()));
+        registerSimpleMapping(type, Object::toString);
     }
 
     public void registerSimpleMapping(Class<?> type, Function<Object, String> mapping) {
-        mappingTemplateObjectProvider.getMapper().put(type, x -> new TemplateString(mapping.apply(x)));
+        Objects.requireNonNull(mapping);
+        mappingTemplateObjectProvider.addMapper(type, x -> {
+            String apply = mapping.apply(x);
+            return apply == null ? TemplateNull.NULL : new TemplateString(apply);
+        });
     }
 
     public void registerUserDirective(String name, UserDirective directive) {
@@ -126,7 +131,9 @@ public final class Configuration {
         logger.info("register plugin: {}", provider.getClass().getSimpleName());
         provider.registerBuildIn(builtIns);
         provider.registerFormatter(formatter);
-        provider.registerMapper(mappingTemplateObjectProvider.getMapper());
+        Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
+        provider.registerMapper(mapper);
+        mapper.forEach(mappingTemplateObjectProvider::addMapper);
         List<TemplateObjectProvider> list = new ArrayList<>();
         provider.registerTemplateObjectProvider(list);
         providers.addAll(providers.size() - 2, list);

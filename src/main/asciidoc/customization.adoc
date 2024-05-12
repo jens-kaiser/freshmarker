@@ -14,9 +14,22 @@ Unknown Java classes are usually treated like beans. However, this is not desire
 Configuration configuration = new Configuration();
 configuration.registerSimpleMapping(LeitwegId.class);
 
+Template template = configuration.getTemplate("id", "ID: ${id}!");
+LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
+String resullt = template.process(Map.of("id", leitwegId));
+// ID: 04011000-1234512345-06!
+----
+
+.Example with Leitweg-ID as String
+[source,java]
+----
+Configuration configuration = new Configuration();
+configuration.registerSimpleMapping(LeitwegId.class, lid -> "<<" + lid + ">>");
+
 Template template = configuration.getTemplate("id", "${id}!");
 LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
-System.out.println(template.process(Map.of("id", leitwegId)));
+String resullt = template.process(Map.of("id", leitwegId);
+// ID: <<04011000-1234512345-06>>!
 ----
 
 === Custom Plug-Ins
