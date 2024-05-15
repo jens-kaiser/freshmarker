@@ -20,9 +20,6 @@ public class BeanTemplateObjectProvider implements TemplateObjectProvider {
     @Override
     public TemplateObject provide(Environment environment, Object o) {
         Class<?> type = o.getClass();
-        if (type.isPrimitive()) {
-            throw new UnsupportedDataTypeException("unsupported primitive: " + type);
-        }
         modelSecurityGateway.check(o.getClass());
         return new TemplateBean(beanProvider.provide(o, environment), type);
     }
