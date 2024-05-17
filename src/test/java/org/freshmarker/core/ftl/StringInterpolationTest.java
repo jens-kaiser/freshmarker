@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,6 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StringInterpolationTest {
 
@@ -36,10 +38,20 @@ class StringInterpolationTest {
         assertEquals(expected, template.process(Map.of("text", TEXT)));
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${a?boolean},test: yes",
+            "test: ${b?boolean},test: no"
+    })
+    void interpolationBoolean(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("a", "true", "b", "false")));
+    }
+
     @Test
-    void interpolationBoolean() throws ParseException {
+    void invalidInterpolationBoolean() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${text?boolean}");
-        assertEquals("test: yes", template.process(Map.of("text", "true")));
+        assertThrows(ProcessException.class, () ->  template.process(Map.of("text", "gonzo")));
     }
 
     @Test

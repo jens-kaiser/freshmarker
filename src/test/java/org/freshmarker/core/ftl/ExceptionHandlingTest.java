@@ -51,7 +51,7 @@ class ExceptionHandlingTest {
         Template template = configuration.getTemplate("test", "test: ${!test}");
         Map<String, Object> dataModel = Map.of("test", 42);
         WrongTypeException exception = assertThrows(WrongTypeException.class, () -> template.process(dataModel));
-        assertEquals("expected TemplateBoolean but is TemplateNumber (org.freshmarker.core.model.number.IntegerNumber@49) at test:1:7 '${!test}'",
+        assertEquals("expected TemplateBoolean but is TemplateNumber (42) at test:1:7 '${!test}'",
                 exception.getMessage());
     }
 
