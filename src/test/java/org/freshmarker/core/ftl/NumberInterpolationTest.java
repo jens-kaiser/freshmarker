@@ -23,6 +23,18 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "test: ${a?c};test: 42",
+            "test: ${b?c};test: 42",
+            "test: ${c?c};test: 42",
+            "test: ${d?c};test: 42",
+    }, delimiterString = ";")
+    void interpolationNumberC(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short)42, "d", (byte)42)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
             "test: ${42};test: 42",
             "test: ${42.23};test: 42,23",
             "test: ${(-42)?abs};test: 42",

@@ -68,4 +68,8 @@ public abstract class AbstractCalculatingNumber<N extends Number> extends Number
             case DOUBLE -> new DoubleNumber(wrapped.doubleValue());
         };
     }
+
+    public String toString() {
+        return wrapped.toString();
+    }
 }
