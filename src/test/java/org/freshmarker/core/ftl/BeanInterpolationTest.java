@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,5 +71,14 @@ class BeanInterpolationTest {
         Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", true));
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
         assertEquals("missing reduction detected. Unsupported primitive? class org.freshmarker.core.ftl.BeanInterpolationTest$TestBean at test:1:1 '${bean}'", processException.getMessage());
+    }
+
+
+    @Test
+    void illegalBeanAccess() throws ParseException {
+        Template template = configuration.getTemplate("test", "${bean}");
+        Map<String, Object> data = Map.of("bean", UUID.randomUUID());
+        ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
+        assertEquals("unsupported system class: class java.util.UUID at test:1:1 '${bean}'", processException.getMessage());
     }
 }
