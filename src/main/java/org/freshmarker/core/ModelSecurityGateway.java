@@ -12,27 +12,24 @@ public class ModelSecurityGateway {
 
     private final Set<String> forbiddenPackages = new HashSet<>();
 
-    public ModelSecurityGateway addForbiddenPackages(String... packageName) {
+    public void addForbiddenPackages(String... packageName) {
         forbiddenPackages.addAll(Arrays.stream(packageName).map(p -> p.endsWith(".") ? p : p + ".").toList());
-        return this;
     }
 
-    public ModelSecurityGateway addForbiddenPackages(Class<?> type) {
-        return addForbiddenPackages(type.getPackageName());
+    public void addForbiddenPackages(Class<?> type) {
+        addForbiddenPackages(type.getPackageName());
     }
 
-    public ModelSecurityGateway addAllowedClass(Class<?> type) {
+    public void addAllowedClass(Class<?> type) {
         allowedClasses.add(type.getName());
-        return this;
     }
 
-    public ModelSecurityGateway addAllowedPackages(String... packageName) {
+    public void addAllowedPackages(String... packageName) {
         allowedPackages.addAll(Arrays.stream(packageName).map(p -> p.endsWith(".") ? p : p + ".").toList());
-        return this;
     }
 
-    public ModelSecurityGateway addAllowedPackages(Class<?> type) {
-        return addAllowedPackages(type.getPackageName());
+    public void addAllowedPackages(Class<?> type) {
+        addAllowedPackages(type.getPackageName());
     }
 
     public void check(Class<?> type) {
