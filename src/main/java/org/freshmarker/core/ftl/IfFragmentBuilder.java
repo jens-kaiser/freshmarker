@@ -4,51 +4,58 @@ import ftl.Node;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
 import ftl.ast.IfStatement;
-import java.util.List;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConditionalFragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
+import java.util.List;
+
 class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
-  private final FragmentBuilder fragmentBuilder;
+    private final FragmentBuilder fragmentBuilder;
 
-  IfFragmentBuilder(FragmentBuilder fragmentBuilder) {
-    this.fragmentBuilder = fragmentBuilder;
-  }
-
-  @Override
-  public IfFragment visit(IfStatement ftl, IfFragment input) {
-    IfFragment ifFragment = new IfFragment();
-    Node expression = ftl.getChild(3);
-    TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
-    BlockFragment ifBlock = ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
-    ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
-    List<ElseIfBlock> elseIfParts = ftl.childrenOfType(ElseIfBlock.class);
-    elseIfParts.forEach(elseIfPart -> elseIfPart.accept(this, ifFragment));
-    ElseBlock elsePart = ftl.firstChildOfType(ElseBlock.class);
-    if (elsePart != null) {
-      elsePart.accept(this, ifFragment);
+    IfFragmentBuilder(FragmentBuilder fragmentBuilder) {
+        this.fragmentBuilder = fragmentBuilder;
     }
-    return ifFragment;
-  }
 
-  @Override
-  public IfFragment visit(ElseIfBlock ftl, IfFragment input) {
-    Node expression = ftl.getChild(3);
-    TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
-    BlockFragment ifBlock = ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
-    input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
-    return input;
-  }
+    @Override
+    public IfFragment visit(IfStatement ftl, IfFragment input) {
+        Node expression = ftl.getChild(3);
+        TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
+        BlockFragment ifBlock = indexAfterIfBlock(ftl) == 5 ? new BlockFragment() : ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
+        IfFragment ifFragment = new IfFragment();
+        ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
+        ftl.childrenOfType(ElseIfBlock.class).forEach(elseIfPart -> elseIfPart.accept(this, ifFragment));
+        ElseBlock elsePart = ftl.firstChildOfType(ElseBlock.class);
+        if (elsePart != null) {
+            elsePart.accept(this, ifFragment);
+        }
+        return ifFragment;
+    }
 
-  @Override
-  public IfFragment visit(ElseBlock ftl, IfFragment input) {
-    Node expression = ftl.getChild(3);
-    BlockFragment ifBlock = expression.accept(fragmentBuilder, new BlockFragment());
-    input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock, expression));
-    return input;
-  }
+    private static Integer indexAfterIfBlock(IfStatement ftl) {
+        return ftl.children().stream().skip(5).filter(n -> List.of(ElseIfBlock.class, ElseBlock.class).contains(n.getClass())).map(ftl::indexOf)
+                .findFirst().orElse(ftl.getChildCount());
+    }
+
+    @Override
+    public IfFragment visit(ElseIfBlock ftl, IfFragment input) {
+        Node expression = ftl.getChild(3);
+        TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
+        BlockFragment ifBlock = ftl.getChildCount() == 5 ? new BlockFragment() : ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
+        input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
+        return input;
+    }
+
+    @Override
+    public IfFragment visit(ElseBlock ftl, IfFragment input) {
+        if (ftl.getChildCount() != 3) {
+            Node expression = ftl.getChild(3);
+            BlockFragment ifBlock = expression.accept(fragmentBuilder, new BlockFragment());
+            input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock, expression));
+        }
+        return input;
+    }
 }

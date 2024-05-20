@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,5 +54,17 @@ class IfDirectiveTest {
         Template template = configuration.getTemplate("test",
                 "test: <#if text?contains('A')>${text}1<#else>${text}3</#if>");
         assertEquals(expected, template.process(Map.of("text", text)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "AAA",
+            "BBB",
+            "CCC",
+    })
+    void emptyIfElseifElse(String text) throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "<#if text?contains('A')><#elseif text?contains('BB')><#else></#if>");
+        assertEquals("", template.process(Map.of("text", text)));
     }
 }
