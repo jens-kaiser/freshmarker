@@ -43,6 +43,12 @@ public class StringPluginProvider implements PluginProvider {
     }
 
     @BuiltInMethod
+    public static TemplateString uncapitalize(TemplateString value, ProcessContext context) {
+        Matcher matcher = Pattern.compile("\\b(\\p{javaUpperCase})(\\p{IsAlphabetic}*)\\b").matcher(value.getValue());
+        return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(context.getEnvironment().getLocale()) + matcher.group(2)));
+    }
+
+    @BuiltInMethod
     public static TemplateString camelCase(TemplateString value, ProcessContext context) {
         Locale locale = context.getEnvironment().getLocale();
         Matcher matcher = Pattern.compile("(\\p{javaLowerCase}+)[_-](\\p{javaLowerCase})").matcher(value.getValue().toLowerCase(locale));

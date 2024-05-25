@@ -34,6 +34,18 @@ A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabeti
 |The Quick Brown Fox Jumps Over The Lazy Dog
 |===
 
+==== `uncapitalize` Built-In
+
+This built-in converts the first letter of each word to lowercase.
+A word with a first uppercase letter means `\b(\p{javaUpperCase})(\p{IsAlphabetic}*)\b`
+
+|===
+|Input | Output
+
+|The quick BROWN Fox jumps over the lazy Dog
+|the quick bROWN fox Jumps over the lazy dog
+|===
+
 ==== `camelCase` Built-In
 
 This built-in converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
