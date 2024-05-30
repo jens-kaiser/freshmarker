@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,7 +145,11 @@ public final class Configuration {
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
-        FreshMarkerParser parser = new FreshMarkerParser(new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+        return getTemplate(name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+    }
+
+    public Template getTemplate(String name, String content) throws ParseException {
+        FreshMarkerParser parser = new FreshMarkerParser(content);
         parser.setInputSource(name);
         parser.Root();
         Root root = (Root) parser.rootNode();
@@ -158,10 +161,6 @@ public final class Configuration {
         }
         root.accept(new FragmentBuilder(template), template.getRootFragment());
         return template;
-    }
-
-    public Template getTemplate(String name, String content) throws ParseException {
-        return getTemplate(name, new StringReader(content));
     }
 
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {

@@ -1,8 +1,8 @@
 package org.freshmarker.core.ftl;
 
-import ftl.Token.TokenType;
 import ftl.Node;
 import ftl.Token;
+import ftl.Token.TokenType;
 import ftl.ast.AdditiveExpression;
 import ftl.ast.AndExpression;
 import ftl.ast.BaseExpression;
@@ -151,7 +151,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(DotKey expression, Object input) {
-        Token lastToken = (Token)expression.getChild(expression.getChildCount() - 1);
+        Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
         String dotKey = lastToken.toString();
         logger.info("dotkey: {}", dotKey);
         return new TemplateDotKey((TemplateObject) input, dotKey);
@@ -229,7 +229,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(BuiltinVariable expression, Object input) {
-        Token lastToken = (Token)expression.getChild(expression.getChildCount() - 1);
+        Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
         return new TemplateBuiltInVariable(lastToken.toString());
     }
 
