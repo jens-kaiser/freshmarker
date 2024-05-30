@@ -139,4 +139,34 @@ class ExpressionTest {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "true & true, true",
+            "true & false, false",
+            "false & true, false",
+            "false & false, false",
+            "true && true, true",
+            "true && false, false",
+            "false && true, false",
+            "false && false, false",
+            "false && 1, false",
+            "true | true, true",
+            "true | false, true",
+            "false | true, true",
+            "false | false, false",
+            "true || true, true",
+            "true || false, true",
+            "false || true, true",
+            "false || false, false",
+            "true || 1, true",
+            "true ^ true, false",
+            "true ^ false, true",
+            "false ^ true, true",
+            "false ^ false, false",
+    })
+    void negatedJunction(String expression, boolean result) throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${(!(" + expression + "))?c}");
+        assertEquals("test: " + !result, template.process(Map.of("prefix", "", "suffix", "")));
+    }
 }

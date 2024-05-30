@@ -244,14 +244,65 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(AndExpression expression, Object input) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        return new TemplateJunction(((Token) expression.getChild(1)).getType(), left, right);
+        TokenType type = ((Token) expression.getChild(1)).getType();
+        switch (type) {
+            case AND -> {
+                if (right instanceof TemplateBoolean r) {
+                    if (left instanceof TemplateBoolean l) {
+                        return TemplateBoolean.from(l.getValue() & r.getValue());
+                    }
+                    if (TemplateBoolean.TRUE.equals(right)) {
+                        return left;
+                    }
+                }
+            }
+            case AND2 -> {
+                if (TemplateBoolean.TRUE.equals(right)) {
+                    return left;
+                }
+                if (TemplateBoolean.TRUE.equals(left)) {
+                    return right;
+                }
+                if ((TemplateBoolean.FALSE.equals(left) || TemplateBoolean.FALSE.equals(right))) {
+                    return TemplateBoolean.FALSE;
+                }
+            }
+        }
+        return new TemplateJunction(type, left, right);
     }
 
     @Override
     public TemplateObject visit(OrExpression expression, Object input) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        return new TemplateJunction(((Token) expression.getChild(1)).getType(), left, right);
+        TokenType type = ((Token) expression.getChild(1)).getType();
+        switch (type) {
+            case OR -> {
+                if (right instanceof TemplateBoolean r) {
+                    if (left instanceof TemplateBoolean l) {
+                        return TemplateBoolean.from(l.getValue() | r.getValue());
+                    }
+                    return left;
+                }
+            }
+            case OR2 -> {
+                if (TemplateBoolean.FALSE.equals(left)) {
+                    return right;
+                }
+                if (TemplateBoolean.FALSE.equals(right)) {
+                    return left;
+                }
+                if ((TemplateBoolean.TRUE.equals(left) || TemplateBoolean.TRUE.equals(right))) {
+                    return TemplateBoolean.TRUE;
+                }
+            }
+            case XOR -> {
+                if (right instanceof TemplateBoolean r && left instanceof TemplateBoolean l) {
+                    return TemplateBoolean.from(l.getValue() ^ r.getValue());
+                }
+            }
+        }
+        return new TemplateJunction(type, left, right);
     }
 
     @Override
