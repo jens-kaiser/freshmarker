@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.IOException;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
@@ -109,5 +108,35 @@ class ExpressionTest {
     void relationWithEnum(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("test", StandardOpenOption.CREATE)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "true & true, true",
+            "true & false, false",
+            "false & true, false",
+            "false & false, false",
+            "true && true, true",
+            "true && false, false",
+            "false && true, false",
+            "false && false, false",
+            "false && 1, false",
+            "true | true, true",
+            "true | false, true",
+            "false | true, true",
+            "false | false, false",
+            "true || true, true",
+            "true || false, true",
+            "false || true, true",
+            "false || false, false",
+            "true || 1, true",
+            "true ^ true, false",
+            "true ^ false, true",
+            "false ^ true, true",
+            "false ^ false, false",
+    })
+    void junction(String expression, boolean result) throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
+        assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
 }

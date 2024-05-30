@@ -4,7 +4,6 @@ A simple template engine based loosely on the FreeMarker syntax. FreshMarker is 
 
 == Usage
 
-
 [source,xml]
 ----
 <dependency>
@@ -35,6 +34,8 @@ Template template = configuration.getTemplate("ancestors-loop",
     """);
 String result = template.process(Map.of("ancestors", ancestorService.ancestorsByFamily("Kaiser")));
 ----
+
+You can find a detailed description of al FreshMarker features in the https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/asciidoc/manual.adoc[manual].
 
 == Template Types
 
@@ -125,11 +126,3 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 |locale | the current locale | String
 |now | the current date-time | DateTime
 |===
-
-== FreshMarker list syntax with loop variable
-[code]
-----
-<#list ancestors as ancestor with looper>
-  ${looper.counter} ${ancestor.givenname} ${ancestor.surname}
-</#list>
-----

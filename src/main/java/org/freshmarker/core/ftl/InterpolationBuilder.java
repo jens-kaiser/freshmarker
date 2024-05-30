@@ -4,6 +4,7 @@ import ftl.Token.TokenType;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.AdditiveExpression;
+import ftl.ast.AndExpression;
 import ftl.ast.BaseExpression;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
@@ -17,6 +18,7 @@ import ftl.ast.MethodInvoke;
 import ftl.ast.MultiplicativeExpression;
 import ftl.ast.NotExpression;
 import ftl.ast.NullLiteral;
+import ftl.ast.OrExpression;
 import ftl.ast.Parenthesis;
 import ftl.ast.PositionalArgsList;
 import ftl.ast.PrimaryExpression;
@@ -31,6 +33,7 @@ import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
+import org.freshmarker.core.model.TemplateJunction;
 import org.freshmarker.core.model.TemplateMethodCall;
 import org.freshmarker.core.model.TemplateNegative;
 import org.freshmarker.core.model.TemplateNull;
@@ -235,6 +238,20 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
         return new TemplateRelational(((Token) expression.getChild(1)).getType(), left, right);
+    }
+
+    @Override
+    public TemplateObject visit(AndExpression expression, Object input) {
+        TemplateObject left = expression.getChild(0).accept(this, null);
+        TemplateObject right = expression.getChild(2).accept(this, null);
+        return new TemplateJunction(((Token) expression.getChild(1)).getType(), left, right);
+    }
+
+    @Override
+    public TemplateObject visit(OrExpression expression, Object input) {
+        TemplateObject left = expression.getChild(0).accept(this, null);
+        TemplateObject right = expression.getChild(2).accept(this, null);
+        return new TemplateJunction(((Token) expression.getChild(1)).getType(), left, right);
     }
 
     @Override

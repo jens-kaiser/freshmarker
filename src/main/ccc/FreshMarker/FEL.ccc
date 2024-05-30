@@ -95,6 +95,8 @@ TOKEN :
     |
     <AND : "&">
     |
+    <XOR : "^">
+    |
     <LT : "<">
     |
     <GT : ">">
@@ -185,7 +187,7 @@ Expression :
 OrExpression :
     AndExpression
     (
-        (<OR>|<OR2>) AndExpression
+        (<OR>|<OR2>|<XOR>) AndExpression
     )*
 ;
 

@@ -25,4 +25,6 @@ include::builtins/builtins.adoc[]
 
 include::directives/directives.adoc[]
 
+include::expression.adoc[]
+
 include::customization.adoc[]
