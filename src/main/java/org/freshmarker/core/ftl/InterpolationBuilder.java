@@ -94,13 +94,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(PrimaryExpression expression, Object input) {
-        logger.info("visit primary expression: {}", expression);
+        logger.debug("visit primary expression: {}", expression);
         return handlePrimaryAndBase(input, expression.children());
     }
 
     @Override
     public TemplateObject visit(BaseExpression expression, Object input) {
-        logger.info("visit base expression: {}", expression);
+        logger.debug("visit base expression: {}", expression);
         return handlePrimaryAndBase(input, expression.children());
     }
 
@@ -124,7 +124,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(BuiltIn expression, Object input) {
-        logger.info("visit builtin expression: {}", expression);
+        logger.debug("visit builtin expression: {}", expression);
         Token buildInName = (Token) expression.getChild(1);
         if (expression.getChildCount() < 3) {
             return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of());
@@ -136,7 +136,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         } else {
             parameter.add(child.accept(this, null));
         }
-        logger.info("parameters: {}", parameter);
+        logger.debug("parameters: {}", parameter);
         return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, parameter);
     }
 
@@ -153,7 +153,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(DotKey expression, Object input) {
         Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
         String dotKey = lastToken.toString();
-        logger.info("dotkey: {}", dotKey);
+        logger.debug("dotkey: {}", dotKey);
         return new TemplateDotKey((TemplateObject) input, dotKey);
     }
 
@@ -198,7 +198,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             return expression.getChild(0).accept(this, null);
         }
         TemplateObject result = expression.getChild(0).accept(this, null);
-        logger.info("first: {}", result);
+        logger.debug("first: {}", result);
         for (int i = 1; i < expression.getChildCount(); i += 2) {
             Token token = (Token) expression.getChild(i);
             TemplateObject second = expression.getChild(i + 1).accept(this, null);
@@ -242,67 +242,87 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(AndExpression expression, Object input) {
+        return switch (((Token) expression.getChild(1)).getType()) {
+            case AND -> handleAnd(expression);
+            case AND2 -> handleAnd2(expression);
+            default -> throw new IllegalArgumentException("invalid conjunction");
+        };
+    }
+
+    private TemplateObject handleAnd(AndExpression expression) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        TokenType type = ((Token) expression.getChild(1)).getType();
-        switch (type) {
-            case AND -> {
-                if (right instanceof TemplateBoolean r) {
-                    if (left instanceof TemplateBoolean l) {
-                        return TemplateBoolean.from(l.getValue() & r.getValue());
-                    }
-                    if (TemplateBoolean.TRUE.equals(right)) {
-                        return left;
-                    }
-                }
-            }
-            case AND2 -> {
-                if (TemplateBoolean.TRUE.equals(right)) {
-                    return left;
-                }
-                if (TemplateBoolean.TRUE.equals(left)) {
-                    return right;
-                }
-                if ((TemplateBoolean.FALSE.equals(left) || TemplateBoolean.FALSE.equals(right))) {
-                    return TemplateBoolean.FALSE;
-                }
-            }
+        if (!(right instanceof TemplateBoolean r)) {
+            return new TemplateJunction(TokenType.AND, left, right);
         }
-        return new TemplateJunction(type, left, right);
+        if (left instanceof TemplateBoolean l) {
+            return TemplateBoolean.from(l.getValue() & r.getValue());
+        }
+        if (TemplateBoolean.TRUE.equals(right)) {
+            return left;
+        }
+        return new TemplateJunction(TokenType.AND, left, right);
+    }
+
+    private TemplateObject handleAnd2(AndExpression expression) {
+        TemplateObject left = expression.getChild(0).accept(this, null);
+        TemplateObject right = expression.getChild(2).accept(this, null);
+        if (TemplateBoolean.TRUE.equals(right)) {
+            return left;
+        }
+        if (TemplateBoolean.TRUE.equals(left)) {
+            return right;
+        }
+        if ((TemplateBoolean.FALSE.equals(left) || TemplateBoolean.FALSE.equals(right))) {
+            return TemplateBoolean.FALSE;
+        }
+        return new TemplateJunction(TokenType.AND2, left, right);
     }
 
     @Override
     public TemplateObject visit(OrExpression expression, Object input) {
+        return switch (((Token) expression.getChild(1)).getType()) {
+            case OR -> handleOr(expression);
+            case OR2 -> handleOr2(expression);
+            case XOR -> handleXor(expression);
+            default -> throw new IllegalArgumentException("invalid disjunction");
+        };
+    }
+
+    private TemplateBooleanExpression handleXor(OrExpression expression) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        TokenType type = ((Token) expression.getChild(1)).getType();
-        switch (type) {
-            case OR -> {
-                if (right instanceof TemplateBoolean r) {
-                    if (left instanceof TemplateBoolean l) {
-                        return TemplateBoolean.from(l.getValue() | r.getValue());
-                    }
-                    return left;
-                }
-            }
-            case OR2 -> {
-                if (TemplateBoolean.FALSE.equals(left)) {
-                    return right;
-                }
-                if (TemplateBoolean.FALSE.equals(right)) {
-                    return left;
-                }
-                if ((TemplateBoolean.TRUE.equals(left) || TemplateBoolean.TRUE.equals(right))) {
-                    return TemplateBoolean.TRUE;
-                }
-            }
-            case XOR -> {
-                if (right instanceof TemplateBoolean r && left instanceof TemplateBoolean l) {
-                    return TemplateBoolean.from(l.getValue() ^ r.getValue());
-                }
-            }
+        if (right instanceof TemplateBoolean r && left instanceof TemplateBoolean l) {
+            return TemplateBoolean.from(l.getValue() ^ r.getValue());
         }
-        return new TemplateJunction(type, left, right);
+        return new TemplateJunction(TokenType.XOR, left, right);
+    }
+
+    private TemplateObject handleOr2(OrExpression expression) {
+        TemplateObject left = expression.getChild(0).accept(this, null);
+        TemplateObject right = expression.getChild(2).accept(this, null);
+        if (TemplateBoolean.FALSE.equals(left)) {
+            return right;
+        }
+        if (TemplateBoolean.FALSE.equals(right)) {
+            return left;
+        }
+        if ((TemplateBoolean.TRUE.equals(left) || TemplateBoolean.TRUE.equals(right))) {
+            return TemplateBoolean.TRUE;
+        }
+        return new TemplateJunction(TokenType.OR2, left, right);
+    }
+
+    private TemplateObject handleOr(OrExpression expression) {
+        TemplateObject left = expression.getChild(0).accept(this, null);
+        TemplateObject right = expression.getChild(2).accept(this, null);
+        if (right instanceof TemplateBoolean r) {
+            if (left instanceof TemplateBoolean l) {
+                return TemplateBoolean.from(l.getValue() | r.getValue());
+            }
+            return left;
+        }
+        return new TemplateJunction(TokenType.OR, left, right);
     }
 
     @Override
@@ -340,7 +360,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         } else {
             parameter.add(child.accept(this, null));
         }
-
         return new TemplateMethodCall(name, parameter);
     }
 }
