@@ -52,6 +52,7 @@ import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
+import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -337,9 +338,9 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(EqualityExpression expression, Object input) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        TokenType equality = (TokenType) expression.getChild(1).getType();
-        TemplateEquality result = new TemplateEquality(left, right);
-        return equality == TokenType.NOT_EQUALS ? result.not() : result;
+        TemplateEquality equality = new TemplateEquality(left, right);
+        TemplateObject result = expression.getChild(1).getType() == TokenType.NOT_EQUALS ? equality.not() : equality;
+        return left.isPrimitive() && right.isPrimitive() ? result.evaluateToObject(null) : result;
     }
 
     @Override
@@ -378,7 +379,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 0; i < expression.size() - 1; i += 4) {
             String key = expression.get(i + 1).accept(this, null).asString().map(TemplateString::getValue)
                     .orElseThrow(() -> new IllegalArgumentException("key is not a string"));
-            Object value = expression.get(i + 3).accept(this, null).asPrimitive()
+            TemplatePrimitive<?> value = expression.get(i + 3).accept(this, null).asPrimitive()
                     .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
             hash.put(key, value);
         }
@@ -392,7 +393,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 1; i < expression.size() - 1; i++) {
             Node node = expression.get(i);
             if (node.getType() != TokenType.COMMA) {
-                Object primitive = node.accept(this, null).asPrimitive()
+                TemplatePrimitive<?> primitive = node.accept(this, null).asPrimitive()
                         .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
                 list.add(primitive);
             }
