@@ -163,15 +163,7 @@ TOKEN :
 ;
 
 <FTL_DIRECTIVE> TOKEN :
-    <TRIM : "t">
-    |
     <COMMENT : "--"> : IN_COMMENT
-    |
-    <LTRIM : "lt">
-    |
-    <RTRIM : "rt">
-    |
-    <NOTRIM : "nt">
     |
     <IF : "if">
     |
@@ -306,32 +298,6 @@ Comment #CommentBlock :
    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
    <COMMENT>
    <END_COMMENT>
-;
-
-Trim #TrimInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <TRIM>
-    LooseTagEnd
-;
-
-NoTrim #TrimInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <NOTRIM>
-    LooseTagEnd
-;
-
-
-RightTrim #TrimInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <RTRIM>
-    LooseTagEnd
-;
-
-
-LeftTrim #TrimInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <LTRIM>
-    LooseTagEnd
 ;
 
 Break #BreakInstruction :
@@ -535,10 +501,6 @@ TopLevelDirective #void :
      SCAN 2 Var|
      SCAN 2 Break |
      SCAN 2 Return |
-     SCAN 2 Trim |
-     SCAN 2 NoTrim |
-     SCAN 2 LeftTrim |
-     SCAN 2 RightTrim|
      SCAN 2 Nested |
      SCAN 2 OutputFormatBlock
    )
