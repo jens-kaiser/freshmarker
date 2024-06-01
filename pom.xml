@@ -6,7 +6,7 @@
 
     <groupId>de.schegge</groupId>
     <artifactId>freshmarker</artifactId>
-    <version>0.5.8</version>
+    <version>0.5.9-SNAPSHOT</version>
     <url>https://gitlab.com/schegge/freshmarker.git</url>
     <name>FreshMarker</name>
     <description>A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17
@@ -50,9 +50,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.jupiter.version>5.9.2</junit.jupiter.version>
-        <auto-service.version>1.0-rc6</auto-service.version>
-        <hamcrest.version>2.2</hamcrest.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <slf4j.version>2.0.3</slf4j.version>
         <jacoco.version>0.8.11</jacoco.version>
         <sonar.organization>schegge</sonar.organization>

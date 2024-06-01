@@ -193,8 +193,6 @@ TOKEN :
     |
     <BREAK : "break">
     |
-    <EMBED : "embed">
-    |
     <NESTED : "nested">
     |
     <VISIT : "visit">
@@ -368,13 +366,6 @@ Include #IncludeInstruction :
     LooseTagEnd
 ;
 
-Embed #EmbedInstruction : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <EMBED><BLANK>
-    Expression
-    LooseTagEnd
-;
-
 Import #ImportInstruction : 
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <IMPORT><BLANK>
@@ -534,7 +525,6 @@ TopLevelDirective #void :
    (
      SCAN 2 Assignment |
      SCAN 2 Comment |
-     SCAN 2 Embed |
      SCAN 2 If |
      SCAN 2 List |
      SCAN 2 Include |

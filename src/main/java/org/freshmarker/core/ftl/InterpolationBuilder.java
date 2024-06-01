@@ -14,6 +14,8 @@ import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
 import ftl.ast.EqualityExpression;
 import ftl.ast.Exists;
+import ftl.ast.HashLiteral;
+import ftl.ast.ListLiteral;
 import ftl.ast.MethodInvoke;
 import ftl.ast.MultiplicativeExpression;
 import ftl.ast.NotExpression;
@@ -25,6 +27,7 @@ import ftl.ast.PrimaryExpression;
 import ftl.ast.RangeExpression;
 import ftl.ast.RelationalExpression;
 import ftl.ast.UnaryPlusMinusExpression;
+import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
 import org.freshmarker.core.model.TemplateBuiltInVariable;
@@ -34,6 +37,7 @@ import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
+import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateMethodCall;
 import org.freshmarker.core.model.TemplateNegative;
 import org.freshmarker.core.model.TemplateNull;
@@ -53,6 +57,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,12 +186,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 1; i < expression.getChildCount(); i += 2) {
             Token token = (Token) expression.getChild(i);
             TemplateObject second = expression.getChild(i + 1).accept(this, null);
-            Optional<TemplateNumber> left = result.asNumber();
-            Optional<TemplateNumber> right = second.asNumber();
-            if (left.isPresent() && right.isPresent()) {
-                result = token.getType() == TokenType.PLUS ? left.get().add(right.get()) : left.get().subtract(right.get());
+            TemplateOperation operation = new TemplateOperation(token.getType(), result, second);
+            if (result.isPrimitive() && second.isPrimitive()) {
+                result = operation.evaluateToObject(null);
             } else {
-                result = new TemplateOperation(token.getType(), result, second);
+                result = operation;
             }
         }
         return result;
@@ -202,12 +206,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 1; i < expression.getChildCount(); i += 2) {
             Token token = (Token) expression.getChild(i);
             TemplateObject second = expression.getChild(i + 1).accept(this, null);
-            Optional<TemplateNumber> left = result.asNumber();
-            Optional<TemplateNumber> right = second.asNumber();
-            if (left.isPresent() && right.isPresent()) {
-                result = token.getType() == TokenType.TIMES ? left.get().multiply(right.get()) : left.get().divide(right.get());
+            TemplateOperation operation = new TemplateOperation(token.getType(), result, second);
+            if (result.isPrimitive() && second.isPrimitive()) {
+                result = operation.evaluateToObject(null);
             } else {
-                result = new TemplateOperation(token.getType(), result, second);
+                result = operation;
             }
         }
         return result;
@@ -237,7 +240,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(RelationalExpression expression, Object input) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         TemplateObject right = expression.getChild(2).accept(this, null);
-        return new TemplateRelational(((Token) expression.getChild(1)).getType(), left, right);
+        TokenType type = ((Token) expression.getChild(1)).getType();
+        TemplateRelational relational = new TemplateRelational(type, left, right);
+        if (left instanceof TemplateNumber && right instanceof TemplateNumber) {
+            return relational.evaluateToObject(null);
+        }
+        return relational;
     }
 
     @Override
@@ -361,5 +369,34 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             parameter.add(child.accept(this, null));
         }
         return new TemplateMethodCall(name, parameter);
+    }
+
+    @Override
+    public TemplateObject visit(HashLiteral expression, Object input) {
+        logger.debug("hash literal");
+        LinkedHashMap<String, Object> hash = new LinkedHashMap<>();
+        for (int i = 0; i < expression.size() - 1; i += 4) {
+            String key = expression.get(i + 1).accept(this, null).asString().map(TemplateString::getValue)
+                    .orElseThrow(() -> new IllegalArgumentException("key is not a string"));
+            Object value = expression.get(i + 3).accept(this, null).asPrimitive()
+                    .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
+            hash.put(key, value);
+        }
+        return new TemplateBean(hash);
+    }
+
+    @Override
+    public TemplateObject visit(ListLiteral expression, Object input) {
+        logger.debug("list literal");
+        List<Object> list = new ArrayList<>();
+        for (int i = 1; i < expression.size() - 1; i++) {
+            Node node = expression.get(i);
+            if (node.getType() != TokenType.COMMA) {
+                Object primitive = node.accept(this, null).asPrimitive()
+                        .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
+                list.add(primitive);
+            }
+        }
+        return new TemplateListSequence(list);
     }
 }

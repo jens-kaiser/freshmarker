@@ -12,6 +12,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExpressionTest {
 
@@ -168,5 +169,37 @@ class ExpressionTest {
     void negatedJunction(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(!(" + expression + "))?c}");
         assertEquals("test: " + !result, template.process(Map.of("prefix", "", "suffix", "")));
+    }
+
+    @Test
+    void simpleHashLiteral() {
+        Template template = configuration.getTemplate("test", "${{ 'key': 42 }.key}");
+        assertEquals("42", template.process(Map.of()));
+    }
+
+    @Test
+    void invalidKeyInHashLiteral() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> configuration.getTemplate("test", "${{ key: 42 } }.key}"));
+        assertEquals("key is not a string", exception.getMessage());
+    }
+
+    @Test
+    void invalidValueInHashLiteral() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> configuration.getTemplate("test", "${{ 'key1': { 'key2' : 42 } } }.key1.key2}"));
+        assertEquals("value is not a primitive", exception.getMessage());
+    }
+
+    @Test
+    void simpleListLiteral() {
+        Template template = configuration.getTemplate("test", "${[1,2,'3',4,5<6][2]}");
+        assertEquals("3", template.process(Map.of()));
+    }
+
+    @Test
+    void simpleListLiteralWithoutComma() {
+        Template template = configuration.getTemplate("test", "${[1  2 '3'  true 3 < 4][2]}");
+        assertEquals("3", template.process(Map.of()));
     }
 }
