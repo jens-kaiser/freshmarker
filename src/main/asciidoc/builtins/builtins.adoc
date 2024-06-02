@@ -37,6 +37,8 @@ include::builtins-string.adoc[]
 
 include::builtins-boolean.adoc[]
 
+include::builtins-number.adoc[]
+
 include::builtins-datetime.adoc[]
 
 include::builtins-date.adoc[]

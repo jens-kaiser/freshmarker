@@ -45,10 +45,11 @@ class NumberInterpolationTest {
             "test: ${(-42)?sign};test: -1",
             "test: ${(-0)?sign};test: 0",
             "test: ${0?sign};test: 0",
+            "test: ${3.14159?abs};test: 3,142",
     }, delimiterString = ";")
     void interpolationConstant(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of()));
+        assertEquals(expected, template.process(Map.of("pi", 3.14159)));
     }
 
     @ParameterizedTest
@@ -83,5 +84,17 @@ class NumberInterpolationTest {
     void interpolationShortExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("x", (short) 42, "y", 42)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${π?c};test: 3.141592653589793",
+            "test: ${π?format('%10.4f')};test:     3,1416",
+            "test: ${π?format('%.2f')};test: 3,14",
+            "<#setting locale='en_US'>test: ${π?format('%.2f')};test: 3.14",
+    }, delimiterString = ";")
+    void format(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("π", Math.PI)));
     }
 }

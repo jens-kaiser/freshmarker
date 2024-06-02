@@ -1,0 +1,57 @@
+=== Number Built-Ins
+
+==== `c` (computer language) Built-In
+
+This built-in converts a boolean to the string using the `toString()` method of the corresponding base types `Double`, `Float`, `Long`, `Integer`, `Byte` or `Short`.
+
+NOTE: Without this builtin, the number is formatter with the default number formatter for the current locale.
+
+==== `format` Built-In
+
+This built-in format the number by the given format parameter and the current locale. See `java.util.Formatter` for details.
+
+|===
+|Interpolation | Locale | Output
+
+m|${3.14159?format("%.2f")}
+m|Locale.GERMANY
+m|3.14
+
+m|${3.14159?format("%.4f")}
+m|Locale.US
+m|3.1416
+|===
+
+==== `abs` Built-In
+
+This built-in return the absolute value of the number.
+
+|===
+|Interpolation | Output
+
+m|${-3.14159?abs}
+m|3.142
+
+m|${3.14159?abs}
+m|3.142
+
+m|${-42?abs}
+m|42
+|===
+
+==== `sign` Built-In
+
+This built-in return the sign of the number as an Integer.
+
+|===
+|Interpolation | Output
+
+m|${-3.14159?sign}
+m|-1
+
+m|${3.14159?sign}
+m|1
+
+m|${0?sign}
+m|0
+|===

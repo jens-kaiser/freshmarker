@@ -1,6 +1,9 @@
 package org.freshmarker.core.plugin;
 
+import java.util.Formatter;
 import java.util.Map;
+
+import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInMethod;
@@ -27,5 +30,11 @@ public class NumberPluginProvider implements PluginProvider {
   @BuiltInMethod
   public static TemplateNumber sign(TemplateNumber value) {
     return value.sign();
+  }
+
+  @BuiltInMethod
+  public static TemplateString format(TemplateNumber value, ProcessContext context, TemplateString format) {
+    Formatter formatter = new Formatter(context.getEnvironment().getLocale());
+    return new TemplateString(formatter.format(format.getValue(), value.getValue().getNumber()).toString());
   }
 }
