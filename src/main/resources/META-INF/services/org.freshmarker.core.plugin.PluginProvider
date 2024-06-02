@@ -6,3 +6,4 @@ org.freshmarker.core.plugin.DatePluginProvider
 org.freshmarker.core.plugin.FileAndPathPluginProvider
 org.freshmarker.core.plugin.LooperPluginProvider
 org.freshmarker.core.plugin.EnumPluginProvider
+org.freshmarker.core.plugin.SequencePluginProvider

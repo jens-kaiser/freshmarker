@@ -7,10 +7,8 @@ import org.freshmarker.core.model.primitive.TemplateEnum;
 public class EnumTemplateObjectProvider implements TemplateObjectProvider {
 
   @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public TemplateObject provide(Environment environment, Object o) {
-    if (o instanceof Enum<?>) {
-      return new TemplateEnum<>((Enum) o);
-    }
-    return null;
+      return o instanceof Enum e ? new TemplateEnum<>(e) : null;
   }
 }

@@ -8,11 +8,6 @@ public interface TemplateMap extends TemplateObject {
 
     TemplateObject get(ProcessContext context, String name);
 
-
-    default Class<?> getType() {
-        return null;
-    }
-
     @Override
     default boolean isMap() {
         return true;

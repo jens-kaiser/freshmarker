@@ -50,7 +50,7 @@ public class TemplateRightLimitedRange implements TemplateRange {
 
   @Override
   public TemplateObject get(ProcessContext context, int index) {
-    logger.info("get: {}", index);
+    logger.debug("get: {}", index);
     evaluate(context);
     return new TemplateNumber(lowerNumber < upperNumber ? lowerNumber  + index : lowerNumber - index);
   }
@@ -59,7 +59,7 @@ public class TemplateRightLimitedRange implements TemplateRange {
   public TemplateNumber size(ProcessContext context) {
     evaluate(context);
     int size = Math.abs(upperNumber - lowerNumber) + 1;
-    logger.info("size: {}", size);
+    logger.debug("size: {}", size);
     return new TemplateNumber(size);
   }
 
