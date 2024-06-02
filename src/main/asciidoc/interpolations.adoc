@@ -36,7 +36,7 @@ System.out.println(template.process(Map.of()));
 The example above produces the output `Hello World!`, because the interpolation `${example!'World'}` evaluates to `World`
 if no value for `example` is given.
 
-The _exists_ operator evaluates to `true` if the value exists and it evaluates to `false` if the value is missing.
+The _exists_ operator evaluates to `true` if the value exists, and it evaluates to `false` if the value is missing.
 
 .Example with _exists_ operator
 [source,java]

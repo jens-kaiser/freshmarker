@@ -66,7 +66,7 @@ m|true
 
 ==== `can_write` Built-In
 
-This built-in returns true, if the file/path in the value can be write.
+This built-in returns true, if the file/path in the value can be written.
 
 |===
 | Interpolation | Output | Type

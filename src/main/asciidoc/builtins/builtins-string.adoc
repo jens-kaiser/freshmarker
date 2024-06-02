@@ -100,7 +100,7 @@ m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
 ==== `trim` Built-In
 
 This built-in removes leading and trailing whitespaces from the text.
-The examples uses `␣` as an replacement for the whitespace.
+The examples use `␣` as a replacement for the whitespace.
 
 |===
 |Input | Output
