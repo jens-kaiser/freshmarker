@@ -4,7 +4,7 @@
 
 This built-in converts a boolean to the string using the `toString()` method of the corresponding base types `Double`, `Float`, `Long`, `Integer`, `Byte` or `Short`.
 
-NOTE: Without this builtin, the number is formatter with the default number formatter for the current locale.
+NOTE: Without this builtin, the number is formatter with the default number formatted for the current locale.
 
 ==== `format` Built-In
 

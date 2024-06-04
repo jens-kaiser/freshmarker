@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-class TokenLineNormalizer {
+public final class TokenLineNormalizer {
 
     private static final Set<TokenType> NON_TAG_TOKEN_TYPES = Set.of(TokenType.INTERPOLATE, TokenType.PRINTABLE_CHARS);
 

@@ -112,4 +112,6 @@ public interface FtlVisitor<I, O> {
   default O visit(Assignment ftl, I input) { return handleWithException(ftl); }
 
   default O visit(VarInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(ImportInstruction ftl, I input) { return handleWithException(ftl); }
 }

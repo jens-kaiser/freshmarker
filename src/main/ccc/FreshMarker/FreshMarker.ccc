@@ -206,6 +206,14 @@ INJECT VarInstruction :
    }
 }
 
+INJECT ImportInstruction :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
+      return (O)visitor.visit(this, input);
+   }
+}
+
 INJECT Expression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {
