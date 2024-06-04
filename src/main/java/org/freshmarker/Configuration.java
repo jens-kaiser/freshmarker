@@ -184,7 +184,7 @@ public final class Configuration {
         this.outputFormat = outputFormat;
     }
 
-        public void setFileSystem(FileSystem fileSystem) {
+    public void setFileSystem(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 
