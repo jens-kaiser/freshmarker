@@ -9,7 +9,7 @@ A simple template engine based loosely on the FreeMarker syntax. FreshMarker is 
 <dependency>
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker</artifactId>
-  <version>0.5.0</versio>
+  <version>0.5.8</versio>
 </dependency>
 ----
 
