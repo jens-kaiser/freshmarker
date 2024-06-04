@@ -1,9 +1,14 @@
 package org.freshmarker.core.model.primitive;
 
 import java.util.Optional;
+
+import org.freshmarker.core.model.number.ByteNumber;
 import org.freshmarker.core.model.number.CalculatingNumber;
 import org.freshmarker.core.model.number.DoubleNumber;
+import org.freshmarker.core.model.number.FloatNumber;
 import org.freshmarker.core.model.number.IntegerNumber;
+import org.freshmarker.core.model.number.LongNumber;
+import org.freshmarker.core.model.number.ShortNumber;
 
 public class TemplateNumber extends TemplatePrimitive<CalculatingNumber> {
 
