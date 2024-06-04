@@ -15,12 +15,28 @@ public class TemplateNumber extends TemplatePrimitive<CalculatingNumber> {
     super(value);
   }
 
+  public TemplateNumber(byte value) {
+    super(new ByteNumber(value));
+  }
+
+  public TemplateNumber(short value) {
+    super(new ShortNumber(value));
+  }
+
   public TemplateNumber(int value) {
     super(new IntegerNumber(value));
   }
 
+  public TemplateNumber(long value) {
+    super(new LongNumber(value));
+  }
+
   public TemplateNumber(double value) {
     super(new DoubleNumber(value));
+  }
+
+  public TemplateNumber(float value) {
+    super(new FloatNumber(value));
   }
 
   public TemplateNumber add(TemplateNumber other) {
