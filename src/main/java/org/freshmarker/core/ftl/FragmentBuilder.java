@@ -1,5 +1,6 @@
 package org.freshmarker.core.ftl;
 
+import ftl.FreshMarkerParser;
 import ftl.Node.TerminalNode;
 import ftl.Token.TokenType;
 import ftl.Node;
@@ -9,6 +10,7 @@ import ftl.ast.Block;
 import ftl.ast.FTLHeader;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
+import ftl.ast.ImportInstruction;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
 import ftl.ast.MacroDefinition;
@@ -23,13 +25,18 @@ import ftl.ast.Text;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.fragment.BlockFragment;
@@ -54,9 +61,13 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
     private final Template template;
+    private final Configuration configuration;
+    private final String nameSpace;
 
-    public FragmentBuilder(Template template) {
+    public FragmentBuilder(Template template, Configuration configuration, String nameSpace) {
         this.template = template;
+        this.configuration = configuration;
+        this.nameSpace = nameSpace;
     }
 
     @Override
@@ -169,7 +180,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     @Override
     public BlockFragment visit(UserDirective ftl, BlockFragment input) {
-        IDENTIFIER directive = (IDENTIFIER) ftl.getChild(1);
+        String directive = getName(ftl.getChild(1));
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
         ftl.getChild(2).accept(NamedArgsBuilder.INSTANCE, namedArgs);
         logger.debug("user directive: {} {}", directive, namedArgs);
@@ -181,7 +192,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
             body = node.accept(this, new BlockFragment());
         }
         logger.debug("user directive: {} {}", node, body);
-        input.addFragment(new UserDirectiveFragment(directive.toString(), namedArgs, body));
+        input.addFragment(new UserDirectiveFragment(directive, namedArgs, body));
         return input;
     }
 
@@ -194,8 +205,8 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         String name = getName(ftl.getChild(3));
         List<ParameterHolder> parameterList = getParameterHolders(ftl);
         Fragment block = getFragment(ftl);
-        logger.debug("macro directive: type={}, name={}, block={}", type, name, block);
-        template.getUserDirectives().put(name, new MacroUserDirective(block, parameterList));
+        logger.debug("macro directive: namespace={}, type={}, name={}, block={}", nameSpace, type, name, block);
+        template.getUserDirectives().put(nameSpace + name, new MacroUserDirective(block, parameterList));
         return input;
     }
 
@@ -270,6 +281,25 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     @Override
     public BlockFragment visit(ReturnInstruction ftl, BlockFragment input) {
         input.addFragment(new ReturnInstructionFragment());
+        return input;
+    }
+
+    @Override
+    public BlockFragment visit(ImportInstruction ftl, BlockFragment input) {
+        String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
+        String namespace = ftl.get(5).toString();
+        try {
+            FreshMarkerParser parser = new FreshMarkerParser(Files.readString(configuration.getFileSystem().getPath(path)));
+            parser.setInputSource(namespace);
+            parser.Root();
+            Root root = (Root) parser.rootNode();
+            new TokenLineNormalizer().normalize(root);
+            root.accept(new ImportBuilder(template, configuration, namespace), template.getRootFragment());
+        } catch (FileNotFoundException e) {
+            throw new ParsingException("cannot find import: " + path, ftl);
+        } catch (IOException e) {
+            throw new ParsingException("cannot read import: " + path, ftl);
+        }
         return input;
     }
 }

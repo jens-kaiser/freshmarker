@@ -165,7 +165,7 @@ public final class Configuration {
         if (ftlHeader != null) {
             logger.info("ftl header: {}", ftlHeader.getLocation());
         }
-        root.accept(new FragmentBuilder(template), template.getRootFragment());
+        root.accept(new FragmentBuilder(template, this, ""), template.getRootFragment());
         return template;
     }
 
