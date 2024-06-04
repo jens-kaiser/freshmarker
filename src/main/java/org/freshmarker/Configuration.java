@@ -20,12 +20,6 @@ import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.number.ByteNumber;
-import org.freshmarker.core.model.number.DoubleNumber;
-import org.freshmarker.core.model.number.FloatNumber;
-import org.freshmarker.core.model.number.IntegerNumber;
-import org.freshmarker.core.model.number.LongNumber;
-import org.freshmarker.core.model.number.ShortNumber;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -42,8 +36,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,16 +69,19 @@ public final class Configuration {
     private final Map<String, TemplateFunction> functions = new HashMap<>();
 
     private String outputFormat = "undefined";
+    private FileSystem fileSystem;
 
     public Configuration() {
         locale = Locale.getDefault();
+        fileSystem = FileSystems.getDefault();
+
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
-        mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber(new LongNumber((Long) o)));
-        mappingTemplateObjectProvider.addMapper(Integer.class, o -> new TemplateNumber(new IntegerNumber((Integer) o)));
-        mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber(new ShortNumber((Short) o)));
-        mappingTemplateObjectProvider.addMapper(Byte.class, o -> new TemplateNumber(new ByteNumber((Byte) o)));
-        mappingTemplateObjectProvider.addMapper(Double.class, o -> new TemplateNumber(new DoubleNumber((Double) o)));
-        mappingTemplateObjectProvider.addMapper(Float.class, o -> new TemplateNumber(new FloatNumber((Float) o)));
+        mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
+        mappingTemplateObjectProvider.addMapper(Integer.class, o -> new TemplateNumber((Integer) o));
+        mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber((Short) o));
+        mappingTemplateObjectProvider.addMapper(Byte.class, o -> new TemplateNumber((Byte) o));
+        mappingTemplateObjectProvider.addMapper(Double.class, o -> new TemplateNumber((Double) o));
+        mappingTemplateObjectProvider.addMapper(Float.class, o -> new TemplateNumber((Float) o));
         mappingTemplateObjectProvider.addMapper(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
 
         formatter.put(TemplateNumber.class, new NumberFormatter());
@@ -144,6 +146,10 @@ public final class Configuration {
         functions.putAll(additionalFunctions);
     }
 
+    public Template getTemplate(String name, Path path) throws ParseException, IOException {
+        return getTemplate(name, Files.readString(path));
+    }
+
     public Template getTemplate(String name, Reader reader) throws ParseException {
         return getTemplate(name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
     }
@@ -176,5 +182,13 @@ public final class Configuration {
 
     public void setOutputFormat(String outputFormat) {
         this.outputFormat = outputFormat;
+    }
+
+        public void setFileSystem(FileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    public FileSystem getFileSystem() {
+        return fileSystem;
     }
 }
