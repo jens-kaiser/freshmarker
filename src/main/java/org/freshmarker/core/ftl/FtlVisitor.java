@@ -10,6 +10,7 @@ import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
 import ftl.ast.FTLHeader;
 import ftl.ast.IfStatement;
+import ftl.ast.ImportInstruction;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
 import ftl.ast.MacroDefinition;
