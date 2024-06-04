@@ -97,4 +97,18 @@ class NumberInterpolationTest {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("π", Math.PI)));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${x?byte?c};test: 42",
+            "test: ${x?short?c};test: 42",
+            "test: ${x?int?c};test: 42",
+            "test: ${x?long?c};test: 42",
+            "test: ${x?float?c};test: 42.0",
+            "test: ${x?double?c};test: 42.0",
+    }, delimiterString = ";")
+    void interpolationIntegerCast(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", 42, "y", 420000)));
+    }
 }
