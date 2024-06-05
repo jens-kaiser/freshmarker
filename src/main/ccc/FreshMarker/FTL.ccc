@@ -506,11 +506,11 @@ UserDirective :
         |
         startToken=<USER_DIRECTIVE_OPEN2>
     )
-    IdentifierOrStringLiteral
+    <IDENTIFIER> [ <DOT>  <IDENTIFIER> ]
     {token_source.noWhitespaceInExpression = false;}
     [<BLANK>]
     [ArgsList]
-    [<SEMICOLON>[ParameterList]]
+    [<SEMICOLON> [ParameterList] ]
     (
        <CLOSE_EMPTY_TAG>
        |

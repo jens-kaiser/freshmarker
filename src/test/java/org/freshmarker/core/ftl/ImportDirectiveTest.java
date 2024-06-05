@@ -40,7 +40,7 @@ class ImportDirectiveTest {
     @Test
     void macroImport() throws IOException {
         Files.writeString(configuration.getFileSystem().getPath("macro.ftm"), "<#macro test>ABC<#return/>DEF</#macro>");
-        Template template = configuration.getTemplate("template", "<#import 'macro.ftm' as m><@'m.test'/>");
+        Template template = configuration.getTemplate("template", "<#import 'macro.ftm' as m><@m.test/>");
         assertEquals("ABC", template.process(Map.of()));
     }
 }

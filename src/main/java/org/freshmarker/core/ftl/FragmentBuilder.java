@@ -39,6 +39,7 @@ import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.directive.MacroUserDirective;
+import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
@@ -180,11 +181,20 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
 
     @Override
     public BlockFragment visit(UserDirective ftl, BlockFragment input) {
-        String directive = getName(ftl.getChild(1));
+        int nameIndex;
+        String nameSpace;
+        if (ftl.get(2).getType() == TokenType.DOT) {
+            nameSpace = ftl.get(1).toString();
+            nameIndex = 3;
+        } else {
+            nameSpace = null;
+            nameIndex = 1;
+        }
+        String name = ftl.get(nameIndex).toString();
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-        ftl.getChild(2).accept(NamedArgsBuilder.INSTANCE, namedArgs);
-        logger.debug("user directive: {} {}", directive, namedArgs);
-        Node node = ftl.children().stream().skip(2)
+        ftl.getChild(nameIndex + 1).accept(NamedArgsBuilder.INSTANCE, namedArgs);
+        logger.debug("user directive: {}.{} {}", nameSpace, name, namedArgs);
+        Node node = ftl.children().stream().skip(nameIndex + 1)
                 .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))
                 .skip(1).findFirst().orElse(null);
         BlockFragment body = null;
@@ -192,7 +202,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
             body = node.accept(this, new BlockFragment());
         }
         logger.debug("user directive: {} {}", node, body);
-        input.addFragment(new UserDirectiveFragment(directive, namedArgs, body));
+        input.addFragment(new UserDirectiveFragment(name, nameSpace, namedArgs, body));
         return input;
     }
 
@@ -206,7 +216,7 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
         List<ParameterHolder> parameterList = getParameterHolders(ftl);
         Fragment block = getFragment(ftl);
         logger.debug("macro directive: namespace={}, type={}, name={}, block={}", nameSpace, type, name, block);
-        template.getUserDirectives().put(nameSpace + name, new MacroUserDirective(block, parameterList));
+        template.getUserDirectives().put(new NameSpaced(nameSpace, name), new MacroUserDirective(block, parameterList));
         return input;
     }
 

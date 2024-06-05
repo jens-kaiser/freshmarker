@@ -20,7 +20,7 @@ public interface Environment {
 
   OutputFormat getOutputFormat();
 
-  UserDirective getDirective(String name);
+  UserDirective getDirective(String nameSpace, String name);
 
   TemplateFunction getFunction(String name);
 

@@ -10,6 +10,8 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.providers.TemplateObjectProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Writer;
 import java.util.List;
@@ -20,17 +22,18 @@ import java.util.Optional;
 
 public class BaseEnvironment implements Environment {
 
+    private static final Logger log = LoggerFactory.getLogger(BaseEnvironment.class);
     private final Map<String, Object> dataModel;
     private final Locale locale;
     private final List<TemplateObjectProvider> providers;
     private final OutputFormat outputFormat;
-    private final Map<String, UserDirective> userDirectives;
+    private final Map<NameSpaced, UserDirective> userDirectives;
     private final Map<String, TemplateFunction> functions;
     private final Writer writer;
     private final Map<Class<? extends TemplateObject>, Formatter> formatter;
 
     public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Locale locale,
-                           OutputFormat outputFormat, Map<String, UserDirective> userDirectives,
+                           OutputFormat outputFormat, Map<NameSpaced, UserDirective> userDirectives,
                            Map<String, TemplateFunction> functions, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter) {
         this.dataModel = dataModel;
         this.locale = locale;
@@ -74,8 +77,9 @@ public class BaseEnvironment implements Environment {
     }
 
     @Override
-    public UserDirective getDirective(String name) {
-        return Optional.ofNullable(userDirectives.get(name)).orElseThrow(() -> new ProcessException("unknown directive: " + name));
+    public UserDirective getDirective(String nameSpace, String name) {
+        log.info("directive: {} {} {}", nameSpace, name, userDirectives);
+        return Optional.ofNullable(userDirectives.get(new NameSpaced(nameSpace, name))).orElseThrow(() -> new ProcessException("unknown directive: " + name));
     }
 
     @Override

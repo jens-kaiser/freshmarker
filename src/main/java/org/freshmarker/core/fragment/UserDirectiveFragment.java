@@ -6,17 +6,19 @@ import org.freshmarker.core.model.TemplateObject;
 
 public class UserDirectiveFragment implements Fragment {
   private final String directive;
+  private final String nameSpace;
   private final Map<String, TemplateObject> namedArgs;
   private final BlockFragment body;
 
-  public UserDirectiveFragment(String directive, Map<String, TemplateObject> namedArgs, BlockFragment body) {
+  public UserDirectiveFragment(String directive, String nameSpace, Map<String, TemplateObject> namedArgs, BlockFragment body) {
     this.directive = directive;
+    this.nameSpace = nameSpace;
     this.namedArgs = namedArgs;
     this.body = body;
   }
 
   @Override
   public void process(ProcessContext context) {
-    context.getEnvironment().getDirective(directive).execute(context, namedArgs, body);
+    context.getEnvironment().getDirective(nameSpace, directive).execute(context, namedArgs, body);
   }
 }

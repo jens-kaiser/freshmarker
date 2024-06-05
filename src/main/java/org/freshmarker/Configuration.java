@@ -13,6 +13,7 @@ import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.BufferedEnvironment;
+import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -65,7 +66,7 @@ public final class Configuration {
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
     private final List<TemplateObjectProvider> providers = new ArrayList<>(
             List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider(modelSecurityGateway)));
-    private final Map<String, UserDirective> userDirectives = new HashMap<>();
+    private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
 
     private String outputFormat = "undefined";
@@ -117,7 +118,7 @@ public final class Configuration {
     }
 
     public void registerUserDirective(String name, UserDirective directive) {
-        userDirectives.put(name, directive);
+        userDirectives.put(new NameSpaced(null, name), directive);
     }
 
     public void registerFunction(String name, TemplateFunction function) {
@@ -140,7 +141,7 @@ public final class Configuration {
         providers.addAll(providers.size() - 2, list);
         Map<String, UserDirective> additionalDirectives = new HashMap<>();
         provider.registerUserDirective(additionalDirectives);
-        userDirectives.putAll(additionalDirectives);
+        additionalDirectives.forEach((k, v) -> userDirectives.put(new NameSpaced(null, k), v));
         Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
         provider.registerFunction(additionalFunctions);
         functions.putAll(additionalFunctions);
@@ -165,7 +166,7 @@ public final class Configuration {
         if (ftlHeader != null) {
             logger.info("ftl header: {}", ftlHeader.getLocation());
         }
-        root.accept(new FragmentBuilder(template, this, ""), template.getRootFragment());
+        root.accept(new FragmentBuilder(template, this, null), template.getRootFragment());
         return template;
     }
 

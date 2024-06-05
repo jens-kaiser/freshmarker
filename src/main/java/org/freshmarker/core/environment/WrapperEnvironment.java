@@ -35,8 +35,8 @@ public abstract class WrapperEnvironment implements Environment {
   }
 
   @Override
-  public UserDirective getDirective(String name) {
-    return wrapped.getDirective(name);
+  public UserDirective getDirective(String nameSpace, String name) {
+    return wrapped.getDirective(nameSpace, name);
   }
 
   @Override

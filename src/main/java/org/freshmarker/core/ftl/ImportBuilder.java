@@ -55,7 +55,7 @@ public class ImportBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
 
     @Override
     public BlockFragment visit(MacroDefinition ftl, BlockFragment input) {
-        return ftl.accept(new FragmentBuilder(template, configuration, nameSpace + "."), input);
+        return ftl.accept(new FragmentBuilder(template, configuration, nameSpace), input);
     }
 
     @Override
