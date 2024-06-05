@@ -1,20 +1,13 @@
 package org.freshmarker.core.ftl;
 
-import ftl.FreshMarkerParser;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.Block;
-import ftl.ast.ImportInstruction;
 import ftl.ast.MacroDefinition;
 import ftl.ast.Root;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
-import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.core.fragment.BlockFragment;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class ImportBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
     private final Template template;
