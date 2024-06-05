@@ -57,23 +57,4 @@ public class ImportBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
     public BlockFragment visit(MacroDefinition ftl, BlockFragment input) {
         return ftl.accept(new FragmentBuilder(template, configuration, nameSpace), input);
     }
-
-    @Override
-    public BlockFragment visit(ImportInstruction ftl, BlockFragment input) {
-        String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
-        String namespace = ftl.get(5).toString();
-        try {
-            FreshMarkerParser parser = new FreshMarkerParser(Files.readString(configuration.getFileSystem().getPath(path)));
-            parser.setInputSource(namespace);
-            parser.Root();
-            Root root = (Root) parser.rootNode();
-            new TokenLineNormalizer().normalize(root);
-            root.accept(new ImportBuilder(template, configuration, namespace), template.getRootFragment());
-        } catch (FileNotFoundException e) {
-            throw new ParsingException("cannot find import: " + path, ftl);
-        } catch (IOException e) {
-            throw new ParsingException("cannot read import: " + path, ftl);
-        }
-        return input;
-    }
 }
