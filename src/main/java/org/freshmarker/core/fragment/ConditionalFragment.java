@@ -2,7 +2,10 @@ package org.freshmarker.core.fragment;
 
 import ftl.Node;
 import java.util.Objects;
+
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 
 public class ConditionalFragment implements Fragment {
@@ -27,6 +30,12 @@ public class ConditionalFragment implements Fragment {
 
   @Override
   public void process(ProcessContext context) {
-    content.process(context);
+    Environment environment = context.getEnvironment();
+    try {
+      context.setEnvironment(new VariableEnvironment(environment));
+      content.process(context);
+    } finally {
+      context.setEnvironment(environment);
+    }
   }
 }

@@ -67,4 +67,11 @@ class IfDirectiveTest {
                 "<#if text?contains('A')><#elseif text?contains('BB')><#else></#if>");
         assertEquals("", template.process(Map.of("text", text)));
     }
+
+    @Test
+    void variableScope() throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "<#if text?contains('A')><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}");
+        assertEquals("Gonzo Kermit", template.process(Map.of("text", "A")));
+    }
 }
