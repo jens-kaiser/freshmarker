@@ -109,17 +109,9 @@ class StringInterpolationTest {
     @ParameterizedTest
     @CsvSource({
             "test: ${text?capitalize},The Quick brown fox jumps Over the lazy Dog,test: The Quick Brown Fox Jumps Over The Lazy Dog",
-    })
-    void capitalize(String templateSource, String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("text", input)));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
             "test: ${text?uncapitalize},The Quick BROWN fox jumps Over the lazy Dog,test: the quick bROWN fox jumps over the lazy dog",
     })
-    void uncapitalize(String templateSource, String input, String expected) throws ParseException {
+    void capitalizeAndUncapitalize(String templateSource, String input, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", input)));
     }

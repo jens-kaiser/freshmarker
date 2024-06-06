@@ -7,7 +7,6 @@ import org.freshmarker.core.environment.TemplateObjectSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 

@@ -144,7 +144,7 @@ class ListDirectiveTest {
                 
                   <#list sequence as s with l> \s
                   ${l?index}. ${s.key} ${s.value}
-                </#list>   """);
+                </#list>   \s""");
         assertEquals("""
                         test  \s
                         
