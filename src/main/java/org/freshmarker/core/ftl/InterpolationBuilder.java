@@ -61,7 +61,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 
 public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateObject> {
 
@@ -112,7 +111,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handlePrimaryAndBase(Object input, List<Node> children) {
-        TemplateObject base = children.get(0).accept(this, input);
+        TemplateObject base = children.getFirst().accept(this, input);
         for (int i = 1; i < children.size(); i++) {
             base = children.get(i).accept(this, base);
         }

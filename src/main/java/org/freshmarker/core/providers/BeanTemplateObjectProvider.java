@@ -2,7 +2,6 @@ package org.freshmarker.core.providers;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ModelSecurityGateway;
-import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateObject;
