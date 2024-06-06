@@ -18,11 +18,15 @@ public class FileSystemTemplateLoader implements TemplateLoader{
 
     @Override
     public String getTemplate(String filename) throws IOException {
-        return Files.readString(fileSystem.getPath(filename));
+        return getContent(filename);
     }
 
     @Override
     public String getImport(String filename) throws IOException {
+        return getContent(filename);
+    }
+
+    private String getContent(String filename) throws IOException {
         return Files.readString(fileSystem.getPath(filename));
     }
 }

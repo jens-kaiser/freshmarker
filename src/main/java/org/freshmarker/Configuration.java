@@ -146,17 +146,16 @@ public final class Configuration {
     }
 
     public Template getTemplate(Path path) throws ParseException, IOException {
-        return getTemplate(path.getFileName().toString(), Files.readString(path));
+        return getTemplate(path.toString(), Files.readString(path));
     }
 
     public Template getTemplate(String filename) throws ParseException, IOException {
-        return getTemplate(Path.of(filename).getFileName().toString(), templateLoader.getTemplate(filename));
+        return getTemplate(Path.of(filename).toString(), templateLoader.getTemplate(filename));
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
         return getTemplate(name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
     }
-
 
     public Template getTemplate(String name, String content) throws ParseException {
         FreshMarkerParser parser = new FreshMarkerParser(content);
