@@ -26,7 +26,6 @@ import ftl.ast.VarInstruction;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -282,7 +281,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
         String namespace = ftl.get(5).toString();
         try {
-            FreshMarkerParser parser = new FreshMarkerParser(Files.readString(configuration.getFileSystem().getPath(path)));
+            FreshMarkerParser parser = new FreshMarkerParser(configuration.getTemplateLoader().getImport(path));
             parser.setInputSource(namespace);
             parser.Root();
             Root root = (Root) parser.rootNode();

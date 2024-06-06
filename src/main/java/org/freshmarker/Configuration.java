@@ -40,8 +40,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -70,11 +68,11 @@ public final class Configuration {
     private final Map<String, TemplateFunction> functions = new HashMap<>();
 
     private String outputFormat = "undefined";
-    private FileSystem fileSystem;
+    private TemplateLoader templateLoader;
 
     public Configuration() {
         locale = Locale.getDefault();
-        fileSystem = FileSystems.getDefault();
+        templateLoader = new FileSystemTemplateLoader();
 
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
         mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
@@ -147,13 +145,18 @@ public final class Configuration {
         functions.putAll(additionalFunctions);
     }
 
-    public Template getTemplate(String name, Path path) throws ParseException, IOException {
-        return getTemplate(name, Files.readString(path));
+    public Template getTemplate(Path path) throws ParseException, IOException {
+        return getTemplate(path.getFileName().toString(), Files.readString(path));
+    }
+
+    public Template getTemplate(String filename) throws ParseException, IOException {
+        return getTemplate(Path.of(filename).getFileName().toString(), templateLoader.getTemplate(filename));
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
         return getTemplate(name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
     }
+
 
     public Template getTemplate(String name, String content) throws ParseException {
         FreshMarkerParser parser = new FreshMarkerParser(content);
@@ -185,11 +188,11 @@ public final class Configuration {
         this.outputFormat = outputFormat;
     }
 
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public void setTemplateLoader(TemplateLoader templateLoader) {
+        this.templateLoader = templateLoader;
     }
 
-    public FileSystem getFileSystem() {
-        return fileSystem;
+    public TemplateLoader getTemplateLoader() {
+        return templateLoader;
     }
 }

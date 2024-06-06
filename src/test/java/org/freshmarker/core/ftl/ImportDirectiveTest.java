@@ -2,11 +2,13 @@ package org.freshmarker.core.ftl;
 
 import com.google.common.jimfs.Jimfs;
 import org.freshmarker.Configuration;
+import org.freshmarker.FileSystemTemplateLoader;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -15,16 +17,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ImportDirectiveTest {
     private Configuration configuration;
+    private FileSystem fileSystem;
 
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.setFileSystem(Jimfs.newFileSystem(com.google.common.jimfs.Configuration.unix()));
+        fileSystem = Jimfs.newFileSystem(com.google.common.jimfs.Configuration.unix());
+        configuration.setTemplateLoader(new FileSystemTemplateLoader(fileSystem));
     }
 
     @Test
     void invalidImport() throws IOException {
-        Files.writeString(configuration.getFileSystem().getPath("invalid.ftm"), "<#var test=42>");
+        Files.writeString(fileSystem.getPath("invalid.ftm"), "<#var test=42>");
         ParsingException exception = assertThrows(ParsingException.class,
                 () -> configuration.getTemplate("template", "<#import 'invalid.ftm' as i>"));
         assertEquals("unsupported import operation at i:1:1 '<#var test=42>'", exception.getMessage());
@@ -39,7 +43,7 @@ class ImportDirectiveTest {
 
     @Test
     void macroImport() throws IOException {
-        Files.writeString(configuration.getFileSystem().getPath("macro.ftm"), "<#macro test>ABC<#return/>DEF</#macro>");
+        Files.writeString(fileSystem.getPath("macro.ftm"), "<#macro test>ABC<#return/>DEF</#macro>");
         Template template = configuration.getTemplate("template", "<#import 'macro.ftm' as m><@m.test/>");
         assertEquals("ABC", template.process(Map.of()));
     }
