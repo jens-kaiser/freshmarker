@@ -6,6 +6,7 @@ import ftl.ast.Root;
 
 public interface UnaryFtlVisitor<T> extends FtlVisitor<T, T> {
 
+    @Override
     default T visit(Root ftl, T input) {
         for (Node node : ftl.children(true)) {
             node.accept(this, input);
@@ -13,6 +14,7 @@ public interface UnaryFtlVisitor<T> extends FtlVisitor<T, T> {
         return input;
     }
 
+    @Override
     default T visit(Block ftl, T input) {
         for (Node node : ftl.children(true)) {
             node.accept(this, input);
