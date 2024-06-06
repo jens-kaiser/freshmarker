@@ -6,7 +6,6 @@ import ftl.Token.TokenType;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.Assignment;
-import ftl.ast.Block;
 import ftl.ast.FTLHeader;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
