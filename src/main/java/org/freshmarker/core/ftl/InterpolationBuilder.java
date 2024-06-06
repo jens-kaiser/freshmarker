@@ -6,6 +6,7 @@ import ftl.Token.TokenType;
 import ftl.ast.AdditiveExpression;
 import ftl.ast.AndExpression;
 import ftl.ast.BaseExpression;
+import ftl.ast.BaseNode;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
