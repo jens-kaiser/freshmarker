@@ -45,11 +45,17 @@ public interface FtlVisitor<I, O> {
   }
 
   default O visit(Root ftl, I input) {
-    return handleWithException(ftl);
+    for (Node node : ftl.children(true)) {
+      node.accept(this, input);
+    }
+    return input;
   }
 
   default O visit(Block ftl, I input) {
-    return handleWithException(ftl);
+    for (Node node : ftl.children(true)) {
+      node.accept(this, input);
+    }
+    return input;
   }
 
   default O visit(Text ftl, I input) {

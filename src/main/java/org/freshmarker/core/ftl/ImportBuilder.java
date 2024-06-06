@@ -31,22 +31,6 @@ public class ImportBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
     }
 
     @Override
-    public BlockFragment visit(Root ftl, BlockFragment input) {
-        for (Node node : ftl.children(true)) {
-            node.accept(this, input);
-        }
-        return input;
-    }
-
-    @Override
-    public BlockFragment visit(Block ftl, BlockFragment input) {
-        for (Node node : ftl.children(true)) {
-            node.accept(this, input);
-        }
-        return input;
-    }
-
-    @Override
     public BlockFragment visit(MacroDefinition ftl, BlockFragment input) {
         return ftl.accept(new FragmentBuilder(template, configuration, nameSpace), input);
     }

@@ -100,22 +100,6 @@ public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment>
     }
 
     @Override
-    public BlockFragment visit(Root ftl, BlockFragment input) {
-        for (Node node : ftl.children(true)) {
-            node.accept(this, input);
-        }
-        return input;
-    }
-
-    @Override
-    public BlockFragment visit(Block ftl, BlockFragment input) {
-        for (Node node : ftl.children(true)) {
-            node.accept(this, input);
-        }
-        return input;
-    }
-
-    @Override
     public BlockFragment visit(Text ftl, BlockFragment input) {
         ftl.getAllTokens(false).stream().map(TerminalNode::toString).map(ConstantFragment::new).forEach(input::addFragment);
         return input;
