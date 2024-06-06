@@ -9,7 +9,7 @@ import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.fragment.BlockFragment;
 
-public class ImportBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
+public class ImportBuilder implements UnaryFtlVisitor<BlockFragment> {
     private final Template template;
     private final Configuration configuration;
     private final String nameSpace;

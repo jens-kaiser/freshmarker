@@ -57,7 +57,7 @@ import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FragmentBuilder implements FtlVisitor<BlockFragment, BlockFragment> {
+public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
