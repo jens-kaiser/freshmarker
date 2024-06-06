@@ -178,7 +178,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
         ftl.getChild(nameIndex + 1).accept(NamedArgsBuilder.INSTANCE, namedArgs);
         logger.debug("user directive: {}.{} {}", nameSpace, name, namedArgs);
-        Node node = ftl.children().stream().skip(nameIndex + 1)
+        Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))
                 .skip(1).findFirst().orElse(null);
         BlockFragment body = null;
