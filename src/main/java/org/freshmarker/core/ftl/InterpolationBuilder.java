@@ -195,7 +195,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleMultiplicativAndAdditiveExpression(BaseNode expression) {
-        TemplateObject result = expression.getChild(0).accept(this, null)
+        TemplateObject result = expression.getChild(0).accept(this, null);
         for (int i = 1; i < expression.getChildCount(); i += 2) {
             Token token = (Token) expression.getChild(i);
             TemplateObject second = expression.getChild(i + 1).accept(this, null);
