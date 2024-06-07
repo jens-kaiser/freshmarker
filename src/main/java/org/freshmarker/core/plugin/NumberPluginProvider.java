@@ -34,8 +34,9 @@ public class NumberPluginProvider implements PluginProvider {
 
   @BuiltInMethod
   public static TemplateString format(TemplateNumber value, ProcessContext context, TemplateString format) {
-    Formatter formatter = new Formatter(context.getEnvironment().getLocale());
-    return new TemplateString(formatter.format(format.getValue(), value.getValue().getNumber()).toString());
+      try (Formatter formatter = new Formatter(context.getEnvironment().getLocale())) {
+          return new TemplateString(formatter.format(format.getValue(), value.getValue().getNumber()).toString());
+      }
   }
 
   @BuiltInMethod("int")

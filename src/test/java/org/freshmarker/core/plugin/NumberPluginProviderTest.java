@@ -23,11 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @ExtendWith(MockitoExtension.class)
 class NumberPluginProviderTest {
-
-    @Test
-    void registerBuildIn() {
-    }
-
     @Test
     void computerBuiltIn() {
         assertEquals("42", NumberPluginProvider.computerBuiltIn(new TemplateNumber(42)).toString());

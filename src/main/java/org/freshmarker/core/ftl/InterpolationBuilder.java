@@ -257,7 +257,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             return new TemplateJunction(TokenType.AND, left, right);
         }
         if (left instanceof TemplateBoolean l) {
-            return TemplateBoolean.from(l.getValue() & r.getValue());
+            return TemplateBoolean.from(l.getValue() && r.getValue());
         }
         if (TemplateBoolean.TRUE.equals(right)) {
             return left;
@@ -319,7 +319,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         TemplateObject right = expression.getChild(2).accept(this, null);
         if (right instanceof TemplateBoolean r) {
             if (left instanceof TemplateBoolean l) {
-                return TemplateBoolean.from(l.getValue() | r.getValue());
+                return TemplateBoolean.from(l.getValue() || r.getValue());
             }
             return left;
         }
