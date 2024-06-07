@@ -281,7 +281,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
         String namespace = ftl.get(5).toString();
         try {
-            FreshMarkerParser parser = new FreshMarkerParser(configuration.getTemplateLoader().getImport(path));
+            FreshMarkerParser parser = new FreshMarkerParser(template.getTemplateLoader().getImport(path));
             parser.setInputSource(namespace);
             parser.Root();
             Root root = (Root) parser.rootNode();

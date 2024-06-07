@@ -154,14 +154,6 @@ public final class Configuration {
         return getTemplate(path.toString(), Files.readString(path, charset));
     }
 
-    public Template getTemplate(String filename) throws ParseException, IOException {
-        return getTemplate(Path.of(filename).toString(), templateLoader.getTemplate(filename));
-    }
-
-    public Template getTemplate(String filename, Charset charset) throws ParseException, IOException {
-        return getTemplate(Path.of(filename).toString(), templateLoader.getTemplate(filename, charset));
-    }
-
     public Template getTemplate(String name, Reader reader) throws ParseException {
         return getTemplate(name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
     }
@@ -172,7 +164,7 @@ public final class Configuration {
         parser.Root();
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
-        Template template = new Template(this);
+        Template template = new Template(this, templateLoader);
         FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
         if (ftlHeader != null) {
             logger.info("ftl header: {}", ftlHeader.getLocation());

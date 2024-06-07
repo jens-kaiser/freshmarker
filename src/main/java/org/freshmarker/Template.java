@@ -19,9 +19,11 @@ public final class Template {
   private final BlockFragment rootFragment = new BlockFragment();
   private final Configuration configuration;
   private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
+  private final TemplateLoader templateLoader;;
 
-  public Template(Configuration configuration) {
+  public Template(Configuration configuration, TemplateLoader templateLoader) {
     this.configuration = configuration;
+    this.templateLoader = templateLoader;
   }
 
   public void process(Map<String, Object> dataModel, Writer writer) {
@@ -53,5 +55,9 @@ public final class Template {
 
   public Map<NameSpaced, UserDirective> getUserDirectives() {
     return userDirectives;
+  }
+
+  public TemplateLoader getTemplateLoader() {
+    return templateLoader;
   }
 }
