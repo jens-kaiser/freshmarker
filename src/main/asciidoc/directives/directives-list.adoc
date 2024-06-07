@@ -43,7 +43,7 @@ Because `l` is the name of the loop variable, the first interpolation evaluates 
 ==== List Directive with a range
 
 A range is defined by a lower and a non-mandatory upper numerical limit.
-Although `FreshMarker` also masters right-open ranges, _List Directives_ are not allowed to use them.
+Although _FreshMarker_ also masters right-open ranges, _List Directives_ are not allowed to use them.
 
 .List Directive example with a range
 [source]

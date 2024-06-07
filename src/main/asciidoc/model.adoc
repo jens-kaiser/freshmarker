@@ -15,8 +15,8 @@ The top level model is a `Map<String, Object>`, which contains the top level val
 Map<String, Object> model = Map.of("father", father, "mother", mother);
 ----
 
-The following tables show all model types supported by FreshMarker.
-Because FreshMarker can be extended, there are more types available
+The following tables show all model types supported by _FreshMarker_.
+Because _FreshMarker_ can be extended, there are more types available
 footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `InternationalPhoneNumber` support.].
 
 .Supported Model Types
@@ -53,7 +53,7 @@ This must be considered with the enums, because the `toString` method can be ove
 Normally the values are written directly into the model.
 Sometimes the cost of creating optional values is quite high.
 In that case it would be a waste to calculate the values if they are not used.
-However, since FreshMarker needs the values in the model, a compromise is made.
+However, since _FreshMarker_ needs the values in the model, a compromise is made.
 Instead of calculating the values immediately and placing them in the map, the calculation is inserted into the model as a `TemplateObjectSupplier`.
 Their actual values are lazy evaluated only when accessed during processing.
 
@@ -61,9 +61,8 @@ Their actual values are lazy evaluated only when accessed during processing.
 [source,java]
 ----
 Map<String, Object> model = Map.of(
-        "familyTree", TemplateObjectSupplier.of(() -> fetchTreeFromDataBase(name)),
-        "name", "Kayser"
-    );
+  "familyTree", TemplateObjectSupplier.of(() -> fetchTreeFromDataBase(name)),
+  "name", "Kayser");
 template.process(model)
 ----
 

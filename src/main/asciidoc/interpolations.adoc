@@ -19,7 +19,7 @@ System.out.println(template.process(Map.of()));
 
 The example above produces an ProcessException, because the interpolation `${example}` is evaluated to `NULL`.
 
-To deal with missing values, FreshMarker provides two operations.
+To deal with missing values, _FreshMarker_ provides two operations.
 The _default_ operator `!` and the _exists_ operator `??`.
 
 The _default_ operator replaces a `NULL` value with the specified parameter.

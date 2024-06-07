@@ -40,7 +40,7 @@ It is possible to create completely new template types or to add further feature
 
 In addition to the existing plug-ins for the _FreshMarker_ basic types, you can also develop your own plug-ins.
 
-Plug-ins can be registered with FreshMarker via the `ServiceLoader` mechanism or via the `Configuration#registerPlugin` method.
+Plug-ins can be registered with _FreshMarker_ via the `ServiceLoader` mechanism or via the `Configuration#registerPlugin` method.
 
 [source,java]
 ----

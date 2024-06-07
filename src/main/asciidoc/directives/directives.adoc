@@ -72,6 +72,13 @@ ${42.23}
 ${42.23}
 ----
 
+=== Import Directive
+
+[source]
+----
+<#import 'macros.fmt' as m/>
+----
+
 === Macro Directive
 
 TBD
@@ -83,3 +90,8 @@ TBD
 <@log level='info' message='test'/>
 ----
 
+[source]
+----
+<#import 'macros.fmt' as m/>
+<@'m.copyright'/>
+----
