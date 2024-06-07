@@ -40,6 +40,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -149,8 +150,16 @@ public final class Configuration {
         return getTemplate(path.toString(), Files.readString(path));
     }
 
+    public Template getTemplate(Path path, Charset charset) throws ParseException, IOException {
+        return getTemplate(path.toString(), Files.readString(path, charset));
+    }
+
     public Template getTemplate(String filename) throws ParseException, IOException {
         return getTemplate(Path.of(filename).toString(), templateLoader.getTemplate(filename));
+    }
+
+    public Template getTemplate(String filename, Charset charset) throws ParseException, IOException {
+        return getTemplate(Path.of(filename).toString(), templateLoader.getTemplate(filename, charset));
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
