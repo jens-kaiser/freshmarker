@@ -3,6 +3,7 @@ package org.freshmarker.core;
 import com.google.common.jimfs.Jimfs;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.FileSystemTemplateLoader;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
