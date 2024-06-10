@@ -55,3 +55,35 @@ m|1
 m|${0?sign}
 m|0
 |===
+
+==== Cast Built-Ins
+
+These built-ins cast the number to a specified number type.
+
+|===
+|Interpolation | Output | Type
+
+m|${42L?byte}
+m|42
+m|byte
+
+m|${42L?short}
+m|42
+m|short
+
+m|${42L?int}
+m|42
+m|integer
+
+m|${42?long}
+m|42
+m|long
+
+m|${42.0?float}
+m|42.0
+m|float
+
+m|${42.0?double}
+m|42.0
+m|double
+|===
