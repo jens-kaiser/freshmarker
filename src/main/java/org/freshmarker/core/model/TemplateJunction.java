@@ -19,9 +19,9 @@ public class TemplateJunction implements TemplateBooleanExpression {
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateBoolean leftValue = left.evaluate(context, TemplateBoolean.class);
         return TemplateBoolean.from(switch (type) {
-            case AND -> leftValue.getValue() & right.evaluate(context, TemplateBoolean.class).getValue();
+            case AND -> right.evaluate(context, TemplateBoolean.class).getValue() && leftValue.getValue();
             case AND2 -> leftValue.getValue() && right.evaluate(context, TemplateBoolean.class).getValue();
-            case OR -> leftValue.getValue() | right.evaluate(context, TemplateBoolean.class).getValue();
+            case OR -> right.evaluate(context, TemplateBoolean.class).getValue() || leftValue.getValue();
             case OR2 -> leftValue.getValue() || right.evaluate(context, TemplateBoolean.class).getValue();
             case XOR -> leftValue.getValue() ^ right.evaluate(context, TemplateBoolean.class).getValue();
             default -> throw new IllegalArgumentException("unsupported junction: " + type);
