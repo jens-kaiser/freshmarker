@@ -137,25 +137,16 @@ class TemporalInterpolationTest {
         assertEquals("test: P2Y4M1D", template.process(dataModel));
     }
 
-    @Test
-    void interpolationZonedDateTime() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal},test: 1968-08-24 12:30:45 Europe/Berlin",
+            "test: ${temporal?c},test: 1968-08-24T12:30:45+01:00[Europe/Berlin]",
+            "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 12:30"
+    })
+    void interpolationZonedDateTime(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
         Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")));
-        assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", template.process(dataModel));
-    }
-
-    @Test
-    void interpolationZonedDateTimeComputerAudience() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")));
-        assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", template.process(dataModel));
-    }
-
-    @Test
-    void interpolationZonedDateTimeString() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
-        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")));
-        assertEquals("test: 24. August 1968 12:30", template.process(dataModel));
+        assertEquals(expected, template.process(dataModel));
     }
 
     @Test
