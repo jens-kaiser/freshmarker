@@ -135,10 +135,25 @@ class ExpressionTest {
             "true ^ false, true",
             "false ^ true, true",
             "false ^ false, false",
+            "first ^ first, false",
+            "first ^ second, true",
+            "second ^ second, false",
+            "first | first, true",
+            "first | second, true",
+            "second | second, false",
+            "first || first, true",
+            "first || second, true",
+            "second || second, false",
+            "first & first, true",
+            "first & second, false",
+            "second & second, false",
+            "first && first, true",
+            "first && second, false",
+            "second && second, false",
     })
     void junction(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
-        assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
+        assertEquals("test: " + result, template.process(Map.of("first", true, "second", false)));
     }
 
     @ParameterizedTest
@@ -165,10 +180,25 @@ class ExpressionTest {
             "true ^ false, true",
             "false ^ true, true",
             "false ^ false, false",
+            "first ^ first, false",
+            "first ^ second, true",
+            "second ^ second, false",
+            "first | first, true",
+            "first | second, true",
+            "second | second, false",
+            "first || first, true",
+            "first || second, true",
+            "second || second, true",
+            "first & first, true",
+            "first & second, false",
+            "second & second, false",
+            "first && first, false",
+            "first && second, true",
+            "second && second, false",
     })
     void negatedJunction(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(!(" + expression + "))?c}");
-        assertEquals("test: " + !result, template.process(Map.of("prefix", "", "suffix", "")));
+        assertEquals("test: " + !result, template.process(Map.of("first", false, "second", true)));
     }
 
     @Test
