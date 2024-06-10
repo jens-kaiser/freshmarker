@@ -58,20 +58,20 @@ m|0
 
 ==== Cast Built-Ins
 
-These built-ins cast the number to a specified number type.
+These built-ins cast the number to a TemplateNumber instance in the specified type range.
 
 |===
 |Interpolation | Output | Type
 
-m|${42L?byte}
+m|${42?byte}
 m|42
 m|byte
 
-m|${42L?short}
+m|${42?short}
 m|42
 m|short
 
-m|${42L?int}
+m|${42?int}
 m|42
 m|integer
 
