@@ -149,25 +149,16 @@ class TemporalInterpolationTest {
         assertEquals(expected, template.process(dataModel));
     }
 
-    @Test
-    void interpolationInstant() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal},test: test: 1968-08-24 11:30:45 Z",
+            "test: ${temporal?c},test: 1968-08-24T11:30:45Z",
+            "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 11:30"
+    })
+    void interpolationInstant(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
         Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant());
-        assertEquals("test: 1968-08-24 11:30:45 Z", template.process(dataModel));
-    }
-
-    @Test
-    void interpolationInstantComputerAudience() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant());
-        assertEquals("test: 1968-08-24T11:30:45Z", template.process(dataModel));
-    }
-
-    @Test
-    void interpolationInstantString() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
-        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/Berlin")).toInstant());
-        assertEquals("test: 24. August 1968 11:30", template.process(dataModel));
+        assertEquals(expected, template.process(dataModel));
     }
 
     @Test

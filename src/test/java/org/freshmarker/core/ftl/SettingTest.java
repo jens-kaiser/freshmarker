@@ -59,6 +59,7 @@ class SettingTest {
     @Test
     void unknownSetting() throws ParseException {
         Template template = configuration.getTemplate("test", "<#setting gonzo=''>");
-        assertThrows(ProcessException.class, () -> template.process(Map.of()));
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 }
