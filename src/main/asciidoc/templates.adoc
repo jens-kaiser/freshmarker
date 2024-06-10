@@ -114,7 +114,7 @@ With template injection, dangerous fragments are injected into the output.
 The example shows an HTML fragment in which the text for a heading is to be inserted.
 without escaping, the script fragment is inserted and a more or less dangerous javascript is executed instead of displaying a title.
 
-FreshMarker's escape mechanism replaces the necessary meta characters of an output format to neutralize them.
+_FreshMarker_'s escape mechanism replaces the necessary meta characters of an output format to neutralize them.
 The following table lists the supported output formats and their meta character replacements.
 the last two lines indicate how comments can be inserted into the output using the @log directive.
 
@@ -162,3 +162,59 @@ the last two lines indicate how comments can be inserted into the output using t
 2+| no escaping
 2+| no comments
 |===
+
+=== Template Loading
+
+The `Configuration` class offers four methods for loading templates.
+
+.Template Loading Methods
+|===
+| Method | Description
+
+| `Template getTemplate(Path path);`
+| Load template from path with default charset
+
+| `Template getTemplate(Path path, Charset charset);`
+| Load template from path with the given charset
+
+| `Template getTemplate(String name, Reader reader);`
+| Read template from the given reader
+
+| `Template getTemplate(String name, String content);`
+| Read template from the given string
+|===
+
+Regardless of the method selected for loading the template, the imports are loaded by the configured `TemplateLoader`.
+
+By default, the `FileSystemTemplateLoader` is configured for the default file system. This loads all imports from the file system.
+
+The `FileSystemTemplateLoader` can also be used with other file system implementations.
+
+.`TemplateLoader` with the `ZipFileSystem`
+[source,java]
+----
+Path zipfile = Paths.get("imports.zip");
+FileSystem fs = FileSystems.newFileSystem(zipfile.toUri(), Map.of());
+configuration.setTemplateLoader(new FileSystemTemplateLoader(fs));
+----
+
+In this example, the imports are loaded from the zip archive `imports.zip`.
+
+Custom template loaders can also be used instead of the `FileSystemTemplateLoader`. They have to implement the `TemplateLoader` interface.
+
+[source,java]
+----
+public interface TemplateLoader {
+    String getTemplate(String filename, Charset charset) throws IOException;
+
+    default String getTemplate(String filename) throws IOException {
+        return getTemplate(filename, Charset.defaultCharset());
+    }
+
+    String getImport(String filename, Charset charset) throws IOException;
+
+    default String getImport(String filename) throws IOException {
+        return getImport(filename, Charset.defaultCharset());
+    }
+}
+----

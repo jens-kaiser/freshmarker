@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public final class Template {
 
   private static final Logger log = LoggerFactory.getLogger(Template.class);
+
   private final BlockFragment rootFragment = new BlockFragment();
   private final Configuration configuration;
   private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
@@ -39,7 +40,8 @@ public final class Template {
     });
     try {
       rootFragment.process(context);
-    } catch (TemplateReturnException ignored) {
+    } catch (TemplateReturnException e) {
+      log.debug("return exception: {}", e.getMessage());
     }
   }
 

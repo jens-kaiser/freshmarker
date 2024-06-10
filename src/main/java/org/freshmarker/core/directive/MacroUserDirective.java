@@ -48,7 +48,8 @@ public class MacroUserDirective implements UserDirective {
     });
     try {
       block.process(context);
-    } catch (TemplateReturnException ignored) {
+    } catch (TemplateReturnException e) {
+      log.debug("return exception: {}", e.getMessage());
     } finally {
       context.setEnvironment(environment);
     }
