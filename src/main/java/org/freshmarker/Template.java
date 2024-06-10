@@ -19,7 +19,7 @@ public final class Template {
   private final BlockFragment rootFragment = new BlockFragment();
   private final Configuration configuration;
   private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
-  private final TemplateLoader templateLoader;;
+  private final TemplateLoader templateLoader;
 
   public Template(Configuration configuration, TemplateLoader templateLoader) {
     this.configuration = configuration;
