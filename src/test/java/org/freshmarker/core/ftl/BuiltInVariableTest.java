@@ -28,6 +28,7 @@ class BuiltInVariableTest {
             "test: ${.lang},test: de",
             "test: ${.locale},test: de_DE",
             "test: ${.country},test: DE",
+            "test: ${.version},test: 1.0.0",
     })
     void locale(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
