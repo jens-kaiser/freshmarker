@@ -34,7 +34,7 @@ import ftl.ast.UnaryPlusMinusExpression;
 public interface ExpressionVisitor<I, O> {
 
   default O handleWithException(Object expression) {
-    throw new UnsupportedOperationException("unsupported: " + expression.getClass());
+    throw new UnsupportedOperationException("unsupported: " + Optional.ofNullable(expression).map(Object::getClass).orElse(null));
   }
 
   default O visit(Node expression, I input) {
