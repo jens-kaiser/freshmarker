@@ -8,10 +8,5 @@ public interface TemplateMap extends TemplateObject {
 
     TemplateObject get(ProcessContext context, String name);
 
-    @Override
-    default boolean isMap() {
-        return true;
-    }
-
     Map<String, Object> map();
 }

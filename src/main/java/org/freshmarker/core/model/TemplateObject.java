@@ -22,10 +22,6 @@ public interface TemplateObject {
         return false;
     }
 
-    default boolean isMap() {
-        return false;
-    }
-
     default <T> Optional<TemplatePrimitive<T>> asPrimitive() {
         return Optional.empty();
     }
