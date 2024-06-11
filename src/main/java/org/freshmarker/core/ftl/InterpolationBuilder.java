@@ -84,6 +84,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case RAW_STRING -> new TemplateString(image.substring(2, image.length() - 1));
             case IDENTIFIER -> new TemplateVariable(expression.toString());
             case EXISTS_OPERATOR -> new TemplateExists((TemplateObject) input);
+            case NULL -> TemplateNull.NULL;
             default -> throw new IllegalArgumentException(
                     "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
         };
