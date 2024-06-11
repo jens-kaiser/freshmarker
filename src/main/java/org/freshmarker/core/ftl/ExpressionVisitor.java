@@ -31,6 +31,9 @@ import ftl.ast.RelationalExpression;
 import ftl.ast.StringLiteral;
 import ftl.ast.UnaryPlusMinusExpression;
 
+import java.util.Objects;
+import java.util.Optional;
+
 public interface ExpressionVisitor<I, O> {
 
   default O handleWithException(Object expression) {
