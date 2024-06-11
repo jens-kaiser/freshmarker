@@ -21,16 +21,6 @@ public class OneLinerDirective implements UserDirective {
         }
 
         @Override
-        public void write(char[] cbuf, int off, int len) throws IOException {
-            char[] transformedCbuf = new char[len];
-            for (int i = 0; i < len; i++) {
-                char c = cbuf[i + off];
-                transformedCbuf[i] = c == '\n' ? ' ' : c;
-            }
-            out.write(transformedCbuf);
-        }
-
-        @Override
         public void write(String str) throws IOException {
             out.write(str.replace('\n', ' '));
         }
