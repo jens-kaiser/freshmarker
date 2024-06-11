@@ -15,7 +15,7 @@ public record TemplateBuiltInVariable(String name) implements TemplateExpression
             case "locale" -> new TemplateString(context.getEnvironment().getLocale().toString());
             case "country" -> new TemplateString(context.getEnvironment().getLocale().getCountry());
             case "lang" -> new TemplateString(context.getEnvironment().getLocale().getLanguage());
-            case "version" -> new TemplateString("1.0");
+            case "version" -> new TemplateString("1.0.0");
             default -> throw new IllegalStateException("Unexpected value: " + name);
         };
     }
