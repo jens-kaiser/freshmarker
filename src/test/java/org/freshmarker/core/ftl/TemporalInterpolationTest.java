@@ -35,18 +35,16 @@ class TemporalInterpolationTest {
         configuration = new Configuration();
     }
 
-    @Test
-    void interpolationLocalDate() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
-        String result = template.process(LOCAL_DATE);
-        assertEquals("test: 1968-08-24", result);
-    }
-
-    @Test
-    void interpolationLocalDateString() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?string('d. MMMM yyyy')}");
-        String result = template.process(LOCAL_DATE);
-        assertEquals("test: 24. August 1968", result);
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal},test: 1968-08-24",
+            "test: ${temporal?c},test: 1968-08-24",
+            "test: ${temporal?date},test: 1968-08-24",
+            "test: ${temporal?string('d. MMMM yyyy')},test: 24. August 1968"
+    })
+    void interpolationLocalDate(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
+        assertEquals(expected, template.process(LOCAL_DATE));
     }
 
     @Test
@@ -137,11 +135,27 @@ class TemporalInterpolationTest {
         assertEquals("test: P2Y4M1D", template.process(dataModel));
     }
 
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal},test: 12:30:45",
+            "test: ${temporal?c},test: 12:30:45",
+            "test: ${temporal?time},test: 12:30:45"
+    })
+    void interpolationLocalTime(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
+        Map<String, Object> dataModel = Map.of("temporal", LOCAL_DATE_TIME.toLocalTime());
+        assertEquals(expected, template.process(dataModel));
+    }
+
     @ParameterizedTest
     @CsvSource({
             "test: ${temporal},test: 1968-08-24 12:30:45 Europe/Berlin",
             "test: ${temporal?c},test: 1968-08-24T12:30:45+01:00[Europe/Berlin]",
-            "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 12:30"
+            "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 12:30",
+            "test: ${temporal?date_time},test: 1968-08-24 12:30:45",
+            "test: ${temporal?date},test: 1968-08-24",
+            "test: ${temporal?time},test: 12:30:45"
     })
     void interpolationZonedDateTime(String input, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", input);

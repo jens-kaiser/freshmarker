@@ -53,32 +53,19 @@ class DateInterpolationTest {
         assertEquals("test: 12:30:45", result);
     }
 
-    @Test
-    void interpolationDateTime() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
-        String result = template.process(Map.of("temporal", CALENDAR.getTime()));
-        assertEquals("test: 1968-08-24 12:30:45", result);
-    }
 
-    @Test
-    void interpolationDateTimeComputerAudience() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        String result = template.process(Map.of("temporal", CALENDAR.getTime()));
-        assertEquals("test: 1968-08-24T12:30:45", result);
-    }
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal},test: 1968-08-24 12:30:45",
+            "test: ${temporal?c},test: 1968-08-24T12:30:45",
+            "test: ${temporal?date},test: 1968-08-24",
+            "test: ${temporal?time},test: 12:30:45"
 
-    @Test
-    void interpolationDateTimeToDate() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?date}");
+    })
+    void interpolationDateTime(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
         String result = template.process(Map.of("temporal", CALENDAR.getTime()));
-        assertEquals("test: 1968-08-24", result);
-    }
-
-    @Test
-    void interpolationDateTimeToTime() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?time}");
-        String result = template.process(Map.of("temporal", CALENDAR.getTime()));
-        assertEquals("test: 12:30:45", result);
+        assertEquals(expected, result);
     }
 }
 
