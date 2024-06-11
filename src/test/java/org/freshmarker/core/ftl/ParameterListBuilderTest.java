@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParameterListBuilderTest {
 
@@ -19,6 +20,17 @@ class ParameterListBuilderTest {
         parser.setInputSource("parameter-list");
         parser.Root();
         assertNull(parser.rootNode().firstDescendantOfType(ParameterList.class));
+    }
+
+    @Test
+    void parameterListWithEllipsis() {
+        FreshMarkerParser parser = new FreshMarkerParser("<#macro test(parameter...)></#macro>");
+        parser.setInputSource("parameter-list");
+        parser.Root();
+        ParameterList parameterList = parser.rootNode().firstDescendantOfType(ParameterList.class);
+        assertNotNull(parameterList);
+        ArrayList<ParameterHolder> parameterHolders = new ArrayList<>();
+        assertThrows(ParsingException.class, () -> parameterList.accept(ParameterListBuilder.INSTANCE, parameterHolders));
     }
 
     @Test
