@@ -207,4 +207,10 @@ class TemporalInterpolationTest {
         String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("Europe/London"))));
         assertEquals("test: Europe/London", result);
     }
+    
+    @Test
+    void interpolationInvalidAtZone() throws ParseException {
+        assertThrows(ParseException.class,
+                () -> configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin','Europe/London)}"));
+    }
 }

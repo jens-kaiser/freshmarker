@@ -164,18 +164,18 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
     @Override
     public BlockFragment visit(UserDirective ftl, BlockFragment input) {
         int nameIndex;
-        String nameSpace;
+        String currentNameSpace;
         if (ftl.get(2).getType() == TokenType.DOT) {
-            nameSpace = ftl.get(1).toString();
+            currentNameSpace = ftl.get(1).toString();
             nameIndex = 3;
         } else {
-            nameSpace = null;
+            currentNameSpace = null;
             nameIndex = 1;
         }
         String name = ftl.get(nameIndex).toString();
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
         ftl.getChild(nameIndex + 1).accept(NamedArgsBuilder.INSTANCE, namedArgs);
-        logger.debug("user directive: {}.{} {}", nameSpace, name, namedArgs);
+        logger.debug("user directive: {}.{} {}", currentNameSpace, name, namedArgs);
         Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))
                 .skip(1).findFirst().orElse(null);
@@ -184,7 +184,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
             body = node.accept(this, new BlockFragment());
         }
         logger.debug("user directive: {} {}", node, body);
-        input.addFragment(new UserDirectiveFragment(name, nameSpace, namedArgs, body));
+        input.addFragment(new UserDirectiveFragment(name, currentNameSpace, namedArgs, body));
         return input;
     }
 
