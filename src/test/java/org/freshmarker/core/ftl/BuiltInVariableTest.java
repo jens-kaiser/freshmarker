@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BuiltInVariableTest {
     private Configuration configuration;
@@ -30,7 +31,7 @@ class BuiltInVariableTest {
             "test: ${.country},test: DE",
             "test: ${.version},test: 1.0.0",
     })
-    void locale(String templateSource, String expected) throws ParseException {
+    void builtInVariables(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
@@ -39,5 +40,12 @@ class BuiltInVariableTest {
     void now() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${.now?date}");
         assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
+    }
+
+
+    @Test
+    void unknownBuiltInVariable() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${.gonzo}");
+        assertThrows(IllegalStateException.class, () -> template.process(Map.of()));
     }
 }
