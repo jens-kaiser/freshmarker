@@ -40,7 +40,7 @@ public class IntegerNumber extends AbstractCalculatingNumber<Integer>{
 
   @Override
   public CalculatingNumber sign() {
-    return new IntegerNumber(Integer.compare(wrapped, 0));
+    return new IntegerNumber(Integer.signum(wrapped));
   }
 
   @Override

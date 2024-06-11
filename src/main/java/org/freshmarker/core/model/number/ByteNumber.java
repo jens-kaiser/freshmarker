@@ -40,7 +40,7 @@ public class ByteNumber extends AbstractCalculatingNumber<Byte> {
 
   @Override
   public CalculatingNumber sign() {
-    return new IntegerNumber(Byte.compare(wrapped, (byte) 0));
+    return new IntegerNumber(Integer.signum(wrapped));
   }
 
   @Override

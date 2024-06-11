@@ -40,7 +40,7 @@ public class FloatNumber extends AbstractCalculatingNumber<Float> {
 
   @Override
   public CalculatingNumber sign() {
-    return new IntegerNumber(Float.compare(wrapped, 0.0f));
+    return new IntegerNumber((int)Math.signum(wrapped));
   }
 
   @Override
