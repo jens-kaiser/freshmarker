@@ -30,6 +30,11 @@ public abstract class WrapperEnvironment implements Environment {
   }
 
   @Override
+  public ZoneId getZoneId() {
+    return wrapped.getZoneId();
+  }
+
+  @Override
   public OutputFormat getOutputFormat() {
     return wrapped.getOutputFormat();
   }
