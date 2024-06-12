@@ -32,9 +32,7 @@ public final class Template {
     context.setEnvironment(new WrapperEnvironment(context.getEnvironment()) {
       @Override
       public UserDirective getDirective(String nameSpace, String name) {
-        log.info("directives2: {}, {}.{}", userDirectives, nameSpace, name);
         UserDirective userDirective = userDirectives.get(new NameSpaced(nameSpace, name));
-        log.info("directives2: {}, {}", userDirective, new NameSpaced(nameSpace, name));
         return userDirective != null ? userDirective : super.getDirective(nameSpace, name);
       }
     });

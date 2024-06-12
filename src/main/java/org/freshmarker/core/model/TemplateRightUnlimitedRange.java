@@ -3,14 +3,10 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class TemplateRightUnlimitedRange implements TemplateRange {
-
-  private static final Logger logger = LoggerFactory.getLogger(TemplateRightUnlimitedRange.class);
 
   private final TemplateObject lower;
 
@@ -47,7 +43,6 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
 
   @Override
   public TemplateObject get(ProcessContext context, int index) {
-    logger.info("get: {}", index);
     lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
     return new TemplateNumber(lowerNumber  + index);
   }

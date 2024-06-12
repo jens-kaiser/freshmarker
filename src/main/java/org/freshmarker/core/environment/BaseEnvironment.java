@@ -10,8 +10,6 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.providers.TemplateObjectProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Writer;
 import java.time.ZoneId;
@@ -23,7 +21,6 @@ import java.util.Optional;
 
 public class BaseEnvironment implements Environment {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseEnvironment.class);
     private final Map<String, Object> dataModel;
     private final Locale locale;
     private final List<TemplateObjectProvider> providers;
@@ -84,7 +81,6 @@ public class BaseEnvironment implements Environment {
 
     @Override
     public UserDirective getDirective(String nameSpace, String name) {
-        log.info("directive: {} {} {}", nameSpace, name, userDirectives);
         return Optional.ofNullable(userDirectives.get(new NameSpaced(nameSpace, name))).orElseThrow(() -> new ProcessException("unknown directive: " + name));
     }
 

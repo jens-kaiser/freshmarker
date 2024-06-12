@@ -6,8 +6,6 @@ import ftl.Token;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.ParameterList;
 import org.freshmarker.core.model.TemplateObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,8 +13,6 @@ import java.util.Set;
 
 public class ParameterListBuilder implements
         ExpressionVisitor<List<ParameterHolder>, List<ParameterHolder>> {
-
-    private static final Logger log = LoggerFactory.getLogger(ParameterListBuilder.class);
 
     public static final ParameterListBuilder INSTANCE = new ParameterListBuilder();
 
@@ -26,7 +22,6 @@ public class ParameterListBuilder implements
 
     @Override
     public List<ParameterHolder> visit(Token expression, List<ParameterHolder> input) {
-        log.debug("parameters: {}", input);
         input.add(new ParameterHolder(expression.toString(), null));
         return input;
     }
@@ -38,7 +33,6 @@ public class ParameterListBuilder implements
         int maxChildren = children.size();
         Set<String> names = new HashSet<>();
         while (index < maxChildren) {
-            log.info("index: {}", index);
             IDENTIFIER identifier = (IDENTIFIER) children.get(index);
             String name = identifier.toString();
             if (names.contains(name)) {
@@ -61,7 +55,6 @@ public class ParameterListBuilder implements
                 input.add(new ParameterHolder(name, null));
             }
         }
-        log.debug("parameters: {}", input);
         return input;
     }
 }
