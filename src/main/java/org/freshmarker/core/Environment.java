@@ -1,14 +1,16 @@
 package org.freshmarker.core;
 
-import java.io.Writer;
-import java.util.Locale;
-import java.util.Optional;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
+
+import java.io.Writer;
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.Optional;
 
 public interface Environment {
 
@@ -17,6 +19,8 @@ public interface Environment {
   TemplateObject getValue(String name);
 
   Locale getLocale();
+
+  ZoneId getZoneId();
 
   OutputFormat getOutputFormat();
 

@@ -23,6 +23,7 @@ import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Map;
 
@@ -49,15 +50,16 @@ public class SettingFragment implements Fragment {
             case "date_format" -> processDateFormat(context, setting);
             case "time_format" -> processTimeFormat(context, setting);
             case "datetime_format" -> processDateTimeFormat(context, setting);
+            case "zone_id" -> processZoneId(context, setting);
             default -> throw new ProcessException("unknown setting: " + name, ftl);
         }
     }
 
-    private static void processDateTimeFormat(ProcessContext context, TemplateObject setting) {
+        private static void processDateTimeFormat(ProcessContext context, TemplateObject setting) {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalDateTime.class, new DateTimeFormatter(value), TemplateClassicDateTime.class, new ClassicDateTimeFormatter(value));
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter, null));
         logger.info("new date-time format: {}", value);
     }
 
@@ -65,7 +67,7 @@ public class SettingFragment implements Fragment {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalTime.class, new TimeFormatter(value), TemplateClassicTime.class, new ClassicTimeFormatter(value));
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter, null));
         logger.info("new time format: {}", value);
     }
 
@@ -73,14 +75,21 @@ public class SettingFragment implements Fragment {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, formatter, null));
         logger.info("new date format: {}", value);
     }
 
     private static void processLocale(ProcessContext context, TemplateObject setting) {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Locale locale = Locale.forLanguageTag(value);
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), locale, null, null));
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), locale, null, null, null));
         logger.info("new locale: {}", locale);
+    }
+
+    private static void processZoneId(ProcessContext context, TemplateObject setting) {
+        String value = setting.evaluate(context, TemplateString.class).getValue();
+        ZoneId zoneId = ZoneId.of(value);
+        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), null, null, null, zoneId));
+        logger.info("new zone-id: {}", zoneId);
     }
 }

@@ -19,7 +19,7 @@ public class OutputFormatFragment implements Fragment {
     @Override
     public void process(ProcessContext context) {
         Environment environment = context.getEnvironment();
-        context.setEnvironment(new SettingEnvironment(environment, null, context.getOutputFormat(format), Map.of()));
+        context.setEnvironment(new SettingEnvironment(environment, null, context.getOutputFormat(format), Map.of(), null));
         try {
             content.process(context);
         } finally {

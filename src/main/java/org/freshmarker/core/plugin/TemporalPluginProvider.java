@@ -47,11 +47,11 @@ public class TemporalPluginProvider implements PluginProvider {
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
         builtIns.put(INSTANT_BUILDER.of("date_time"), new FunctionalBuiltIn(
-                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(e.getEnvironment().getZoneId()).toLocalDateTime()));
         builtIns.put(INSTANT_BUILDER.of("date"), new FunctionalBuiltIn(
-                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(ZoneId.systemDefault()).toLocalDate()));
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(e.getEnvironment().getZoneId()).toLocalDate()));
         builtIns.put(INSTANT_BUILDER.of("time"), new FunctionalBuiltIn(
-                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(ZoneId.systemDefault()).toLocalTime()));
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(e.getEnvironment().getZoneId()).toLocalTime()));
         builtIns.put(INSTANT_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
         builtIns.put(INSTANT_BUILDER.of(STRING), new FunctionalBuiltIn(
@@ -101,7 +101,7 @@ public class TemporalPluginProvider implements PluginProvider {
     }
 
     private static TemplateString formatTemporal(List<TemplateObject> y, ProcessContext e, Temporal value) {
-        return new TemplateString(getDateTimeFormatter(y, e).withZone(ZoneId.systemDefault()).format(value));
+        return new TemplateString(getDateTimeFormatter(y, e).withZone(e.getEnvironment().getZoneId()).format(value));
     }
 
     private static TemplateString formatTemporal(List<TemplateObject> y, ProcessContext e, Instant value) {
@@ -117,17 +117,17 @@ public class TemporalPluginProvider implements PluginProvider {
     }
 
     private static String getFormatString(List<TemplateObject> y, ProcessContext e) {
-        if (y.isEmpty()) {
+        if (y.size() != 1) {
             throw new ProcessException("missing format parameter");
         }
-        return y.get(0).evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
+        return y.getFirst.evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
     }
 
     private static ZoneId getZoneId(List<TemplateObject> y, ProcessContext e) {
         if (y.size() != 1) {
             throw new IllegalArgumentException("wrong parameter count");
         }
-        return ZoneId.of(y.get(0).evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new IllegalArgumentException("no valid zoneId")));
+        return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).map(ZoneId::of).orElseThrow(() -> new IllegalArgumentException("no valid zoneId"));
     }
 
     @Override

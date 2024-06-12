@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Writer;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -70,6 +71,11 @@ public class BaseEnvironment implements Environment {
     @Override
     public Locale getLocale() {
         return locale;
+    }
+
+    @Override
+    public ZoneId getZoneId() {
+        return ZoneId.systemDefault();
     }
 
     public OutputFormat getOutputFormat() {
