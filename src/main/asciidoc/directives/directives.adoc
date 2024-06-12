@@ -72,16 +72,19 @@ ${42.23}
 ${42.23}
 ----
 
-=== Import Directive
+=== Macro Directive
 
 [source]
 ----
-<#import 'macros.fmt' as m/>
+<#macro copyright from>
+/*
+ * Copyright © ${from}-${.now?string('yyyy')} Jens Kaiser
+ *
+ * All Rights resevered.
+ */
+</#macro>
+<@copyright/>
 ----
-
-=== Macro Directive
-
-TBD
 
 === User Directive
 
@@ -90,8 +93,15 @@ TBD
 <@log level='info' message='test'/>
 ----
 
+=== Import Directive
+
 [source]
 ----
 <#import 'macros.fmt' as m/>
-<@'m.copyright'/>
+----
+
+[source]
+----
+<#import 'macros.fmt' as m/>
+<@m.copyright/>
 ----
