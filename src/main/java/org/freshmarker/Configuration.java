@@ -200,8 +200,4 @@ public final class Configuration {
     public void setTemplateLoader(TemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
     }
-
-    public TemplateLoader getTemplateLoader() {
-        return templateLoader;
-    }
 }

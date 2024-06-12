@@ -36,112 +36,112 @@ class IntegerNumberTest {
     }
 
     @Test
-    void subLongFromLong() {
+    void subLongFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(10, number1.sub(new LongNumber(10L)).getNumber());
         assertEquals(0, number1.sub(new LongNumber(20L)).getNumber());
     }
 
     @Test
-    void subIntegerFromLong() {
+    void subIntegerFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(10, number1.sub(new IntegerNumber(10)).getNumber());
         assertEquals(0, number1.sub(new IntegerNumber(20)).getNumber());
     }
 
     @Test
-    void subShortFromLong() {
+    void subShortFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(10, number1.sub(new ShortNumber((short)10)).getNumber());
         assertEquals(0, number1.sub(new ShortNumber((short)20)).getNumber());
     }
 
     @Test
-    void subByteFromLong() {
+    void subByteFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(10, number1.sub(new ByteNumber((byte)10)).getNumber());
         assertEquals(0, number1.sub(new ByteNumber((byte)20)).getNumber());
     }
 
     @Test
-    void mulLongFromLong() {
+    void mulLongFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(200, number1.mul(new LongNumber(10L)).getNumber());
         assertEquals(400, number1.mul(new LongNumber(20L)).getNumber());
     }
 
     @Test
-    void mulIntegerFromLong() {
+    void mulIntegerFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(200, number1.mul(new IntegerNumber(10)).getNumber());
         assertEquals(400, number1.mul(new IntegerNumber(20)).getNumber());
     }
 
     @Test
-    void mulShortFromLong() {
+    void mulShortFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(200, number1.mul(new ShortNumber((short)10)).getNumber());
         assertEquals(400, number1.mul(new ShortNumber((short)20)).getNumber());
     }
 
     @Test
-    void mulByteFromLong() {
+    void mulByteFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(200, number1.mul(new ByteNumber((byte)10)).getNumber());
         assertEquals(400, number1.mul(new ByteNumber((byte)20)).getNumber());
     }
 
     @Test
-    void divLongByLong() {
+    void divLongByInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(2, number1.div(new LongNumber(10L)).getNumber());
         assertEquals(1, number1.div(new LongNumber(20L)).getNumber());
     }
 
     @Test
-    void divIntegerByLong() {
+    void divIntegerByInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(2, number1.div(new IntegerNumber(10)).getNumber());
         assertEquals(1, number1.div(new IntegerNumber(20)).getNumber());
     }
 
     @Test
-    void divShortByLong() {
+    void divShortByInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(2, number1.div(new ShortNumber((short)10)).getNumber());
         assertEquals(1, number1.div(new ShortNumber((short)20)).getNumber());
     }
 
     @Test
-    void divByteFromLong() {
+    void divByteFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(2, number1.div(new ByteNumber((byte)10)).getNumber());
         assertEquals(1, number1.div(new ByteNumber((byte)20)).getNumber());
     }
 
     @Test
-    void modLongByLong() {
+    void modLongByInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(0, number1.mod(new LongNumber(4L)).getNumber());
         assertEquals(2, number1.mod(new LongNumber(3L)).getNumber());
     }
 
     @Test
-    void modIntegerByLong() {
+    void modIntegerByInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(0, number1.mod(new IntegerNumber(4)).getNumber());
         assertEquals(2, number1.mod(new IntegerNumber(3)).getNumber());
     }
 
     @Test
-    void modvShortByLong() {
+    void modvShortByInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(0, number1.mod(new ShortNumber((short)4)).getNumber());
         assertEquals(2, number1.mod(new ShortNumber((short)3)).getNumber());
     }
 
     @Test
-    void modByteFromLong() {
+    void modByteFromInteger() {
         IntegerNumber number1 = new IntegerNumber(20);
         assertEquals(0, number1.mod(new ByteNumber((byte)4)).getNumber());
         assertEquals(2, number1.mod(new ByteNumber((byte)3)).getNumber());
