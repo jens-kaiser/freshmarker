@@ -56,7 +56,7 @@ m|${0?sign}
 m|0
 |===
 
-==== Cast Built-Ins
+==== Cast Built-Ins (since 1.0.0)
 
 These built-ins cast the number to a TemplateNumber instance in the specified type range.
 

@@ -93,7 +93,7 @@ ${42.23}
 <@log level='info' message='test'/>
 ----
 
-=== Import Directive
+=== Import Directive (since 1.0.0)
 
 [source]
 ----
