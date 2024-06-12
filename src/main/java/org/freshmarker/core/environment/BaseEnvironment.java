@@ -22,25 +22,21 @@ import java.util.Optional;
 public class BaseEnvironment implements Environment {
 
     private final Map<String, Object> dataModel;
-    private final Locale locale;
     private final List<TemplateObjectProvider> providers;
-    private final OutputFormat outputFormat;
     private final Map<NameSpaced, UserDirective> userDirectives;
     private final Map<String, TemplateFunction> functions;
     private final Writer writer;
-    private final Map<Class<? extends TemplateObject>, Formatter> formatter;
+    private final Settings settings;
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Locale locale,
-                           OutputFormat outputFormat, Map<NameSpaced, UserDirective> userDirectives,
-                           Map<String, TemplateFunction> functions, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter) {
+    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers,
+                           Map<NameSpaced, UserDirective> userDirectives, Map<String, TemplateFunction> functions,
+                           Writer writer, Settings settings) {
         this.dataModel = dataModel;
-        this.locale = locale;
-        this.outputFormat = outputFormat;
         this.providers = providers;
         this.userDirectives = userDirectives;
         this.functions = functions;
         this.writer = writer;
-        this.formatter = formatter;
+        this.settings = settings;
     }
 
     @Override
@@ -67,16 +63,16 @@ public class BaseEnvironment implements Environment {
 
     @Override
     public Locale getLocale() {
-        return locale;
+        return settings.locale();
     }
 
     @Override
     public ZoneId getZoneId() {
-        return ZoneId.systemDefault();
+        return settings.zoneId();
     }
 
     public OutputFormat getOutputFormat() {
-        return outputFormat;
+        return settings.format();
     }
 
     @Override
@@ -95,6 +91,6 @@ public class BaseEnvironment implements Environment {
     }
 
     public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-        return formatter.getOrDefault(type, (o, l) -> o.toString());
+        return settings.formatters().getOrDefault(type, (o, l) -> o.toString());
     }
 }

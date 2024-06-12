@@ -14,6 +14,7 @@ import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.BufferedEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.environment.Settings;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -43,6 +44,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +64,7 @@ public final class Configuration {
     private final Map<String, OutputFormat> outputs = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
     private Locale locale;
+    private ZoneId zoneId;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
     private final List<TemplateObjectProvider> providers = new ArrayList<>(
             List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider(modelSecurityGateway)));
@@ -73,6 +76,7 @@ public final class Configuration {
 
     public Configuration() {
         locale = Locale.getDefault();
+        zoneId = ZoneId.systemDefault();
         templateLoader = new FileSystemTemplateLoader();
 
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
@@ -175,13 +179,18 @@ public final class Configuration {
 
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
         OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, locale, format, userDirectives, functions, writer, Map.copyOf(formatter));
+        Settings settings = new Settings(locale, zoneId, format, Map.copyOf(formatter));
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, userDirectives, functions, writer, settings);
         Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
         return new ProcessContext(environment, Map.copyOf(builtIns), Map.copyOf(outputs));
     }
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public void setZoneId(ZoneId zoneId) {
+        this.zoneId = zoneId;
     }
 
     public void setOutputFormat(String outputFormat) {
