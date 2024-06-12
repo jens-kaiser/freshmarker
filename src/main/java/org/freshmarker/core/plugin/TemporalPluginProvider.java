@@ -120,7 +120,7 @@ public class TemporalPluginProvider implements PluginProvider {
         if (y.size() != 1) {
             throw new ProcessException("missing format parameter");
         }
-        return y.getFirst.evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
+        return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
     }
 
     private static ZoneId getZoneId(List<TemplateObject> y, ProcessContext e) {
