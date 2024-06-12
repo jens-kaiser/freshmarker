@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ class SettingTest {
     public void setUp() {
         configuration = new Configuration();
         configuration.setLocale(Locale.GERMANY);
+        configuration.setZoneId(ZoneId.of("Europe/Berlin"));
     }
 
     @ParameterizedTest
@@ -33,6 +36,14 @@ class SettingTest {
     void settingLocale(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = "test: ${date} - <#setting zone_id=\"Europe/London\">${date};test: 1968-08-24 12:34:56 Europe/Berlin - 1968-08-24 12:34:56 Europe/Berlin", delimiterString = ";")
+    void settingZoneIdWithNoImpact(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        ZonedDateTime zonedDateTime = LocalDateTime.of(1968, Month.AUGUST, 24, 12, 34, 56).atZone(ZoneId.of("Europe/Berlin"));
+        assertEquals(expected, template.process(Map.of("date", zonedDateTime)));
     }
 
     @ParameterizedTest
