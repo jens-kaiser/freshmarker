@@ -46,18 +46,22 @@ class SimpleToStringMapperTest {
         assertEquals(expected, template.process(Map.of("id", LeitwegId.parse(leitwegId))));
     }
 
-    @ParameterizedTest
+        @ParameterizedTest
     @CsvSource(value = {
             "https://schegge.de,${url}",
             "https://schegge.de,${uri}",
             "40ba6fe6-3032-490c-b3e4-84c0961202e5,${uuid}",
+            "builder,${builder}",
+            "buffer,${buffer}",
     })
     void renderDefaultSimpleToStringMapper(String expected, String input) throws MalformedURLException {
         Template template = configuration.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of(
                 "uri", URI.create("https://schegge.de"),
                 "url", URI.create("https://schegge.de").toURL(),
-                "uuid", UUID.fromString("40ba6fe6-3032-490c-b3e4-84c0961202e5")
+                "uuid", UUID.fromString("40ba6fe6-3032-490c-b3e4-84c0961202e5"),
+                "builder", new StringBuilder("builder"),
+                "buffer", new StringBuffer("buffer")
         )));
     }
 }

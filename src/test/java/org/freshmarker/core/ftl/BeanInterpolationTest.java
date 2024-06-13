@@ -73,12 +73,11 @@ class BeanInterpolationTest {
         assertEquals("missing reduction detected. Unsupported primitive? class org.freshmarker.core.ftl.BeanInterpolationTest$TestBean at test:1:1 '${bean}'", processException.getMessage());
     }
 
-
     @Test
     void illegalBeanAccess() throws ParseException {
         Template template = configuration.getTemplate("test", "${bean}");
-        Map<String, Object> data = Map.of("bean", UUID.randomUUID());
+        Map<String, Object> data = Map.of("bean", Runtime.getRuntime());
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
-        assertEquals("unsupported system class: class java.util.UUID at test:1:1 '${bean}'", processException.getMessage());
+        assertEquals("unsupported system class: class java.lang.Runtime at test:1:1 '${bean}'", processException.getMessage());
     }
 }
