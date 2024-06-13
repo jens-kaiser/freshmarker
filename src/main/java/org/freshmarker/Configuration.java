@@ -106,12 +106,15 @@ public final class Configuration {
 
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
         registerPlugins();
+        registerSimpleMapping(URI.class, URL.class, UUID.class);
     }
 
-    public void registerSimpleMapping(Class<?> type) {
-        registerSimpleMapping(type, Object::toString);
+    public void registerSimpleMapping(Class<?>... types) {
+        for (Class<?> type : types) {
+            registerSimpleMapping(type, Object::toString);
+        }
     }
-
+    
     public void registerSimpleMapping(Class<?> type, Function<Object, String> mapping) {
         Objects.requireNonNull(mapping);
         mappingTemplateObjectProvider.addMapper(type, x -> {
