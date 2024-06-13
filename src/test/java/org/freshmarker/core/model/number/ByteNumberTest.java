@@ -115,8 +115,8 @@ class ByteNumberTest {
     @Test
     void divByteFromLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)2, number1.div(new LongNumber((byte)10)).getNumber());
-        assertEquals((byte)1, number1.div(new LongNumber((byte)20)).getNumber());
+        assertEquals((byte)2, number1.div(new LongNumber(10L)).getNumber());
+        assertEquals((byte)1, number1.div(new LongNumber(20L)).getNumber());
     }
 
     @Test
@@ -129,15 +129,15 @@ class ByteNumberTest {
     @Test
     void modIntegerByLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)0, number1.mod(new IntegerNumber((byte)4)).getNumber());
-        assertEquals((byte)2, number1.mod(new IntegerNumber((byte)3)).getNumber());
+        assertEquals((byte)0, number1.mod(new IntegerNumber(4)).getNumber());
+        assertEquals((byte)2, number1.mod(new IntegerNumber(3)).getNumber());
     }
 
     @Test
     void modShortByLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)0, number1.mod(new ShortNumber((byte)4)).getNumber());
-        assertEquals((byte)2, number1.mod(new ShortNumber((byte)3)).getNumber());
+        assertEquals((byte)0, number1.mod(new ShortNumber((short)4)).getNumber());
+        assertEquals((byte)2, number1.mod(new ShortNumber((short)3)).getNumber());
     }
 
     @Test
