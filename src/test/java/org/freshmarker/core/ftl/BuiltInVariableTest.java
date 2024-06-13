@@ -46,6 +46,7 @@ class BuiltInVariableTest {
     @Test
     void unknownBuiltInVariable() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${.gonzo}");
-        assertThrows(IllegalStateException.class, () -> template.process(Map.of()));
+        Map<String, Object> model = Map.of();
+        assertThrows(IllegalStateException.class, () -> template.process(model));
     }
 }

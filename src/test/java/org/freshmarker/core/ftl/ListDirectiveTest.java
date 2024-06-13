@@ -29,7 +29,8 @@ class ListDirectiveTest {
     @Test
     void output() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${sequence}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
+        Map<String, Object> model = Map.of("sequence", List.of("a", "b", "c", "d"));
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @Test

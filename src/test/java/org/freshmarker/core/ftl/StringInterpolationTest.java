@@ -51,7 +51,8 @@ class StringInterpolationTest {
     @Test
     void invalidInterpolationBoolean() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${text?boolean}");
-        assertThrows(ProcessException.class, () ->  template.process(Map.of("text", "gonzo")));
+        Map<String, Object> model = Map.of("text", "gonzo")
+        assertThrows(ProcessException.class, () ->  template.process(model));
     }
 
     @Test

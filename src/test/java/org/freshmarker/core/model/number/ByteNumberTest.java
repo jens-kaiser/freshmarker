@@ -64,28 +64,28 @@ class ByteNumberTest {
     }
 
     @Test
-    void mulLongFromLong() {
+    void mulLongByByte() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)200, number1.mul(new LongNumber(10L)).getNumber());
         assertEquals((byte)400, number1.mul(new LongNumber(20L)).getNumber());
     }
 
     @Test
-    void mulIntegerFromLong() {
+    void mulIntegerByByteFromLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)200, number1.mul(new IntegerNumber(10)).getNumber());
         assertEquals((byte)400, number1.mul(new IntegerNumber(20)).getNumber());
     }
 
     @Test
-    void mulShortFromLong() {
+    void mulShortByByte() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)200, number1.mul(new ShortNumber((short)10)).getNumber());
         assertEquals((byte)400, number1.mul(new ShortNumber((short)20)).getNumber());
     }
 
     @Test
-    void mulByteFromLong() {
+    void mulByteByByte() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)200, number1.mul(new ByteNumber((byte)10)).getNumber());
         assertEquals((byte)400, number1.mul(new ByteNumber((byte)20)).getNumber());
@@ -115,8 +115,8 @@ class ByteNumberTest {
     @Test
     void divByteFromLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)2, number1.div(new ByteNumber((byte)10)).getNumber());
-        assertEquals((byte)1, number1.div(new ByteNumber((byte)20)).getNumber());
+        assertEquals((byte)2, number1.div(new LongNumber((byte)10)).getNumber());
+        assertEquals((byte)1, number1.div(new LongNumber((byte)20)).getNumber());
     }
 
     @Test
@@ -129,15 +129,15 @@ class ByteNumberTest {
     @Test
     void modIntegerByLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)0, number1.mod(new ByteNumber((byte)4)).getNumber());
-        assertEquals((byte)2, number1.mod(new ByteNumber((byte)3)).getNumber());
+        assertEquals((byte)0, number1.mod(new IntegerNumber((byte)4)).getNumber());
+        assertEquals((byte)2, number1.mod(new IntegerNumber((byte)3)).getNumber());
     }
 
     @Test
-    void modvShortByLong() {
+    void modShortByLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)0, number1.mod(new ByteNumber((byte)4)).getNumber());
-        assertEquals((byte)2, number1.mod(new ByteNumber((byte)3)).getNumber());
+        assertEquals((byte)0, number1.mod(new ShortNumber((byte)4)).getNumber());
+        assertEquals((byte)2, number1.mod(new ShortNumber((byte)3)).getNumber());
     }
 
     @Test
