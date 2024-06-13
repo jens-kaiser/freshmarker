@@ -39,11 +39,11 @@ class SettingTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = "test: ${date} - <#setting zone_id=\"Europe/London\">${date};test: 1968-08-24 12:34:56 Europe/Berlin - 1968-08-24 12:34:56 Europe/Berlin", delimiterString = ";")
-    void settingZoneIdWithNoImpact(String templateSource, String expected) throws ParseException {
+    @CsvSource(value = "test: ${date?date_time} - <#setting zone_id=\"Europe/London\">${date?date_time},test: 2001-08-24 12:34:56 - 2001-08-24 11:34:56")
+    void settingZoneI(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        ZonedDateTime zonedDateTime = LocalDateTime.of(1968, Month.AUGUST, 24, 12, 34, 56).atZone(ZoneId.of("Europe/Berlin"));
-        assertEquals(expected, template.process(Map.of("date", zonedDateTime)));
+        ZonedDateTime zonedDateTime = LocalDateTime.of(2001, Month.AUGUST, 24, 12, 34, 56).atZone(ZoneId.of("Europe/Berlin"));
+        assertEquals(expected, template.process(Map.of("date", zonedDateTime.toInstant())));
     }
 
     @ParameterizedTest
