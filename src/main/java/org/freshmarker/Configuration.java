@@ -41,6 +41,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,6 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -114,7 +117,7 @@ public final class Configuration {
             registerSimpleMapping(type, Object::toString);
         }
     }
-    
+
     public void registerSimpleMapping(Class<?> type, Function<Object, String> mapping) {
         Objects.requireNonNull(mapping);
         mappingTemplateObjectProvider.addMapper(type, x -> {
