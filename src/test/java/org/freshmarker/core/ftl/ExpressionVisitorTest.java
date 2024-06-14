@@ -32,7 +32,7 @@ import ftl.ast.UnaryPlusMinusExpression;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExpressionVisitorTest {
     private ExpressionVisitor<String, String> visitor;
@@ -40,156 +40,161 @@ class ExpressionVisitorTest {
     @BeforeEach
     void setUp() {
         visitor = new ExpressionVisitor<>() {
+
+            @Override
+            public String handleWithException(Object expression) {
+                return "";
+            }
         };
     }
 
     @Test
     void visitNode() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((Node) null, ""));
+        assertEquals("", visitor.visit((Node) null, ""));
     }
 
     @Test
     void visitToken() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((Token) null, ""));
+        assertEquals("", visitor.visit((Token) null, ""));
     }
 
     @Test
     void visitExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((Expression) null, ""));
+        assertEquals("", visitor.visit((Expression) null, ""));
     }
 
     @Test
     void visitOrExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((OrExpression) null, ""));
+        assertEquals("", visitor.visit((OrExpression) null, ""));
     }
 
     @Test
     void visitAndExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((AndExpression) null, ""));
+        assertEquals("", visitor.visit((AndExpression) null, ""));
     }
 
     @Test
     void visitEqualityExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((EqualityExpression) null, ""));
+        assertEquals("", visitor.visit((EqualityExpression) null, ""));
     }
 
     @Test
     void visitRelationalExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((RelationalExpression) null, ""));
+        assertEquals("", visitor.visit((RelationalExpression) null, ""));
     }
 
     @Test
     void visitRangeExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((RangeExpression) null, ""));
+        assertEquals("", visitor.visit((RangeExpression) null, ""));
     }
 
     @Test
     void visitAdditiveExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((AdditiveExpression) null, ""));
+        assertEquals("", visitor.visit((AdditiveExpression) null, ""));
     }
 
     @Test
     void visitMultiplicativeExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((MultiplicativeExpression) null, ""));
+        assertEquals("", visitor.visit((MultiplicativeExpression) null, ""));
     }
 
     @Test
     void visitUnaryPlusMinusExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((UnaryPlusMinusExpression) null, ""));
+        assertEquals("", visitor.visit((UnaryPlusMinusExpression) null, ""));
     }
 
     @Test
     void visitNotExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((NotExpression) null, ""));
+        assertEquals("", visitor.visit((NotExpression) null, ""));
     }
 
     @Test
     void visitPrimaryExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((PrimaryExpression) null, ""));
+        assertEquals("", visitor.visit((PrimaryExpression) null, ""));
     }
 
     @Test
     void visitDefaultToExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((DefaultToExpression) null, ""));
+        assertEquals("", visitor.visit((DefaultToExpression) null, ""));
     }
 
     @Test
     void visitBaseExpression() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((BaseExpression) null, ""));
+        assertEquals("", visitor.visit((BaseExpression) null, ""));
     }
 
     @Test
     void visitNumberLiteral() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((NumberLiteral) null, ""));
+        assertEquals("", visitor.visit((NumberLiteral) null, ""));
     }
 
     @Test
     void visitHashLiteral() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((HashLiteral) null, ""));
+        assertEquals("", visitor.visit((HashLiteral) null, ""));
     }
 
     @Test
     void visitStringLiteral() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((StringLiteral) null, ""));
+        assertEquals("", visitor.visit((StringLiteral) null, ""));
     }
 
     @Test
     void visitBooleanLiteral() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((BooleanLiteral) null, ""));
+        assertEquals("", visitor.visit((BooleanLiteral) null, ""));
     }
 
     @Test
     void visitNullLiteral() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((NullLiteral) null, ""));
+        assertEquals("", visitor.visit((NullLiteral) null, ""));
     }
 
     @Test
     void visitListLiteral() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((ListLiteral) null, ""));
+        assertEquals("", visitor.visit((ListLiteral) null, ""));
     }
 
     @Test
     void visitParenthesis() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((Parenthesis) null, ""));
+        assertEquals("", visitor.visit((Parenthesis) null, ""));
     }
 
     @Test
     void visitBuiltinVariable() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((BuiltinVariable) null, ""));
+        assertEquals("", visitor.visit((BuiltinVariable) null, ""));
     }
 
     @Test
     void visitDotKey() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((DotKey) null, ""));
+        assertEquals("", visitor.visit((DotKey) null, ""));
     }
 
     @Test
     void visitDynamicKey() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((DynamicKey) null, ""));
+        assertEquals("", visitor.visit((DynamicKey) null, ""));
     }
 
     @Test
     void visitMethodInvoke() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((MethodInvoke) null, ""));
+        assertEquals("", visitor.visit((MethodInvoke) null, ""));
     }
 
     @Test
     void visitBuiltIn() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((BuiltIn) null, ""));
+        assertEquals("", visitor.visit((BuiltIn) null, ""));
     }
 
     @Test
     void visitExists() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((Exists) null, ""));
+        assertEquals("", visitor.visit((Exists) null, ""));
     }
 
     @Test
     void visitPositionalArgsList() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((Exists) null, ""));
+        assertEquals("", visitor.visit((Exists) null, ""));
     }
 
     @Test
     void visitParameterList() {
-        assertThrows(UnsupportedOperationException.class, () -> visitor.visit((ParameterList) null, ""));
+        assertEquals("", visitor.visit((ParameterList) null, ""));
     }
 }
