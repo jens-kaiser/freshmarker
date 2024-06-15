@@ -24,7 +24,6 @@ import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

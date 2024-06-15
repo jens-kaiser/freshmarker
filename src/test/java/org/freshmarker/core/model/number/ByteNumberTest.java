@@ -92,31 +92,24 @@ class ByteNumberTest {
     }
 
     @Test
-    void divLongByLong() {
+    void divByteByLong() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)2, number1.div(new LongNumber(10L)).getNumber());
         assertEquals((byte)1, number1.div(new LongNumber(20L)).getNumber());
     }
 
     @Test
-    void divIntegerByLong() {
+    void divByteByInteger() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)2, number1.div(new IntegerNumber(10)).getNumber());
         assertEquals((byte)1, number1.div(new IntegerNumber(20)).getNumber());
     }
 
     @Test
-    void divShortByLong() {
+    void divByteByShort() {
         ByteNumber number1 = new ByteNumber((byte)20);
         assertEquals((byte)2, number1.div(new ShortNumber((short)10)).getNumber());
         assertEquals((byte)1, number1.div(new ShortNumber((short)20)).getNumber());
-    }
-
-    @Test
-    void divByteFromLong() {
-        ByteNumber number1 = new ByteNumber((byte)20);
-        assertEquals((byte)2, number1.div(new LongNumber(10L)).getNumber());
-        assertEquals((byte)1, number1.div(new LongNumber(20L)).getNumber());
     }
 
     @Test
