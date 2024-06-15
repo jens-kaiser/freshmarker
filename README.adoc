@@ -1,6 +1,6 @@
 = FreshMarker
 
-A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 and supports the `java.time` API and Records.
+A simple template engine based loosely on the FreeMarker syntax. FreshMarker is implemented in Java 17 (java 21 since version 1.0.0) and supports the `java.time` API and Records.
 
 == Usage
 
