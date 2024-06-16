@@ -10,10 +10,6 @@ import java.util.Optional;
 
 public interface TemplateObject {
 
-    default boolean isNumber() {
-        return false;
-    }
-
     default boolean isPrimitive() {
         return false;
     }
