@@ -55,14 +55,12 @@ class DateInterpolationTest {
         assertEquals("test: 12:30:45", result);
     }
 
-
     @ParameterizedTest
     @CsvSource({
             "test: ${temporal},test: 1968-08-24 12:30:45",
             "test: ${temporal?c},test: 1968-08-24T12:30:45",
             "test: ${temporal?date},test: 1968-08-24",
             "test: ${temporal?time},test: 12:30:45"
-
     })
     void interpolationDateTime(String input, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", input);
