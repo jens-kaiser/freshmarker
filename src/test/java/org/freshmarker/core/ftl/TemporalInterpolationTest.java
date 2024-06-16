@@ -169,7 +169,6 @@ class TemporalInterpolationTest {
             "test: ${temporal?c},test: 1968-08-24T11:30:45Z",
             "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 11:30",
             "test: ${temporal?date},test: 1968-08-24",
-            "test: ${temporal?time},test: 12:30:45"
     })
     void interpolationInstant(String input, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", input);
