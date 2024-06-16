@@ -193,8 +193,7 @@ The `FileSystemTemplateLoader` can also be used with other file system implement
 .`TemplateLoader` with the `ZipFileSystem`
 [source,java]
 ----
-Path zipfile = Paths.get("imports.zip");
-FileSystem fs = FileSystems.newFileSystem(zipfile.toUri(), Map.of());
+FileSystem fs = FileSystems.newFileSystem(Paths.get("imports.zip"));
 configuration.setTemplateLoader(new FileSystemTemplateLoader(fs));
 ----
 
@@ -205,16 +204,16 @@ Custom template loaders can also be used instead of the `FileSystemTemplateLoade
 [source,java]
 ----
 public interface TemplateLoader {
-    String getTemplate(String filename, Charset charset) throws IOException;
+  String getTemplate(String filename, Charset charset) throws IOException;
 
-    default String getTemplate(String filename) throws IOException {
-        return getTemplate(filename, Charset.defaultCharset());
-    }
+  default String getTemplate(String filename) throws IOException {
+    return getTemplate(filename, Charset.defaultCharset());
+  }
 
-    String getImport(String filename, Charset charset) throws IOException;
+  String getImport(String filename, Charset charset) throws IOException;
 
-    default String getImport(String filename) throws IOException {
-        return getImport(filename, Charset.defaultCharset());
-    }
+  default String getImport(String filename) throws IOException {
+    return getImport(filename, Charset.defaultCharset());
+  }
 }
 ----

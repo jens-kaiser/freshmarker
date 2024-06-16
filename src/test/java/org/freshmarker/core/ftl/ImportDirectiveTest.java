@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,6 +47,13 @@ class ImportDirectiveTest {
     void macroImport() throws IOException {
         Files.writeString(fileSystem.getPath("macro.ftm"), "<#macro test>ABC<#return/>DEF</#macro>");
         Template template = configuration.getTemplate("template", "<#import 'macro.ftm' as m><@m.test/>");
+        assertEquals("ABC", template.process(Map.of()));
+    }
+
+    @Test
+    void macroImportFromZip() throws IOException {
+        configuration.setTemplateLoader(new FileSystemTemplateLoader(FileSystems.newFileSystem(Path.of("src/test/resources/macros.zip"))));
+        Template template = configuration.getTemplate("template", "<#import 'macros.fmt' as m><@m.test/>");
         assertEquals("ABC", template.process(Map.of()));
     }
 }
