@@ -20,7 +20,7 @@ class RecordInterpolationTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         configuration = new Configuration();
     }
 

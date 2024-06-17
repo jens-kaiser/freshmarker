@@ -69,12 +69,11 @@ class FileAndPathInterpolationTest {
     })
     void interpolationConstant(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
+        Path existing = Path.of("src/main/ccc/FreshMarker/FEL.ccc");
+        Path missing = Path.of("src/main/ccc/FreshMarker/FEL2.ccc");
         Map<String, Object> dataModel = Map.of(
-                "path", Path.of("src/main/ccc/FreshMarker/FEL.ccc"),
-                "missingPath", Path.of("src/main/ccc/FreshMarker/FEL2.ccc"),
-                "file", Path.of("src/main/ccc/FreshMarker/FEL.ccc").toFile(),
-                "missingFile", Path.of("src/main/ccc/FreshMarker/FEL2.ccc").toFile()
-        );
+                "path", existing, "missingPath", missing,
+                "file", existing.toFile(), "missingFile", missing.toFile());
         assertEquals(expected, template.process(dataModel).replace('/', '\\'));
     }
 }

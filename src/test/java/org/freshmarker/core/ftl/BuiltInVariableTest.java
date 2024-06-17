@@ -19,7 +19,7 @@ class BuiltInVariableTest {
     private Configuration configuration;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         configuration = new Configuration();
         configuration.setLocale(Locale.GERMANY);
     }
@@ -41,7 +41,6 @@ class BuiltInVariableTest {
         Template template = configuration.getTemplate("test", "test: ${.now?date}");
         assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
     }
-
 
     @Test
     void unknownBuiltInVariable() throws ParseException {

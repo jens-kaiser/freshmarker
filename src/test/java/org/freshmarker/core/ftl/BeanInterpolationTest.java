@@ -42,7 +42,7 @@ class BeanInterpolationTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         configuration = new Configuration();
     }
 

@@ -1,0 +1,1 @@
+<#macro test>ABC<#return/>DEF</#macro>

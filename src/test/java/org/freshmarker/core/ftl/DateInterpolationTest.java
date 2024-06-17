@@ -21,7 +21,7 @@ class DateInterpolationTest {
     private Configuration configuration;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         configuration = new Configuration();
     }
 

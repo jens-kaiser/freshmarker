@@ -35,7 +35,7 @@ class EnumInterpolationTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         configuration = new Configuration();
         configuration.setLocale(Locale.GERMANY);
     }

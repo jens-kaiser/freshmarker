@@ -51,7 +51,7 @@ class ExpressionOptimizationTest {
         parser.setInputSource("test");
         parser.Root();
         Root root = (Root) parser.rootNode();
-        TemplateObject templateObject = root.get(0).get(1).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject templateObject = root.getFirst().get(1).accept(InterpolationBuilder.INSTANCE, null);
         TemplateBoolean templateBoolean = assertInstanceOf(TemplateBoolean.class, templateObject);
         assertEquals(expected, templateBoolean.getValue());
     }
@@ -70,7 +70,7 @@ class ExpressionOptimizationTest {
         parser.setInputSource("test");
         parser.Root();
         Root root = (Root) parser.rootNode();
-        TemplateObject templateObject = root.get(0).get(1).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject templateObject = root.getFirst().get(1).accept(InterpolationBuilder.INSTANCE, null);
         TemplateVariable templateVariable = assertInstanceOf(TemplateVariable.class, templateObject);
         assertEquals("variable", templateVariable.name());
     }
@@ -92,7 +92,7 @@ class ExpressionOptimizationTest {
         parser.setInputSource("test");
         parser.Root();
         Root root = (Root) parser.rootNode();
-        TemplateObject templateObject = root.get(0).get(1).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject templateObject = root.getFirst().get(1).accept(InterpolationBuilder.INSTANCE, null);
         assertInstanceOf(TemplateJunction.class, templateObject);
     }
 }
