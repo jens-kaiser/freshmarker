@@ -4,7 +4,7 @@ Interpolations produce output for the values in the model.
 
 When processing an interpolation, there are two mandatory constraints that must be met.
 
-An interpolation must evaluate to a primitive type.
+An interpolation must evaluate to a _FreshMarker_ primitive type.
 For example, if the result is a list, an exception is thrown.
 If the result of the evaluation is the special value `NULL`, then an exception is also thrown.
 An interpolation must always return a result.

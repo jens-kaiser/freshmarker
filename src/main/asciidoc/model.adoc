@@ -1,7 +1,7 @@
 == Model
 
 The template engine needs data to fill the interpolations.
-Because it is an embedded Java engine, normal Java classes are used.
+Because it is an embedded _Java_ engine, normal _Java_ classes are used.
 A map is always used as the model for calling the engine.
 
 By default, the template engine supports `String`, Number like `Integer`, `Long`, `Double` and `Float`, `Boolean` and Date Types as base types.
@@ -21,9 +21,10 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 
 .Supported Model Types
 |===
-|Type | Java Type(s) | Primitive type
+|Type | _Java_ Type(s) | _FreshMarker_ primitive type
 
-|String|`String`|yes
+|String|`String`, `StringBuilder`, `StringBuffer`|yes
+|String|`UUID`, `URI`, `URL`|yes
 |Number|`Long`, `Integer`, `Short`, `Byte`|yes
 |Number|`long`, `int`, `short`, `byte`|yes
 |Number|`Double`, `Float`, `double`, `float`|yes
@@ -63,7 +64,7 @@ Their actual values are lazy evaluated only when accessed during processing.
 Map<String, Object> model = Map.of(
   "familyTree", TemplateObjectSupplier.of(() -> fetchTreeFromDataBase(name)),
   "name", "Kayser");
-template.process(model)
+template.process(model);
 ----
 
 In the example above, the `familyTree` value is lazy evaluated, when the variable is accessed during template processing.
@@ -77,9 +78,11 @@ if you desperately need one of these classes, you can declare it as an exception
 .Example allowed system classes
 [source,java]
 ----
-configuration.getSecurity().addAllowedClass(java.util.UUID.class);
+configuration.getSecurity().addAllowedClass(Runtime.class);
 configuration.getSecurity().addAllowedPackages(java.lang.annotation.Annotation.class);
 configuration.getSecurity().addAllowedPackages("java.io");
 ----
+
+NOTE: Of course, it only makes sense to allow classes that can also be interpreted by _FreshMarker_. Alternatively, a class can also be integrated via _Custom String Types_ or a _Plug-in_.
 
 In the example above, the class `java.util.UUID` and all classes in the packages `java.lang.annotation` and `java.io` and all of their subpackages are allowed.

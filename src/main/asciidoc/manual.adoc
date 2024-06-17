@@ -6,7 +6,7 @@ Version 0.2.8-SNAPSHOT
 
 == Introduction
 
-_FreshMarker_ is a simple, embedded Java 17 Template-Engine, which is inspired by FreeMarker.
+_FreshMarker_ is a simple, embedded _Java 21_ Template-Engine, which is inspired by _FreeMarker_.
 Most of the basic concepts are the same.
 
 _FreshMarker_'s area of application is the processing of simple templates with reduced programming features.

@@ -44,7 +44,7 @@ Hallo ${example}!
 </#if>
 ----
 
-Directives look like HTML tags with a # before the tag name.
+Directives look like _HTML_ tags with a # before the tag name.
 In this example, the English `Hello` is only written if the value is `World`.
 In all other cases the German `Hallo` is written.
 
@@ -111,8 +111,8 @@ With template injection, dangerous fragments are injected into the output.
 <h1>${title}</h1>
 ----
 
-The example shows an HTML fragment in which the text for a heading is to be inserted.
-without escaping, the script fragment is inserted and a more or less dangerous javascript is executed instead of displaying a title.
+The example shows an _HTML_ fragment in which the text for a heading is to be inserted.
+Without escaping, the script fragment is inserted and a more or less dangerous _Javascript_ is executed instead of displaying a title.
 
 _FreshMarker_'s escape mechanism replaces the necessary meta characters of an output format to neutralize them.
 The following table lists the supported output formats and their meta character replacements.
@@ -217,3 +217,5 @@ public interface TemplateLoader {
   }
 }
 ----
+
+NOTE: Currently only `getImport` of _FreeMarker_ is used, therefore the `getTemplate` method can return `null`.

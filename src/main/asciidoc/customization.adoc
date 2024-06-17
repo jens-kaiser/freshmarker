@@ -6,7 +6,7 @@ TBD
 
 === Custom String Types
 
-Unknown Java classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered for this purpose.
+Unknown _Java_ classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered for this purpose.
 
 .Example with Leitweg-ID as String
 [source,java]
@@ -34,11 +34,11 @@ String resullt = template.process(Map.of("id", leitwegId);
 
 === Custom Plug-Ins
 
-The plug-in mechanism is the core of _FreshMarker_'s modular extension concept. Plug-ins can be used to add new types, formatters, functions, user directives, built-ins and mappers.
+The _Plug-in_ mechanism is the core of _FreshMarker_'s modular extension concept. _Plug-ins_ can be used to add new types, formatters, functions, user directives, built-ins and mappers.
 
 It is possible to create completely new template types or to add further features to existing ones.
 
-In addition to the existing plug-ins for the _FreshMarker_ basic types, you can also develop your own plug-ins.
+In addition to the existing plug-ins for the _FreshMarker_ basic types, you can also develop your own _Plug-ins_.
 
 Plug-ins can be registered with _FreshMarker_ via the `ServiceLoader` mechanism or via the `Configuration#registerPlugin` method.
 
@@ -56,6 +56,7 @@ public interface PluginProvider {
   default void registerUserDirective(Map<String, UserDirective> directives) {}
 
   default void registerFunction(Map<String, TemplateFunction> functions) {}
+}
 ----
 
 TBD
