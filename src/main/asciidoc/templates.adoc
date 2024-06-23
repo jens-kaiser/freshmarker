@@ -182,11 +182,17 @@ The `Configuration` class offers four methods for loading templates.
 
 | `Template getTemplate(String name, String content);`
 | Read template from the given string
+
+| `Template getTemplate(Path importPath, String name, Reader reader);`
+| Read template from the given reader
+
+| `Template getTemplate(Path importPath, String name, String content);`
+| Read template from the given string
 |===
 
 Regardless of the method selected for loading the template, the imports are loaded by the configured `TemplateLoader`.
 
-By default, the `FileSystemTemplateLoader` is configured for the default file system. This loads all imports from the file system.
+By default, the `DefaultFileSystemTemplateLoader` is configured. This loads all imports from the file system.
 
 The `FileSystemTemplateLoader` can also be used with other file system implementations.
 
@@ -204,18 +210,14 @@ Custom template loaders can also be used instead of the `FileSystemTemplateLoade
 [source,java]
 ----
 public interface TemplateLoader {
-  String getTemplate(String filename, Charset charset) throws IOException;
+    String getImport(Path path, String filename, Charset charset) throws IOException;
 
-  default String getTemplate(String filename) throws IOException {
-    return getTemplate(filename, Charset.defaultCharset());
-  }
-
-  String getImport(String filename, Charset charset) throws IOException;
-
-  default String getImport(String filename) throws IOException {
-    return getImport(filename, Charset.defaultCharset());
-  }
+    default String getImport(Path path, String filename) throws IOException {
+        return getImport(path, filename, Charset.defaultCharset());
+    }
 }
 ----
 
-NOTE: Currently only `getImport` of _FreeMarker_ is used, therefore the `getTemplate` method can return `null`.
+The `filename` parameter is the name of the import file and `path` is the parent directory of the template. The parent directory can be used to load import files located relative to the template.
+
+NOTE: For templates loaded by String or Reader the path is the current directory.

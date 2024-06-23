@@ -1,10 +1,10 @@
 package org.freshmarker.core.ftl;
 
 import ftl.FreshMarkerParser;
-import ftl.Node.TerminalNode;
-import ftl.Token.TokenType;
 import ftl.Node;
+import ftl.Node.TerminalNode;
 import ftl.Token;
+import ftl.Token.TokenType;
 import ftl.ast.Assignment;
 import ftl.ast.FTLHeader;
 import ftl.ast.IDENTIFIER;
@@ -23,15 +23,6 @@ import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
@@ -54,6 +45,14 @@ import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
@@ -281,7 +280,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
         String namespace = ftl.get(5).toString();
         try {
-            FreshMarkerParser parser = new FreshMarkerParser(template.getTemplateLoader().getImport(path));
+            FreshMarkerParser parser = new FreshMarkerParser(template.getTemplateLoader().getImport(template.getPath(), path));
             parser.setInputSource(namespace);
             parser.Root();
             Root root = (Root) parser.rootNode();

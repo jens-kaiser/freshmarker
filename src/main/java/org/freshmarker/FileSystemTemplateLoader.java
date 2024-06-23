@@ -5,8 +5,9 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
-public class FileSystemTemplateLoader implements TemplateLoader{
+public class FileSystemTemplateLoader implements TemplateLoader {
     private final FileSystem fileSystem;
 
     public FileSystemTemplateLoader(FileSystem fileSystem) {
@@ -14,16 +15,11 @@ public class FileSystemTemplateLoader implements TemplateLoader{
     }
 
     public FileSystemTemplateLoader() {
-        this.fileSystem = FileSystems.getDefault();
+        this(FileSystems.getDefault());
     }
 
     @Override
-    public String getTemplate(String filename, Charset charset) throws IOException {
-        return getContent(filename, charset);
-    }
-
-    @Override
-    public String getImport(String filename, Charset charset) throws IOException {
+    public String getImport(Path path, String filename, Charset charset) throws IOException {
         return getContent(filename, charset);
     }
 

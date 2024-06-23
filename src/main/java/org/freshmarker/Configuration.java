@@ -80,7 +80,7 @@ public final class Configuration {
     public Configuration() {
         locale = Locale.getDefault();
         zoneId = ZoneId.systemDefault();
-        templateLoader = new FileSystemTemplateLoader();
+        templateLoader = new DefaultFileSystemTemplateLoader();
 
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
         mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
@@ -157,24 +157,32 @@ public final class Configuration {
     }
 
     public Template getTemplate(Path path) throws ParseException, IOException {
-        return getTemplate(path.toString(), Files.readString(path));
+        return getTemplate(path.getParent(), path.toString(), Files.readString(path));
     }
 
     public Template getTemplate(Path path, Charset charset) throws ParseException, IOException {
-        return getTemplate(path.toString(), Files.readString(path, charset));
+        return getTemplate(path.getParent(), path.toString(), Files.readString(path, charset));
     }
 
     public Template getTemplate(String name, Reader reader) throws ParseException {
-        return getTemplate(name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+        return getTemplate(Path.of("."), name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
     }
 
     public Template getTemplate(String name, String content) throws ParseException {
+        return getTemplate(Path.of("."), name, content);
+    }
+
+    public Template getTemplate(Path importPath, String name, Reader reader) throws ParseException {
+        return getTemplate(importPath, name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+    }
+
+    public Template getTemplate(Path importPath, String name, String content) throws ParseException {
         FreshMarkerParser parser = new FreshMarkerParser(content);
         parser.setInputSource(name);
         parser.Root();
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
-        Template template = new Template(this, templateLoader);
+        Template template = new Template(this, templateLoader, importPath);
         FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
         if (ftlHeader != null) {
             logger.info("ftl header: {}", ftlHeader.getLocation());
