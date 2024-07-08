@@ -68,6 +68,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     public static final InterpolationBuilder INSTANCE = new InterpolationBuilder();
 
+    private static final PositionalArgsListBuilder BUILDER = new PositionalArgsListBuilder();
+
     private InterpolationBuilder() {
         super();
     }
@@ -139,7 +141,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         List<TemplateObject> parameter = new ArrayList<>();
         Node child = expression.getChild(3);
         if (child instanceof PositionalArgsList) {
-            child.accept(PositionalArgsListBuilder.INSTANCE, parameter);
+            child.accept(BUILDER, parameter);
         } else {
             parameter.add(child.accept(this, null));
         }
@@ -358,7 +360,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         Node child = expression.getChild(1);
         logger.debug("child: {}", child.getClass());
         if (child instanceof PositionalArgsList) {
-            child.accept(PositionalArgsListBuilder.INSTANCE, parameter);
+            child.accept(BUILDER, parameter);
         } else {
             parameter.add(child.accept(this, null));
         }

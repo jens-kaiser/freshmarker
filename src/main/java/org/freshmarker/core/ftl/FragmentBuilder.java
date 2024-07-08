@@ -58,6 +58,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
+    private static final NamedArgsBuilder INSTANCE = new NamedArgsBuilder();
+
     private final Template template;
     private final Configuration configuration;
     private final String nameSpace;
@@ -173,7 +175,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         }
         String name = ftl.get(nameIndex).toString();
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-        ftl.getChild(nameIndex + 1).accept(NamedArgsBuilder.INSTANCE, namedArgs);
+        ftl.getChild(nameIndex + 1).accept(INSTANCE, namedArgs);
         logger.debug("user directive: {}.{} {}", currentNameSpace, name, namedArgs);
         Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))

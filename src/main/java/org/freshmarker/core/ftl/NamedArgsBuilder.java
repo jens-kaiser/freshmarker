@@ -10,12 +10,6 @@ import java.util.Map;
 
 public class NamedArgsBuilder implements FtlVisitor<Map<String, TemplateObject>, Void> {
 
-    public static final NamedArgsBuilder INSTANCE = new NamedArgsBuilder();
-
-    private NamedArgsBuilder() {
-        super();
-    }
-
     @Override
     public Void visit(Token ftl, Map<String, TemplateObject> input) {
         return null;

@@ -6,12 +6,6 @@ import org.freshmarker.core.model.TemplateObject;
 import java.util.List;
 
 public class PositionalArgsListBuilder implements ExpressionVisitor<List<TemplateObject>, List<TemplateObject>> {
-    public static final PositionalArgsListBuilder INSTANCE = new PositionalArgsListBuilder();
-
-    private PositionalArgsListBuilder() {
-        super();
-    }
-
     @Override
     public List<TemplateObject> visit(PositionalArgsList expression, List<TemplateObject> input) {
         for (int i = 0; i < expression.getChildCount(); i += 2) {
