@@ -20,6 +20,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional<TemplatePrimitive<?>> asPrimitive() {
         return Optional.of(this);
     }

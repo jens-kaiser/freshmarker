@@ -35,7 +35,6 @@ public class SettingEnvironment extends WrapperEnvironment {
 
     @Override
     public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-        Formatter formatter = settings.formatters().get(type);
-        return Objects.requireNonNullElseGet(formatter, () -> wrapped.getFormatter(type));
+        return Objects.requireNonNullElseGet(settings.formatters().get(type), () -> wrapped.getFormatter(type));
     }
 }

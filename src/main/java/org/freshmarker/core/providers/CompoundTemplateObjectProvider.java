@@ -12,10 +12,12 @@ public class CompoundTemplateObjectProvider implements TemplateObjectProvider {
   @Override
   public TemplateObject provide(Environment environment, Object o) {
     if (o instanceof List) {
+      @SuppressWarnings("unchecked")
       List<Object> values = (List<Object>) o;
       return new TemplateListSequence(values);
     }
     if (o instanceof Map) {
+      @SuppressWarnings("unchecked")
       Map<String, Object> values = (Map<String, Object>) o;
       return new TemplateBean(values);
     }

@@ -95,10 +95,14 @@ ${42.23}
 
 === Import Directive (since 1.0.0)
 
+Macros can be loaded by the `import` directive.
+
 [source]
 ----
 <#import 'macros.fmt' as m/>
 ----
+
+The file name parameter is the name of the import file and will be loaded by default relative to the template file.
 
 [source]
 ----

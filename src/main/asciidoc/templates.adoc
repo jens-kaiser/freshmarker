@@ -205,7 +205,7 @@ configuration.setTemplateLoader(new FileSystemTemplateLoader(fs));
 
 In this example, the imports are loaded from the zip archive `imports.zip`.
 
-Custom template loaders can also be used instead of the `FileSystemTemplateLoader`. They have to implement the `TemplateLoader` interface.
+Custom template loaders can also be used instead of the `DefaultFileSystemTemplateLoader`. They have to implement the `TemplateLoader` interface.
 
 [source,java]
 ----

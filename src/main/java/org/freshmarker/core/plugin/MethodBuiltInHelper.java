@@ -77,6 +77,7 @@ public class MethodBuiltInHelper {
       boolean withVarargs) {
     String annotatedName = method.getAnnotation(BuiltInMethod.class).value();
     Class<?>[] parameterTypes = method.getParameterTypes();
+    @SuppressWarnings("unchecked")
     Class<? extends TemplateObject> parameterType = (Class<? extends TemplateObject>) parameterTypes[0];
     MethodBuiltIn methodBuiltIn = new MethodBuiltIn(method, withEnvironment, withVarargs);
     if (!annotatedName.isEmpty()) {
