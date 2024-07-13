@@ -9,11 +9,13 @@ import org.freshmarker.core.output.OutputFormat;
 
 public class TemplateMarkup implements TemplateObject {
 
+  private static final DelegatingOutputFormat INSTANCE = new DelegatingOutputFormat();
+
   private final TemplateObject content;
   private final OutputFormat outputFormat;
 
   public TemplateMarkup(TemplateObject content) {
-    this(content, DelegatingOutputFormat.INSTANCE);
+    this(content, INSTANCE);
   }
 
   public TemplateMarkup(TemplateObject content, OutputFormat outputFormat) {

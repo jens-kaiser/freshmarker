@@ -4,14 +4,14 @@ import org.freshmarker.core.ProcessContext;
 
 public final class TemplateNull implements TemplateObject {
 
-  public static final TemplateNull NULL = new TemplateNull();
+    public static final TemplateNull NULL = new TemplateNull();
 
-  private TemplateNull() {
-    super();
-  }
+    private TemplateNull() {
+        super();
+    }
 
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    return this;
-  }
+    @Override
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        return this;
+    }
 }

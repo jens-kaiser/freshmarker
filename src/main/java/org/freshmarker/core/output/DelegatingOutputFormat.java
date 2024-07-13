@@ -5,15 +5,13 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 public class DelegatingOutputFormat implements OutputFormat {
 
-  public static final DelegatingOutputFormat INSTANCE = new DelegatingOutputFormat();
+    @Override
+    public TemplateString escape(Environment environment, String value) {
+        return environment.getOutputFormat().escape(environment, value);
+    }
 
-  @Override
-  public TemplateString escape(Environment environment, String value) {
-    return environment.getOutputFormat().escape(environment, value);
-  }
-
-  @Override
-  public TemplateString comment(Environment environment, String value) {
-    return environment.getOutputFormat().comment(environment, value);
-  }
+    @Override
+    public TemplateString comment(Environment environment, String value) {
+        return environment.getOutputFormat().comment(environment, value);
+    }
 }
