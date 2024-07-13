@@ -83,7 +83,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case INTEGER -> new TemplateNumber(Integer.parseInt(image));
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
-            case RAW_STRING -> new TemplateString(image.substring(2, image.length() - 1));
             case IDENTIFIER -> new TemplateVariable(expression.toString());
             case EXISTS_OPERATOR -> new TemplateExists((TemplateObject) input);
             case NULL -> TemplateNull.NULL;
