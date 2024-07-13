@@ -103,13 +103,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(PrimaryExpression expression, Object input) {
-        logger.debug("visit primary expression: {}", expression);
         return handlePrimaryAndBase(input, expression.children());
     }
 
     @Override
     public TemplateObject visit(BaseExpression expression, Object input) {
-        logger.debug("visit base expression: {}", expression);
         return handlePrimaryAndBase(input, expression.children());
     }
 
@@ -133,7 +131,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(BuiltIn expression, Object input) {
-        logger.debug("visit builtin expression: {}", expression);
         Token buildInName = (Token) expression.getChild(1);
         if (expression.getChildCount() < 3) {
             return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of());
@@ -145,7 +142,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         } else {
             parameter.add(child.accept(this, null));
         }
-        logger.debug("parameters: {}", parameter);
         return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, parameter);
     }
 
@@ -161,9 +157,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateObject visit(DotKey expression, Object input) {
         Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
-        String dotKey = lastToken.toString();
-        logger.debug("dotkey: {}", dotKey);
-        return new TemplateDotKey((TemplateObject) input, dotKey);
+        return new TemplateDotKey((TemplateObject) input, lastToken.toString());
     }
 
     @Override
@@ -183,21 +177,15 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(AdditiveExpression expression, Object input) {
-        if (expression.getChildCount() == 1) {
-            return expression.getChild(0).accept(this, null);
-        }
-        return handleMultiplicativAndAdditiveExpression(expression);
+        return handleMultiplicativeAndAdditiveExpression(expression);
     }
 
     @Override
     public TemplateObject visit(MultiplicativeExpression expression, Object input) {
-        if (expression.getChildCount() == 1) {
-            return expression.getChild(0).accept(this, null);
-        }
-        return handleMultiplicativAndAdditiveExpression(expression);
+        return handleMultiplicativeAndAdditiveExpression(expression);
     }
 
-    private TemplateObject handleMultiplicativAndAdditiveExpression(BaseNode expression) {
+    private TemplateObject handleMultiplicativeAndAdditiveExpression(BaseNode expression) {
         TemplateObject result = expression.getChild(0).accept(this, null);
         for (int i = 1; i < expression.getChildCount(); i += 2) {
             Token token = (Token) expression.getChild(i);
