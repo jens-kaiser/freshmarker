@@ -60,12 +60,12 @@ public abstract class AbstractCalculatingNumber<N extends Number> extends Number
             return this;
         }
         return switch (type) {
-            case BYTE -> new ByteNumber(wrapped.byteValue());
-            case SHORT -> new ShortNumber(wrapped.shortValue());
-            case INTEGER -> new IntegerNumber(wrapped.intValue());
-            case LONG -> new LongNumber(wrapped.longValue());
-            case FLOAT -> new FloatNumber(wrapped.floatValue());
-            case DOUBLE -> new DoubleNumber(wrapped.doubleValue());
+            case BYTE -> new ByteNumber(byteValue());
+            case SHORT -> new ShortNumber(shortValue());
+            case INTEGER -> new IntegerNumber(intValue());
+            case LONG -> new LongNumber(longValue());
+            case FLOAT -> new FloatNumber(floatValue());
+            case DOUBLE -> new DoubleNumber(doubleValue());
         };
     }
 
