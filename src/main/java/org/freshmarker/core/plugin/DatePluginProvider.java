@@ -23,10 +23,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class DatePluginProvider implements PluginProvider {
-
-    private static final ThreadLocal<SimpleDateFormat> COMPUTER_AUDIENCE = ThreadLocal
-            .withInitial(() -> new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss"));
-
     private static final BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
 
     private static final BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
@@ -43,7 +39,7 @@ public class DatePluginProvider implements PluginProvider {
                         new Time(((TemplateClassicDateTime) x).getValue().getTime()))));
         builtIns.put(DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext c) -> new TemplateString(
-                        COMPUTER_AUDIENCE.get().format(((TemplateClassicDateTime) x).getValue()))));
+                        new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").format(((TemplateClassicDateTime) x).getValue()))));
         builtIns.put(DATE_BUILDER.of("date"),
                 new FunctionalBuiltIn((TemplateObject x, List<TemplateObject> y, ProcessContext c) -> x));
         builtIns.put(DATE_BUILDER.of("c"), new FunctionalBuiltIn(
