@@ -4,6 +4,7 @@ import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class ShortNumberTest {
 
@@ -168,5 +169,16 @@ class ShortNumberTest {
     @Test
     void getType() {
         assertEquals(Type.SHORT, new ShortNumber((short)42).getType());
+    }
+
+    @Test
+    void toType() {
+        ShortNumber byteNumber = new ShortNumber((short) 42);
+        assertInstanceOf(ByteNumber.class, byteNumber.toType(Type.BYTE));
+        assertInstanceOf(ShortNumber.class, byteNumber.toType(Type.SHORT));
+        assertInstanceOf(IntegerNumber.class, byteNumber.toType(Type.INTEGER));
+        assertInstanceOf(LongNumber.class, byteNumber.toType(Type.LONG));
+        assertInstanceOf(FloatNumber.class, byteNumber.toType(Type.FLOAT));
+        assertInstanceOf(DoubleNumber.class, byteNumber.toType(Type.DOUBLE));
     }
 }
