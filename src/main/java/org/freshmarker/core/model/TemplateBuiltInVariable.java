@@ -11,11 +11,11 @@ public record TemplateBuiltInVariable(String name) implements TemplateExpression
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
         return switch (name) {
-            case "now" -> new TemplateLocalDateTime(LocalDateTime.now());
+            case "now" -> new TemplateLocalDateTime(LocalDateTime.now()).at(context);
             case "locale" -> new TemplateString(context.getEnvironment().getLocale().toString());
             case "country" -> new TemplateString(context.getEnvironment().getLocale().getCountry());
             case "lang" -> new TemplateString(context.getEnvironment().getLocale().getLanguage());
-            case "version" -> new TemplateString("1.0.0");
+            case "version" -> new TemplateString(getClass().getPackage().getImplementationVersion());
             default -> throw new IllegalStateException("Unexpected value: " + name);
         };
     }

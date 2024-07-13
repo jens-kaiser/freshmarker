@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,7 +30,6 @@ class BuiltInVariableTest {
             "test: ${.lang},test: de",
             "test: ${.locale},test: de_DE",
             "test: ${.country},test: DE",
-            "test: ${.version},test: 1.0.0",
     })
     void builtInVariables(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
