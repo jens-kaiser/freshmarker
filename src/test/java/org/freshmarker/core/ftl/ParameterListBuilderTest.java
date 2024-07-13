@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParameterListBuilderTest {
 
+    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder();
+
     @Test
     void emptyParameterList() {
         FreshMarkerParser parser = new FreshMarkerParser("<#macro test()></#macro>");
@@ -30,7 +32,7 @@ class ParameterListBuilderTest {
         ParameterList parameterList = parser.rootNode().firstDescendantOfType(ParameterList.class);
         assertNotNull(parameterList);
         ArrayList<ParameterHolder> parameterHolders = new ArrayList<>();
-        assertThrows(ParsingException.class, () -> parameterList.accept(ParameterListBuilder.INSTANCE, parameterHolders));
+        assertThrows(ParsingException.class, () -> parameterList.accept(PARAMETER_LIST_BUILDER, parameterHolders));
     }
 
     @Test
@@ -41,7 +43,7 @@ class ParameterListBuilderTest {
         ParameterList parameterList = parser.rootNode().firstDescendantOfType(ParameterList.class);
         assertNotNull(parameterList);
         ArrayList<ParameterHolder> parameterHolders = new ArrayList<>();
-        parameterList.accept(ParameterListBuilder.INSTANCE, parameterHolders);
+        parameterList.accept(PARAMETER_LIST_BUILDER, parameterHolders);
         assertEquals(2, parameterHolders.size());
         ParameterHolder first = parameterHolders.getFirst();
         assertAll(
@@ -65,7 +67,7 @@ class ParameterListBuilderTest {
         ParameterList parameterList = parser.rootNode().firstDescendantOfType(ParameterList.class);
         assertNotNull(parameterList);
         ArrayList<ParameterHolder> parameterHolders = new ArrayList<>();
-        parameterList.accept(ParameterListBuilder.INSTANCE, parameterHolders);
+        parameterList.accept(PARAMETER_LIST_BUILDER, parameterHolders);
         assertEquals(2, parameterHolders.size());
         ParameterHolder first = parameterHolders.getFirst();
         assertAll(

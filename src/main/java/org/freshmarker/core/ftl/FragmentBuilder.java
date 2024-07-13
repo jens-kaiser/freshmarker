@@ -58,7 +58,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
-    private static final NamedArgsBuilder INSTANCE = new NamedArgsBuilder();
+    private static final NamedArgsBuilder NAMED_ARGS_BUILDER = new NamedArgsBuilder();
+    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder();
 
     private final Template template;
     private final Configuration configuration;
@@ -175,7 +176,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         }
         String name = ftl.get(nameIndex).toString();
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-        ftl.getChild(nameIndex + 1).accept(INSTANCE, namedArgs);
+        ftl.getChild(nameIndex + 1).accept(NAMED_ARGS_BUILDER, namedArgs);
         logger.debug("user directive: {}.{} {}", currentNameSpace, name, namedArgs);
         Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))
@@ -216,7 +217,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         if (ftl.getChild(parameterListIndex).getType() == TokenType.CLOSE_TAG) {
             return Collections.emptyList();
         }
-        return ftl.getChild(parameterListIndex).accept(ParameterListBuilder.INSTANCE, new ArrayList<>());
+        return ftl.getChild(parameterListIndex).accept(PARAMETER_LIST_BUILDER, new ArrayList<>());
     }
 
     private int getParameterListIndex(MacroDefinition ftl) {

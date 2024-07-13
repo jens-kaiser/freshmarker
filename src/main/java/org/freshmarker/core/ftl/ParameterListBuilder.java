@@ -1,8 +1,8 @@
 package org.freshmarker.core.ftl;
 
-import ftl.Token.TokenType;
 import ftl.Node;
 import ftl.Token;
+import ftl.Token.TokenType;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.ParameterList;
 import org.freshmarker.core.model.TemplateObject;
@@ -13,12 +13,6 @@ import java.util.Set;
 
 public class ParameterListBuilder implements
         ExpressionVisitor<List<ParameterHolder>, List<ParameterHolder>> {
-
-    public static final ParameterListBuilder INSTANCE = new ParameterListBuilder();
-
-    private ParameterListBuilder() {
-        super();
-    }
 
     @Override
     public List<ParameterHolder> visit(Token expression, List<ParameterHolder> input) {
