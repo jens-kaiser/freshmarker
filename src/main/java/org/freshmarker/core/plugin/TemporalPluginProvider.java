@@ -47,11 +47,11 @@ public class TemporalPluginProvider implements PluginProvider {
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
         builtIns.put(INSTANT_BUILDER.of("date_time"), new FunctionalBuiltIn(
-                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(e.getEnvironment().getZoneId()).toLocalDateTime()));
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).at(e).toLocalDateTime()));
         builtIns.put(INSTANT_BUILDER.of("date"), new FunctionalBuiltIn(
-                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(e.getEnvironment().getZoneId()).toLocalDate()));
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).at(e).toLocalDate()));
         builtIns.put(INSTANT_BUILDER.of("time"), new FunctionalBuiltIn(
-                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).atZone(e.getEnvironment().getZoneId()).toLocalTime()));
+                (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> ((TemplateInstant) x).at(e).toLocalTime()));
         builtIns.put(INSTANT_BUILDER.of("c"), new FunctionalBuiltIn(
                 (TemplateObject x, List<TemplateObject> y, ProcessContext e) -> new TemplateString(String.valueOf(x))));
         builtIns.put(INSTANT_BUILDER.of(STRING), new FunctionalBuiltIn(

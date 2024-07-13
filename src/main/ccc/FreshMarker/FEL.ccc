@@ -168,8 +168,6 @@ TOKEN :
           ((~["\\", "'"]) | ("\\" ~[]))*
       "'")
    >
-   |
-   <RAW_STRING : "r" (("\"" (~["\""])* "\"") | ("'" (~["'"])* "'"))>
 ;
 
 Node Input #void :
@@ -345,7 +343,7 @@ ListLiteral :
 ;
 
 StringLiteral :
-    <STRING_LITERAL>|<RAW_STRING>
+    <STRING_LITERAL>
 ;
 
 
