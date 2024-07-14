@@ -27,6 +27,11 @@
         </developer>
     </developers>
 
+    <organization>
+        <name>freshmarker.org</name>
+        <url>http://freshmarker.org</url>
+    </organization>
+
     <scm>
         <url>https://gitlab.com/schegge/freshmarker.git</url>
         <connection>scm:git:https://gitlab.com/schegge/freshmarker.git</connection>
@@ -241,15 +246,13 @@
                 <configuration>
                     <classesDirectory>target/${project.artifactId}-${project.version}.jar
                     </classesDirectory>
+                    <systemProperties>
+                        <property>
+                            <name>projectArtifactId</name>
+                            <value>${project.artifactId}</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <phase>integration-test</phase>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

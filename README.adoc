@@ -7,9 +7,7 @@ A simple, small but powerful template engine based loosely on the _FreeMarker_ s
 [source,xml]
 ----
 <dependency>
-  <groupId>de.schegge</groupId>
-  <artifactId>freshmarker</artifactId>
-  <version>1.0.2</versio>
+include::pom.xml[lines=7..9]
 </dependency>
 ----
 
