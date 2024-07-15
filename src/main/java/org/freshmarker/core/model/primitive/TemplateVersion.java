@@ -22,7 +22,7 @@ public class TemplateVersion extends TemplatePrimitive<Version> {
     }
 
     public TemplateBoolean isBefore(TemplateVersion value) {
-        return TemplateBoolean.from(getValue().isBefore(value.getValue()));
+        return TemplateBoolean.from(getValue().compareTo(value.getValue()) < 0);
     }
 
     public TemplateBoolean isEqual(TemplateVersion value) {
@@ -30,7 +30,7 @@ public class TemplateVersion extends TemplatePrimitive<Version> {
     }
 
     public TemplateBoolean isAfter(TemplateVersion value) {
-        return TemplateBoolean.from(getValue().isAfter(value.getValue()));
+        return TemplateBoolean.from(getValue().compareTo(value.getValue()) > 0);
     }
 
     @Override
