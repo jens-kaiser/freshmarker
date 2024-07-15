@@ -123,6 +123,20 @@ m|${'The quick brown Fox jumps over the lazy Dog'?contains('Cat')}
 m|false
 |===
 
+==== `startsWith` Built-In
+
+This built-in return `true` if the text starts with the specified parameter, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|${'The quick brown Fox jumps over the lazy Dog'?endsWith('Dog')}
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?ends_with('Cat')}
+m|false
+|===
+
 ==== `endsWith` Built-In
 
 This built-in return `true` if the text ends with the specified parameter, otherwise `false`.

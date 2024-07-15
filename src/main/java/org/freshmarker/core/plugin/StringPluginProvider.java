@@ -85,6 +85,11 @@ public class StringPluginProvider implements PluginProvider {
         return value.getValue().endsWith(endsWith.getValue()) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
     }
 
+    @BuiltInMethod
+    public static TemplateBoolean startsWith(TemplateString value, TemplateString endsWith) {
+        return value.getValue().startsWith(endsWith.getValue()) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+    }
+
     @BuiltInMethod("boolean")
     public static TemplateBoolean toBoolean(TemplateString value) {
         String input = value.getValue();

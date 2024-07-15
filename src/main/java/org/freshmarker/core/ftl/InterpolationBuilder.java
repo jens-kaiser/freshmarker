@@ -327,7 +327,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(UnaryPlusMinusExpression expression, Object input) {
-        logger.debug("visit unary plus minus expression: {}", expression);
         Token token = (Token) expression.getChild(0);
         TemplateObject templateObject = expression.getChild(1).accept(this, null);
         if (token.getType() == TokenType.PLUS) {
@@ -356,7 +355,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(HashLiteral expression, Object input) {
-        logger.debug("hash literal");
         LinkedHashMap<String, Object> hash = new LinkedHashMap<>();
         for (int i = 0; i < expression.size() - 1; i += 4) {
             String key = expression.get(i + 1).accept(this, null).asString().map(TemplateString::getValue)
@@ -370,7 +368,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(ListLiteral expression, Object input) {
-        logger.debug("list literal");
         List<Object> list = new ArrayList<>();
         for (int i = 1; i < expression.size() - 1; i++) {
             Node node = expression.get(i);

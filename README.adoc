@@ -58,6 +58,7 @@ You can find a detailed description of al FreshMarker features in the https://gi
 |Record|Records|TemplateBean
 |Enum|Enums|TemplateEnum
 |Null|-|TemplateNull
+|Version|-|TemplateVersion
 |===
 
 == Template Directives
@@ -91,6 +92,7 @@ You can find a detailed description of al FreshMarker features in the https://gi
 | contains | String |
 | ends_with | String |
 | boolean | String |
+| version | String |
 | c    | DateTime, Date, Time |
 | string | DateTime, Date, Time | Not for the legacy temporal types
 | date | DateTime, Date |
@@ -113,6 +115,12 @@ You can find a detailed description of al FreshMarker features in the https://gi
 | item_parity_cap | Loop Variable |
 | c | Enum | Enum name
 | ordinal | Enum | Enum ordinal
+| major | Version |
+| minor | Version |
+| patch | Version |
+| is_before | Version |
+| is_equal | Version |
+| is_after | Version |
 |===
 
 == Built-in Variables
@@ -123,4 +131,5 @@ You can find a detailed description of al FreshMarker features in the https://gi
 |country | the country part of the current locale | String
 |locale | the current locale | String
 |now | the current date-time | DateTime
+|version | the current version | Version
 |===

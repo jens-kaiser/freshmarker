@@ -50,3 +50,5 @@ include::builtins-looper.adoc[]
 include::builtins-enum.adoc[]
 
 include::builtins-filepath.adoc[]
+
+include::builtins-version.adoc[]
