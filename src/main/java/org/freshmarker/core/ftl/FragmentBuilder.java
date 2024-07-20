@@ -137,7 +137,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         Comparator<String> comparator = null;
         if (ftl.get(index).getType() == TokenType.SORTED) {
             comparator = COMPARATORS.get((TokenType) ftl.get(index + 1).getType());
-            ;
             index += 2;
         }
         String valueIdentifier = null;

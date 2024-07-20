@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -260,8 +259,8 @@ class ListDirectiveTest {
     @Test
     void sortedRecordHashList() {
         Template template = configuration.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
-        HashRecord record = new HashRecord("1", "2", "3");
-        assertEquals("a 2,b 3,c 1,", template.process(Map.of("hash", record)));
+        HashRecord recordHash = new HashRecord("1", "2", "3");
+        assertEquals("a 2,b 3,c 1,", template.process(Map.of("hash", recordHash)));
     }
 
     public record HashRecord(String c, String a, String b) {
@@ -270,8 +269,8 @@ class ListDirectiveTest {
     @Test
     void sortedDescendingRecordHashList() {
         Template template = configuration.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
-        HashRecord record = new HashRecord("1", "2", "3");
-        assertEquals("c 1,b 3,a 2,", template.process(Map.of("hash", record)));
+        HashRecord recordHash = new HashRecord("1", "2", "3");
+        assertEquals("c 1,b 3,a 2,", template.process(Map.of("hash", recordHash)));
     }
 
     @Test
