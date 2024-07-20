@@ -98,12 +98,27 @@ ${key}->${value}
 </#list>
 ----
 
-NOTE: In addition to the _Java_ `Map` types, _Java Beans_ are also interpreted as a hash. It is not only possible to iterate over the enries of a `Map`, but also over the attributes of a Bean.
+NOTE: In addition to the _Java_ `Map` types, _Java Beans_ are also interpreted as a hash. It is not only possible to iterate over the entries of a `Map`, but also over the attributes of a Bean.
 
 .List Directive example with a hash and a loop variable
 [source]
 ----
 <#list map as key, value with l>
 ${l?counter}. ${key}->${value}
+</#list>
+----
+
+==== List Directive with a hash and sorted keys
+
+Normally the list iterates over the entries without a preferred order.
+With _Java_ `Map` types this can be influenced by the use of `SequencedMap` implementations. However, this is not possible when using a _Java Beans_.
+
+The keys of a hash can also be sorted in ascending and descending order by adding `sorted asc` after the key for ascending sorting and `sorted desc` for descending sorting.
+
+.List Directive example with a hash and a sorted key
+[source]
+----
+<#list map as key sorted asc, value>
+${key}->${value}
 </#list>
 ----

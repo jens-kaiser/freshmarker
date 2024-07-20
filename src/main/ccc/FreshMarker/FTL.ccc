@@ -391,13 +391,16 @@ Default #DefaultInstruction :
     Block
 ;
 
-List #ListInstruction : 
+List #ListInstruction :
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <LIST><BLANK>
     Expression
     <AS>
     <IDENTIFIER>
-    [ <COMMA> <IDENTIFIER> ]
+    [
+      [ <SORTED> (<ASCENDING> | <DESCENDING>) ]
+      <COMMA> <IDENTIFIER>
+    ]
     [ <WITH> <IDENTIFIER> ]
     <CLOSE_TAG>
     Block
