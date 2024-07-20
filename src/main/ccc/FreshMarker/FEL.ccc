@@ -153,6 +153,12 @@ TOKEN :
     |
     <WITH : "with">
     |
+    <SORTED : "sorted">
+    |
+    <ASCENDING : "asc">
+    |
+    <DESCENDING : "desc">
+    |
     <INTEGER : (["0"-"9"])+>
     |
     <DECIMAL : <INTEGER> "." <INTEGER>>

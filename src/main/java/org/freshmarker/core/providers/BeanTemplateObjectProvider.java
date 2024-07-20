@@ -19,7 +19,7 @@ public class BeanTemplateObjectProvider implements TemplateObjectProvider {
     @Override
     public TemplateObject provide(Environment environment, Object o) {
         Class<?> type = o.getClass();
-        modelSecurityGateway.check(o.getClass());
+        modelSecurityGateway.check(type);
         return new TemplateBean(beanProvider.provide(o, environment), type);
     }
 }

@@ -50,8 +50,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
@@ -60,6 +62,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
     private static final NamedArgsBuilder NAMED_ARGS_BUILDER = new NamedArgsBuilder();
     private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder();
+
+    private static final Map<TokenType, Comparator<String>> COMPARATORS = Map.of(
+            TokenType.ASCENDING, Comparator.naturalOrder(), TokenType.DESCENDING, Comparator.reverseOrder());
 
     private final Template template;
     private final Configuration configuration;
@@ -127,20 +132,28 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
     @Override
     public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
         TemplateObject list = ftl.getChild(3).accept(InterpolationBuilder.INSTANCE, null);
-        int looperIndex = ftl.getChild(6).getType() == TokenType.COMMA ? 9 : 7;
-        int blockIndex = looperIndex;
-        String looperIdentifier = null;
-        if (ftl.getChild(looperIndex - 1).getType() == TokenType.WITH) {
-            looperIdentifier = ((IDENTIFIER) ftl.getChild(looperIndex)).toString();
-            blockIndex += 2;
+        String identifier = ftl.getChild(5).toString();
+        int index = 6;
+        Comparator<String> comparator = null;
+        if (ftl.get(index).getType() == TokenType.SORTED) {
+            comparator = COMPARATORS.get((TokenType) ftl.get(index + 1).getType());
+            ;
+            index += 2;
         }
-        BlockFragment block = ftl.getChild(blockIndex).accept(this, new BlockFragment());
-        if (ftl.getChild(6).getType() == TokenType.COMMA) {
-            String keyIdentifier = ftl.getChild(5).toString();
-            String valueIdentifier = ftl.getChild(7).toString();
-            input.addFragment(new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block, ftl));
+        String valueIdentifier = null;
+        if (ftl.getChild(index).getType() == TokenType.COMMA) {
+            valueIdentifier = ftl.getChild(index + 1).toString();
+            index += 2;
+        }
+        String looperIdentifier = null;
+        if (ftl.getChild(index).getType() == TokenType.WITH) {
+            looperIdentifier = ((IDENTIFIER) ftl.getChild(index + 1)).toString();
+            index += 2;
+        }
+        BlockFragment block = ftl.getChild(index + 1).accept(this, new BlockFragment());
+        if (valueIdentifier != null) {
+            input.addFragment(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator));
         } else {
-            String identifier = ftl.getChild(5).toString();
             input.addFragment(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
         }
         return input;
