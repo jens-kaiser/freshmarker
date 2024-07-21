@@ -40,7 +40,7 @@ public class MethodBuiltInHelper {
         for (int i = firstBuiltInParameter; i < parameterTypes.length - 1; i++) {
             Class<?> parameterType = parameterTypes[i];
             if (!TemplateObject.class.isAssignableFrom(parameterType)) {
-                throw new ConfigurationException("builtin additional parameter " + (i - firstBuiltInParameter) + " must be assignable from TemplateObject");
+                throw new ConfigurationException("builtin additional parameter " + (i - firstBuiltInParameter + 1) + " must be assignable from TemplateObject");
             }
         }
         Class<?> parameterType = parameterTypes[parameterTypes.length - 1];
