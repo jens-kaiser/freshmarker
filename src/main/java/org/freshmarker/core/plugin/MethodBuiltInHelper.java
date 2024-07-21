@@ -57,9 +57,6 @@ public class MethodBuiltInHelper {
         if (!Modifier.isStatic(method.getModifiers())) {
             throw new ConfigurationException("builtin method must be static");
         }
-        if (Modifier.isAbstract(method.getModifiers())) {
-            throw new ConfigurationException("builtin method must not be abstract");
-        }
         if (method.getParameterCount() == 0) {
             throw new ConfigurationException("builtin method must have parameter");
         }
