@@ -92,7 +92,7 @@ class MethodBuiltInHelperTest {
 
     @Test
     void registerWrongArrayTypeLastAdditionalParameterBuiltIns() {
-        PluginProvider provider = new WrongTypeLastAdditionalParameterTestPluginProvider();
+        PluginProvider provider = new WrongArrayTypeLastAdditionalParameterTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
         ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("builtin additional parameter 2 must be assignable from TemplateObject", exception.getMessage());
