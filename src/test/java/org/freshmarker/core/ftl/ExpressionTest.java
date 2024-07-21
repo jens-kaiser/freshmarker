@@ -87,10 +87,16 @@ class ExpressionTest {
             "!(2 > 1), false",
             "!(1 <= 1), false",
             "!(2 >= 1), false",
+            "!(first < first), true",
+            "!(first < second), false",
+            "!(first > first), true",
+            "!(second > first), false",
+            "!(first <= first), false",
+            "!(second >= first), false",
     })
     void negatedRelation(String expression, boolean result) throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
-        assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
+        assertEquals("test: " + result, template.process(Map.of("first", 1, "second", 2)));
     }
 
     @ParameterizedTest
