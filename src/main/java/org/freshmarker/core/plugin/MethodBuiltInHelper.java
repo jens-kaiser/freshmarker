@@ -25,7 +25,7 @@ public class MethodBuiltInHelper {
 
         Class<?>[] parameterTypes = method.getParameterTypes();
         if (!TemplateObject.class.isAssignableFrom(parameterTypes[0])) {
-            throw new ConfigurationException("first parameter must be assignable from TemplateObject");
+            throw new ConfigurationException("builtin first parameter must be assignable from TemplateObject");
         }
         if (parameterTypes.length == 1) {
             getMethodBuiltIn(method, builtIns, false, false);
@@ -40,7 +40,7 @@ public class MethodBuiltInHelper {
         for (int i = firstBuiltInParameter; i < parameterTypes.length - 1; i++) {
             Class<?> parameterType = parameterTypes[i];
             if (!TemplateObject.class.isAssignableFrom(parameterType)) {
-                throw new ConfigurationException("builtin parameter " + (i - firstBuiltInParameter) + " must be assignable from TemplateObject");
+                throw new ConfigurationException("builtin additional parameter " + (i - firstBuiltInParameter) + " must be assignable from TemplateObject");
             }
         }
         Class<?> parameterType = parameterTypes[parameterTypes.length - 1];
@@ -49,7 +49,7 @@ public class MethodBuiltInHelper {
         } else if ((parameterType.isArray() && TemplateObject.class.isAssignableFrom(parameterType.getComponentType()))) {
             getMethodBuiltIn(method, builtIns, withEnvironment, true);
         } else {
-            throw new ConfigurationException("builtin parameter " + (parameterTypes.length - 1) + " must be assignable from TemplateObject");
+            throw new ConfigurationException("builtin additional parameter " + (parameterTypes.length - 1) + " must be assignable from TemplateObject");
         }
     }
 

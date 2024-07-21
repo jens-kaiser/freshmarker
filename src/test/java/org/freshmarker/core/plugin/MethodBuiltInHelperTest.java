@@ -46,6 +46,21 @@ class MethodBuiltInHelperTest {
         assertEquals("builtin method must have parameter", exception.getMessage());
     }
 
+    private static class WrongTypeFirstParameterTestPluginProvider implements PluginProvider {
+        @BuiltInMethod
+        public static TemplateObject wrongParameterType(String object) {
+            return null;
+        }
+    }
+
+    @Test
+    void registerWrongTypeFirstParameterBuiltIns() {
+        PluginProvider provider = new WrongTypeFirstParameterTestPluginProvider();
+        Map<BuiltInKey, BuiltIn> builtIns = Map.of();
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        assertEquals("builtin first parameter must be assignable from TemplateObject", exception.getMessage());
+    }
+
     private static class WrongTypeAdditionalParameterTestPluginProvider implements PluginProvider {
         @BuiltInMethod
         public static TemplateObject wrongParameterType(TemplateObject object, String parameter) {
@@ -58,7 +73,7 @@ class MethodBuiltInHelperTest {
         PluginProvider provider = new WrongTypeAdditionalParameterTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
         ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
-        assertEquals("builtin parameter 1 must be assignable from TemplateObject", exception.getMessage());
+        assertEquals("builtin additional parameter 1 must be assignable from TemplateObject", exception.getMessage());
     }
 
     private static class WrongReturnTypeTestPluginProvider implements PluginProvider {
