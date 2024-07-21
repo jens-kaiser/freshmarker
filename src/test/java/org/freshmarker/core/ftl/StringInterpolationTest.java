@@ -141,4 +141,19 @@ class StringInterpolationTest {
         Template template = configuration.getTemplate("test", "test: ${text" + builtIn + "}");
         assertEquals(expected, template.process(Map.of("text", input)));
     }
-}
+
+    @ParameterizedTest
+    @CsvSource({
+            "?locale?language,de_DE_BFE,test: de",
+            "?locale?lang,de_DE_BFE,test: de",
+            "?locale?country,de_DE_BFE,test: DE",
+            "?locale?language,de_DE,test: de",
+            "?locale?lang,de_DE,test: de",
+            "?locale?country,de_DE,test: DE",
+            "?locale?language,de,test: de",
+            "?locale?lang,de,test: de",
+    })
+    void locale(String builtIn, String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${text" + builtIn + "}");
+        assertEquals(expected, template.process(Map.of("text", input)));
+    }}

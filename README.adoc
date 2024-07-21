@@ -134,7 +134,7 @@ You can find a detailed description of al FreshMarker features in the https://gi
 | Name | Description | Type
 |lang | the language part of the current locale | String
 |country | the country part of the current locale | String
-|locale | the current locale | String
+|locale | the current locale | Locale
 |now | the current date-time | DateTime
 |version | the current version | Version
 |===
