@@ -88,16 +88,3 @@ m|${.version?is_after(.version)}
 m|no
 m|boolean
 |===
-
-==== `version` Built-In
-
-This built-in converts a string value into a version value.
-
-|===
-|Interpolation | Output | Type
-
-m|${'1.0.2'?version}
-m|1.0.2
-m|version
-
-|===

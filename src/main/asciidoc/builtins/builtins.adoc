@@ -51,4 +51,6 @@ include::builtins-enum.adoc[]
 
 include::builtins-filepath.adoc[]
 
+include::builtins-locale.adoc[]
+
 include::builtins-version.adoc[]

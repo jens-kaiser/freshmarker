@@ -27,8 +27,12 @@ class BuiltInVariableTest {
 
     @ParameterizedTest
     @CsvSource({
-            "test: ${.lang},test: de",
             "test: ${.locale},test: de_DE",
+            "test: ${.locale?lang},test: de",
+            "test: ${.locale?language},test: de",
+            "test: ${.locale?country},test: DE",
+            "test: ${.lang},test: de",
+            "test: ${.language},test: de",
             "test: ${.country},test: DE",
     })
     void builtInVariables(String templateSource, String expected) throws ParseException {

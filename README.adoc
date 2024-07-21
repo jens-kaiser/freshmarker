@@ -59,6 +59,7 @@ You can find a detailed description of al FreshMarker features in the https://gi
 |Enum|Enums|TemplateEnum
 |Null|-|TemplateNull
 |Version|-|TemplateVersion
+|Locale|`Locale`|TemplateLocale
 |===
 
 == Template Directives
@@ -93,6 +94,7 @@ You can find a detailed description of al FreshMarker features in the https://gi
 | ends_with | String |
 | boolean | String |
 | version | String |
+| locale | String |
 | c    | DateTime, Date, Time |
 | string | DateTime, Date, Time | Not for the legacy temporal types
 | date | DateTime, Date |
@@ -121,6 +123,9 @@ You can find a detailed description of al FreshMarker features in the https://gi
 | is_before | Version |
 | is_equal | Version |
 | is_after | Version |
+| lang | Locale |
+| language | Locale |
+| country | Locale |
 |===
 
 == Built-in Variables

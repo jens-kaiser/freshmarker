@@ -44,6 +44,7 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 |Record|Top-Level Records|no
 |Enum|Enums|yes
 |Null|-|yes
+|Locale|`Locale`|yes
 |Version|-|yes
 |===
 

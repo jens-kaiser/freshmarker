@@ -7,6 +7,7 @@ import ftl.ast.Root;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
@@ -185,7 +186,7 @@ public final class Configuration {
         Template template = new Template(this, templateLoader, importPath);
         FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
         if (ftlHeader != null) {
-            logger.info("ftl header: {}", ftlHeader.getLocation());
+            throw new ProcessException("ftl header is not supported", ftlHeader);
         }
         root.accept(new FragmentBuilder(template, this, null), template.getRootFragment());
         return template;

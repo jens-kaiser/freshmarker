@@ -189,3 +189,33 @@ TBD
 ==== `noEsc` Built-In
 
 TBD
+
+==== `locale` Built-In
+
+This built-in converts a string value into a version value.
+
+|===
+|Interpolation | Output | Type
+
+m|${'de_DE'?locale}
+m|de_DE
+m|locale
+
+m|${'de'?locale}
+m|de
+m|locale
+
+|===
+
+==== `version` Built-In
+
+This built-in converts a string value into a version value.
+
+|===
+|Interpolation | Output | Type
+
+m|${'1.0.2'?version}
+m|1.0.2
+m|version
+
+|===

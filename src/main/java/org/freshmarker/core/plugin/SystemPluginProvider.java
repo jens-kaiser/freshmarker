@@ -7,7 +7,7 @@ import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.buildin.FunctionalBuiltIn;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplatePrimitive;
+import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 
@@ -17,6 +17,7 @@ import java.util.Map;
 public class SystemPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateVersion> VERSION = new BuiltInKeyBuilder<>(TemplateVersion.class);
     private static final BuiltInKeyBuilder<TemplateString> STRING = new BuiltInKeyBuilder<>(TemplateString.class);
+    private static final BuiltInKeyBuilder<TemplateLocale> LOCALE = new BuiltInKeyBuilder<>(TemplateLocale.class);
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -26,12 +27,19 @@ public class SystemPluginProvider implements PluginProvider {
         register(builtIns, VERSION.of("major"), (x, y, e) -> version(x, e).major());
         register(builtIns, VERSION.of("minor"), (x, y, e) -> version(x, e).minor());
         register(builtIns, VERSION.of("patch"), (x, y, e) -> version(x, e).patch());
-        register(builtIns, STRING.of("version"), (x, y, e) -> x.evaluateToObject(e).asString().map(TemplatePrimitive::toString)
-                .map(TemplateVersion::new).orElseThrow());
+        register(builtIns, STRING.of("version"), (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString()));
+        register(builtIns, LOCALE.of("lang"), (x, y, e) -> locale(x, e).getLanguage());
+        register(builtIns, LOCALE.of("language"), (x, y, e) -> locale(x, e).getLanguage());
+        register(builtIns, LOCALE.of("country"), (x, y, e) -> locale(x, e).getCountry());
+        register(builtIns, STRING.of("locale"), (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString()));
     }
 
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {
         return x.evaluate(e, TemplateVersion.class);
+    }
+
+    private static TemplateLocale locale(TemplateObject x, ProcessContext e) {
+        return x.evaluate(e, TemplateLocale.class);
     }
 
     private static TemplateVersion parameter(List<TemplateObject> objects, ProcessContext context) {
