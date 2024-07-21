@@ -6,6 +6,7 @@ import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInMethod;
 import org.freshmarker.core.model.TemplateObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -16,6 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MethodBuiltInHelperTest {
+    private MethodBuiltInHelper helper;
+    @BeforeEach
+    void setUp() {
+        helper = new MethodBuiltInHelper();
+    }
+
     private static class NotStaticTestPluginProvider implements PluginProvider {
         @BuiltInMethod
         public TemplateObject notStatic() {
@@ -27,7 +34,7 @@ class MethodBuiltInHelperTest {
     void registerNotStaticBuiltIns() {
         PluginProvider provider = new NotStaticTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("builtin method must be static", exception.getMessage());
     }
 
@@ -42,7 +49,7 @@ class MethodBuiltInHelperTest {
     void registerNoParameterBuiltIns() {
         PluginProvider provider = new NoParameterTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("builtin method must have parameter", exception.getMessage());
     }
 
@@ -57,7 +64,7 @@ class MethodBuiltInHelperTest {
     void registerWrongTypeFirstParameterBuiltIns() {
         PluginProvider provider = new WrongTypeFirstParameterTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("builtin first parameter must be assignable from TemplateObject", exception.getMessage());
     }
 
@@ -72,7 +79,22 @@ class MethodBuiltInHelperTest {
     void registerWrongTypeLastAdditionalParameterBuiltIns() {
         PluginProvider provider = new WrongTypeLastAdditionalParameterTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
+        assertEquals("builtin additional parameter 2 must be assignable from TemplateObject", exception.getMessage());
+    }
+
+    private static class WrongArrayTypeLastAdditionalParameterTestPluginProvider implements PluginProvider {
+        @BuiltInMethod
+        public static TemplateObject wrongParameterType(TemplateObject object, TemplateObject parameter1,  String[] parameter2) {
+            return null;
+        }
+    }
+
+    @Test
+    void registerWrongArrayTypeLastAdditionalParameterBuiltIns() {
+        PluginProvider provider = new WrongTypeLastAdditionalParameterTestPluginProvider();
+        Map<BuiltInKey, BuiltIn> builtIns = Map.of();
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("builtin additional parameter 2 must be assignable from TemplateObject", exception.getMessage());
     }
 
@@ -87,7 +109,7 @@ class MethodBuiltInHelperTest {
     void registerWrongTypeAdditionalParameterBuiltIns() {
         PluginProvider provider = new WrongTypeAdditionalParameterTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("builtin additional parameter 1 must be assignable from TemplateObject", exception.getMessage());
     }
 
@@ -102,7 +124,7 @@ class MethodBuiltInHelperTest {
     void registerWrongReturnTypeBuiltIns() {
         PluginProvider provider = new WrongReturnTypeTestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = Map.of();
-        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        ConfigurationException exception = assertThrows(ConfigurationException.class, () -> helper.registerBuiltIns(provider, builtIns));
         assertEquals("result must be assignable from TemplateObject", exception.getMessage());
     }
 
@@ -133,7 +155,7 @@ class MethodBuiltInHelperTest {
     void registerBuiltIns() {
         PluginProvider provider = new TestPluginProvider();
         Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-        assertDoesNotThrow(() -> new MethodBuiltInHelper().registerBuiltIns(provider, builtIns));
+        assertDoesNotThrow(() -> helper.registerBuiltIns(provider, builtIns));
         assertEquals(10, builtIns.size());
     }
 }
