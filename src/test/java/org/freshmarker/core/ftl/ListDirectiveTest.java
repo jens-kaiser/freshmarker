@@ -7,12 +7,8 @@ import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -190,93 +186,5 @@ class ListDirectiveTest {
                           c d
                         """,
                 template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
-    }
-
-    @Test
-    void hashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k, v>${k} ${v},</#list>");
-        Map<String, String> map = Stream.of("a", "c", "b").collect(Collectors.toMap(Function.identity(), String::toUpperCase, (a, b) -> a, LinkedHashMap::new));
-        assertEquals("a A,c C,b B,", template.process(Map.of("hash", map)));
-    }
-
-    @Test
-    void sortedHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
-        Map<String, String> map = Map.of("c", "C", "b", "B", "a", "A");
-        assertEquals("a A,b B,c C,", template.process(Map.of("hash", map)));
-    }
-
-    @Test
-    void sortedDescendingHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
-        Map<String, String> map = Map.of("a", "A", "b", "B", "c", "C");
-        assertEquals("c C,b B,a A,", template.process(Map.of("hash", map)));
-    }
-
-    public static class HashBean {
-        final String d;
-        final String a;
-        final String c;
-        final String b;
-
-        public HashBean(String a, String b, String c, String d) {
-            this.a = a;
-            this.b = b;
-            this.c = c;
-            this.d = d;
-        }
-
-        public String getD() {
-            return d;
-        }
-
-        public String getA() {
-            return a;
-        }
-
-        public String getC() {
-            return c;
-        }
-
-        public String getB() {
-            return b;
-        }
-    }
-
-    @Test
-    void sortedDescendingBeanHashList() {
-        Template template = configuration.getTemplate("test", """
-                <#list hash as k, v with l>${k} ${v}<#if l?has_next>,</#if></#list>
-                <#list hash as k sorted desc, v with l>${k} ${v}<#if l?has_next>,</#if></#list>
-                """);
-        HashBean bean = new HashBean("1", "2", "3", "4");
-        assertEquals("""
-                a 1,b 2,c 3,d 4
-                d 4,c 3,b 2,a 1
-                """, template.process(Map.of("hash", bean)));
-    }
-
-    @Test
-    void sortedRecordHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
-        HashRecord recordHash = new HashRecord("1", "2", "3");
-        assertEquals("a 2,b 3,c 1,", template.process(Map.of("hash", recordHash)));
-    }
-
-    public record HashRecord(String c, String a, String b) {
-    }
-
-    @Test
-    void sortedDescendingRecordHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
-        HashRecord recordHash = new HashRecord("1", "2", "3");
-        assertEquals("c 1,b 3,a 2,", template.process(Map.of("hash", recordHash)));
-    }
-
-    @Test
-    void hashListWithLooper() {
-        Template template = configuration.getTemplate("test", "<#list hash as k, v with l>${l?counter} ${k} ${v},</#list>");
-        Map<String, String> map = Stream.of("a", "b", "c").collect(Collectors.toMap(Function.identity(), String::toUpperCase, (a, b) -> a, LinkedHashMap::new));
-        assertEquals("1 a A,2 b B,3 c C,", template.process(Map.of("hash", map)));
     }
 }
