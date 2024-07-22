@@ -211,7 +211,9 @@ class TemporalInterpolationTest {
 
     @Test
     void interpolationInvalidAtZone() throws ParseException {
-        assertThrows(ParseException.class,
-                () -> configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin','Europe/London)}"));
+        Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin','Europe/London')}");
+        Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->template.process(model));
+        assertEquals("wrong parameter count", exception.getMessage());
     }
 }
