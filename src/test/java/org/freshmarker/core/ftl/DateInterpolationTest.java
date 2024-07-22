@@ -33,6 +33,13 @@ class DateInterpolationTest {
     }
 
     @Test
+    void interpolationDateDate() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?date}");
+        String result = template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis())));
+        assertEquals("test: 1968-08-24", result);
+    }
+
+    @Test
     void interpolationDateComputerAudience() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?c}");
         String result = template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis())));
@@ -42,6 +49,14 @@ class DateInterpolationTest {
     @Test
     void interpolationTime() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
+        CALENDAR.getTime();
+        String result = template.process(Map.of("temporal", new java.sql.Time(CALENDAR.getTimeInMillis())));
+        assertEquals("test: 12:30:45", result);
+    }
+
+    @Test
+    void interpolationTimeTime() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?time}");
         CALENDAR.getTime();
         String result = template.process(Map.of("temporal", new java.sql.Time(CALENDAR.getTimeInMillis())));
         assertEquals("test: 12:30:45", result);

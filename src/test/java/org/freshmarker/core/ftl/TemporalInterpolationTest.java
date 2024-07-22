@@ -189,6 +189,13 @@ class TemporalInterpolationTest {
     }
 
     @Test
+    void interpolationInstantTime() throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${temporal?time}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")).toInstant()));
+        assertEquals("test: 01:30:45", result);
+    }
+
+    @Test
     void interpolationInstantAtZone() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')}");
         String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")).toInstant()));
