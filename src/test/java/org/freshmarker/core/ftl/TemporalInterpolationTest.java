@@ -190,9 +190,10 @@ class TemporalInterpolationTest {
 
     @Test
     void interpolationInstantTime() throws ParseException {
+        configuration.setZoneId(ZoneId.of("UTC"));
         Template template = configuration.getTemplate("test", "test: ${temporal?time}");
         String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")).toInstant()));
-        assertEquals("test: 01:30:45", result);
+        assertEquals("test: 12:30:45", result);
     }
 
     @Test
