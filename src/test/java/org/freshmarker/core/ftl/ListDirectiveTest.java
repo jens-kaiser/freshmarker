@@ -37,6 +37,13 @@ class ListDirectiveTest {
     }
 
     @Test
+    void loopCounter() throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "test: <#list sequence as s with l>${l?counter}. ${s}\n</#list>");
+        assertEquals("test: 1. a\n2. b\n3. c\n4. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
+    }
+
+    @Test
     void emptyList() throws ParseException {
         Template template = configuration.getTemplate("test",
                 "test:\n<#list sequence as s with l>\n${l?index}. ${s}\n</#list>");
