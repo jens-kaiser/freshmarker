@@ -79,8 +79,10 @@ class StringInterpolationTest {
             "test: ${text?contains('EX')},test: no",
             "test: ${text?endsWith('xt')},test: yes",
             "test: ${text?ends_with('XT')},test: no",
+            "test: ${text?startsWith('te')},test: yes",
+            "test: ${text?starts_with('TE')},test: no",
     })
-    void interpolationContainsAndEndWith(String templateSource, String expected) throws ParseException {
+    void interpolationContainsAndStartOrEndWith(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", "text")));
     }
