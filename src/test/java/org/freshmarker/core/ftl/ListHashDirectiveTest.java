@@ -6,6 +6,8 @@ import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,43 +49,20 @@ class ListHashDirectiveTest {
         assertEquals("test:\n", template.process(Map.of("sequence", Map.of())));
     }
 
-    @Test
-    void hasNext() throws ParseException {
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${l?item_parity};test: odd even odd even ",
+            "${l?item_parity_cap};test: Odd Even Odd Even ",
+            "${l?item_cycle(1, 2, 3)};test: 1 2 3 1 ",
+            "${l?is_first};test: yes no no no ",
+            "${l?is_last};test: no no no yes ",
+            "${l?has_next};test: yes yes yes no "
+    }, ignoreLeadingAndTrailingWhitespace = false, delimiterString = ";")
+    void looperBuildIns(String interpolation, String expected) throws ParseException {
         Template template = configuration.getTemplate("test",
-                "test: <#list sequence as k, v with l>${l?has_next} </#list>");
-        Map<String, Integer> sequence = Map.of("a", 1, "b", 2);
-        assertEquals("test: yes no ", template.process(Map.of("sequence", sequence)));
-    }
-
-    @Test
-    void itemParity() throws ParseException {
-        Template template = configuration.getTemplate("test",
-                "test: <#list sequence as k, v with l>${l?item_parity} </#list>");
+                "test: <#list sequence as k, v with l>" + interpolation + " </#list>");
         Map<String, Integer> sequence = Map.of("a", 1, "b", 2, "c", 3, "d", 4);
-        assertEquals("test: odd even odd even ", template.process(Map.of("sequence", sequence)));
-    }
-
-    @Test
-    void itemParityCap() throws ParseException {
-        Template template = configuration.getTemplate("test",
-                "test: <#list sequence as k, v with l>${l?item_parity_cap} </#list>");
-        Map<String, Integer> sequence = Map.of("a", 1, "b", 2, "c", 3, "d", 4);
-        assertEquals("test: Odd Even Odd Even ", template.process(Map.of("sequence", sequence)));
-    }
-
-    @Test
-    void itemCycle() throws ParseException {
-        Template template = configuration.getTemplate("test",
-                "test: <#list sequence as k, v with l>${l?item_cycle(1, 2, 3)} </#list>");
-        Map<String, Integer> sequence = Map.of("a", 1, "b", 2, "c", 3, "d", 4);
-        assertEquals("test: 1 2 3 1 ", template.process(Map.of("sequence", sequence)));
-    }
-
-    @Test
-    void firstLast() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: <#list sequence as k, v with l>(${l?is_first}.${l?is_last})</#list>");
-        Map<String, Integer> sequence = Map.of("a", 1, "b", 2, "c", 3, "d", 4);
-        assertEquals("test: (yes.no)(no.no)(no.no)(no.yes)", template.process(Map.of("sequence", sequence)));
+        assertEquals(expected, template.process(Map.of("sequence", sequence)));
     }
 
     public record Complex(String key, String value) {

@@ -4,7 +4,6 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -25,47 +24,25 @@ class DateInterpolationTest {
         configuration = new Configuration();
     }
 
-    @Test
-    void interpolationDate() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
-        String result = template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis())));
-        assertEquals("test: 1968-08-24", result);
+    @ParameterizedTest
+    @CsvSource({
+            "${temporal},test: 1968-08-24",
+            "${temporal?date},test: 1968-08-24",
+            "${temporal?c},test: 1968-08-24",
+    })
+    void dateBuiltIns(String interpolation, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", "test: " + interpolation);
+        assertEquals(expected, template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis()))));
     }
 
-    @Test
-    void interpolationDateDate() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?date}");
-        String result = template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis())));
-        assertEquals("test: 1968-08-24", result);
-    }
-
-    @Test
-    void interpolationDateComputerAudience() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        String result = template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis())));
-        assertEquals("test: 1968-08-24", result);
-    }
-
-    @Test
+    @ParameterizedTest
+    @CsvSource({
+            "${temporal},test: 12:30:45",
+            "${temporal?time},test: 12:30:45",
+            "${temporal?c},test: 12:30:45",
+    })
     void interpolationTime() throws ParseException {
         Template template = configuration.getTemplate("test", "test: ${temporal}");
-        CALENDAR.getTime();
-        String result = template.process(Map.of("temporal", new java.sql.Time(CALENDAR.getTimeInMillis())));
-        assertEquals("test: 12:30:45", result);
-    }
-
-    @Test
-    void interpolationTimeTime() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?time}");
-        CALENDAR.getTime();
-        String result = template.process(Map.of("temporal", new java.sql.Time(CALENDAR.getTimeInMillis())));
-        assertEquals("test: 12:30:45", result);
-    }
-
-    @Test
-    void interpolationTimeComputerAudience() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal?c}");
-        CALENDAR.getTime();
         String result = template.process(Map.of("temporal", new java.sql.Time(CALENDAR.getTimeInMillis())));
         assertEquals("test: 12:30:45", result);
     }
