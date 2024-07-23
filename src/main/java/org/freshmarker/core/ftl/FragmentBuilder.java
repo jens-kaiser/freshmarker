@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.FreshMarkerParser;
 import ftl.Node;
+import ftl.Node.NodeType;
 import ftl.Node.TerminalNode;
 import ftl.Token;
 import ftl.Token.TokenType;
@@ -17,7 +18,6 @@ import ftl.ast.NestedInstruction;
 import ftl.ast.OutputFormatBlock;
 import ftl.ast.ReturnInstruction;
 import ftl.ast.Root;
-import ftl.ast.STRING_LITERAL;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
@@ -63,7 +63,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
     private static final NamedArgsBuilder NAMED_ARGS_BUILDER = new NamedArgsBuilder();
     private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder();
 
-    private static final Map<TokenType, Comparator<String>> COMPARATORS = Map.of(
+    private static final Map<NodeType, Comparator<String>> COMPARATORS = Map.of(
             TokenType.ASCENDING, Comparator.naturalOrder(), TokenType.DESCENDING, Comparator.reverseOrder());
 
     private final Template template;
@@ -136,7 +136,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         int index = 6;
         Comparator<String> comparator = null;
         if (ftl.get(index).getType() == TokenType.SORTED) {
-            comparator = COMPARATORS.get((TokenType) ftl.get(index + 1).getType());
+            comparator = COMPARATORS.get(ftl.get(index + 1).getType());
             index += 2;
         }
         String valueIdentifier = null;
@@ -168,9 +168,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
     @Override
     public BlockFragment visit(OutputFormatBlock ftl, BlockFragment input) {
-        STRING_LITERAL format = (STRING_LITERAL) ftl.getChild(3);
         BlockFragment block = ftl.getChild(5).accept(this, new BlockFragment());
-        String image = format.toString();
+        String image = ftl.getChild(3).toString();
         input.addFragment(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
         return input;
     }
@@ -191,7 +190,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         ftl.getChild(nameIndex + 1).accept(NAMED_ARGS_BUILDER, namedArgs);
         logger.debug("user directive: {}.{} {}", currentNameSpace, name, namedArgs);
         Node node = ftl.children().stream().skip(nameIndex + 1L)
-                .dropWhile(n -> n.getType() == null || !Set.of(TokenType.GT, TokenType.CLOSE_TAG).contains((TokenType) n.getType()))
+                .dropWhile(n -> n.getType() == null || !Set.<NodeType>of(TokenType.GT, TokenType.CLOSE_TAG).contains(n.getType()))
                 .skip(1).findFirst().orElse(null);
         BlockFragment body = null;
         if (node != null) {
