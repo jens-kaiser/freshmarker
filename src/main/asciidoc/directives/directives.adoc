@@ -79,8 +79,9 @@ ${test!'gonzo'}
 
 In this example the variable `test` cannot accessed outside of the macro.
 The result of the interpolation `${test!'gonzo'}` is therefore `gonzo`.
+
 Variables with an identical name cannot created in the same context.
-Variables in an outer context can be hidden by variable s with an identical name.
+Variables in an outer context can be hidden by variables with an identical name.
 
 === Output-Format Directive
 
