@@ -66,11 +66,16 @@ Therefore, variables that are created in a _List Directive_ can no longer be acc
 <#set test='drei'/>
 ----
 
+Variables with an identical name cannot created in the same context. 
+Variables in an outer context can be hidden by variable s with an identical name.
+
 === Output-Format Directive
 
 TBD
 
 === Setting Directive
+
+The _Setting Directive_ changes some standard values in the template.
 
 [source]
 ----
