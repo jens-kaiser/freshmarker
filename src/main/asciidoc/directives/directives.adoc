@@ -56,8 +56,6 @@ Unlike the model values, new values can be assigned to variables.
 
 The first use of a variable is with the _Var Directive_. This defines the variables in the current context. 
 Later, the variable can be assigned new values with the _Set Directive_. A variable only exists within its context. 
-A new context is created within the _List Directive_ and the conditional _If_ and _Switch Directives_. 
-Therefore, variables that are created in a _List Directive_ can no longer be accessed outside.
 
 [source]
 ----
@@ -66,7 +64,22 @@ Therefore, variables that are created in a _List Directive_ can no longer be acc
 <#set test='drei'/>
 ----
 
-Variables with an identical name cannot created in the same context. 
+A new context is created within the _List Directive_, _Macro Directive_ and the conditional _If_ and _Switch Directives_.
+Therefore, variables that are created in a _Macro Directive_ can no longer be accessed outside.
+
+.Example variable context
+[source]
+----
+<#macro copyright>
+  <#var test='test'/>
+</#macro>
+<@copyright/>
+${test!'gonzo'}
+----
+
+In this example the variable `test` cannot accessed outside of the macro.
+The result of the interpolation `${test!'gonzo'}` is therefore `gonzo`.
+Variables with an identical name cannot created in the same context.
 Variables in an outer context can be hidden by variable s with an identical name.
 
 === Output-Format Directive
