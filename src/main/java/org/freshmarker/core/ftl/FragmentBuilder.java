@@ -260,6 +260,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
             throw new ParsingException("assignment type " + type + " not supported", ftl.getChild(1));
         }
         String name = getName(ftl.getChild(3));
+        if (name.startsWith(".")) {
+            throw new ParsingException("built-in variable name not allowed: " + name, ftl);
+        }
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
@@ -270,6 +273,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
     @Override
     public BlockFragment visit(VarInstruction ftl, BlockFragment input) {
         String name = getName(ftl.getChild(3));
+        if (name.startsWith(".")) {
+            throw new ParsingException("built-in variable name not allowed: " + name, ftl);
+        }
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
