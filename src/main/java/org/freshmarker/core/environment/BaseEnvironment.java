@@ -6,6 +6,7 @@ import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.Formatter;
+import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
@@ -49,6 +50,11 @@ public class BaseEnvironment implements Environment {
         return wrap(dataModel.get(name));
     }
 
+    @Override
+    public boolean checkVariable(String name) {
+        return false;
+    }
+
     private TemplateObject wrap(Object o) {
         if (o == null) {
             return TemplateNull.NULL;
@@ -88,6 +94,21 @@ public class BaseEnvironment implements Environment {
     @Override
     public Writer getWriter() {
         return writer;
+    }
+
+    @Override
+    public Optional<Fragment> getNestedContent() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void createVariable(String name, TemplateObject value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setVariable(String name, TemplateObject value) {
+        throw new UnsupportedOperationException();
     }
 
     public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {

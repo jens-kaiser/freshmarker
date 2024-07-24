@@ -18,9 +18,7 @@ public interface Environment {
 
     TemplateObject getValue(String name);
 
-    default boolean checkVariable(String name) {
-        return false;
-    }
+    boolean checkVariable(String name);
 
     Locale getLocale();
 
@@ -34,17 +32,11 @@ public interface Environment {
 
     Writer getWriter();
 
-    default Optional<Fragment> getNestedContent() {
-        return Optional.empty();
-    }
+    Optional<Fragment> getNestedContent();
 
-    default void createVariable(String name, TemplateObject value) {
-        throw new UnsupportedOperationException();
-    }
+    void createVariable(String name, TemplateObject value);
 
-    default void setVariable(String name, TemplateObject value) {
-        throw new UnsupportedOperationException();
-    }
+    void setVariable(String name, TemplateObject value);
 
     <T extends TemplateObject> Formatter getFormatter(Class<T> type);
 }
