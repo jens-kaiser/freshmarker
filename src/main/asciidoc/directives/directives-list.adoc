@@ -98,7 +98,7 @@ ${key}->${value}
 </#list>
 ----
 
-NOTE: In addition to the _Java_ `Map` types, _Java Beans_ are also interpreted as a hash. It is not only possible to iterate over the entries of a `Map`, but also over the attributes of a Bean.
+NOTE: In addition to the _Java_ `Map` types, _Java Beans_ and _Records_ are also interpreted as a hash. It is not only possible to iterate over the entries of a `Map`, but also over the attributes of _Java Beans_ and _Records_.
 
 .List Directive example with a hash and a loop variable
 [source]
