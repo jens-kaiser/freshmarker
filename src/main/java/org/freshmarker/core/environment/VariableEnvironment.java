@@ -1,7 +1,6 @@
 package org.freshmarker.core.environment;
 
 import org.freshmarker.core.Environment;
-import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.HashMap;
