@@ -53,4 +53,10 @@ class MacroTest {
         ParsingException exception = assertThrows(ParsingException.class, () -> configuration.getTemplate("test", "<#macro entry label label>${label}=${value}</#macro><@entry label='label' value='value'/>"));
         assertEquals("non unique parameter name at test:1:21 'label'", exception.getMessage());
     }
+
+    @Test
+    void macroVariableContext() throws ParseException {
+        Template template = configuration.getTemplate("test", "<#macro copyright><#var test='test'/></#macro><@copyright/>${test!'gonzo'}");
+        assertEquals("gonzo", template.process(Map.of()));
+    }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -49,5 +50,19 @@ class VariableTest {
     @Test
     void unsupported() {
         assertThrows(ParsingException.class, () -> configuration.getTemplate("test", "<#var test1='eins' test2='zwei'/>"));
+    }
+
+    @Test
+    void nested() {
+        Template template = configuration.getTemplate("test", """
+                <#var v="test">
+                ${v}
+                <#list sequence as s>
+                  <#var v=s>
+                ${v}
+                </#list>
+                ${v}
+                """);
+        assertEquals("test\n1\n2\n3\ntest\n", template.process(Map.of("sequence", List.of(1, 2, 3))));
     }
 }

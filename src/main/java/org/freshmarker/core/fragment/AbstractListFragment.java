@@ -22,16 +22,16 @@ public abstract class AbstractListFragment<T> implements Fragment {
     }
 
     protected void processLoop(ProcessContext context, ListEnvironment hashEnvironment) {
-        Environment environment = context.getEnvironment();
-        try {
-            context.setEnvironment(new VariableEnvironment(hashEnvironment));
-            TemplateLooper looper = hashEnvironment.getLooper();
-            for (int i = 0, n = looper.size(); i < n; i++) {
+        TemplateLooper looper = hashEnvironment.getLooper();
+        for (int i = 0, n = looper.size(); i < n; i++) {
+            Environment environment = context.getEnvironment();
+            try {
+                context.setEnvironment(new VariableEnvironment(hashEnvironment));
                 block.process(context);
-                looper.increment();
+            } finally {
+                context.setEnvironment(environment);
             }
-        } finally {
-            context.setEnvironment(environment);
+            looper.increment();
         }
     }
 }

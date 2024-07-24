@@ -14,29 +14,37 @@ import java.util.Optional;
 
 public interface Environment {
 
-  TemplateObject mapObject(Object object);
+    TemplateObject mapObject(Object object);
 
-  TemplateObject getValue(String name);
+    TemplateObject getValue(String name);
 
-  Locale getLocale();
+    default boolean checkVariable(String name) {
+        return false;
+    }
 
-  ZoneId getZoneId();
+    Locale getLocale();
 
-  OutputFormat getOutputFormat();
+    ZoneId getZoneId();
 
-  UserDirective getDirective(String nameSpace, String name);
+    OutputFormat getOutputFormat();
 
-  TemplateFunction getFunction(String name);
+    UserDirective getDirective(String nameSpace, String name);
 
-  Writer getWriter();
+    TemplateFunction getFunction(String name);
 
-  default Optional<Fragment> getNestedContent() {
-    return Optional.empty();
-  }
+    Writer getWriter();
 
-  default void setVariable(String name, TemplateObject value) {
-    throw new UnsupportedOperationException();
-  }
+    default Optional<Fragment> getNestedContent() {
+        return Optional.empty();
+    }
 
-  <T extends TemplateObject> Formatter getFormatter(Class<T> type);
+    default void createVariable(String name, TemplateObject value) {
+        throw new UnsupportedOperationException();
+    }
+
+    default void setVariable(String name, TemplateObject value) {
+        throw new UnsupportedOperationException();
+    }
+
+    <T extends TemplateObject> Formatter getFormatter(Class<T> type);
 }
