@@ -6,7 +6,7 @@
 
     <groupId>de.schegge</groupId>
     <artifactId>freshmarker</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1</version>
     <url>https://gitlab.com/schegge/freshmarker.git</url>
     <name>FreshMarker</name>
     <description>A simple, small but powerful template engine based loosely on the FreeMarker syntax. FreshMarker is
