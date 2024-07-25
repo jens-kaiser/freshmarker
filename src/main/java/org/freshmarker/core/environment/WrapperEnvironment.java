@@ -76,6 +76,11 @@ public abstract class WrapperEnvironment implements Environment {
   }
 
   @Override
+  public void getVariable(String name, TemplateObject value) {
+    wrapped.getVariable(name, value);
+  }
+
+  @Override
   public boolean checkVariable(String name) {
     return wrapped.checkVariable(name);
   }

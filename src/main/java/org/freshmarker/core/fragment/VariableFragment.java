@@ -25,25 +25,16 @@ public class VariableFragment implements Fragment {
     @Override
     public void process(ProcessContext context) {
         Environment environment = context.getEnvironment();
-        boolean checked = environment.checkVariable(name);
         if (exists) {
-            processSetVariable(context, checked, environment);
+            if (environment.getVariable(name) == null) {
+                throw new ProcessException("variable " + name + " must exists", node);
+            }
+            environment.setVariable(name, expression.evaluateToObject(context));
         } else {
-            processCreateVariable(context, checked, environment);
+          if (environment.checkVariable(name)) {
+              throw new ProcessException("variable " + name + " must not exist", node);
+          }
+          environment.createVariable(name, expression.evaluateToObject(context));
         }
-    }
-
-    private void processCreateVariable(ProcessContext context, boolean checked, Environment environment) {
-        if (checked) {
-            throw new ProcessException("variable " + name + " must not exist", node);
-        }
-        environment.createVariable(name, expression.evaluateToObject(context));
-    }
-
-    private void processSetVariable(ProcessContext context, boolean checked, Environment environment) {
-        if (!checked) {
-            throw new ProcessException("variable " + name + " must exists", node);
-        }
-        environment.setVariable(name, expression.evaluateToObject(context));
     }
 }

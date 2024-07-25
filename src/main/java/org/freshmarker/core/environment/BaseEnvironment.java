@@ -111,6 +111,11 @@ public class BaseEnvironment implements Environment {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public TemplateObject getVariable(String name) {
+        throw new UnsupportedOperationException();
+    }
+
     public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
         return settings.formatters().getOrDefault(type, (o, l) -> o.toString());
     }

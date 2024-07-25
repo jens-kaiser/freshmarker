@@ -38,5 +38,7 @@ public interface Environment {
 
     void setVariable(String name, TemplateObject value);
 
+    TemplateObject getVariable(String name);
+
     <T extends TemplateObject> Formatter getFormatter(Class<T> type);
 }
