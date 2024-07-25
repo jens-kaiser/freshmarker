@@ -77,7 +77,7 @@ public abstract class WrapperEnvironment implements Environment {
 
   @Override
   public void getVariable(String name) {
-    wrapped.getVariable(name, value);
+    wrapped.getVariable(name);
   }
 
   @Override
