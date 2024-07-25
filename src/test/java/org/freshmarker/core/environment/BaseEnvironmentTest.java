@@ -1,5 +1,6 @@
 package org.freshmarker.core.environment;
 
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,6 @@ class BaseEnvironmentTest {
 
     @Test
     void setVariable() {
-        assertThrows(UnsupportedOperationException.class, () -> environment.setVariable("name", new TemplateString("value")));
+        assertThrows(ProcessException.class, () -> environment.setVariable("name", new TemplateString("value")));
     }
 }
