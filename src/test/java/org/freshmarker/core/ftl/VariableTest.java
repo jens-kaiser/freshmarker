@@ -44,7 +44,7 @@ class VariableTest {
     void invalid(String templateSource) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         Map<String, Object> dataModel = Map.of();
-        assertThrows(ProcessException.class, () -> template.process(dataModel));
+        assertThrows(UnsupportedOperationException.class, () -> template.process(dataModel));
     }
 
     @Test
