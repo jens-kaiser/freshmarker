@@ -85,7 +85,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
             case IDENTIFIER -> new TemplateVariable(expression.toString());
             case EXISTS_OPERATOR -> new TemplateExists((TemplateObject) input);
-            case NULL -> TemplateNull.NULL;
+            case NULL -> TemplateNull.NULL_LITERAL;
             default -> throw new IllegalArgumentException(
                     "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
         };
@@ -125,7 +125,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(NullLiteral expression, Object input) {
-        return TemplateNull.NULL;
+        return TemplateNull.NULL_LITERAL;
     }
 
     @Override

@@ -8,7 +8,6 @@ import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConditionalFragment;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 import java.util.List;
 
@@ -53,8 +52,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
     public IfFragment visit(ElseBlock ftl, IfFragment input) {
         if (ftl.getChildCount() != 3) {
             Node expression = ftl.getChild(3);
-            BlockFragment ifBlock = expression.accept(fragmentBuilder, new BlockFragment());
-            input.addFragment(new ConditionalFragment(TemplateBoolean.TRUE, ifBlock, expression));
+            input.addElseFragment(expression.accept(fragmentBuilder, new BlockFragment()));
         }
         return input;
     }
