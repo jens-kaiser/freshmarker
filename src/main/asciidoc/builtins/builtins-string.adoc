@@ -192,7 +192,7 @@ TBD
 
 ==== `locale` Built-In
 
-This built-in converts a string value into a version value.
+This built-in converts a string value into a locale value.
 
 |===
 |Interpolation | Output | Type
