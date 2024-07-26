@@ -1,6 +1,6 @@
 === String Built-Ins
 
-==== `uppercase` Built-In
+==== `upper_case` Built-In
 
 This built-in converts a text in its uppercase form.
 
@@ -11,7 +11,7 @@ This built-in converts a text in its uppercase form.
 |THE QUICK BROWN FOX JUMPS OVER THE LAYZ DOG
 |===
 
-==== `lowercase` Built-In
+==== `lower_case` Built-In
 
 This built-in converts a text in its lowercase form.
 
