@@ -5,6 +5,7 @@ import org.freshmarker.core.ProcessContext;
 public final class TemplateNull implements TemplateObject {
 
     public static final TemplateNull NULL = new TemplateNull();
+    public static final TemplateNull NULL_LITERAL = new TemplateNull();
 
     private TemplateNull() {
         super();
@@ -13,5 +14,10 @@ public final class TemplateNull implements TemplateObject {
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
         return this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof TemplateNull;
     }
 }
