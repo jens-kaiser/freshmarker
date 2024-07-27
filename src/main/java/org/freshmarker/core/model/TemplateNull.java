@@ -20,4 +20,9 @@ public final class TemplateNull implements TemplateObject {
     public boolean equals(Object obj) {
         return obj instanceof TemplateNull;
     }
+
+    @Override
+    public int hashCode() {
+        return 23;
+    }
 }

@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,6 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IfDirectiveTest {
 
@@ -76,10 +78,28 @@ class IfDirectiveTest {
         assertEquals("Gonzo Kermit", template.process(Map.of("text", "A")));
     }
 
-    @Test
-    void nullCompare() throws ParseException {
-        Template template = configuration.getTemplate("test",
-                "<#if text != null><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}");
-        assertEquals("Gonzo Kermit", template.process(Map.of("text", "A")));
+    @ParameterizedTest
+    @CsvSource(value = {
+            "<#if text != null><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit",
+            "<#if text == null><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}, Kermit",
+            "<#if null != text><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit",
+            "<#if null == text><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}, Kermit",
+            "<#if null != null><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}, Kermit",
+            "<#if null == null><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit"
+    }, ignoreLeadingAndTrailingWhitespace = false)
+    void nullCompare(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("text", "A")));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "<#if text1 != text2><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}",
+            "<#if text2 != text1><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}"
+    })
+    void invalidNullCompare(String input) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 }
