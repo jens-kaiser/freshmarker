@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 
@@ -37,5 +38,15 @@ public class ConditionalFragment implements Fragment {
     } finally {
       context.setEnvironment(environment);
     }
+  }
+
+  @Override
+  public ConditionalFragment reduce(ReduceContext context) {
+    return new ConditionalFragment(conditional, (BlockFragment) content.reduce(context), node);
+  }
+
+  @Override
+  public int getSize() {
+    return content.getSize() + 1;
   }
 }

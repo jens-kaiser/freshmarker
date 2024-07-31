@@ -13,9 +13,9 @@ import java.util.Map;
 public class ProcessContext {
 
   private Environment environment;
-  private final Map<Object, Map<Object, Object>> stores = new HashMap<>();
-  private final Map<BuiltInKey, BuiltIn> builtIns;
-  private final Map<String, OutputFormat> outputs;
+  protected final Map<Object, Map<Object, Object>> stores = new HashMap<>();
+  protected  final Map<BuiltInKey, BuiltIn> builtIns;
+  protected  final Map<String, OutputFormat> outputs;
 
   public ProcessContext(Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs) {
     this.environment = environment;
@@ -49,5 +49,9 @@ public class ProcessContext {
 
   public OutputFormat getOutputFormat(String name) {
     return outputs.getOrDefault(name, UndefinedOutputFormat.INSTANCE);
+  }
+
+  public void reductionCheck() {
+    // ignored
   }
 }

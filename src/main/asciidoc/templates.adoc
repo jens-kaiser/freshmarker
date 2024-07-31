@@ -10,8 +10,9 @@ This complicated sentence can be better explained with a small example.
 Hello ${example}!
 ----
 
-The example template contains three parts. A first literal text fragment ``Hello ``, an interpolation fragment `${name}` and a
-second literal text fragment `!`. Literal text means the fragment is not interpreted in any particular way
+The example template contains three parts.
+A first literal text fragment ``Hello ``, an interpolation fragment `${name}` and a second literal text fragment `!`.
+Literal text means the fragment is not interpreted in any particular way
 footnote:[This is an example in the introduction, sometimes it's different, of course.].
 
 === Interpolations
@@ -50,10 +51,12 @@ In all other cases the German `Hallo` is written.
 
 === Built-Ins
 
-Another important template concept is the built-in. The result of an interpolation is changed by the built-ins.
+Another important template concept is the built-in.
+The result of an interpolation is changed by the built-ins.
 The interpolation from the last example produces the output `World` from the value `World`.
 If the interpolation is extended to `${example?uppercase}` then the interpolation produces `WORLD`.
-In this case the built-in `upper_case` has been added. Depending on the type of value, a wide variety of built-ins can be used.
+In this case the built-in `upper_case` has been added.
+Depending on the type of value, a wide variety of built-ins can be used.
 footnote:[The library https://gitlab.com/schegge/holidays[Holidays] adds Built-Ins for Holidays].
 
 === Functions
@@ -72,7 +75,7 @@ A _Function_ is a Java class implementing the functional interface `TemplateFunc
 It can be registered to the `Configuration` by the `registerFunction` method.
 
 .Example Custom Function `abs` and `avg`
-[source, java]
+[source,java]
 ----
 configuration = new Configuration();
 
@@ -100,7 +103,8 @@ ${abs(-10)}
 
 === Output Format and Escaping
 
-Every Template is associated with an Output Format. The Output Format defines the escaping rule for dynamically generated output.
+Every Template is associated with an Output Format.
+The Output Format defines the escaping rule for dynamically generated output.
 Without escaping, there is a security risk known as template injection.
 With template injection, dangerous fragments are injected into the output.
 
@@ -192,7 +196,8 @@ The `Configuration` class offers four methods for loading templates.
 
 Regardless of the method selected for loading the template, the imports are loaded by the configured `TemplateLoader`.
 
-By default, the `DefaultFileSystemTemplateLoader` is configured. This loads all imports from the file system.
+By default, the `DefaultFileSystemTemplateLoader` is configured.
+This loads all imports from the file system.
 
 The `FileSystemTemplateLoader` can also be used with other file system implementations.
 
@@ -205,7 +210,8 @@ configuration.setTemplateLoader(new FileSystemTemplateLoader(fs));
 
 In this example, the imports are loaded from the zip archive `imports.zip`.
 
-Custom template loaders can also be used instead of the `DefaultFileSystemTemplateLoader`. They have to implement the `TemplateLoader` interface.
+Custom template loaders can also be used instead of the `DefaultFileSystemTemplateLoader`.
+They have to implement the `TemplateLoader` interface.
 
 [source,java]
 ----
@@ -218,6 +224,34 @@ public interface TemplateLoader {
 }
 ----
 
-The `filename` parameter is the name of the import file and `path` is the parent directory of the template. The parent directory can be used to load import files located relative to the template.
+The `filename` parameter is the name of the import file and `path` is the parent directory of the template.
+The parent directory can be used to load import files located relative to the template.
 
 NOTE: For templates loaded by String or Reader the path is the current directory.
+
+=== Template Caching
+
+_FreshMarker_ does not know any caching mechanism, but you can store and reuse templates with any technology (_Maps_, _Singletons_, _Caches_) you like.
+
+=== Partial Reduction
+
+NOTE: This feature is in an experimental stage and should be used with care.
+
+When processing a template, all necessary data must be available in the model.
+Otherwise, an exception is thrown if data is missing during processing.
+If the template contains values that remain the same for a large number of evaluations,
+the template can be preprocessed.
+
+.Example Template with reduction on company
+[source,java]
+----
+Template template = configuration.getTemplate("test", """"
+   <#for employee as e>${e.firstname}.${e.lastname}@${company.domain}</älist>
+   """);
+Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+----
+
+The reduce method receives some of the necessary data and partially evaluates the template.
+As a result, it delivers a new template in which part of the structure has been simplified.
+
+A reduction cannot be carried out if loop variables, the default or exist operator are used.

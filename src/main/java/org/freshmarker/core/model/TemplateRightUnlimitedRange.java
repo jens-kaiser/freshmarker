@@ -37,12 +37,12 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
   }
 
   @Override
-  public TemplateObject getUpper() {
+  public TemplateNull getUpper() {
     return TemplateNull.NULL;
   }
 
   @Override
-  public TemplateObject get(ProcessContext context, int index) {
+  public TemplateNumber get(ProcessContext context, int index) {
     lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
     return new TemplateNumber(lowerNumber  + index);
   }

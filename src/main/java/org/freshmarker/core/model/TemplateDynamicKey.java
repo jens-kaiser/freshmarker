@@ -19,7 +19,7 @@ public class TemplateDynamicKey implements TemplateExpression {
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateObject templateObject = sequence.evaluateToObject(context);
         if (templateObject == TemplateNull.NULL) {
-            return templateObject;
+            return TemplateNull.NULL;
         }
         TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
         int beginIndex = index.getValue().getNumber().intValue();

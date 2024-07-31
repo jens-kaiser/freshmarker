@@ -16,7 +16,7 @@ public class TemplateJunction implements TemplateBooleanExpression {
     }
 
     @Override
-    public TemplateObject evaluateToObject(ProcessContext context) {
+    public TemplateBoolean evaluateToObject(ProcessContext context) {
         TemplateBoolean leftValue = left.evaluate(context, TemplateBoolean.class);
         return TemplateBoolean.from(switch (type) {
             case AND -> right.evaluate(context, TemplateBoolean.class).getValue() && leftValue.getValue();
@@ -29,7 +29,7 @@ public class TemplateJunction implements TemplateBooleanExpression {
     }
 
     @Override
-    public TemplateObject not() {
+    public TemplateBooleanExpression not() {
         TemplateObject newLeft = left instanceof TemplateBooleanExpression leftExpression ? leftExpression.not() : left;
         return switch (type) {
             case AND -> new TemplateJunction(TokenType.OR, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);

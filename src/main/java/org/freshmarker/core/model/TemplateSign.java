@@ -12,7 +12,7 @@ public class TemplateSign implements TemplateExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
+  public TemplateNumber evaluateToObject(ProcessContext context) {
     return expression.evaluate(context, TemplateNumber.class).negate();
   }
 }

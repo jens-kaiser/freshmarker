@@ -34,4 +34,9 @@ public abstract class AbstractListFragment<T> implements Fragment {
             looper.increment();
         }
     }
+
+    @Override
+    public int getSize() {
+        return block.getSize() + 1;
+    }
 }

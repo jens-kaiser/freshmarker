@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import ftl.ast.ListInstruction;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.model.TemplateHashLooper;
 import org.freshmarker.core.model.TemplateMap;
@@ -41,5 +42,10 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
         } catch (RuntimeException e) {
             throw new ProcessException(e.getMessage(), ftl, e);
         }
+    }
+
+    @Override
+    public HashListFragment reduce(ReduceContext context) {
+        return new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, (BlockFragment) block.reduce(context), ftl, comparator);
     }
 }

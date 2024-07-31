@@ -35,8 +35,7 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
 
     public TemplateObject getCountry() {
         String country = getValue().getCountry();
-        return country == null ? TemplateNull.NULL : new TemplateString(country
-        );
+        return country == null ? TemplateNull.NULL : new TemplateString(country);
     }
 
     @Override

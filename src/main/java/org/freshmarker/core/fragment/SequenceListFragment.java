@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import ftl.ast.ListInstruction;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
@@ -28,5 +29,10 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
         } catch (RuntimeException e) {
             throw new ProcessException(e.getMessage(), ftl, e);
         }
+    }
+
+    @Override
+    public SequenceListFragment reduce(ReduceContext context) {
+        return new SequenceListFragment(list, identifier, looperIdentifier, (BlockFragment) block.reduce(context), ftl);
     }
 }

@@ -2,6 +2,7 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.environment.SettingEnvironment;
 import org.freshmarker.core.environment.Settings;
 
@@ -26,5 +27,15 @@ public class OutputFormatFragment implements Fragment {
         } finally {
             context.setEnvironment(environment);
         }
+    }
+
+    @Override
+    public OutputFormatFragment reduce(ReduceContext context) {
+        return new OutputFormatFragment(content.reduce(context), format);
+    }
+
+    @Override
+    public int getSize() {
+        return content.getSize() + 1;
     }
 }
