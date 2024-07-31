@@ -17,7 +17,7 @@ public class TemplateRelational implements TemplateBooleanExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
+  public TemplateBoolean evaluateToObject(ProcessContext context) {
     TemplateNumber leftValue = left.evaluate(context, TemplateNumber.class);
     TemplateNumber rightValue = right.evaluate(context, TemplateNumber.class);
       return switch (type) {
@@ -30,7 +30,7 @@ public class TemplateRelational implements TemplateBooleanExpression {
   }
 
   @Override
-  public TemplateObject not() {
+  public TemplateRelational not() {
       return switch (type) {
           case LT, ALT_LT -> new TemplateRelational(TokenType.GTE, left, right);
           case GT, ALT_GT -> new TemplateRelational(TokenType.LTE, left, right);

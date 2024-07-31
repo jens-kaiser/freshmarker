@@ -31,7 +31,7 @@ public class TemplateListSequence implements TemplateSequence {
   }
 
   @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
+  public TemplateListSequence evaluateToObject(ProcessContext context) {
     return this;
   }
 

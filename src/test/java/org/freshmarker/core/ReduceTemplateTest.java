@@ -1,0 +1,180 @@
+package org.freshmarker.core;
+
+import org.freshmarker.Configuration;
+import org.freshmarker.ReductionStatus;
+import org.freshmarker.Template;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class ReduceTemplateTest {
+    private Configuration configuration;
+    private ReductionStatus reductionStatus;
+
+    @BeforeEach
+    void setUp() {
+        configuration = new Configuration();
+        reductionStatus = new ReductionStatus();
+    }
+
+    @Test
+    void reduceBlock() {
+        Map<String, Object> model = Map.of("company", "schegge.de");
+        Template template = configuration.getTemplate("test", "${company} ${name}").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals(0, reductionStatus.deleted().get());
+    }
+
+    @Test
+    void reduceBlockWithDefault() {
+        Map<String, Object> model = Map.of("company", "schegge.de");
+        Template template = configuration.getTemplate("test", "${company} ${name!}").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals(0, reductionStatus.deleted().get());
+    }
+
+    @Test
+    void reduceIf() {
+        Map<String, Object> model = Map.of("company", "schegge.de", "flag", true);
+        Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
+        assertEquals(2, reductionStatus.deleted().get());
+    }
+
+    @Test
+    void reduceIfWithExists() {
+        Map<String, Object> model = Map.of("company", "schegge.de");
+        Template template = configuration.getTemplate("test", "<#if name??>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+    }
+
+    @Test
+    void reduceMultipleIf() {
+        Map<String, Object> model = Map.of("company", "schegge.de", "flag", 3);
+        Template template = configuration.getTemplate("test", """
+                <#if flag == 1>
+                ${company}1
+                <#elseif flag == 2>
+                ${company}2
+                <#elseif flag == 3>
+                ${company}3
+                <#else>
+                ${name}
+                </#if>
+                """).reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de3\n", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
+        assertEquals(12, reductionStatus.deleted().get());
+
+    }
+
+    @Test
+    void reduceIfElseWithException() {
+        Map<String, Object> model = Map.of("company", "schegge.de", "flag", 3);
+        Template template = configuration.getTemplate("test", """
+                <#if flag == 1>
+                ${company}1
+                <#elseif galf == 2>
+                ${company}2
+                </#if>
+                """).reduce(model, reductionStatus);
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(2, reductionStatus.changed().get());
+        assertNotNull(template);
+        assertEquals("schegge.de2\n", template.process(Map.of("flag", 3, "galf", 2)));
+    }
+
+    @Test
+    void reduceElse() {
+        Map<String, Object> model = Map.of("company", "schegge.de", "flag", false);
+        Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("Jens Kaiser", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
+        assertEquals(3, reductionStatus.deleted().get());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,1,schegge.de",
+            "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,2,Jens Kaiser",
+            "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,3,three",
+    })
+    void reduceSwitchCase(String input, int flag, String expected) {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "flag", flag);
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(expected, reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
+        assertEquals(8, reductionStatus.deleted().get());
+    }
+
+    @Test
+    void reduceSwitchDefault() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "flag", 4);
+        String input = "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("default", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
+        assertEquals(9, reductionStatus.deleted().get());
+    }
+
+    @Test
+    void reduceSwitchWithoutCaseReduction() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de");
+        String input = "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+    }
+
+    @Test
+    void reduceList() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "seq", List.of(1, 2, 3, 4));
+        String input = "<#list seq as s>${company} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+        assertEquals(5, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+    }
+
+    @Test
+    void reduceListWithItem() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de");
+        String input = "<#list seq as s>${company}/${s} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+        assertEquals(7, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+    }
+
+    @Test
+    void reduceWithoutStatus() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de");
+        String input = "<#list seq as s>${company}/${s} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        assertNotNull(template.reduce(reduceModel));
+    }
+}

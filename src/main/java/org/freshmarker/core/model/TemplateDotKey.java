@@ -17,7 +17,7 @@ public class TemplateDotKey implements TemplateExpression {
   public TemplateObject evaluateToObject(ProcessContext context) {
     TemplateObject templateObject = map.evaluateToObject(context);
     if (templateObject == TemplateNull.NULL) {
-      return templateObject;
+      return TemplateNull.NULL;
     }
     if (templateObject instanceof TemplateMap templateMap) {
       return templateMap.get(context, dotKey);

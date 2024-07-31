@@ -16,7 +16,7 @@ public class TemplateNegative implements TemplateBooleanExpression {
   }
 
   @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
+  public TemplateBoolean evaluateToObject(ProcessContext context) {
     TemplateBoolean templateObject = expression.evaluate(context, TemplateBoolean.class);
     return templateObject == TemplateBoolean.TRUE ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
   }

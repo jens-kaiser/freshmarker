@@ -2,6 +2,7 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 
@@ -29,5 +30,15 @@ public class UserDirectiveFragment implements Fragment {
         } finally {
             context.setEnvironment(environment);
         }
+    }
+
+    @Override
+    public Fragment reduce(ReduceContext context) {
+        return new UserDirectiveFragment(directive, nameSpace, namedArgs, (BlockFragment) body.reduce(context));
+    }
+
+    @Override
+    public int getSize() {
+        return body.getSize() + 1;
     }
 }

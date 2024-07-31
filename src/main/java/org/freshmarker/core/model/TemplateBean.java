@@ -34,7 +34,7 @@ public class TemplateBean implements TemplateMap {
     }
 
     @Override
-    public TemplateObject evaluateToObject(ProcessContext context) {
+    public TemplateBean evaluateToObject(ProcessContext context) {
         return this;
     }
 }

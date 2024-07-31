@@ -12,7 +12,7 @@ public final class TemplateNull implements TemplateObject {
     }
 
     @Override
-    public TemplateObject evaluateToObject(ProcessContext context) {
+    public TemplateNull evaluateToObject(ProcessContext context) {
         return this;
     }
 
@@ -24,5 +24,10 @@ public final class TemplateNull implements TemplateObject {
     @Override
     public int hashCode() {
         return 23;
+    }
+
+    @Override
+    public boolean isNull() {
+        return true;
     }
 }

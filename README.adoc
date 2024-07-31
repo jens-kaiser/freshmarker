@@ -33,6 +33,20 @@ Template template = configuration.getTemplate("ancestors-loop",
 String result = template.process(Map.of("ancestors", ancestorService.ancestorsByFamily("Kaiser")));
 ----
 
+.Partial reduction of a Template
+[source,java]
+----
+Template template = configuration.getTemplate("ancestors-loop",
+    """
+    <h1>$title</h1>
+    <#list ancestors as ancestor with loop>
+      ${loop?index}. ${ancestor.givenname} ${ancestor.surename}
+    </#list>
+    """);
+Template reduced = template.reduce("title", "Genealogy List");
+String result = reduced.process(Map.of("ancestors", ancestorService.ancestorsByFamily("Kaiser")));
+----
+
 You can find a detailed description of al FreshMarker features in the https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/asciidoc/manual.adoc[manual].
 
 == Template Types

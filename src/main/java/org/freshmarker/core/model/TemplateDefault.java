@@ -3,17 +3,18 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 
 public class TemplateDefault implements TemplateExpression {
-  private final TemplateObject base;
-  private final TemplateObject fallback;
+    private final TemplateObject base;
+    private final TemplateObject fallback;
 
-  public TemplateDefault(TemplateObject base, TemplateObject fallback) {
-    this.base = base;
-    this.fallback = fallback;
-  }
+    public TemplateDefault(TemplateObject base, TemplateObject fallback) {
+        this.base = base;
+        this.fallback = fallback;
+    }
 
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    TemplateObject templateObject = base.evaluateToObject(context);
-    return templateObject != TemplateNull.NULL ? templateObject : fallback.evaluateToObject(context);
-  }
+    @Override
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        context.reductionCheck();
+        TemplateObject templateObject = base.evaluateToObject(context);
+        return templateObject.isNull() ? fallback.evaluateToObject(context) : templateObject;
+    }
 }

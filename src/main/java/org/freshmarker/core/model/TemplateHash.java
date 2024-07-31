@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 public record TemplateHash(Entry<String, Object> entry) implements TemplateObject {
 
     @Override
-    public TemplateObject evaluateToObject(ProcessContext context) {
+    public TemplateHash evaluateToObject(ProcessContext context) {
         return this;
     }
 }

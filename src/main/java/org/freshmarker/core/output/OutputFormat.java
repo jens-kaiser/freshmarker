@@ -9,6 +9,6 @@ public interface OutputFormat {
     }
 
     default TemplateString comment(Environment environment, String value) {
-        return new TemplateString("");
+        return TemplateString.EMPTY;
     }
 }

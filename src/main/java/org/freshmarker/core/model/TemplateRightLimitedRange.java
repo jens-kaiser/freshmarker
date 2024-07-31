@@ -45,7 +45,7 @@ public class TemplateRightLimitedRange implements TemplateRange {
     }
 
     @Override
-    public TemplateObject get(ProcessContext context, int index) {
+    public TemplateNumber get(ProcessContext context, int index) {
         evaluate(context);
         return new TemplateNumber(lowerNumber < upperNumber ? lowerNumber + index : lowerNumber - index);
     }
