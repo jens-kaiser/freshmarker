@@ -160,6 +160,19 @@ class ReduceTemplateTest {
     }
 
     @Test
+    void reduceHashList() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "seq", Map.of(1, 2, 2, 4));
+        String input = "<#list seq as k, v>${company} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
+        assertEquals(5, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+    }
+
+    @Test
     void reduceListWithItem() {
         Map<String, Object> reduceModel = Map.of("company", "schegge.de");
         String input = "<#list seq as s>${company}/${s} </#list>";
