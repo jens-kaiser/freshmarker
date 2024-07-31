@@ -33,11 +33,13 @@ class BaseEnvironmentTest {
 
     @Test
     void createVariable() {
-        assertThrows(UnsupportedOperationException.class, () -> environment.createVariable("name", new TemplateString("value")));
+        TemplateString value = new TemplateString("value");
+        assertThrows(UnsupportedOperationException.class, () -> environment.createVariable("name", value));
     }
 
     @Test
     void setVariable() {
-        assertThrows(ProcessException.class, () -> environment.setVariable("name", new TemplateString("value")));
+        TemplateString value = new TemplateString("value");
+        assertThrows(ProcessException.class, () -> environment.setVariable("name", value));
     }
 }

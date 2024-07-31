@@ -1,6 +1,5 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
@@ -18,7 +17,6 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 

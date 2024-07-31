@@ -42,7 +42,7 @@ public class ConditionalFragment implements Fragment {
 
   @Override
   public ConditionalFragment reduce(ReduceContext context) {
-    return new ConditionalFragment(conditional, (BlockFragment) content.reduce(context), node);
+    return new ConditionalFragment(conditional, content.reduce(context), node);
   }
 
   @Override

@@ -46,6 +46,6 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
 
     @Override
     public HashListFragment reduce(ReduceContext context) {
-        return new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, (BlockFragment) block.reduce(context), ftl, comparator);
+        return new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block.reduce(context), ftl, comparator);
     }
 }
