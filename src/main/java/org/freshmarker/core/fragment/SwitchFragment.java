@@ -73,7 +73,7 @@ public class SwitchFragment implements Fragment {
             log.info("cannot reduce: {}", e.getMessage(), e);
         }
         SwitchFragment switchFragment = new SwitchFragment(switchExpression, node);
-        switchFragment.fragments.addAll(fragments.stream().map(f -> (ConditionalFragment) f.reduce(context)).toList());
+        switchFragment.fragments.addAll(fragments.stream().map(f -> f.reduce(context)).toList());
         switchFragment.defaultFragment = defaultFragment.reduce(context);
         return switchFragment;
     }

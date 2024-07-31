@@ -33,6 +33,6 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
 
     @Override
     public SequenceListFragment reduce(ReduceContext context) {
-        return new SequenceListFragment(list, identifier, looperIdentifier, (BlockFragment) block.reduce(context), ftl);
+        return new SequenceListFragment(list, identifier, looperIdentifier, block.reduce(context), ftl);
     }
 }

@@ -55,7 +55,7 @@ public class IfFragment implements Fragment {
             log.info("cannot reduce: {}", e.getMessage(), e);
         }
         IfFragment ifFragment = new IfFragment();
-        ifFragment.fragments.addAll(fragments.stream().map(f -> (ConditionalFragment) f.reduce(context)).toList());
+        ifFragment.fragments.addAll(fragments.stream().map(f -> f.reduce(context)).toList());
         ifFragment.elseFragment = elseFragment.reduce(context);
         return ifFragment;
     }

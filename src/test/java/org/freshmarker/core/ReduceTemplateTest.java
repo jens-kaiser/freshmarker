@@ -27,10 +27,12 @@ class ReduceTemplateTest {
     @Test
     void reduceBlock() {
         Map<String, Object> model = Map.of("company", "schegge.de");
-        Template template = configuration.getTemplate("test", "${company} ${name}").reduce(model, reductionStatus);
+        Template template = configuration.getTemplate("test", "${company}: ${name}").reduce(model, reductionStatus);
         assertNotNull(template);
-        assertEquals("schegge.de Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals("schegge.de: Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals(5, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
     }
 
     @Test

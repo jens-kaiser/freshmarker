@@ -34,7 +34,7 @@ public class UserDirectiveFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        return new UserDirectiveFragment(directive, nameSpace, namedArgs, (BlockFragment) body.reduce(context));
+        return new UserDirectiveFragment(directive, nameSpace, namedArgs, body.reduce(context));
     }
 
     @Override
