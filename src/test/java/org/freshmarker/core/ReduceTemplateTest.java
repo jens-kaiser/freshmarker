@@ -50,7 +50,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(2, reductionStatus.deleted().get());
+        assertEquals(3, reductionStatus.deleted().get());
     }
 
     @Test
@@ -79,7 +79,7 @@ class ReduceTemplateTest {
                 """).reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de3\n", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(12, reductionStatus.deleted().get());
+        assertEquals(14, reductionStatus.deleted().get());
 
     }
 
@@ -105,7 +105,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("Jens Kaiser", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(3, reductionStatus.deleted().get());
+        assertEquals(4, reductionStatus.deleted().get());
     }
 
     @ParameterizedTest
@@ -120,7 +120,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals(expected, reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(8, reductionStatus.deleted().get());
+        assertEquals(9, reductionStatus.deleted().get());
     }
 
     @Test
@@ -131,7 +131,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals("default", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(9, reductionStatus.deleted().get());
+        assertEquals(10, reductionStatus.deleted().get());
     }
 
     @Test
