@@ -13,9 +13,8 @@ public class TemplateExists implements TemplateBooleanExpression {
 
   @Override
   public TemplateBoolean evaluateToObject(ProcessContext context) {
-    context.reductionCheck();
     TemplateObject templateObject = expression.evaluateToObject(context);
-    return templateObject.isNull() ? TemplateBoolean.FALSE : TemplateBoolean.TRUE;
+    return context.reductionCheck(templateObject) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
   }
 
   @Override

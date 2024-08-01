@@ -60,7 +60,7 @@ class ReduceTemplateTest {
         assertNotNull(template);
         assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser")));
         assertEquals(0, reductionStatus.deleted().get());
-        assertEquals(1, reductionStatus.changed().get());
+        assertEquals(2, reductionStatus.changed().get());
     }
 
     @Test
@@ -88,15 +88,15 @@ class ReduceTemplateTest {
         Map<String, Object> model = Map.of("company", "schegge.de", "flag", 3);
         Template template = configuration.getTemplate("test", """
                 <#if flag == 1>
-                ${company}1
+                ${company} 1
                 <#elseif galf == 2>
-                ${company}2
+                ${company} 2
                 </#if>
                 """).reduce(model, reductionStatus);
         assertEquals(0, reductionStatus.deleted().get());
-        assertEquals(2, reductionStatus.changed().get());
+        assertEquals(4, reductionStatus.changed().get());
         assertNotNull(template);
-        assertEquals("schegge.de2\n", template.process(Map.of("flag", 3, "galf", 2)));
+        assertEquals("schegge.de 2\n", template.process(Map.of("flag", 3, "galf", 2)));
     }
 
     @Test
@@ -143,7 +143,7 @@ class ReduceTemplateTest {
         assertNotNull(reducedTemplate);
         assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
         assertEquals(0, reductionStatus.deleted().get());
-        assertEquals(1, reductionStatus.changed().get());
+        assertEquals(4, reductionStatus.changed().get());
     }
 
     @Test

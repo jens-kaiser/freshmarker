@@ -42,7 +42,16 @@ public class ConditionalFragment implements Fragment {
 
   @Override
   public ConditionalFragment reduce(ReduceContext context) {
-    return new ConditionalFragment(conditional, content.reduce(context), node);
+    try {
+      BlockFragment reduce = content.reduce(context);
+      if (reduce == content) {
+        return this;
+      }
+      context.getStatus().changed().incrementAndGet();
+      return new ConditionalFragment(conditional, reduce, node);
+    } catch (RuntimeException e) {
+      return this;
+    }
   }
 
   @Override

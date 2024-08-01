@@ -51,7 +51,7 @@ public class ProcessContext {
     return outputs.getOrDefault(name, UndefinedOutputFormat.INSTANCE);
   }
 
-  public void reductionCheck() {
-    // ignored
+  public boolean reductionCheck(TemplateObject templateObject) {
+    return !templateObject.isNull();
   }
 }

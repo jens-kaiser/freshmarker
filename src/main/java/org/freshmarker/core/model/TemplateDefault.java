@@ -13,8 +13,7 @@ public class TemplateDefault implements TemplateExpression {
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
-        context.reductionCheck();
         TemplateObject templateObject = base.evaluateToObject(context);
-        return templateObject.isNull() ? fallback.evaluateToObject(context) : templateObject;
+        return context.reductionCheck(templateObject) ? templateObject : fallback.evaluateToObject(context);
     }
 }
