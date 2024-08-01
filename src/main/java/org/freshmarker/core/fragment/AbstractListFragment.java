@@ -8,7 +8,7 @@ import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public abstract class AbstractListFragment<T> implements Fragment {
     protected final TemplateObject list;
@@ -37,7 +37,7 @@ public abstract class AbstractListFragment<T> implements Fragment {
         }
     }
 
-    protected Fragment optimize(Fragment original, Fragment reduced, Function<Fragment, Fragment> function) {
+    protected Fragment optimize(Fragment original, Fragment reduced, UnaryOperator<Fragment> function) {
         if (reduced == ConstantFragment.EMPTY)  {
             return reduced;
         }
