@@ -21,7 +21,7 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
     private final String valueIdentifier;
     private final Comparator<String> comparator;
 
-    public HashListFragment(TemplateObject list, String keyIdentifier, String valueIdentifier, String looperIdentifier, BlockFragment block, ListInstruction ftl, Comparator<String> comparator) {
+    public HashListFragment(TemplateObject list, String keyIdentifier, String valueIdentifier, String looperIdentifier, Fragment block, ListInstruction ftl, Comparator<String> comparator) {
         super(list, looperIdentifier, block, ftl);
         this.keyIdentifier = keyIdentifier;
         this.valueIdentifier = valueIdentifier;
@@ -45,7 +45,8 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
     }
 
     @Override
-    public HashListFragment reduce(ReduceContext context) {
-        return new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, block.reduce(context), ftl, comparator);
+    public Fragment reduce(ReduceContext context) {
+        Fragment reduced = block.reduce(context);
+        return optimize(block, reduced, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator));
     }
 }

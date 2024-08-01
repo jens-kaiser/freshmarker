@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class OutputFormatFragment implements Fragment {
 
-    private final BlockFragment content;
+    private final Fragment content;
     private final String format;
 
-    public OutputFormatFragment(BlockFragment content, String format) {
+    public OutputFormatFragment(Fragment content, String format) {
         this.content = content;
         this.format = format;
     }

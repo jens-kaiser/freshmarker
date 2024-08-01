@@ -8,13 +8,15 @@ import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 
+import java.util.function.Function;
+
 public abstract class AbstractListFragment<T> implements Fragment {
     protected final TemplateObject list;
     protected final String looperIdentifier;
-    protected final BlockFragment block;
+    protected final Fragment block;
     protected final ListInstruction ftl;
 
-    protected AbstractListFragment(TemplateObject list, String looperIdentifier, BlockFragment block, ListInstruction ftl) {
+    protected AbstractListFragment(TemplateObject list, String looperIdentifier, Fragment block, ListInstruction ftl) {
         this.list = list;
         this.looperIdentifier = looperIdentifier;
         this.block = block;
@@ -33,6 +35,13 @@ public abstract class AbstractListFragment<T> implements Fragment {
             }
             looper.increment();
         }
+    }
+
+    protected Fragment optimize(Fragment original, Fragment reduced, Function<Fragment, Fragment> function) {
+        if (reduced == ConstantFragment.EMPTY)  {
+            return reduced;
+        }
+        return original == reduced ? this : function.apply(reduced);
     }
 
     @Override

@@ -4,7 +4,7 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.WriterEnvironment;
-import org.freshmarker.core.fragment.BlockFragment;
+import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.io.FilterWriter;
@@ -27,7 +27,7 @@ public class OneLinerDirective implements UserDirective {
     }
 
     @Override
-    public void execute(ProcessContext context, Map<String, TemplateObject> args, BlockFragment body) {
+    public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
         if (body == null) {
             throw new ProcessException("one-liner body missing");
         }

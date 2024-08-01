@@ -39,7 +39,7 @@ public class IfFragment extends AbstractConditionalFragment {
         try {
             for (ConditionalFragment fragment : fragments) {
                 if (filterByConditional(context, fragment)) {
-                    return fragment.reduce(context);
+                    return fragment.reduce(context).getContent();
                 }
             }
             return endFragment.reduce(context);

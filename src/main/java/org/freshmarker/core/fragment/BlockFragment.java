@@ -12,9 +12,10 @@ public class BlockFragment implements Fragment {
     private List<Fragment> fragments;
 
     public BlockFragment() {
+        super();
     }
 
-    private BlockFragment(List<Fragment> fragments) {
+    public BlockFragment(List<Fragment> fragments) {
         this.fragments = fragments;
     }
 
@@ -31,8 +32,13 @@ public class BlockFragment implements Fragment {
     }
 
     @Override
-    public BlockFragment reduce(ReduceContext context) {
-        return new BlockFragment(fragments.stream().map(f -> f.reduce(context)).toList());
+    public Fragment reduce(ReduceContext context) {
+        List<Fragment> list = fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList();
+        return switch (list.size()) {
+            case 0 -> ConstantFragment.EMPTY;
+            case 1 -> list.getFirst();
+            default -> new BlockFragment(list);
+        };
     }
 
     @Override

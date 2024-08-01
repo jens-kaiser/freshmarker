@@ -7,6 +7,7 @@ import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.WrapperEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
+import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class Template {
@@ -63,13 +65,17 @@ public final class Template {
         ProcessContext context = configuration.createContext(dataModel, new StringWriter());
         context.setEnvironment(getWrapperEnvironment(context));
         try {
-            BlockFragment reducedFragment = rootFragment.reduce(new ReduceContext(context, status));
+            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());
             log.info("reduced by: {}", status);
             return new Template(configuration, templateLoader, path, reducedFragment);
         } catch (RuntimeException e) {
             throw new ReduceException("cannot reduce: " + e.getMessage(), e);
         }
+    }
+
+    private BlockFragment toBlock(Fragment fragment) {
+        return fragment instanceof BlockFragment blockFragment ? blockFragment : new BlockFragment(List.of(fragment));
     }
 
     public BlockFragment getRootFragment() {

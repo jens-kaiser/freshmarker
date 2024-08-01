@@ -50,7 +50,8 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(3, reductionStatus.deleted().get());
+        assertEquals(7, reductionStatus.total().get());
+        assertEquals(5, reductionStatus.deleted().get());
     }
 
     @Test
@@ -59,7 +60,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if name??>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser")));
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(2, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
     }
 
@@ -79,7 +80,8 @@ class ReduceTemplateTest {
                 """).reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de3\n", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(14, reductionStatus.deleted().get());
+        assertEquals(20, reductionStatus.total().get());
+        assertEquals(16, reductionStatus.deleted().get());
 
     }
 
@@ -105,7 +107,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("Jens Kaiser", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(4, reductionStatus.deleted().get());
+        assertEquals(5, reductionStatus.deleted().get());
     }
 
     @ParameterizedTest
@@ -120,7 +122,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals(expected, reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(9, reductionStatus.deleted().get());
+        assertEquals(10, reductionStatus.deleted().get());
     }
 
     @Test
@@ -131,7 +133,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals("default", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(10, reductionStatus.deleted().get());
+        assertEquals(11, reductionStatus.deleted().get());
     }
 
     @Test
@@ -142,7 +144,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(4, reductionStatus.deleted().get());
         assertEquals(4, reductionStatus.changed().get());
     }
 
@@ -191,5 +193,23 @@ class ReduceTemplateTest {
         String input = "<#list seq as s>${company}/${s} </#list>";
         Template template = configuration.getTemplate("test", input);
         assertNotNull(template.reduce(reduceModel));
+    }
+
+    @Test
+    void demo() {
+        String input = """
+                <#switch flag>
+                <#case 1>${company}
+                <#case 2>${name!'Jens'}
+                <#case 3><#if name??>${name}<#else>Anonymous</#if>
+                <#default>default
+                </#switch>""";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(Map.of("flag", 3), reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("Jens Kaiser\n", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 3)));
+        assertEquals(22, reductionStatus.total().get());
+        assertEquals(14, reductionStatus.deleted().get());
+        assertEquals(2, reductionStatus.changed().get());
     }
 }

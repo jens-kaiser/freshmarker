@@ -15,7 +15,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
 
     private final String identifier;
 
-    public SequenceListFragment(TemplateObject list, String identifier, String looperIdentifier, BlockFragment block, ListInstruction ftl) {
+    public SequenceListFragment(TemplateObject list, String identifier, String looperIdentifier, Fragment block, ListInstruction ftl) {
         super(list, looperIdentifier, block, ftl);
         this.identifier = identifier;
     }
@@ -32,7 +32,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     }
 
     @Override
-    public SequenceListFragment reduce(ReduceContext context) {
-        return new SequenceListFragment(list, identifier, looperIdentifier, block.reduce(context), ftl);
+    public Fragment reduce(ReduceContext context) {
+        return optimize(block, block.reduce(context), r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl));
     }
 }

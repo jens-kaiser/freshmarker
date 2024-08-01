@@ -246,7 +246,7 @@ the template can be preprocessed.
 [source,java]
 ----
 Template template = configuration.getTemplate("test", """"
-   <#for employee as e>${e.firstname}.${e.lastname}@${company.domain}</älist>
+   <#list employee as e>${e.firstname}.${e.lastname}@${company.domain}</#list>
    """);
 Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
 ----
@@ -254,4 +254,4 @@ Template reducedTemplate = template.reduce("company", new Company("schegge.de"))
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
 
-A reduction cannot be carried out if loop variables, the default or exist operator are used.
+WARNING: A reduction cannot be carried out if loop variables, the default or exist operator are used. Variables and parameter should not hide model variables, this could be produced unprodicted results.

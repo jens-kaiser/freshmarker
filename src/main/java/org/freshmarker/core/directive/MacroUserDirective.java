@@ -10,7 +10,6 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.WrapperEnvironment;
-import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
 import org.freshmarker.core.ftl.ParameterHolder;
@@ -31,7 +30,7 @@ public class MacroUserDirective implements UserDirective {
   }
 
   @Override
-  public void execute(ProcessContext context, Map<String, TemplateObject> args, BlockFragment body) {
+  public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
     Map<String, TemplateObject> values = evaluateParameterValues(args, context);
     Environment environment = context.getEnvironment();
     context.setEnvironment(new WrapperEnvironment(context.getEnvironment()) {
