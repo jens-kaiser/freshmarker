@@ -113,7 +113,7 @@ public class BaseEnvironment implements Environment {
 
     @Override
     public TemplateObject getVariable(String name) {
-        throw new ProcessException("variable " + name + "not found");
+        throw new ProcessException("variable " + name + " not found");
     }
 
     public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {

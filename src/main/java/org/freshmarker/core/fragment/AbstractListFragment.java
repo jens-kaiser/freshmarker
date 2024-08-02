@@ -39,7 +39,7 @@ public abstract class AbstractListFragment<T> implements Fragment {
 
     protected Fragment optimize(Fragment original, Fragment reduced, UnaryOperator<Fragment> function) {
         if (reduced == ConstantFragment.EMPTY)  {
-            return reduced;
+            return ConstantFragment.EMPTY;
         }
         return original == reduced ? this : function.apply(reduced);
     }
