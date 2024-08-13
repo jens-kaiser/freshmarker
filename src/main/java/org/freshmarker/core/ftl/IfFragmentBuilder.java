@@ -4,11 +4,14 @@ import ftl.Node;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
 import ftl.ast.IfStatement;
-import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConditionalFragment;
+import org.freshmarker.core.fragment.ConstantFragment;
+import org.freshmarker.core.fragment.Fragment;
+import org.freshmarker.core.fragment.Fragments;
 import org.freshmarker.core.fragment.IfFragment;
 import org.freshmarker.core.model.TemplateObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
@@ -23,7 +26,12 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
     public IfFragment visit(IfStatement ftl, IfFragment input) {
         Node expression = ftl.getChild(3);
         TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
-        BlockFragment ifBlock = indexAfterIfBlock(ftl) == 5 ? new BlockFragment() : ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
+        Fragment ifBlock;
+        if (indexAfterIfBlock(ftl) == 5) {
+            ifBlock = ConstantFragment.EMPTY;
+        } else {
+            ifBlock = Fragments.optimize(ftl.getChild(5).accept(fragmentBuilder, new ArrayList<>()));
+        }
         IfFragment ifFragment = new IfFragment();
         ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
         ftl.childrenOfType(ElseIfBlock.class).forEach(elseIfPart -> elseIfPart.accept(this, ifFragment));
@@ -43,7 +51,13 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
     public IfFragment visit(ElseIfBlock ftl, IfFragment input) {
         Node expression = ftl.getChild(3);
         TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
-        BlockFragment ifBlock = ftl.getChildCount() == 5 ? new BlockFragment() : ftl.getChild(5).accept(fragmentBuilder, new BlockFragment());
+        Fragment ifBlock;
+        if (ftl.getChildCount() == 5) {
+            ifBlock = ConstantFragment.EMPTY;
+        } else {
+            List<Fragment> fragments = ftl.getChild(5).accept(fragmentBuilder, new ArrayList<>());
+            ifBlock = Fragments.optimize(fragments);
+        }
         input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
         return input;
     }
@@ -52,7 +66,8 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
     public IfFragment visit(ElseBlock ftl, IfFragment input) {
         if (ftl.getChildCount() != 3) {
             Node expression = ftl.getChild(3);
-            input.addElseFragment(expression.accept(fragmentBuilder, new BlockFragment()));
+            List<Fragment> fragments = expression.accept(fragmentBuilder, new ArrayList<>());
+            input.addElseFragment(Fragments.optimize(fragments));
         }
         return input;
     }

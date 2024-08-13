@@ -1,6 +1,7 @@
 package org.freshmarker.core.fragment;
 
 import ftl.ast.ListInstruction;
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
@@ -46,7 +47,16 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        Fragment reduced = block.reduce(context);
-        return optimize(block, reduced, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator));
+        Environment environment = context.getEnvironment();
+        Fragment reduce;
+        try {
+            ReducingVariableEnvironment reducingVariableEnvironment = new ReducingVariableEnvironment(environment, keyIdentifier, valueIdentifier, looperIdentifier);
+            context.setEnvironment(reducingVariableEnvironment);
+            reduce = block.reduce(context);
+        } finally {
+            context.setEnvironment(environment);
+        }
+
+        return optimize(block, reduce, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator));
     }
 }

@@ -50,8 +50,8 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(7, reductionStatus.total().get());
-        assertEquals(5, reductionStatus.deleted().get());
+        assertEquals(5, reductionStatus.total().get());
+        assertEquals(3, reductionStatus.deleted().get());
     }
 
     @Test
@@ -60,7 +60,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if name??>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de", template.process(Map.of("name", "Jens Kaiser")));
-        assertEquals(2, reductionStatus.deleted().get());
+        assertEquals(0, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
     }
 
@@ -107,7 +107,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("Jens Kaiser", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(5, reductionStatus.deleted().get());
+        assertEquals(3, reductionStatus.deleted().get());
     }
 
     @ParameterizedTest
@@ -122,7 +122,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals(expected, reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(10, reductionStatus.deleted().get());
+        assertEquals(6, reductionStatus.deleted().get());
     }
 
     @Test
@@ -133,7 +133,7 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals("default", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(11, reductionStatus.deleted().get());
+        assertEquals(7, reductionStatus.deleted().get());
     }
 
     @Test
@@ -144,8 +144,8 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-        assertEquals(4, reductionStatus.deleted().get());
-        assertEquals(4, reductionStatus.changed().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(2, reductionStatus.changed().get());
     }
 
     @Test
@@ -155,10 +155,23 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
         assertEquals(5, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
+        assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+    }
+
+    @Test
+    void reduceListWithHiddenValue() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "seq", List.of(1, 2, 3, 4));
+        String input = "<#list seq as company>${company} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(5, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(0, reductionStatus.changed().get());
+        assertEquals("1 2 3 4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
 
     @Test
@@ -168,10 +181,10 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
         assertEquals(5, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
+        assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
     }
 
     @Test
@@ -181,10 +194,10 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
         assertEquals(7, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
+        assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
 
     @Test
@@ -207,9 +220,9 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(Map.of("flag", 3), reductionStatus);
         assertNotNull(reducedTemplate);
+        assertEquals(20, reductionStatus.total().get());
+        assertEquals(12, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
         assertEquals("Jens Kaiser\n", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 3)));
-        assertEquals(22, reductionStatus.total().get());
-        assertEquals(14, reductionStatus.deleted().get());
-        assertEquals(2, reductionStatus.changed().get());
     }
 }

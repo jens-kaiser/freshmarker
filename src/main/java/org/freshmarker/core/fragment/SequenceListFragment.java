@@ -1,6 +1,7 @@
 package org.freshmarker.core.fragment;
 
 import ftl.ast.ListInstruction;
+import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
@@ -33,6 +34,15 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        return optimize(block, block.reduce(context), r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl));
+        Environment environment = context.getEnvironment();
+        Fragment reduce;
+        try {
+            context.setEnvironment(new ReducingVariableEnvironment(environment, identifier, looperIdentifier));
+            reduce = block.reduce(context);
+        } finally {
+            context.setEnvironment(environment);
+        }
+
+        return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl));
     }
 }

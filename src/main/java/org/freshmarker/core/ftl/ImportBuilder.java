@@ -5,9 +5,11 @@ import ftl.Token;
 import ftl.ast.MacroDefinition;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
-import org.freshmarker.core.fragment.BlockFragment;
+import org.freshmarker.core.fragment.Fragment;
 
-public class ImportBuilder implements UnaryFtlVisitor<BlockFragment> {
+import java.util.List;
+
+public class ImportBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final Template template;
     private final Configuration configuration;
     private final String nameSpace;
@@ -19,17 +21,17 @@ public class ImportBuilder implements UnaryFtlVisitor<BlockFragment> {
     }
 
     @Override
-    public BlockFragment handleWithException(Node node) {
+    public List<Fragment> handleWithException(Node node) {
         throw new ParsingException("unsupported import operation", node);
     }
 
     @Override
-    public BlockFragment visit(Token ftl, BlockFragment input) {
+    public List<Fragment> visit(Token ftl, List<Fragment> input) {
         return input;
     }
 
     @Override
-    public BlockFragment visit(MacroDefinition ftl, BlockFragment input) {
+    public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
         return ftl.accept(new FragmentBuilder(template, configuration, nameSpace), input);
     }
 }

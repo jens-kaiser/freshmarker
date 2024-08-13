@@ -29,9 +29,9 @@ import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
+import org.freshmarker.core.fragment.Fragments;
 import org.freshmarker.core.fragment.HashListFragment;
 import org.freshmarker.core.fragment.InterpolationFragment;
 import org.freshmarker.core.fragment.NestedInstructionFragment;
@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
+public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
@@ -77,7 +77,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
     }
 
     @Override
-    public BlockFragment visit(Node ftl, BlockFragment input) {
+    public List<Fragment> visit(Node ftl, List<Fragment> input) {
         logger.info("unsupported node operation: {}", ftl.getClass());
         return input;
     }
@@ -85,52 +85,52 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
     private static final ConstantFragment ONE_WHITESPACE = new ConstantFragment(" ");
 
     @Override
-    public BlockFragment visit(Token ftl, BlockFragment input) {
+    public List<Fragment> visit(Token ftl, List<Fragment> input) {
         String image = ftl.toString();
         if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
-            input.addFragment(new ConstantFragment(image));
+            input.add(new ConstantFragment(image));
         } else if (ftl.getType() == TokenType.WHITESPACE) {
             if (" ".equals(image)) {
-                input.addFragment(ONE_WHITESPACE);
+                input.add(ONE_WHITESPACE);
             } else {
-                input.addFragment(new ConstantFragment(image));
+                input.add(new ConstantFragment(image));
             }
         }
         return input;
     }
 
     @Override
-    public BlockFragment visit(FTLHeader ftl, BlockFragment input) {
+    public List<Fragment> visit(FTLHeader ftl, List<Fragment> input) {
         return input;
     }
 
     @Override
-    public BlockFragment visit(Text ftl, BlockFragment input) {
-        ftl.getAllTokens(false).stream().map(TerminalNode::toString).map(ConstantFragment::new).forEach(input::addFragment);
+    public List<Fragment> visit(Text ftl, List<Fragment> input) {
+        ftl.getAllTokens(false).stream().map(TerminalNode::toString).map(ConstantFragment::new).forEach(input::add);
         return input;
     }
 
     @Override
-    public BlockFragment visit(IfStatement ftl, BlockFragment input) {
-        input.addFragment(ftl.accept(new IfFragmentBuilder(this), null));
+    public List<Fragment> visit(IfStatement ftl, List<Fragment> input) {
+        input.add(ftl.accept(new IfFragmentBuilder(this), null));
         return input;
     }
 
     @Override
-    public BlockFragment visit(SwitchInstruction ftl, BlockFragment input) {
-        input.addFragment(ftl.accept(new SwitchFragmentBuilder(this), null));
+    public List<Fragment> visit(SwitchInstruction ftl, List<Fragment> input) {
+        input.add(ftl.accept(new SwitchFragmentBuilder(this), null));
         return input;
     }
 
     @Override
-    public BlockFragment visit(Interpolation ftl, BlockFragment input) {
+    public List<Fragment> visit(Interpolation ftl, List<Fragment> input) {
         TemplateObject interpolation = ftl.getChild(1).accept(InterpolationBuilder.INSTANCE, null);
-        input.addFragment(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
+        input.add(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
         return input;
     }
 
     @Override
-    public BlockFragment visit(ListInstruction ftl, BlockFragment input) {
+    public List<Fragment> visit(ListInstruction ftl, List<Fragment> input) {
         TemplateObject list = ftl.getChild(3).accept(InterpolationBuilder.INSTANCE, null);
         String identifier = ftl.getChild(5).toString();
         int index = 6;
@@ -149,33 +149,35 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
             looperIdentifier = ((IDENTIFIER) ftl.getChild(index + 1)).toString();
             index += 2;
         }
-        BlockFragment block = ftl.getChild(index + 1).accept(this, new BlockFragment());
+        List<Fragment> fragments = ftl.getChild(index + 1).accept(this, new ArrayList<>());
+        Fragment block = Fragments.optimize(fragments);
         if (valueIdentifier != null) {
-            input.addFragment(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator));
+            input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator));
         } else {
-            input.addFragment(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
+            input.add(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
         }
         return input;
     }
 
     @Override
-    public BlockFragment visit(SettingInstruction ftl, BlockFragment input) {
+    public List<Fragment> visit(SettingInstruction ftl, List<Fragment> input) {
         IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(3);
         TemplateObject expression = ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null);
-        input.addFragment(new SettingFragment(identifier.toString(), expression, ftl));
+        input.add(new SettingFragment(identifier.toString(), expression, ftl));
         return input;
     }
 
     @Override
-    public BlockFragment visit(OutputFormatBlock ftl, BlockFragment input) {
-        BlockFragment block = ftl.getChild(5).accept(this, new BlockFragment());
+    public List<Fragment> visit(OutputFormatBlock ftl, List<Fragment> input) {
+        List<Fragment> fragments = ftl.getChild(5).accept(this, new ArrayList<>());
+        Fragment block = Fragments.optimize(fragments);
         String image = ftl.getChild(3).toString();
-        input.addFragment(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
+        input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
         return input;
     }
 
     @Override
-    public BlockFragment visit(UserDirective ftl, BlockFragment input) {
+    public List<Fragment> visit(UserDirective ftl, List<Fragment> input) {
         int nameIndex;
         String currentNameSpace;
         if (ftl.get(2).getType() == TokenType.DOT) {
@@ -192,17 +194,18 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.<NodeType>of(TokenType.GT, TokenType.CLOSE_TAG).contains(n.getType()))
                 .skip(1).findFirst().orElse(null);
-        BlockFragment body = null;
+        Fragment body = null;
         if (node != null) {
-            body = node.accept(this, new BlockFragment());
+            List<Fragment> fragments = node.accept(this, new ArrayList<>());
+            body = Fragments.optimize(fragments);
         }
         logger.debug("user directive: {} {}", node, body);
-        input.addFragment(new UserDirectiveFragment(name, currentNameSpace, namedArgs, body));
+        input.add(new UserDirectiveFragment(name, currentNameSpace, namedArgs, body));
         return input;
     }
 
     @Override
-    public BlockFragment visit(MacroDefinition ftl, BlockFragment input) {
+    public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
         TokenType type = (TokenType) ftl.getChild(1).getType();
         if (type != TokenType.MACRO) {
             return input;
@@ -220,7 +223,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
                 || ftl.getChild(ftl.getChildCount() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
-        return ftl.getChild(ftl.getChildCount() - 2).accept(this, new BlockFragment());
+        List<Fragment> fragments = ftl.getChild(ftl.getChildCount() - 2).accept(this, new ArrayList<>());
+        return Fragments.optimize(fragments);
     }
 
     private List<ParameterHolder> getParameterHolders(MacroDefinition ftl) {
@@ -254,7 +258,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
 
 
     @Override
-    public BlockFragment visit(Assignment ftl, BlockFragment input) {
+    public List<Fragment> visit(Assignment ftl, List<Fragment> input) {
         TokenType type = (TokenType) ftl.getChild(1).getType();
         if (type != TokenType.SET) {
             throw new ParsingException("assignment type " + type + " not supported", ftl.getChild(1));
@@ -266,12 +270,12 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), true, ftl.getChild(5)));
+        input.add(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), true, ftl.getChild(5)));
         return input;
     }
 
     @Override
-    public BlockFragment visit(VarInstruction ftl, BlockFragment input) {
+    public List<Fragment> visit(VarInstruction ftl, List<Fragment> input) {
         String name = getName(ftl.getChild(3));
         if (name.startsWith(".")) {
             throw new ParsingException("built-in variable name not allowed: " + name, ftl);
@@ -279,24 +283,24 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
         if (ftl.getChildCount() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.addFragment(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), false, ftl.getChild(5)));
+        input.add(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), false, ftl.getChild(5)));
         return input;
     }
 
     @Override
-    public BlockFragment visit(NestedInstruction ftl, BlockFragment input) {
-        input.addFragment(new NestedInstructionFragment());
+    public List<Fragment> visit(NestedInstruction ftl, List<Fragment> input) {
+        input.add(new NestedInstructionFragment());
         return input;
     }
 
     @Override
-    public BlockFragment visit(ReturnInstruction ftl, BlockFragment input) {
-        input.addFragment(new ReturnInstructionFragment());
+    public List<Fragment> visit(ReturnInstruction ftl, List<Fragment> input) {
+        input.add(new ReturnInstructionFragment());
         return input;
     }
 
     @Override
-    public BlockFragment visit(ImportInstruction ftl, BlockFragment input) {
+    public List<Fragment> visit(ImportInstruction ftl, List<Fragment> input) {
         String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
         String namespace = ftl.get(5).toString();
         try {
@@ -305,12 +309,13 @@ public class FragmentBuilder implements UnaryFtlVisitor<BlockFragment> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            root.accept(new ImportBuilder(template, configuration, namespace), template.getRootFragment());
+            List<Fragment> fragments = root.accept(new ImportBuilder(template, configuration, namespace), new ArrayList<>());
+            fragments.forEach(template.getRootFragment()::addFragment);
+            return input;
         } catch (FileNotFoundException e) {
             throw new ParsingException("cannot find import: " + path, ftl);
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
         }
-        return input;
     }
 }

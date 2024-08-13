@@ -20,6 +20,7 @@ import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
+import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
@@ -188,7 +189,8 @@ public final class Configuration {
         if (ftlHeader != null) {
             throw new ProcessException("ftl header is not supported", ftlHeader);
         }
-        root.accept(new FragmentBuilder(template, this, null), template.getRootFragment());
+        List<Fragment> fragments = root.accept(new FragmentBuilder(template, this, null), new ArrayList<>());
+        fragments.forEach(template.getRootFragment()::addFragment);
         return template;
     }
 
