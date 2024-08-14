@@ -5,7 +5,6 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.model.TemplateObject;
 
 public class VariableFragment implements Fragment {
