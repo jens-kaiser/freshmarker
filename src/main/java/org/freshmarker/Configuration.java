@@ -141,7 +141,7 @@ public final class Configuration {
     }
 
     public void registerPlugin(PluginProvider provider) {
-        logger.info("register plugin: {}", provider.getClass().getSimpleName());
+        logger.debug("register plugin: {}", provider.getClass().getSimpleName());
         provider.registerBuildIn(builtIns);
         provider.registerFormatter(formatter);
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
