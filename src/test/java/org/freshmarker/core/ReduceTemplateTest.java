@@ -175,19 +175,6 @@ class ReduceTemplateTest {
     }
 
     @Test
-    void reduceHashList() {
-        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "seq", Map.of(1, 2, 2, 4));
-        String input = "<#list seq as k, v>${company} </#list>";
-        Template template = configuration.getTemplate("test", input);
-        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-        assertNotNull(reducedTemplate);
-        assertEquals(5, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
-        assertEquals(1, reductionStatus.changed().get());
-        assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
-    }
-
-    @Test
     void reduceListWithItem() {
         Map<String, Object> reduceModel = Map.of("company", "schegge.de");
         String input = "<#list seq as s>${company}/${s} </#list>";
@@ -198,6 +185,54 @@ class ReduceTemplateTest {
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
         assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+    }
+
+    @Test
+    void reduceListWithLoopVariable() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de");
+        String input = "<#list seq as s with l>${l?counter} ${company}/${s} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(9, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+        assertEquals("1 schegge.de/1 2 schegge.de/2 3 schegge.de/3 4 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+    }
+
+    @Test
+    void reduceListWithLoopVariableAndvariable() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "firstname", "jens");
+        String input = """
+                <#var name=firstname>
+                <#list seq as s with l>
+                ${l?counter}. ${company}/${s} ${name}
+                </#list>""";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(13, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(3, reductionStatus.changed().get());
+        assertEquals("""
+                1. schegge.de/1 jens
+                2. schegge.de/2 jens
+                3. schegge.de/3 jens
+                4. schegge.de/4 jens
+                """, reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+    }
+
+    @Test
+    void reduceHashList() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "seq", Map.of(1, 2, 2, 4));
+        String input = "<#list seq as k, v>${company} </#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(5, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+        assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
     }
 
     @Test
@@ -230,7 +265,7 @@ class ReduceTemplateTest {
         assertNotNull(reducedTemplate);
         assertEquals(9, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
-        assertEquals(2, reductionStatus.changed().get());
+        assertEquals(3, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
 

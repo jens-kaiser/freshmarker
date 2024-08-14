@@ -33,27 +33,36 @@ public class VariableFragment implements Fragment {
             }
             environment.setVariable(name, expression.evaluateToObject(context));
         } else {
-          if (environment.checkVariable(name)) {
-              throw new ProcessException("variable " + name + " must not exist", node);
-          }
-          environment.createVariable(name, expression.evaluateToObject(context));
+            if (environment.checkVariable(name)) {
+                throw new ProcessException("variable " + name + " must not exist", node);
+            }
+            environment.createVariable(name, expression.evaluateToObject(context));
         }
     }
 
     @Override
     public Fragment reduce(ReduceContext context) {
         Environment environment = context.getEnvironment();
-        if (exists) {
-            if (environment.getVariable(name) == null) {
-                throw new ReduceException("variable " + name + " must exists");
-            }
-            environment.setVariable(name, expression.evaluateToObject(context));
-        } else {
-            if (environment.checkVariable(name)) {
-                throw new ReduceException("variable " + name + " must not exist");
-            }
-            environment.createVariable(name, expression.evaluateToObject(context));
+        TemplateObject value = expression.evaluateToObject(context);
+        if (value.isNull()) {
+            return this;
         }
-        return this;
+        try {
+            if (exists) {
+                if (environment.getVariable(name) == null) {
+                    return this;
+                }
+                environment.setVariable(name, value);
+            } else {
+                if (environment.checkVariable(name)) {
+                    return this;
+                }
+                environment.createVariable(name, value);
+            }
+            context.getStatus().changed().incrementAndGet();
+            return new VariableFragment(name, value, exists, node);
+        } catch (RuntimeException e) {
+            return this;
+        }
     }
 }
