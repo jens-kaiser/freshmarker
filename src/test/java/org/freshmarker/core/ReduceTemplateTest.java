@@ -270,6 +270,19 @@ class ReduceTemplateTest {
     }
 
     @Test
+    void reduceWithDynamicVariableSet() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de", "firstname", "jens");
+        String input = "<#var name='Jens'><#set name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
+        Template template = configuration.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(10, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(4, reductionStatus.changed().get());
+        assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
+    }
+
+    @Test
     void reduceWithEmptyVariable() {
         Map<String, Object> reduceModel = Map.of("company", "schegge.de");
         String input = "<#var name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
