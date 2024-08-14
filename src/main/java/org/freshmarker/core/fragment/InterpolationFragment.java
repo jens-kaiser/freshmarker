@@ -41,8 +41,6 @@ public class InterpolationFragment implements Fragment {
             TemplateString templateObject = expression.evaluate(context, TemplateString.class);
             context.getStatus().changed().incrementAndGet();
             return new ConstantFragment(templateObject.getValue());
-        } catch (UnsupportedBuiltInException e) {
-            throw new UnsupportedBuiltInException(e.getMessage(), ftl, e);
         } catch (WrongTypeException e) {
             throw new WrongTypeException(e.getMessage(), ftl, e);
         } catch (ProcessException e) {

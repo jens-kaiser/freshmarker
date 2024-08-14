@@ -254,4 +254,5 @@ Template reducedTemplate = template.reduce("company", new Company("schegge.de"))
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
 
-WARNING: A reduction cannot be carried out if loop variables, the default or exist operator are used. Variables and parameter should not hide model variables, this could be produced unprodicted results.
+WARNING: A reduction cannot be carried out if loop variables, the default or exist operator are used.
+Variables and parameter should not hide model variables, this could be produced unpredicted results.
