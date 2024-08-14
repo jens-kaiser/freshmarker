@@ -252,7 +252,7 @@ class ReduceTemplateTest {
         assertNotNull(reducedTemplate);
         assertEquals(9, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
-        assertEquals(2, reductionStatus.changed().get());
+        assertEquals(3, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
 
