@@ -42,11 +42,11 @@ public class VariableFragment implements Fragment {
     @Override
     public Fragment reduce(ReduceContext context) {
         Environment environment = context.getEnvironment();
-        TemplateObject value = expression.evaluateToObject(context);
-        if (value.isNull()) {
-            return this;
-        }
         try {
+            TemplateObject value = expression.evaluateToObject(context);
+            if (value.isNull()) {
+                return this;
+            }
             if (exists) {
                 if (environment.getVariable(name) == null) {
                     return this;

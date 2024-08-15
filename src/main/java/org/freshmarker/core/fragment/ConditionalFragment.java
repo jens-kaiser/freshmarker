@@ -4,6 +4,7 @@ import ftl.Node;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 
@@ -46,7 +47,9 @@ public class ConditionalFragment implements Fragment {
 
     @Override
     public ConditionalFragment reduce(ReduceContext context) {
+        Environment environment = context.getEnvironment();
         try {
+            context.setEnvironment(new ReducingVariableEnvironment(environment));
             Fragment reduce = content.reduce(context);
             if (reduce == content) {
                 return this;
@@ -55,6 +58,8 @@ public class ConditionalFragment implements Fragment {
             return new ConditionalFragment(conditional, reduce, node);
         } catch (RuntimeException e) {
             return this;
+        } finally {
+            context.setEnvironment(environment);
         }
     }
 

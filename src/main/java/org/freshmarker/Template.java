@@ -5,6 +5,7 @@ import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.environment.WrapperEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
@@ -63,7 +64,7 @@ public final class Template {
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.total().set(rootFragment.getSize());
         ProcessContext context = configuration.createContext(dataModel, new StringWriter());
-        context.setEnvironment(getWrapperEnvironment(context));
+        context.setEnvironment(new ReducingVariableEnvironment(getWrapperEnvironment(context)));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());

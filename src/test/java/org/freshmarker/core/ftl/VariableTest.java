@@ -65,4 +65,18 @@ class VariableTest {
                 """);
         assertEquals("test\n1\n2\n3\ntest\n", template.process(Map.of("sequence", List.of(1, 2, 3))));
     }
+
+    @Test
+    void connter() {
+        Template template = configuration.getTemplate("test", """
+                <#var v=0>
+                ${v}
+                <#list sequence as s>
+                  <#set v=v+1>
+                ${v}
+                </#list>
+                ${v}
+                """);
+        assertEquals("0\n1\n2\n3\n3\n", template.process(Map.of("sequence", List.of(1, 2, 3))));
+    }
 }
