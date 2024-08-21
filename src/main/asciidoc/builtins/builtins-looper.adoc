@@ -45,7 +45,7 @@ m|I, II, III, IV, V, VI, VII, VIII, IX, X,
 ==== `utf_roman` Built-In (since 1.3.5)
 
 This built-in returns the counter (starting with one) of the current loop value as a roman number value.
- This built-in uses the Unicode Characters `\u2160`, `\u2164`, `\u2169` and `\u216C` to `\u216F`.
+This built-in uses the Unicode Characters `\u2160`, `\u2164`, `\u2169` and `\u216C` to `\u216F`.
 
 |===
 |Template |Output
@@ -55,6 +55,21 @@ a|
 <#list (1..10) as s with l>${l?utf_roman}, </#list>
 ----
 m|Ⅰ, ⅠⅠ, ⅠⅠⅠ, ⅠⅤ, Ⅴ, ⅤⅠ, ⅤⅠⅠ, ⅤⅠⅠⅠ, ⅠⅩ, Ⅹ,
+|===
+
+==== `clock_roman` Built-In (since 1.3.5)
+
+This built-in returns the counter (starting with one up to twelve) of the current loop value as a roman number value.
+This built-in uses the Unicode Characters from `\u2160` to `\u216B`.
+
+|===
+|Template |Output
+
+a|
+----
+<#list (1..12) as s with l>${l?clock_roman}, </#list>
+----
+m|Ⅰ, Ⅱ, Ⅲ, Ⅳ, Ⅴ, Ⅵ, Ⅶ, Ⅷ, Ⅸ, Ⅹ, Ⅺ, Ⅻ, 
 |===
 
 ==== `is_first` Built-In
