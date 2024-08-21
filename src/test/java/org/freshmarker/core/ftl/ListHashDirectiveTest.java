@@ -43,6 +43,14 @@ class ListHashDirectiveTest {
     }
 
     @Test
+    void loopRoman() throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "test: <#list sequence as k sorted asc, v with l>${l?roman}. ${k} ${v}\n</#list>");
+        Map<String, Object> model = Map.of("sequence", Map.of("a", 1, "b", 2, "c", 3, "d", 4));
+        assertEquals("test: I. a 1\nII. b 2\nIII. c 3\nIV. d 4\n", template.process(model));
+    }
+
+    @Test
     void emptyList() throws ParseException {
         Template template = configuration.getTemplate("test",
                 "test:\n<#list sequence as k, v with l>\n${l?index}. ${k} ${v}\n</#list>");

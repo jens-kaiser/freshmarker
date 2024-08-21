@@ -3,7 +3,9 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -11,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NumberInterpolationTest {
     private Configuration configuration;
@@ -30,7 +33,7 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationNumberC(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short)42, "d", (byte)42)));
+        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42)));
     }
 
     @ParameterizedTest
@@ -110,5 +113,42 @@ class NumberInterpolationTest {
     void interpolationIntegerCast(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("x", 42, "y", 420000)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: I Ⅰ,1",
+            "test: II ⅠⅠ,2",
+            "test: IV ⅠⅤ,4",
+            "test: VI ⅤⅠ,6",
+            "test: IX ⅠⅩ,9",
+            "test: X Ⅹ,10",
+            "test: XIV ⅩⅠⅤ,14",
+            "test: MMXII ⅯⅯⅩⅠⅠ,2012",
+    })
+    void interpolationRoman(String expected, int value) throws ParseException {
+        Template template = configuration.getTemplate("roman", "test: ${x?roman} ${x?utf_roman}");
+        assertEquals(expected, template.process(Map.of("x", value)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${x?roman},0",
+            "test: ${x?utf_roman},0",
+            "test: ${x?clock_roman},0",
+            "test: ${x?roman},4000",
+            "test: ${x?utf_roman},4000",
+            "test: ${x?clock_roman},13",
+    })
+    void interpolationInvalidRoman(String input, int value) throws ParseException {
+        Template template = configuration.getTemplate("roman", input);
+        Map<String, Object> model = Map.of("x", value);
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @Test
+    void interpolationClockRoman() throws ParseException {
+        Template template = configuration.getTemplate("roman", "test:<#list 1..12 as c with l> ${l?clock_roman?lower_case} ${c?clock_roman}</#list>");
+        assertEquals("test: ⅰ Ⅰ ⅱ Ⅱ ⅲ Ⅲ ⅳ Ⅳ ⅴ Ⅴ ⅵ Ⅵ ⅶ Ⅶ ⅷ Ⅷ ⅸ Ⅸ ⅹ Ⅹ ⅺ Ⅺ ⅻ Ⅻ", template.process(Map.of()));
     }
 }
