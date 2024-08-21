@@ -40,9 +40,39 @@ public class LooperPluginProvider implements PluginProvider {
         return value.getCounter();
     }
 
+    @BuiltInMethod("roman")
+    public static TemplateString romanCounter(TemplateSequenceLooper value) {
+        return NumberPluginProvider.roman(value.getCounter());
+    }
+
+    @BuiltInMethod("utf_roman")
+    public static TemplateString utfRomanCounter(TemplateSequenceLooper value) {
+        return NumberPluginProvider.utfRoman(value.getCounter());
+    }
+
+    @BuiltInMethod("clock_roman")
+    public static TemplateString clockCounter(TemplateSequenceLooper value) {
+        return NumberPluginProvider.clockRoman(value.getCounter());
+    }
+
     @BuiltInMethod
     public static TemplateNumber counter(TemplateHashLooper value) {
         return value.getCounter();
+    }
+
+    @BuiltInMethod("roman")
+    public static TemplateString romanCounter(TemplateHashLooper value) {
+        return NumberPluginProvider.roman(value.getCounter());
+    }
+
+    @BuiltInMethod("utf_roman")
+    public static TemplateString utfRomanCounter(TemplateHashLooper value) {
+        return NumberPluginProvider.utfRoman(value.getCounter());
+    }
+
+    @BuiltInMethod("clock_roman")
+    public static TemplateString clockCounter(TemplateHashLooper value) {
+        return NumberPluginProvider.clockRoman(value.getCounter());
     }
 
     @BuiltInMethod

@@ -44,6 +44,27 @@ class ListDirectiveTest {
     }
 
     @Test
+    void loopRoman() throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "test: <#list sequence as s with l>${l?roman}. ${s}\n</#list>");
+        assertEquals("test: I. a\nII. b\nIII. c\nIV. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
+    }
+
+    @Test
+    void loopUtfRoman() throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "test: <#list sequence as s with l>${l?roman}. ${s}\n</#list>");
+        assertEquals("test: I. a\nII. b\nIII. c\nIV. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
+    }
+
+    @Test
+    void loopClockRoman() throws ParseException {
+        Template template = configuration.getTemplate("test",
+                "test: <#list sequence as s with l>${l?clock_roman}. ${s}\n</#list>");
+        assertEquals("test: Ⅰ. a\nⅡ. b\nⅢ. c\nⅣ. d\n", template.process(Map.of("sequence", List.of("a", "b", "c", "d"))));
+    }
+
+    @Test
     void emptyList() throws ParseException {
         Template template = configuration.getTemplate("test",
                 "test:\n<#list sequence as s with l>\n${l?index}. ${s}\n</#list>");

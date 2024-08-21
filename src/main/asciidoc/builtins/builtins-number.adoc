@@ -87,3 +87,56 @@ m|${42.0?double}
 m|42.0
 m|double
 |===
+
+==== `roman` Built-In (since 1.3.5)
+
+This built-in converts numbers between 1 and 3999 to roman numerals.
+
+|===
+|Interpolation | Output
+
+m|${1?roman}
+m|I
+
+m|${4?roman}
+m|IV
+
+m|${2012?roman}
+m|MMXII
+|===
+
+==== `utf_roman` Built-In (since 1.3.5)
+
+This built-in converts numbers between 1 and 3999 to roman numerals. This built-in
+uses the Unicode Characters `\u2160`, `\u2164`, `\u2169` and `\u216C` to `\u216F`.
+
+|===
+|Interpolation | Output
+
+m|${1?utf_roman}
+m|Ⅰ
+
+m|${4?utf_roman}
+m|ⅠⅤ
+
+m|${2012?utf_roman}
+m|ⅯⅯⅩⅠⅠ
+|===
+
+==== `clock_roman` Built-In (since 1.3.5)
+
+This built-in converts numbers between 1 and 12 to roman numerals. This built-in
+uses the Unicode Characters from `\u2160` to `\u216B`.
+
+|===
+|Interpolation | Output
+
+m|${1?utf_roman}
+m|Ⅰ
+
+m|${4?utf_roman}
+m|Ⅳ
+
+m|${9?utf_roman}
+m|Ⅸ
+|===
