@@ -363,7 +363,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
                     .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
             hash.put(key, value);
         }
-        return new TemplateBean(hash);
+        return new TemplateBean(hash, null);
     }
 
     @Override

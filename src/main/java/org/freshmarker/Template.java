@@ -13,7 +13,6 @@ import org.freshmarker.core.fragment.TemplateReturnException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public final class Template {
     }
 
     public String process(Map<String, Object> dataModel) {
-        StringWriter writer = new StringWriter();
+        StringBuilderWriter writer = new StringBuilderWriter();
         process(dataModel, writer);
         return writer.toString();
     }
@@ -64,7 +63,7 @@ public final class Template {
 
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.total().set(rootFragment.getSize());
-        ProcessContext context = configuration.createContext(dataModel, new StringWriter());
+        ProcessContext context = configuration.createContext(dataModel, new StringBuilderWriter());
         context.setEnvironment(new ReducingVariableEnvironment(getWrapperEnvironment(context)));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
