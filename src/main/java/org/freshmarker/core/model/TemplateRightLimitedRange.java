@@ -51,9 +51,9 @@ public class TemplateRightLimitedRange implements TemplateRange {
     }
 
     @Override
-    public TemplateNumber size(ProcessContext context) {
+    public int size(ProcessContext context) {
         evaluate(context);
-        return new TemplateNumber(Math.abs(upperNumber - lowerNumber) + 1);
+        return Math.abs(upperNumber - lowerNumber);
     }
 
     @Override

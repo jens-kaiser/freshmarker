@@ -36,8 +36,7 @@ public class TemplateSlice implements TemplateObject {
     TemplateNumber upper = templateRange.getUpper().evaluate(context, TemplateNumber.class);
     int max = upper.getValue().getNumber().intValue();
     if (templateRange.isLengthLimited()) {
-      return templateListSequence.slice(min,
-          Math.max(templateListSequence.size(context).getValue().getNumber().intValue(), min + max));
+      return templateListSequence.slice(min, Math.max(templateListSequence.size(context), min + max));
     }
     return templateListSequence.slice(min, max);
   }

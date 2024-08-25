@@ -48,8 +48,8 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
   }
 
   @Override
-  public TemplateNumber size(ProcessContext context) {
-      throw new ProcessException("right unlimited range not supported");
+  public int size(ProcessContext context) {
+    throw new ProcessException("right unlimited range not supported");
   }
 
   @Override

@@ -18,7 +18,7 @@ public class SequencePluginProvider implements PluginProvider {
 
     @BuiltInMethod("size")
     public static TemplateNumber size(TemplateListSequence value, ProcessContext context) {
-        return value.size(context);
+        return new TemplateNumber(value.size(context));
     }
 
     @BuiltInMethod("first")
@@ -28,7 +28,7 @@ public class SequencePluginProvider implements PluginProvider {
 
     @BuiltInMethod("last")
     public static TemplateObject last(TemplateListSequence value, ProcessContext context) {
-        return value.get(context, value.size(context).asInt() - 1);
+        return value.get(context, value.size(context) - 1);
     }
 
     @BuiltInMethod("reverse")
