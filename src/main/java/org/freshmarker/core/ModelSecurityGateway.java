@@ -1,14 +1,12 @@
 package org.freshmarker.core;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ModelSecurityGateway {
-    private final List<String> allowedPackages = new ArrayList<>();
-    private final List<String> allowedClasses = new ArrayList<>();
+    private final Set<String> allowedPackages = new HashSet<>();
+    private final Set<String> allowedClasses = new HashSet<>();
 
     private final Set<String> forbiddenPackages = new HashSet<>();
 
@@ -33,7 +31,7 @@ public class ModelSecurityGateway {
     }
 
     public void check(Class<?> type) {
-        boolean isForbiddenPackage = forbiddenPackages.stream().anyMatch(s -> type.getName().startsWith(s));
+        boolean isForbiddenPackage = isForbiddenPackage(type);
         if (!isForbiddenPackage) {
             return;
         }
@@ -41,10 +39,27 @@ public class ModelSecurityGateway {
         if (isAllowedClass) {
             return;
         }
-        boolean isAllowedPackage = allowedPackages.stream().anyMatch(s -> type.getName().startsWith(s));
+        boolean isAllowedPackage = isAllowedPackage(type);
         if (isAllowedPackage) {
             return;
         }
         throw new UnsupportedDataTypeException("unsupported system class: " + type);
+    }
+
+    private boolean isAllowedPackage(Class<?> type) {
+        return isPackage(allowedPackages, type.getName());
+    }
+
+    private boolean isForbiddenPackage(Class<?> type) {
+        return isPackage(forbiddenPackages, type.getName());
+    }
+
+    private boolean isPackage(Set<String> packages, String name) {
+        for (String forbidden : packages) {
+            if (name.startsWith(forbidden)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

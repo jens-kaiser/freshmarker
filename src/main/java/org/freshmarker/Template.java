@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public final class Template {
     private final Path path;
 
     public Template(Configuration configuration, TemplateLoader templateLoader, Path path) {
-        this(configuration, templateLoader, path, new BlockFragment());
+        this(configuration, templateLoader, path, new BlockFragment(new ArrayList<>()));
     }
 
     private Template(Configuration configuration, TemplateLoader templateLoader, Path path, BlockFragment rootFragment) {
