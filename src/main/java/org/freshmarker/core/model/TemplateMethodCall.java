@@ -15,6 +15,6 @@ public class TemplateMethodCall implements TemplateExpression {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    return context.getEnvironment().getFunction(name).execute(context, parameter);
+    return context.getFunction(name).execute(context, parameter);
   }
 }

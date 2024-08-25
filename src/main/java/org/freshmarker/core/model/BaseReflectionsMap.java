@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.environment.BaseEnvironment;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,10 +13,10 @@ import java.util.Set;
 class BaseReflectionsMap extends AbstractMap<String, Object> {
 
     private final Map<String, Method> methods;
-    private final Environment environment;
+    private final BaseEnvironment environment;
     private final Object bean;
 
-    public BaseReflectionsMap(Map<String, Method> methods, Environment environment, Object bean) {
+    public BaseReflectionsMap(Map<String, Method> methods, BaseEnvironment environment, Object bean) {
         this.methods = methods;
         this.environment = environment;
         this.bean = bean;

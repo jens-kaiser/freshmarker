@@ -3,7 +3,6 @@ package org.freshmarker.core.environment;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedDataTypeException;
-import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.fragment.Fragment;
@@ -28,23 +27,19 @@ public class BaseEnvironment implements Environment {
     private final Map<String, Object> dataModel;
     private final List<TemplateObjectProvider> providers;
     private final Map<NameSpaced, UserDirective> userDirectives;
-    private final Map<String, TemplateFunction> functions;
     private final Writer writer;
     private final Settings settings;
     private final Set<Object> checks = new HashSet<>();
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers,
-                           Map<NameSpaced, UserDirective> userDirectives, Map<String, TemplateFunction> functions,
+    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Map<NameSpaced, UserDirective> userDirectives,
                            Writer writer, Settings settings) {
         this.dataModel = dataModel;
         this.providers = providers;
         this.userDirectives = userDirectives;
-        this.functions = functions;
         this.writer = writer;
         this.settings = settings;
     }
 
-    @Override
     public TemplateObject mapObject(Object object) {
         return wrap(object);
     }
@@ -95,12 +90,6 @@ public class BaseEnvironment implements Environment {
         return Optional.ofNullable(userDirectives.get(new NameSpaced(nameSpace, name))).orElseThrow(() -> new ProcessException("unknown directive: " + name));
     }
 
-    @Override
-    public TemplateFunction getFunction(String name) {
-        return Optional.ofNullable(functions.get(name)).orElseThrow(() -> new ProcessException("unknown function: " + name));
-    }
-
-    @Override
     public Writer getWriter() {
         return writer;
     }

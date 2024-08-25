@@ -207,9 +207,9 @@ public final class Configuration {
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
         OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
         Settings settings = new Settings(locale, zoneId, format, formatter);
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, userDirectives, functions, writer, settings);
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, userDirectives, writer, settings);
         Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
-        return new ProcessContext(baseEnvironment, environment, builtIns, outputs);
+        return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions);
     }
 
     public void setLocale(Locale locale) {

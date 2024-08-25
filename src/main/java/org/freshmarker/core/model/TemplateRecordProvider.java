@@ -7,13 +7,13 @@ import java.lang.reflect.RecordComponent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-import org.freshmarker.core.Environment;
+import org.freshmarker.core.environment.BaseEnvironment;
 
 public class TemplateRecordProvider {
 
   private final Map<Class<?>, Map<String, Method>> records = new HashMap<>();
 
-  public Map<String, Object> provide(Object recordObject, Environment environment) {
+  public Map<String, Object> provide(Object recordObject, BaseEnvironment environment) {
     Map<String, Method> methods = records.computeIfAbsent(recordObject.getClass(), b -> collectMethods(recordObject));
     return new BaseReflectionsMap(methods, environment, recordObject);
   }
