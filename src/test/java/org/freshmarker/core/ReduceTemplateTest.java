@@ -30,7 +30,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", "${company}: ${name}").reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de: Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
-        assertEquals(5, reductionStatus.total().get());
+        assertEquals(4, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
     }
@@ -80,8 +80,8 @@ class ReduceTemplateTest {
                 """).reduce(model, reductionStatus);
         assertNotNull(template);
         assertEquals("schegge.de3\n", template.process(Map.of("name", "Jens Kaiser", "flag", true)));
-        assertEquals(20, reductionStatus.total().get());
-        assertEquals(16, reductionStatus.deleted().get());
+        assertEquals(17, reductionStatus.total().get());
+        assertEquals(14, reductionStatus.deleted().get());
 
     }
 
@@ -211,7 +211,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(13, reductionStatus.total().get());
+        assertEquals(12, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
         assertEquals("""
@@ -236,7 +236,7 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(15, reductionStatus.total().get());
+        assertEquals(14, reductionStatus.total().get());
         assertEquals(0, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
         assertEquals("""
@@ -333,8 +333,8 @@ class ReduceTemplateTest {
         Template template = configuration.getTemplate("test", input);
         Template reducedTemplate = template.reduce(Map.of("flag", 3), reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(20, reductionStatus.total().get());
-        assertEquals(12, reductionStatus.deleted().get());
+        assertEquals(18, reductionStatus.total().get());
+        assertEquals(10, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
         assertEquals("Jens Kaiser\n", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 3)));
     }

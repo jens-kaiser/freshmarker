@@ -8,10 +8,14 @@ public class ConstantFragment implements Fragment {
 
   public static final ConstantFragment EMPTY = new ConstantFragment("");
 
-  private final String value;
+  private String value;
 
   public ConstantFragment(String value) {
     this.value = value;
+  }
+
+  public void add(String value) {
+    this.value += value;
   }
 
   @Override

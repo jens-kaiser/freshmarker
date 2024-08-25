@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
@@ -86,6 +87,13 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(Token ftl, List<Fragment> input) {
+        if (!input.isEmpty()) {
+            Fragment fragment = input.getLast();
+            if (fragment instanceof ConstantFragment constantFragment) {
+                constantFragment.add(ftl.toString());
+                return input;
+            }
+        }
         String image = ftl.toString();
         if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
             input.add(new ConstantFragment(image));
@@ -106,7 +114,15 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(Text ftl, List<Fragment> input) {
-        ftl.getAllTokens(false).stream().map(TerminalNode::toString).map(ConstantFragment::new).forEach(input::add);
+        String content = ftl.getAllTokens(false).stream().map(TerminalNode::toString).collect(Collectors.joining());
+        if (!input.isEmpty()) {
+            Fragment fragment = input.getLast();
+            if (fragment instanceof ConstantFragment constantFragment) {
+                constantFragment.add(content);
+                return input;
+            }
+        }
+        input.add(new ConstantFragment(content));
         return input;
     }
 
