@@ -9,13 +9,9 @@ public class BufferedEnvironment extends WrapperEnvironment {
 
   private final Map<String, TemplateObject> dataModel;
 
-  public BufferedEnvironment(Environment wrapped, Map<String, TemplateObject> dataModel) {
-    super(wrapped);
-    this.dataModel = dataModel;
-  }
-
   public BufferedEnvironment(Environment wrapped) {
-    this(wrapped, new HashMap<>());
+    super(wrapped);
+    this.dataModel = new HashMap<>();
   }
 
   @Override
