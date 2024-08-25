@@ -114,6 +114,10 @@ public final class Configuration {
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
 
+    public void registerOutputFormat(String name, OutputFormat format) {
+        outputs.put(name, format);
+    }
+
     public void registerSimpleMapping(Class<?>... types) {
         for (Class<?> type : types) {
             mappingTemplateObjectProvider.addMapper(type, o -> new TemplateString(o.toString()));
@@ -184,11 +188,11 @@ public final class Configuration {
         parser.Root();
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
-        Template template = new Template(this, templateLoader, importPath);
         FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
         if (ftlHeader != null) {
             throw new ProcessException("ftl header is not supported", ftlHeader);
         }
+        Template template = new Template(this, templateLoader, importPath);
         List<Fragment> fragments = root.accept(new FragmentBuilder(template, this, null), new ArrayList<>());
         fragments.forEach(template.getRootFragment()::addFragment);
         return template;
@@ -199,7 +203,7 @@ public final class Configuration {
         Settings settings = new Settings(locale, zoneId, format, Map.copyOf(formatter));
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, userDirectives, functions, writer, settings);
         Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
-        return new ProcessContext(environment, Map.copyOf(builtIns), Map.copyOf(outputs));
+        return new ProcessContext(baseEnvironment, environment, Map.copyOf(builtIns), Map.copyOf(outputs));
     }
 
     public void setLocale(Locale locale) {

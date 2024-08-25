@@ -1,9 +1,7 @@
 package org.freshmarker.core.directive;
 
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.environment.WriterEnvironment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 
@@ -31,13 +29,13 @@ public class OneLinerDirective implements UserDirective {
         if (body == null) {
             throw new ProcessException("one-liner body missing");
         }
+        Writer oldWriter = context.getWriter();
         FlattenFilterWriter writer = new FlattenFilterWriter(context.getWriter());
-        Environment environment = context.getEnvironment();
-        context.setEnvironment(new WriterEnvironment(writer, environment));
+        context.setWriter(writer);
         try {
             body.process(context);
         } finally {
-            context.setEnvironment(environment);
+            context.setWriter(oldWriter);
         }
     }
 }
