@@ -4,7 +4,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInMethod;
-import org.freshmarker.core.model.TemplateMarkup;
+import org.freshmarker.core.model.TemplateStringMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -106,14 +106,14 @@ public class StringPluginProvider implements PluginProvider {
     }
 
     @BuiltInMethod
-    public static TemplateMarkup noEsc(TemplateString value) {
-        return new TemplateMarkup(value, UndefinedOutputFormat.INSTANCE);
+    public static TemplateStringMarkup noEsc(TemplateString value) {
+        return new TemplateStringMarkup(value, UndefinedOutputFormat.INSTANCE);
     }
 
     @BuiltInMethod
-    public static TemplateMarkup esc(TemplateString value, ProcessContext context, TemplateString parameter) {
+    public static TemplateStringMarkup esc(TemplateString value, ProcessContext context, TemplateString parameter) {
         OutputFormat outputFormat = parameter.asString().map(String::valueOf).map(context::getOutputFormat)
                 .orElse(context.getEnvironment().getOutputFormat());
-        return new TemplateMarkup(value, outputFormat);
+        return new TemplateStringMarkup(value, outputFormat);
     }
 }

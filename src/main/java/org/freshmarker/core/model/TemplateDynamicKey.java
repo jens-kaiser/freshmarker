@@ -22,7 +22,7 @@ public class TemplateDynamicKey implements TemplateExpression {
             return TemplateNull.NULL;
         }
         TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
-        int beginIndex = index.getValue().getNumber().intValue();
+        int beginIndex = index.asInt();
         if (templateObject instanceof TemplateString templateString) {
             String value = templateString.getValue();
             return new TemplateString(value.substring(beginIndex, beginIndex + 1));

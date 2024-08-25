@@ -92,7 +92,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(DefaultToExpression expression, Object input) {
+    public TemplateDefault visit(DefaultToExpression expression, Object input) {
         TemplateObject base = expression.children().get(0).accept(this, input);
         if (expression.getChildCount() == 2) {
             return new TemplateDefault(base, TemplateString.EMPTY);
@@ -124,12 +124,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(NullLiteral expression, Object input) {
+    public TemplateNull visit(NullLiteral expression, Object input) {
         return TemplateNull.NULL_LITERAL;
     }
 
     @Override
-    public TemplateObject visit(BuiltIn expression, Object input) {
+    public TemplateBuiltIn visit(BuiltIn expression, Object input) {
         Token buildInName = (Token) expression.getChild(1);
         if (expression.getChildCount() < 3) {
             return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of());
@@ -154,18 +154,18 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(DotKey expression, Object input) {
+    public TemplateDotKey visit(DotKey expression, Object input) {
         Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
         return new TemplateDotKey((TemplateObject) input, lastToken.toString());
     }
 
     @Override
-    public TemplateObject visit(Exists expression, Object input) {
+    public TemplateExists visit(Exists expression, Object input) {
         return new TemplateExists((TemplateObject) input);
     }
 
     @Override
-    public TemplateObject visit(RangeExpression expression, Object input) {
+    public TemplateRange visit(RangeExpression expression, Object input) {
         TemplateObject left = expression.getChild(0).accept(this, null);
         if (expression.getChildCount() < 3) {
             return new TemplateRightUnlimitedRange(left);
@@ -214,7 +214,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(BuiltinVariable expression, Object input) {
+    public TemplateBuiltInVariable visit(BuiltinVariable expression, Object input) {
         Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
         return new TemplateBuiltInVariable(lastToken.toString());
     }
@@ -336,7 +336,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(MethodInvoke expression, Object input) {
+    public TemplateMethodCall visit(MethodInvoke expression, Object input) {
         String name = ((TemplateVariable) input).name();
         logger.debug("method invoke: {}", name);
         if (expression.getChild(1).getType() == TokenType.CLOSE_PAREN) {
@@ -354,7 +354,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(HashLiteral expression, Object input) {
+    public TemplateBean visit(HashLiteral expression, Object input) {
         LinkedHashMap<String, Object> hash = new LinkedHashMap<>();
         for (int i = 0; i < expression.size() - 1; i += 4) {
             String key = expression.get(i + 1).accept(this, null).asString().map(TemplateString::getValue)
@@ -367,7 +367,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     @Override
-    public TemplateObject visit(ListLiteral expression, Object input) {
+    public TemplateListSequence visit(ListLiteral expression, Object input) {
         List<Object> list = new ArrayList<>();
         for (int i = 1; i < expression.size() - 1; i++) {
             Node node = expression.get(i);
