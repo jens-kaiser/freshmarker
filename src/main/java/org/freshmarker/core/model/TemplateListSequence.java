@@ -14,7 +14,7 @@ public class TemplateListSequence implements TemplateSequence {
 
   @Override
   public TemplateObject get(ProcessContext context, int index) {
-    return context.getEnvironment().mapObject(sequence.get(index));
+    return context.getBaseEnvironment().mapObject(sequence.get(index));
   }
 
   @Override

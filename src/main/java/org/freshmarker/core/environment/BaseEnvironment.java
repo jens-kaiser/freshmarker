@@ -14,13 +14,16 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.io.Writer;
 import java.time.ZoneId;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 public class BaseEnvironment implements Environment {
+
+    private static final Formatter SIMPLE = (object, locale) -> object.toString();
 
     private final Map<String, Object> dataModel;
     private final List<TemplateObjectProvider> providers;
@@ -28,6 +31,7 @@ public class BaseEnvironment implements Environment {
     private final Map<String, TemplateFunction> functions;
     private final Writer writer;
     private final Settings settings;
+    private final Set<Object> checks = new HashSet<>();
 
     public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers,
                            Map<NameSpaced, UserDirective> userDirectives, Map<String, TemplateFunction> functions,
@@ -122,6 +126,10 @@ public class BaseEnvironment implements Environment {
     }
 
     public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-        return settings.formatters().getOrDefault(type, (o, l) -> o.toString());
+        return settings.formatters().getOrDefault(type, SIMPLE);
+    }
+
+    public Set<Object> getChecks() {
+        return checks;
     }
 }
