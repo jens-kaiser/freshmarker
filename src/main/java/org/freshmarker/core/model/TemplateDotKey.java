@@ -5,23 +5,21 @@ import org.freshmarker.core.ProcessException;
 
 public class TemplateDotKey implements TemplateExpression {
 
-  private final TemplateObject map;
-  private final String dotKey;
+    private final TemplateObject map;
+    private final String dotKey;
 
-  public TemplateDotKey(TemplateObject map, String dotKey) {
-    this.map = map;
-    this.dotKey = dotKey;
-  }
+    public TemplateDotKey(TemplateObject map, String dotKey) {
+        this.map = map;
+        this.dotKey = dotKey;
+    }
 
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    TemplateObject templateObject = map.evaluateToObject(context);
-    if (templateObject == TemplateNull.NULL) {
-      return TemplateNull.NULL;
+    @Override
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        TemplateObject templateObject = map.evaluateToObject(context);
+        return switch (templateObject) {
+            case TemplateNull templateNull -> templateNull;
+            case TemplateMap templateMap -> templateMap.get(context, dotKey);
+            case null, default -> throw new ProcessException("index out of range: " + dotKey + " " + templateObject);
+        };
     }
-    if (templateObject instanceof TemplateMap templateMap) {
-      return templateMap.get(context, dotKey);
-    }
-    throw new ProcessException("index out of range: " + dotKey + " " + templateObject);
-  }
 }

@@ -3,11 +3,15 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.Environment;
+import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.output.OutputFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -66,5 +70,37 @@ class OutputFormatTest {
         configuration.setOutputFormat(format);
         Template template = configuration.getTemplate("test", "test: ${content?noEsc}");
         assertEquals(expected, template.process(Map.of("content", content)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "value1,value 2#value1#value 2",
+            "\"value,value\",value 2#value,value#value 2",
+            "value1,\"value\"\"2\"#value1#value\"2",
+            "value1,\"value@2\"#value1#value@2",
+    }, delimiterString = "#")
+    void CsvOutputFormatBlock(String expected, String value1, String value2) throws ParseException {
+        configuration.registerOutputFormat("CSV", new OutputFormat() {
+            @Override
+            public TemplateString escape(Environment environment, String value) {
+                boolean escaped = value.contains("\"");
+                if (escaped) {
+                    value = value.replaceAll("\"", "\"\"");
+                }
+                if (escaped || value.contains("\n") || value.contains(",")) {
+                    value = '"' + value + '"';
+                }
+                return new TemplateString(value);
+            }
+        });
+        Template template = configuration.getTemplate("test", """
+                VALUE1,VALUE2
+                <#outputformat 'CSV'>
+                <#list sequence as s>
+                ${s.value1},${s.value2}
+                </#list>
+                </#outputformat>""");
+        Map<String, String> row = Map.of("value1", value1, "value2", value2.replace('@', '\n'));
+        assertEquals("VALUE1,VALUE2\n" + expected.replace('@', '\n') + "\n", template.process(Map.of("sequence", List.of(row))));
     }
 }

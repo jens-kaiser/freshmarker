@@ -64,9 +64,9 @@ public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-    private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-    private final Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
-    private final Map<String, OutputFormat> outputs = new HashMap<>();
+    private Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
+    private Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
+    private Map<String, OutputFormat> outputs = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
     private Locale locale;
     private ZoneId zoneId;
@@ -115,7 +115,9 @@ public final class Configuration {
     }
 
     public void registerOutputFormat(String name, OutputFormat format) {
-        outputs.put(name, format);
+        Map<String, OutputFormat> newOutputs = new HashMap<>(outputs);
+        newOutputs.put(name, format);
+        outputs = newOutputs;
     }
 
     public void registerSimpleMapping(Class<?>... types) {
@@ -146,8 +148,12 @@ public final class Configuration {
 
     public void registerPlugin(PluginProvider provider) {
         logger.debug("register plugin: {}", provider.getClass().getSimpleName());
+        Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>(this.builtIns);
         provider.registerBuildIn(builtIns);
+        this.builtIns = builtIns;
+        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>(this.formatter);
         provider.registerFormatter(formatter);
+        this.formatter = formatter;
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
         provider.registerMapper(mapper);
         mapper.forEach(mappingTemplateObjectProvider::addMapper);
@@ -200,10 +206,10 @@ public final class Configuration {
 
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
         OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-        Settings settings = new Settings(locale, zoneId, format, Map.copyOf(formatter));
+        Settings settings = new Settings(locale, zoneId, format, formatter);
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, userDirectives, functions, writer, settings);
         Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
-        return new ProcessContext(baseEnvironment, environment, Map.copyOf(builtIns), Map.copyOf(outputs));
+        return new ProcessContext(baseEnvironment, environment, builtIns, outputs);
     }
 
     public void setLocale(Locale locale) {
