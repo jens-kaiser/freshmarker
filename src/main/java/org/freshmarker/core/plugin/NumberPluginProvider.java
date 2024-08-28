@@ -55,7 +55,7 @@ public class NumberPluginProvider implements PluginProvider {
 
     private static TemplateString format(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
         BuiltInHelper.checkParametersLength(parameters, 1);
-        TemplateString format = (TemplateString) parameters.getFirst();
+        TemplateString format = parameters.getFirst().evaluate(context, TemplateString.class);
         try (Formatter formatter = new Formatter(context.getEnvironment().getLocale())) {
             return new TemplateString(formatter.format(format.getValue(), ((TemplateNumber) value).getValue().getNumber()).toString());
         }

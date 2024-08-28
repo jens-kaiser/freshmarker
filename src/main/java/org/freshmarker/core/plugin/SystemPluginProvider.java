@@ -2,10 +2,8 @@ package org.freshmarker.core.plugin;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInFunction;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.buildin.FunctionalBuiltIn;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -54,7 +52,7 @@ public class SystemPluginProvider implements PluginProvider {
         };
     }
 
-    private void register(Map<BuiltInKey, BuiltIn> buildIns, BuiltInKey builtInKey, BuiltInFunction function) {
-        buildIns.put(builtInKey, new FunctionalBuiltIn(function));
+    private void register(Map<BuiltInKey, BuiltIn> buildIns, BuiltInKey builtInKey, BuiltIn function) {
+        buildIns.put(builtInKey, function);
     }
 }

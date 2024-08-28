@@ -7,7 +7,6 @@ import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.number.AbstractCalculatingNumber;
 import org.freshmarker.core.model.number.ByteNumber;
 import org.freshmarker.core.model.number.DoubleNumber;
 import org.freshmarker.core.model.number.FloatNumber;
@@ -34,32 +33,32 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 @ExtendWith(MockitoExtension.class)
 class NumberPluginProviderTest {
     private Map<BuiltInKey, BuiltIn> builtIns;
-    private BuiltInKeyBuilder<TemplateNumber> BUILDER;
+    private BuiltInKeyBuilder<TemplateNumber> builder;
 
     @BeforeEach
     public void setUp() {
-        BUILDER = new BuiltInKeyBuilder<>(TemplateNumber.class);
+        builder = new BuiltInKeyBuilder<>(TemplateNumber.class);
         builtIns = new HashMap<>();
         new NumberPluginProvider().registerBuildIn(builtIns);
     }
 
     @Test
     void computerBuiltIn() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("c"));
+        BuiltIn builtIn = builtIns.get(builder.of("c"));
         assertEquals("42", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
         assertEquals("42.0", builtIn.apply(new TemplateNumber(42.0), List.of(), null).toString());
     }
 
     @Test
     void abs() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("abs"));
+        BuiltIn builtIn = builtIns.get(builder.of("abs"));
         assertEquals("42", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
         assertEquals("42", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
     }
 
     @Test
     void sign() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("sign"));
+        BuiltIn builtIn = builtIns.get(builder.of("sign"));
         assertEquals("1", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
         assertEquals("-1", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
         assertEquals("0", builtIn.apply(new TemplateNumber(0), List.of(), null).toString());
@@ -69,14 +68,14 @@ class NumberPluginProviderTest {
     void format(@Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
         Mockito.when(environment.getLocale()).thenReturn(Locale.GERMANY, Locale.US);
         ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null);
-        BuiltIn builtIn = builtIns.get(BUILDER.of("format"));
+        BuiltIn builtIn = builtIns.get(builder.of("format"));
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
         assertEquals("42.00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
     }
 
     @Test
     void castInt() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("int"));
+        BuiltIn builtIn = builtIns.get(builder.of("int"));
         assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
         assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
@@ -87,7 +86,7 @@ class NumberPluginProviderTest {
 
     @Test
     void castLong() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("long"));
+        BuiltIn builtIn = builtIns.get(builder.of("long"));
         assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
         assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
@@ -98,7 +97,7 @@ class NumberPluginProviderTest {
 
     @Test
     void castShort() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("short"));
+        BuiltIn builtIn = builtIns.get(builder.of("short"));
         assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
         assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
@@ -109,7 +108,7 @@ class NumberPluginProviderTest {
 
     @Test
     void castByte() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("byte"));
+        BuiltIn builtIn = builtIns.get(builder.of("byte"));
         assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
         assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
@@ -120,7 +119,7 @@ class NumberPluginProviderTest {
 
     @Test
     void castDouble() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("double"));
+        BuiltIn builtIn = builtIns.get(builder.of("double"));
         assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
         assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
@@ -131,7 +130,7 @@ class NumberPluginProviderTest {
 
     @Test
     void castFloat() {
-        BuiltIn builtIn = builtIns.get(BUILDER.of("float"));
+        BuiltIn builtIn = builtIns.get(builder.of("float"));
         assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
         assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));

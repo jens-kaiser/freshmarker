@@ -5,7 +5,6 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.buildin.FunctionalBuiltIn;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.DurationFormatter;
@@ -96,16 +95,12 @@ public class TemporalPluginProvider implements PluginProvider {
     }
 
     private static String getFormatString(List<TemplateObject> y, ProcessContext e) {
-        if (y.size() != 1) {
-            throw new ProcessException("missing format parameter");
-        }
+        BuiltInHelper.checkParametersLength(y,1);
         return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
     }
 
     private static ZoneId getZoneId(List<TemplateObject> y, ProcessContext e) {
-        if (y.size() != 1) {
-            throw new IllegalArgumentException("wrong parameter count");
-        }
+        BuiltInHelper.checkParametersLength(y,1);
         return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).map(ZoneId::of).orElseThrow(() -> new IllegalArgumentException("no valid zoneId"));
     }
 

@@ -28,6 +28,6 @@ public class BooleanPluginProvider implements PluginProvider {
 
     public static TemplateString stringBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
         BuiltInHelper.checkParametersLength(parameters, 2);
-        return value == TemplateBoolean.TRUE ? (TemplateString) parameters.getFirst() : (TemplateString) parameters.get(1);
+        return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluate(context, TemplateString.class) : parameters.get(1).evaluate(context, TemplateString.class);
     }
 }

@@ -120,7 +120,7 @@ public final class Configuration {
         outputs.put("JSON", none);
         outputs.put("CSS", new OutputFormatBuilder().withComment("/* ", " */").build());
         outputs.put("ADOC", new OutputFormatBuilder().withComment("\n////\n", "\n////\n").build());
-        ;
+        
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
