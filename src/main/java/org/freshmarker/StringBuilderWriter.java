@@ -18,12 +18,12 @@ public class StringBuilderWriter extends Writer {
 
     @Override
     public void flush() {
-
+        // intentionally left blank
     }
 
     @Override
     public void close() throws IOException {
-
+        // intentionally left blank
     }
 
     @Override

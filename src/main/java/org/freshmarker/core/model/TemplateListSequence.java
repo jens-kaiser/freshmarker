@@ -2,7 +2,6 @@ package org.freshmarker.core.model;
 
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateListSequence implements TemplateSequence {
 

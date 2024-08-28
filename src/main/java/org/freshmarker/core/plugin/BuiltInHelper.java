@@ -6,7 +6,7 @@ import org.freshmarker.core.model.TemplateObject;
 import java.util.List;
 
 public final class BuiltInHelper {
-    public BuiltInHelper() {
+    private BuiltInHelper() {
         super();
     }
 

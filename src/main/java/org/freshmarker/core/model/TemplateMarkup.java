@@ -5,7 +5,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.DelegatingOutputFormat;
-import org.freshmarker.core.output.OutputFormat;
 
 public class TemplateMarkup implements TemplateObject {
 

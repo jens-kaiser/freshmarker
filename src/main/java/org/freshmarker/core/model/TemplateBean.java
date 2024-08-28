@@ -14,7 +14,7 @@ public class TemplateBean implements TemplateMap {
     public TemplateBean(Map<String, Object> map, Class<?> type) {
         this.map = map;
         this.type = type;
-        mapped = new HashMap<>(map.size());
+        mapped = HashMap.newHashMap(map.size());
     }
 
     public TemplateObject get(ProcessContext context, String name) {

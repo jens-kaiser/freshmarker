@@ -4,12 +4,9 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.buildin.BuiltInMethod;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplateEnum;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.util.Map;
 
@@ -18,10 +15,10 @@ public class SequencePluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(BUILDER.of("size"), (x, y, e) -> new TemplateNumber(((TemplateListSequence)x).size(e)));
-        builtIns.put(BUILDER.of("first"), (x, y, e) -> first((TemplateListSequence)x, e));
-        builtIns.put(BUILDER.of("last"), (x, y, e) -> last((TemplateListSequence)x, e));
-        builtIns.put(BUILDER.of("reverse"), (x, y, e) -> reverse((TemplateListSequence)x, e));
+        builtIns.put(BUILDER.of("size"), (x, y, e) -> new TemplateNumber(((TemplateListSequence) x).size(e)));
+        builtIns.put(BUILDER.of("first"), (x, y, e) -> first((TemplateListSequence) x, e));
+        builtIns.put(BUILDER.of("last"), (x, y, e) -> last((TemplateListSequence) x, e));
+        builtIns.put(BUILDER.of("reverse"), (x, y, e) -> reverse((TemplateListSequence) x, e));
     }
 
     private static TemplateObject first(TemplateListSequence value, ProcessContext context) {

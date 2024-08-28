@@ -20,7 +20,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class NumberPluginProvider implements PluginProvider {
 
@@ -61,7 +61,7 @@ public class NumberPluginProvider implements PluginProvider {
         }
     }
 
-    private static TemplateNumber cast(TemplateObject value, TemplateNumber.Type type, Function<CalculatingNumber, CalculatingNumber> converter) {
+    private static TemplateNumber cast(TemplateObject value, TemplateNumber.Type type, UnaryOperator<CalculatingNumber> converter) {
         TemplateNumber number = (TemplateNumber) value;
         return number.getType() == type ? number : new TemplateNumber(converter.apply(number.getValue()));
     }
