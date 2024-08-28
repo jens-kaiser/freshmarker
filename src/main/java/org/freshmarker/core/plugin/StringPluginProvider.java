@@ -1,9 +1,10 @@
 package org.freshmarker.core.plugin;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInMethod;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateStringMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
@@ -19,98 +20,98 @@ import java.util.regex.Pattern;
 public class StringPluginProvider implements PluginProvider {
 
     private static final Map<String, TemplateBoolean> BOOLEAN_MAP = Map.of("true", TemplateBoolean.TRUE, "false", TemplateBoolean.FALSE);
+
+    private static final BuiltInKeyBuilder<TemplateString> BUILDER = new BuiltInKeyBuilder<>(TemplateString.class);
+
     private static final String LOWER_CASE_UPPER_CASES = "(\\p{javaLowerCase})(\\p{javaUpperCase}+)";
+
+    private static final Pattern CAPITALIZE = Pattern.compile("\\b(\\p{javaLowerCase})(\\p{IsAlphabetic}*)\\b");
+    private static final Pattern UNCAPITALIZE = Pattern.compile("\\b(\\p{javaUpperCase})(\\p{IsAlphabetic}*)\\b");
+    public static final Pattern CAMEL_CASE = Pattern.compile("(\\p{javaLowerCase}+)[_-](\\p{javaLowerCase})");
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
+        builtIns.put(BUILDER.of("upper_case"), (x, y, e) -> upperCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("lower_case"), (x, y, e) -> lowerCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("capitalize"), (x, y, e) -> capitalize((TemplateString) x, e));
+        builtIns.put(BUILDER.of("uncapitalize"), (x, y, e) -> uncapitalize((TemplateString) x, e));
+        builtIns.put(BUILDER.of("camel_case"), (x, y, e) -> camelCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("camelCase"), (x, y, e) -> camelCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("kebabCase"), (x, y, e) -> kebabCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("kebab_case"), (x, y, e) -> kebabCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("kebab-case"), (x, y, e) -> kebabCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("snake_case"), (x, y, e) -> snakeCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("screaming_snake_case"), (x, y, e) -> screamingSnakeCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("trim"), (x, y, e) -> new TemplateString(((TemplateString) x).getValue().trim()));
+        builtIns.put(BUILDER.of("contains"), (x, y, e) -> contains((TemplateString) x, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("ends_with"), (x, y, e) -> endsWith((TemplateString) x, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("endsWith"), (x, y, e) -> endsWith((TemplateString) x, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("starts_with"), (x, y, e) -> startsWith((TemplateString) x, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("startsWith"), (x, y, e) -> startsWith((TemplateString) x, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("boolean"), (x, y, e) -> toBoolean((TemplateString) x));
+        builtIns.put(BUILDER.of("length"), (x, y, e) -> new TemplateNumber(((TemplateString) x).getValue().length()));
+        builtIns.put(BUILDER.of("esc"), (x, y, e) -> esc((TemplateString) x, e, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("no_esc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
+        builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
     }
 
-    @BuiltInMethod
-    public static TemplateString upperCase(TemplateString value, ProcessContext context) {
+    private static TemplateString upperCase(TemplateString value, ProcessContext context) {
         return new TemplateString(value.getValue().toUpperCase(context.getEnvironment().getLocale()));
     }
 
-    @BuiltInMethod
-    public static TemplateString lowerCase(TemplateString value, ProcessContext context) {
+    private static TemplateString lowerCase(TemplateString value, ProcessContext context) {
         return new TemplateString(value.getValue().toLowerCase(context.getEnvironment().getLocale()));
     }
 
-    @BuiltInMethod
     public static TemplateString capitalize(TemplateString value, ProcessContext context) {
-        Matcher matcher = Pattern.compile("\\b(\\p{javaLowerCase})(\\p{IsAlphabetic}*)\\b").matcher(value.getValue());
+        Matcher matcher = CAPITALIZE.matcher(value.getValue());
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toUpperCase(context.getEnvironment().getLocale()) + matcher.group(2)));
     }
 
-    @BuiltInMethod
     public static TemplateString uncapitalize(TemplateString value, ProcessContext context) {
-        Matcher matcher = Pattern.compile("\\b(\\p{javaUpperCase})(\\p{IsAlphabetic}*)\\b").matcher(value.getValue());
+        Matcher matcher = UNCAPITALIZE.matcher(value.getValue());
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(context.getEnvironment().getLocale()) + matcher.group(2)));
     }
 
-    @BuiltInMethod
     public static TemplateString camelCase(TemplateString value, ProcessContext context) {
         Locale locale = context.getEnvironment().getLocale();
-        Matcher matcher = Pattern.compile("(\\p{javaLowerCase}+)[_-](\\p{javaLowerCase})").matcher(value.getValue().toLowerCase(locale));
+        Matcher matcher = CAMEL_CASE.matcher(value.getValue().toLowerCase(locale));
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(locale) + matcher.group(2).toUpperCase(locale)));
     }
 
-    @BuiltInMethod
     public static TemplateString kebabCase(TemplateString value, ProcessContext context) {
         return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getEnvironment().getLocale()));
     }
 
-    @BuiltInMethod
     public static TemplateString snakeCase(TemplateString value, ProcessContext context) {
         return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getEnvironment().getLocale()));
     }
 
-    @BuiltInMethod
     public static TemplateString screamingSnakeCase(TemplateString value, ProcessContext context) {
         return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getEnvironment().getLocale()));
     }
 
-    @BuiltInMethod
-    public static TemplateString trim(TemplateString value) {
-        return new TemplateString(value.getValue().trim());
-    }
-
-    @BuiltInMethod
     public static TemplateBoolean contains(TemplateString value, TemplateString contains) {
-        return value.getValue().contains(contains.getValue()) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(value.getValue().contains(contains.getValue()));
     }
 
-    @BuiltInMethod
     public static TemplateBoolean endsWith(TemplateString value, TemplateString endsWith) {
-        return value.getValue().endsWith(endsWith.getValue()) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(value.getValue().endsWith(endsWith.getValue()));
     }
 
-    @BuiltInMethod
     public static TemplateBoolean startsWith(TemplateString value, TemplateString endsWith) {
-        return value.getValue().startsWith(endsWith.getValue()) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE;
+        return TemplateBoolean.from(value.getValue().startsWith(endsWith.getValue()));
     }
 
-    @BuiltInMethod("boolean")
     public static TemplateBoolean toBoolean(TemplateString value) {
         String input = value.getValue();
         TemplateBoolean result = BOOLEAN_MAP.get(input);
         if (result == null) {
-            throw new IllegalArgumentException("cannot convert string to boolean: " + input);
+            throw new ProcessException("cannot convert string to boolean: " + input);
         }
         return result;
     }
 
-    @BuiltInMethod
-    public static TemplateNumber length(TemplateString value) {
-        return new TemplateNumber(value.getValue().length());
-    }
-
-    @BuiltInMethod
-    public static TemplateStringMarkup noEsc(TemplateString value) {
-        return new TemplateStringMarkup(value, UndefinedOutputFormat.INSTANCE);
-    }
-
-    @BuiltInMethod
     public static TemplateStringMarkup esc(TemplateString value, ProcessContext context, TemplateString parameter) {
         OutputFormat outputFormat = parameter.asString().map(String::valueOf).map(context::getOutputFormat)
                 .orElse(context.getEnvironment().getOutputFormat());

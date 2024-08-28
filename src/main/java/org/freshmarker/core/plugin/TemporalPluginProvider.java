@@ -46,37 +46,37 @@ public class TemporalPluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(INSTANT_BUILDER.of("date_time"), new FunctionalBuiltIn((x, y, e) -> ((TemplateInstant) x).at(e).toLocalDateTime()));
-        builtIns.put(INSTANT_BUILDER.of("date"), new FunctionalBuiltIn((x, y, e) -> ((TemplateInstant) x).at(e).toLocalDate()));
-        builtIns.put(INSTANT_BUILDER.of("time"), new FunctionalBuiltIn((x, y, e) -> ((TemplateInstant) x).at(e).toLocalTime()));
-        builtIns.put(INSTANT_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(INSTANT_BUILDER.of(STRING), new FunctionalBuiltIn((x, y, e) -> formatTemporal(y, e, ((TemplateInstant) x).getValue())));
-        builtIns.put(INSTANT_BUILDER.of(AT_ZONE), new FunctionalBuiltIn((x, y, e) -> ((TemplateInstant) x).atZone(getZoneId(y, e))));
+        builtIns.put(INSTANT_BUILDER.of("date_time"), (x, y, e) -> ((TemplateInstant) x).at(e).toLocalDateTime());
+        builtIns.put(INSTANT_BUILDER.of("date"), (x, y, e) -> ((TemplateInstant) x).at(e).toLocalDate());
+        builtIns.put(INSTANT_BUILDER.of("time"), (x, y, e) -> ((TemplateInstant) x).at(e).toLocalTime());
+        builtIns.put(INSTANT_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(INSTANT_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateInstant) x).getValue()));
+        builtIns.put(INSTANT_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateInstant) x).atZone(getZoneId(y, e)));
 
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("date_time"), new FunctionalBuiltIn((x, y, e) -> ((TemplateZonedDateTime) x).toLocalDateTime()));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("date"), new FunctionalBuiltIn((x, y, e) -> ((TemplateZonedDateTime) x).toLocalDate()));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("time"), new FunctionalBuiltIn((x, y, e) -> ((TemplateZonedDateTime) x).toLocalTime()));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of(STRING), new FunctionalBuiltIn((x, y, e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue())));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), new FunctionalBuiltIn((x, y, e) -> ((TemplateZonedDateTime) x).atZone(getZoneId(y, e))));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"), new FunctionalBuiltIn(
-                (x, y, e) -> new TemplateString(((TemplateZonedDateTime) x).getValue().getZone().toString())));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("date_time"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalDateTime());
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("date"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalDate());
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("time"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalTime());
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("c"),(x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue()));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateZonedDateTime) x).atZone(getZoneId(y, e)));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"),
+                (x, y, e) -> new TemplateString(((TemplateZonedDateTime) x).getValue().getZone().toString()));
 
-        builtIns.put(DATE_TIME_BUILDER.of("date"), new FunctionalBuiltIn(
-                (x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate())));
-        builtIns.put(DATE_TIME_BUILDER.of("time"), new FunctionalBuiltIn(
-                (x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime())));
-        builtIns.put(DATE_TIME_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(DATE_TIME_BUILDER.of(STRING), new FunctionalBuiltIn((x, y, e) -> formatTemporal(y, e, ((TemplateLocalDateTime) x).getValue())));
-        builtIns.put(DATE_TIME_BUILDER.of(AT_ZONE), new FunctionalBuiltIn((x, y, e) -> ((TemplateLocalDateTime) x).atZone(getZoneId(y, e))));
+        builtIns.put(DATE_TIME_BUILDER.of("date"),
+                (x, y, e) -> new TemplateLocalDate(((TemplateLocalDateTime) x).getValue().toLocalDate()));
+        builtIns.put(DATE_TIME_BUILDER.of("time"),
+                (x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime()));
+        builtIns.put(DATE_TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDateTime) x).getValue()));
+        builtIns.put(DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateLocalDateTime) x).atZone(getZoneId(y, e)));
 
-        builtIns.put(DATE_BUILDER.of("date"), new FunctionalBuiltIn((x, y, e) -> x));
-        builtIns.put(DATE_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(DATE_BUILDER.of(STRING), new FunctionalBuiltIn((x, y, e) -> formatTemporal(y, e, ((TemplateLocalDate) x).getValue())));
+        builtIns.put(DATE_BUILDER.of("date"), (x, y, e) -> x);
+        builtIns.put(DATE_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(DATE_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDate) x).getValue()));
 
-        builtIns.put(TIME_BUILDER.of("time"), new FunctionalBuiltIn((x, y, e) -> x));
-        builtIns.put(TIME_BUILDER.of("c"), new FunctionalBuiltIn((x, y, e) -> new TemplateString(String.valueOf(x))));
-        builtIns.put(TIME_BUILDER.of(STRING), new FunctionalBuiltIn((x, y, e) -> formatTemporal(y, e, ((TemplateLocalTime) x).getValue())));
+        builtIns.put(TIME_BUILDER.of("time"), (x, y, e) -> x);
+        builtIns.put(TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalTime) x).getValue()));
     }
 
     private static TemplateString formatTemporal(List<TemplateObject> y, ProcessContext e, Temporal value) {

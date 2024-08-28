@@ -1,18 +1,25 @@
 package org.freshmarker.core.providers;
 
+import org.freshmarker.Configuration.FeatureFlag;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.model.TemplateBean;
+import org.freshmarker.core.model.TemplateBeanGetterProvider;
 import org.freshmarker.core.model.TemplateBeanProvider;
 import org.freshmarker.core.model.TemplateObject;
+
+import java.util.Map;
 
 public class BeanTemplateObjectProvider implements TemplateObjectProvider {
 
     private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
+    private final TemplateBeanGetterProvider beanGetterProvider = new TemplateBeanGetterProvider();
 
     private final ModelSecurityGateway modelSecurityGateway;
+    private final FeatureFlag featureFlag;
 
-    public BeanTemplateObjectProvider(ModelSecurityGateway modelSecurityGateway) {
+    public BeanTemplateObjectProvider(FeatureFlag featureFlag, ModelSecurityGateway modelSecurityGateway) {
+        this.featureFlag = featureFlag;
         this.modelSecurityGateway = modelSecurityGateway;
     }
 
@@ -23,6 +30,7 @@ public class BeanTemplateObjectProvider implements TemplateObjectProvider {
             modelSecurityGateway.check(type);
         }
         environment.getChecks().add(type);
-        return new TemplateBean(beanProvider.provide(o, environment), type);
+        Map<String, Object> map = featureFlag == FeatureFlag.REFLECTIONS ? beanProvider.provide(o, environment) : beanGetterProvider.provide(o, environment);
+        return new TemplateBean(map, type);
     }
 }

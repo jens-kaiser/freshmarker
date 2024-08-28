@@ -1,136 +1,47 @@
 package org.freshmarker.core.plugin;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInMethod;
+import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateHashLooper;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequenceLooper;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+
+import java.util.List;
+import java.util.Map;
 
 public class LooperPluginProvider implements PluginProvider {
 
     private static final List<TemplateObject> ITEM_PARITYTY = List.of(new TemplateString("odd"), new TemplateString("even"));
-
     private static final List<TemplateObject> ITEM_PARITYTY_CAP = List.of(new TemplateString("Odd"), new TemplateString("Even"));
+
+    private static final BuiltInKeyBuilder<TemplateHashLooper> HASH = new BuiltInKeyBuilder<>(TemplateHashLooper.class);
+    private static final BuiltInKeyBuilder<TemplateSequenceLooper> SEQUENCE = new BuiltInKeyBuilder<>(TemplateSequenceLooper.class);
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
-    }
-
-    @BuiltInMethod
-    public static TemplateNumber index(TemplateSequenceLooper value) {
-        return value.getIndex();
-    }
-
-    @BuiltInMethod
-    public static TemplateNumber index(TemplateHashLooper value) {
-        return value.getIndex();
-    }
-
-    @BuiltInMethod
-    public static TemplateNumber counter(TemplateSequenceLooper value) {
-        return value.getCounter();
-    }
-
-    @BuiltInMethod("roman")
-    public static TemplateString romanCounter(TemplateSequenceLooper value) {
-        return NumberPluginProvider.roman(value.getCounter());
-    }
-
-    @BuiltInMethod("utf_roman")
-    public static TemplateString utfRomanCounter(TemplateSequenceLooper value) {
-        return NumberPluginProvider.utfRoman(value.getCounter());
-    }
-
-    @BuiltInMethod("clock_roman")
-    public static TemplateString clockCounter(TemplateSequenceLooper value) {
-        return NumberPluginProvider.clockRoman(value.getCounter());
-    }
-
-    @BuiltInMethod
-    public static TemplateNumber counter(TemplateHashLooper value) {
-        return value.getCounter();
-    }
-
-    @BuiltInMethod("roman")
-    public static TemplateString romanCounter(TemplateHashLooper value) {
-        return NumberPluginProvider.roman(value.getCounter());
-    }
-
-    @BuiltInMethod("utf_roman")
-    public static TemplateString utfRomanCounter(TemplateHashLooper value) {
-        return NumberPluginProvider.utfRoman(value.getCounter());
-    }
-
-    @BuiltInMethod("clock_roman")
-    public static TemplateString clockCounter(TemplateHashLooper value) {
-        return NumberPluginProvider.clockRoman(value.getCounter());
-    }
-
-    @BuiltInMethod
-    public static TemplateBoolean isFirst(TemplateSequenceLooper value) {
-        return value.isFirst();
-    }
-
-    @BuiltInMethod
-    public static TemplateBoolean isFirst(TemplateHashLooper value) {
-        return value.isFirst();
-    }
-
-    @BuiltInMethod
-    public static TemplateBoolean isLast(TemplateSequenceLooper value) {
-        return value.isLast();
-    }
-
-    @BuiltInMethod
-    public static TemplateBoolean isLast(TemplateHashLooper value) {
-        return value.isLast();
-    }
-
-    @BuiltInMethod
-    public static TemplateString itemParity(TemplateSequenceLooper value) {
-        return (TemplateString) value.cycle(ITEM_PARITYTY);
-    }
-
-    @BuiltInMethod
-    public static TemplateString itemParity(TemplateHashLooper value) {
-        return (TemplateString) value.cycle(ITEM_PARITYTY);
-    }
-
-    @BuiltInMethod
-    public static TemplateString itemParityCap(TemplateSequenceLooper value) {
-        return (TemplateString) value.cycle(ITEM_PARITYTY_CAP);
-    }
-
-    @BuiltInMethod
-    public static TemplateString itemParityCap(TemplateHashLooper value) {
-        return (TemplateString) value.cycle(ITEM_PARITYTY_CAP);
-    }
-
-    @BuiltInMethod
-    public static TemplateObject itemCycle(TemplateSequenceLooper value, TemplateObject... cycle) {
-        return value.cycle(Arrays.asList(cycle));
-    }
-
-    @BuiltInMethod
-    public static TemplateObject itemCycle(TemplateHashLooper value, TemplateObject... cycle) {
-        return value.cycle(Arrays.asList(cycle));
-    }
-
-    @BuiltInMethod
-    public static TemplateBoolean hasNext(TemplateSequenceLooper value) {
-        return value.hasNext();
-    }
-    @BuiltInMethod
-    public static TemplateBoolean hasNext(TemplateHashLooper value) {
-        return value.hasNext();
+        builtIns.put(HASH.of("counter"), (x, y, e) -> ((TemplateHashLooper) x).getCounter());
+        builtIns.put(SEQUENCE.of("counter"), (x, y, e) -> ((TemplateSequenceLooper) x).getCounter());
+        builtIns.put(HASH.of("item_parity"), (x, y, e) -> ((TemplateHashLooper) x).cycle(ITEM_PARITYTY));
+        builtIns.put(SEQUENCE.of("item_parity"), (x, y, e) -> ((TemplateSequenceLooper) x).cycle(ITEM_PARITYTY));
+        builtIns.put(HASH.of("index"), (x, y, e) -> ((TemplateHashLooper) x).getIndex());
+        builtIns.put(SEQUENCE.of("index"), (x, y, e) -> ((TemplateSequenceLooper) x).getIndex());
+        builtIns.put(HASH.of("roman"), (x, y, e) -> NumberPluginProvider.roman(((TemplateHashLooper) x).getCounter()));
+        builtIns.put(SEQUENCE.of("roman"), (x, y, e) -> NumberPluginProvider.roman(((TemplateSequenceLooper) x).getCounter()));
+        builtIns.put(HASH.of("utf_roman"), (x, y, e) -> NumberPluginProvider.utfRoman(((TemplateHashLooper) x).getCounter()));
+        builtIns.put(SEQUENCE.of("utf_roman"), (x, y, e) -> NumberPluginProvider.utfRoman(((TemplateSequenceLooper) x).getCounter()));
+        builtIns.put(HASH.of("clock_roman"), (x, y, e) -> NumberPluginProvider.clockRoman(((TemplateHashLooper) x).getCounter()));
+        builtIns.put(SEQUENCE.of("clock_roman"), (x, y, e) -> NumberPluginProvider.clockRoman(((TemplateSequenceLooper) x).getCounter()));
+        builtIns.put(HASH.of("is_first"), (x, y, e) -> ((TemplateHashLooper) x).isFirst());
+        builtIns.put(SEQUENCE.of("is_first"), (x, y, e) -> ((TemplateSequenceLooper) x).isFirst());
+        builtIns.put(HASH.of("is_last"), (x, y, e) -> ((TemplateHashLooper) x).isLast());
+        builtIns.put(SEQUENCE.of("is_last"), (x, y, e) -> ((TemplateSequenceLooper) x).isLast());
+        builtIns.put(HASH.of("item_parity_cap"), (x, y, e) -> ((TemplateHashLooper) x).cycle(ITEM_PARITYTY_CAP));
+        builtIns.put(SEQUENCE.of("item_parity_cap"), (x, y, e) -> ((TemplateSequenceLooper) x).cycle(ITEM_PARITYTY_CAP));
+        builtIns.put(HASH.of("item_cycle"), (x, y, e) -> ((TemplateHashLooper) x).cycle(y));
+        builtIns.put(SEQUENCE.of("item_cycle"), (x, y, e) -> ((TemplateSequenceLooper) x).cycle(y));
+        builtIns.put(HASH.of("has_next"), (x, y, e) -> ((TemplateHashLooper) x).hasNext());
+        builtIns.put(SEQUENCE.of("has_next"), (x, y, e) -> ((TemplateSequenceLooper) x).hasNext());
     }
 }

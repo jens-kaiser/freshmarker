@@ -1,34 +1,29 @@
 package org.freshmarker.core.plugin;
 
-import java.util.List;
-import java.util.Map;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInMethod;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateEnum;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.providers.EnumTemplateObjectProvider;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
+import java.util.List;
+import java.util.Map;
+
 public class EnumPluginProvider implements PluginProvider {
-  @Override
-  public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-    new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
-  }
+    private static final BuiltInKeyBuilder<? extends TemplateObject> BUILDER = new BuiltInKeyBuilder<>(TemplateEnum.class);
 
-  @BuiltInMethod("c")
-  public static TemplateString computerBuiltIn(TemplateEnum<?> value) {
-    return new TemplateString(value.getValue().name());
-  }
+    @Override
+    public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
+        builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));
+        builtIns.put(BUILDER.of("ordinal"), (x, y, e) -> new TemplateNumber(((TemplateEnum<?>) x).getValue().ordinal()));
+    }
 
-  @BuiltInMethod("ordinal")
-  public static TemplateNumber ordinal(TemplateEnum<?> value) {
-    return new TemplateNumber(value.getValue().ordinal());
-  }
-
-  @Override
-  public void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {
-    providers.add(new EnumTemplateObjectProvider());
-  }
+    @Override
+    public void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {
+        providers.add(new EnumTemplateObjectProvider());
+    }
 }

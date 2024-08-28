@@ -44,6 +44,10 @@ public class TemplateNumber extends TemplatePrimitive<CalculatingNumber> {
         super(new FloatNumber(value));
     }
 
+    public Type getType() {
+        return getValue().getType();
+    }
+
     public TemplateNumber add(TemplateNumber other) {
         return new TemplateNumber(getValue().toType(getNewType(other)).add(other.getValue()));
     }

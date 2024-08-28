@@ -3,31 +3,31 @@ package org.freshmarker.core.plugin;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInMethod;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateString;
 
+import java.util.List;
 import java.util.Map;
 
 public class BooleanPluginProvider implements PluginProvider {
+    private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
+
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        new MethodBuiltInHelper().registerBuiltIns(this, builtIns);
+        builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(BUILDER.of("then"), BooleanPluginProvider::thenBuildIn);
+        builtIns.put(BUILDER.of("string"), BooleanPluginProvider::stringBuiltIn);
     }
 
-    @BuiltInMethod("c")
-    public static TemplateString computerBuiltIn(TemplateBoolean value) {
-        return new TemplateString(String.valueOf(value));
+    private static TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(parameters, 2);
+        return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluateToObject(context) : parameters.get(1).evaluateToObject(context);
     }
 
-    @BuiltInMethod("then")
-    public static TemplateObject thenBuildIn(TemplateBoolean value, ProcessContext context, TemplateObject trueValue, TemplateObject falseValue) {
-        return value == TemplateBoolean.TRUE ? trueValue.evaluateToObject(context) : falseValue.evaluateToObject(context);
-    }
-
-    @BuiltInMethod("string")
-    public static TemplateString stringBuiltIn(TemplateBoolean value, TemplateString trueValue, TemplateString falseValue) {
-        return value == TemplateBoolean.TRUE ? trueValue : falseValue;
+    public static TemplateString stringBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(parameters, 2);
+        return value == TemplateBoolean.TRUE ? (TemplateString) parameters.getFirst() : (TemplateString) parameters.get(1);
     }
 }

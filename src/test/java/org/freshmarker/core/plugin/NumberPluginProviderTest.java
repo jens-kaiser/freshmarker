@@ -2,7 +2,12 @@ package org.freshmarker.core.plugin;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.buildin.BuiltIn;
+import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.number.AbstractCalculatingNumber;
 import org.freshmarker.core.model.number.ByteNumber;
 import org.freshmarker.core.model.number.DoubleNumber;
 import org.freshmarker.core.model.number.FloatNumber;
@@ -11,103 +16,130 @@ import org.freshmarker.core.model.number.LongNumber;
 import org.freshmarker.core.model.number.ShortNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @ExtendWith(MockitoExtension.class)
 class NumberPluginProviderTest {
+    private Map<BuiltInKey, BuiltIn> builtIns;
+    private BuiltInKeyBuilder<TemplateNumber> BUILDER;
+
+    @BeforeEach
+    public void setUp() {
+        BUILDER = new BuiltInKeyBuilder<>(TemplateNumber.class);
+        builtIns = new HashMap<>();
+        new NumberPluginProvider().registerBuildIn(builtIns);
+    }
+
     @Test
     void computerBuiltIn() {
-        assertEquals("42", NumberPluginProvider.computerBuiltIn(new TemplateNumber(42)).toString());
-        assertEquals("42.0", NumberPluginProvider.computerBuiltIn(new TemplateNumber(42.0)).toString());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("c"));
+        assertEquals("42", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
+        assertEquals("42.0", builtIn.apply(new TemplateNumber(42.0), List.of(), null).toString());
     }
 
     @Test
     void abs() {
-        assertEquals("42", NumberPluginProvider.abs(new TemplateNumber(42)).toString());
-        assertEquals("42", NumberPluginProvider.abs(new TemplateNumber(-42)).toString());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("abs"));
+        assertEquals("42", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
     }
 
     @Test
     void sign() {
-        assertEquals("1", NumberPluginProvider.sign(new TemplateNumber(42)).toString());
-        assertEquals("-1", NumberPluginProvider.sign(new TemplateNumber(-42)).toString());
-        assertEquals("0", NumberPluginProvider.sign(new TemplateNumber(0)).toString());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("sign"));
+        assertEquals("1", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
+        assertEquals("-1", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
+        assertEquals("0", builtIn.apply(new TemplateNumber(0), List.of(), null).toString());
     }
 
     @Test
     void format(@Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
         Mockito.when(environment.getLocale()).thenReturn(Locale.GERMANY, Locale.US);
         ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null);
-        assertEquals("42,00", NumberPluginProvider.format(new TemplateNumber(42.0), context, new TemplateString("%.2f")).toString());
-        assertEquals("42.00", NumberPluginProvider.format(new TemplateNumber(42.0), context, new TemplateString("%.2f")).toString());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("format"));
+        assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
+        assertEquals("42.00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
     }
 
     @Test
     void castInt() {
-        assertInstanceOf(IntegerNumber.class, NumberPluginProvider.castInt(new TemplateNumber((byte) 42)).getValue());
-        assertInstanceOf(IntegerNumber.class, NumberPluginProvider.castInt(new TemplateNumber((short) 42)).getValue());
-        assertInstanceOf(IntegerNumber.class, NumberPluginProvider.castInt(new TemplateNumber(42)).getValue());
-        assertInstanceOf(IntegerNumber.class, NumberPluginProvider.castInt(new TemplateNumber(42L)).getValue());
-        assertInstanceOf(IntegerNumber.class, NumberPluginProvider.castInt(new TemplateNumber(42.0)).getValue());
-        assertInstanceOf(IntegerNumber.class, NumberPluginProvider.castInt(new TemplateNumber((float) 42.0)).getValue());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("int"));
+        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castLong() {
-        assertInstanceOf(LongNumber.class, NumberPluginProvider.castLong(new TemplateNumber((byte) 42)).getValue());
-        assertInstanceOf(LongNumber.class, NumberPluginProvider.castLong(new TemplateNumber((short) 42)).getValue());
-        assertInstanceOf(LongNumber.class, NumberPluginProvider.castLong(new TemplateNumber(42)).getValue());
-        assertInstanceOf(LongNumber.class, NumberPluginProvider.castLong(new TemplateNumber(42L)).getValue());
-        assertInstanceOf(LongNumber.class, NumberPluginProvider.castLong(new TemplateNumber(42.0)).getValue());
-        assertInstanceOf(LongNumber.class, NumberPluginProvider.castLong(new TemplateNumber((float) 42.0)).getValue());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("long"));
+        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castShort() {
-        assertInstanceOf(ShortNumber.class, NumberPluginProvider.castShort(new TemplateNumber((byte) 42)).getValue());
-        assertInstanceOf(ShortNumber.class, NumberPluginProvider.castShort(new TemplateNumber((short) 42)).getValue());
-        assertInstanceOf(ShortNumber.class, NumberPluginProvider.castShort(new TemplateNumber(42)).getValue());
-        assertInstanceOf(ShortNumber.class, NumberPluginProvider.castShort(new TemplateNumber(42L)).getValue());
-        assertInstanceOf(ShortNumber.class, NumberPluginProvider.castShort(new TemplateNumber(42.0)).getValue());
-        assertInstanceOf(ShortNumber.class, NumberPluginProvider.castShort(new TemplateNumber((float) 42.0)).getValue());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("short"));
+        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castByte() {
-        assertInstanceOf(ByteNumber.class, NumberPluginProvider.castByte(new TemplateNumber((byte) 42)).getValue());
-        assertInstanceOf(ByteNumber.class, NumberPluginProvider.castByte(new TemplateNumber((short) 42)).getValue());
-        assertInstanceOf(ByteNumber.class, NumberPluginProvider.castByte(new TemplateNumber(42)).getValue());
-        assertInstanceOf(ByteNumber.class, NumberPluginProvider.castByte(new TemplateNumber(42L)).getValue());
-        assertInstanceOf(ByteNumber.class, NumberPluginProvider.castByte(new TemplateNumber(42.0)).getValue());
-        assertInstanceOf(ByteNumber.class, NumberPluginProvider.castByte(new TemplateNumber((float) 42.0)).getValue());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("byte"));
+        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castDouble() {
-        assertInstanceOf(DoubleNumber.class, NumberPluginProvider.castDouble(new TemplateNumber((byte) 42)).getValue());
-        assertInstanceOf(DoubleNumber.class, NumberPluginProvider.castDouble(new TemplateNumber((short) 42)).getValue());
-        assertInstanceOf(DoubleNumber.class, NumberPluginProvider.castDouble(new TemplateNumber(42)).getValue());
-        assertInstanceOf(DoubleNumber.class, NumberPluginProvider.castDouble(new TemplateNumber(42L)).getValue());
-        assertInstanceOf(DoubleNumber.class, NumberPluginProvider.castDouble(new TemplateNumber(42.0)).getValue());
-        assertInstanceOf(DoubleNumber.class, NumberPluginProvider.castDouble(new TemplateNumber((float) 42.0)).getValue());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("double"));
+        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castFloat() {
-        assertInstanceOf(FloatNumber.class, NumberPluginProvider.castFloat(new TemplateNumber((byte) 42)).getValue());
-        assertInstanceOf(FloatNumber.class, NumberPluginProvider.castFloat(new TemplateNumber((short) 42)).getValue());
-        assertInstanceOf(FloatNumber.class, NumberPluginProvider.castFloat(new TemplateNumber(42)).getValue());
-        assertInstanceOf(FloatNumber.class, NumberPluginProvider.castFloat(new TemplateNumber(42L)).getValue());
-        assertInstanceOf(FloatNumber.class, NumberPluginProvider.castFloat(new TemplateNumber(42.0)).getValue());
-        assertInstanceOf(FloatNumber.class, NumberPluginProvider.castFloat(new TemplateNumber((float) 42.0)).getValue());
+        BuiltIn builtIn = builtIns.get(BUILDER.of("float"));
+        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+    }
+
+    void assertNumberType(Class<?> type, TemplateObject object) {
+        assertInstanceOf(type, ((TemplateNumber) object).getValue());
     }
 }

@@ -17,10 +17,10 @@ import static java.util.stream.Collectors.toMap;
 
 public class TemplateBeanProvider {
 
-    private final Map<Class<?>, Map<String, Method>> beans = new HashMap<>();
+    private final Map<Class<?>, Map<String, Method>> methodBeans = new HashMap<>();
 
     public Map<String, Object> provide(Object bean, BaseEnvironment environment) {
-        final Map<String, Method> methods = beans.computeIfAbsent(bean.getClass(), b -> collectMethods(bean));
+        final Map<String, Method> methods = methodBeans.computeIfAbsent(bean.getClass(), b -> collectMethods(bean));
         return new BaseReflectionsMap(methods, environment, bean);
     }
 

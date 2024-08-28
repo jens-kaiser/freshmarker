@@ -71,15 +71,27 @@ public final class Configuration {
     private Locale locale;
     private ZoneId zoneId;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
-    private final List<TemplateObjectProvider> providers = new ArrayList<>(
-            List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), new BeanTemplateObjectProvider(modelSecurityGateway)));
+    private final List<TemplateObjectProvider> providers;
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
 
     private String outputFormat = "undefined";
     private TemplateLoader templateLoader;
 
+    public enum FeatureFlag {
+        REFLECTIONS,
+        LAMBDAS
+    }
+
     public Configuration() {
+        this(FeatureFlag.LAMBDAS);
+    }
+
+    public Configuration(FeatureFlag featureFlag) {
+        modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
+        BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(featureFlag, modelSecurityGateway);
+        providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
+
         locale = Locale.getDefault();
         zoneId = ZoneId.systemDefault();
         templateLoader = new DefaultFileSystemTemplateLoader();
@@ -108,8 +120,7 @@ public final class Configuration {
         outputs.put("JSON", none);
         outputs.put("CSS", new OutputFormatBuilder().withComment("/* ", " */").build());
         outputs.put("ADOC", new OutputFormatBuilder().withComment("\n////\n", "\n////\n").build());
-
-        modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
+        ;
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
@@ -148,12 +159,12 @@ public final class Configuration {
 
     public void registerPlugin(PluginProvider provider) {
         logger.debug("register plugin: {}", provider.getClass().getSimpleName());
-        Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>(this.builtIns);
-        provider.registerBuildIn(builtIns);
-        this.builtIns = builtIns;
-        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>(this.formatter);
-        provider.registerFormatter(formatter);
-        this.formatter = formatter;
+        Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>(this.builtIns);
+        provider.registerBuildIn(registerBuiltIns);
+        this.builtIns = registerBuiltIns;
+        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = new HashMap<>(this.formatter);
+        provider.registerFormatter(registerFormatter);
+        this.formatter = registerFormatter;
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
         provider.registerMapper(mapper);
         mapper.forEach(mappingTemplateObjectProvider::addMapper);
@@ -226,5 +237,9 @@ public final class Configuration {
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
+    }
+
+    public ModelSecurityGateway getSecurity() {
+        return modelSecurityGateway;
     }
 }
