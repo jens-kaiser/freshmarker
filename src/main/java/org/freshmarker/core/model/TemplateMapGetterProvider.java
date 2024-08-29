@@ -1,12 +1,7 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.environment.BaseEnvironment;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -15,8 +10,16 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
-public class TemplateBeanGetterProvider {
+public class TemplateMapGetterProvider {
+    private final Function<Class<?>, Map<String, Method>> methodSupplier;
+
+    public TemplateMapGetterProvider(Function<Class<?>, Map<String, Method>> methodSupplier) {
+        this.methodSupplier = methodSupplier;
+    }
+
     public interface Getter {
         Object get(Object instance);
     }
@@ -29,17 +32,12 @@ public class TemplateBeanGetterProvider {
     }
 
     private Map<String, Getter> collectGetters(Object bean) {
-        try {
-            final MethodHandles.Lookup lookup = MethodHandles.lookup();
-            BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
-            Map<String, Getter> result = new HashMap<>();
-            for (PropertyDescriptor propertyDescriptor : beanInfo.getPropertyDescriptors()) {
-                result.put(propertyDescriptor.getName(), wrapGetter(lookup, propertyDescriptor.getReadMethod()));
-            }
-            return result;
-        } catch (IntrospectionException e) {
-            throw new ProcessException(e.getMessage(), e);
+        final MethodHandles.Lookup lookup = MethodHandles.lookup();
+        Map<String, Getter> result = new HashMap<>();
+        for (Entry<String, Method> entry : methodSupplier.apply(bean.getClass()).entrySet()) {
+            result.put(entry.getKey(), wrapGetter(lookup, entry.getValue()));
         }
+        return result;
     }
 
     private static Getter wrapGetter(Lookup lookup, Method method) {

@@ -3,17 +3,18 @@ package org.freshmarker.core.providers;
 import org.freshmarker.Configuration.FeatureFlag;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.model.BeanMethodProvider;
 import org.freshmarker.core.model.TemplateBean;
-import org.freshmarker.core.model.TemplateBeanGetterProvider;
-import org.freshmarker.core.model.TemplateBeanProvider;
+import org.freshmarker.core.model.TemplateMapGetterProvider;
+import org.freshmarker.core.model.TemplateMapReflectionsProvider;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Map;
 
 public class BeanTemplateObjectProvider implements TemplateObjectProvider {
 
-    private final TemplateBeanProvider beanProvider = new TemplateBeanProvider();
-    private final TemplateBeanGetterProvider beanGetterProvider = new TemplateBeanGetterProvider();
+    private final TemplateMapReflectionsProvider beanProvider;
+    private final TemplateMapGetterProvider beanGetterProvider;
 
     private final ModelSecurityGateway modelSecurityGateway;
     private final FeatureFlag featureFlag;
@@ -21,6 +22,9 @@ public class BeanTemplateObjectProvider implements TemplateObjectProvider {
     public BeanTemplateObjectProvider(FeatureFlag featureFlag, ModelSecurityGateway modelSecurityGateway) {
         this.featureFlag = featureFlag;
         this.modelSecurityGateway = modelSecurityGateway;
+        BeanMethodProvider methodSupplier = new BeanMethodProvider();
+        beanProvider = new TemplateMapReflectionsProvider(methodSupplier);
+        beanGetterProvider = new TemplateMapGetterProvider(methodSupplier);
     }
 
     @Override

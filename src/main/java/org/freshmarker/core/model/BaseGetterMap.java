@@ -1,7 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.environment.BaseEnvironment;
-import org.freshmarker.core.model.TemplateBeanGetterProvider.Getter;
+import org.freshmarker.core.model.TemplateMapGetterProvider.Getter;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;

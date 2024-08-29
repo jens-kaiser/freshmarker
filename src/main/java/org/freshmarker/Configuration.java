@@ -90,7 +90,8 @@ public final class Configuration {
     public Configuration(FeatureFlag featureFlag) {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
         BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(featureFlag, modelSecurityGateway);
-        providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, new RecordTemplateObjectProvider(), new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
+        RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(featureFlag, modelSecurityGateway);
+        providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, recordTemplateObjectProvider, new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
 
         locale = Locale.getDefault();
         zoneId = ZoneId.systemDefault();

@@ -1,0 +1,24 @@
+package org.freshmarker.core.model;
+
+import org.freshmarker.core.environment.BaseEnvironment;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+public class TemplateMapReflectionsProvider {
+
+    private final Map<Class<?>, Map<String, Method>> methodBeans = new HashMap<>();
+    private final Function<Class<?>, Map<String, Method>> methodSupplier;
+
+    public TemplateMapReflectionsProvider(Function<Class<?>, Map<String, Method>> methodSupplier) {
+        this.methodSupplier = methodSupplier;
+    }
+
+    public Map<String, Object> provide(Object bean, BaseEnvironment environment) {
+        final Map<String, Method> methods = methodBeans.computeIfAbsent(bean.getClass(), b -> methodSupplier.apply(bean.getClass()));
+        return new BaseReflectionsMap(methods, environment, bean);
+    }
+
+}
