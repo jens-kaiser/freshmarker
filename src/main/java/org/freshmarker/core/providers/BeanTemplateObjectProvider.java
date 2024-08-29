@@ -3,11 +3,7 @@ package org.freshmarker.core.providers;
 import org.freshmarker.Configuration.FeatureFlag;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.environment.BaseEnvironment;
-import org.freshmarker.core.model.BeanMethodProvider;
 import org.freshmarker.core.model.TemplateBean;
-import org.freshmarker.core.model.TemplateMapGetterProvider;
-import org.freshmarker.core.model.TemplateMapReflectionsProvider;
-import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Map;
 
@@ -28,7 +24,7 @@ public class BeanTemplateObjectProvider implements TemplateObjectProvider {
     }
 
     @Override
-    public TemplateObject provide(BaseEnvironment environment, Object o) {
+    public TemplateBean provide(BaseEnvironment environment, Object o) {
         Class<?> type = o.getClass();
         if (!environment.getChecks().contains(type)) {
             modelSecurityGateway.check(type);

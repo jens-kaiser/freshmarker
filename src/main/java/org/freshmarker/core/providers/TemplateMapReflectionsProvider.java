@@ -1,4 +1,4 @@
-package org.freshmarker.core.model;
+package org.freshmarker.core.providers;
 
 import org.freshmarker.core.environment.BaseEnvironment;
 

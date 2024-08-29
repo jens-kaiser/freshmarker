@@ -1,6 +1,7 @@
-package org.freshmarker.core.model;
+package org.freshmarker.core.providers;
 
 import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.model.TemplateObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package org.freshmarker.core.model;
+package org.freshmarker.core.providers;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
