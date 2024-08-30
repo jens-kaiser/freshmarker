@@ -7,7 +7,7 @@ public class ReduceContext extends ProcessContext {
     private final ReductionStatus status;
 
     public ReduceContext(ProcessContext context, ReductionStatus status) {
-        super(context.baseEnvironment, context.environment, context.builtIns, context.outputs, context.functions, context.userDirectives, context.formatters.getFirst(), context.getOutputFormat());
+        super(context);
         this.status = status;
     }
 

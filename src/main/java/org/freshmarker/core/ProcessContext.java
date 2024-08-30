@@ -36,16 +36,30 @@ public class ProcessContext {
     protected final List<Map<Class<? extends TemplateObject>, Formatter>> formatters = new LinkedList<>();
     protected final List<Map<NameSpaced, UserDirective>> userDirectives;
 
-    public ProcessContext(BaseEnvironment baseEnvironment, Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs, Map<String, TemplateFunction> functions, List<Map<NameSpaced, UserDirective>> userDirectives, Map<Class<? extends TemplateObject>, Formatter> formatters, OutputFormat outputFormat) {
+    public ProcessContext(ProcessContext context) {
+        this.baseEnvironment = context.baseEnvironment;
+        this.environment = context.environment;
+        this.builtIns = context.builtIns;
+        this.outputs = context.outputs;
+        this.writer = context.writer;
+        this.functions = context.functions;
+        this.userDirectives = context.userDirectives;
+        this.locals.addFirst(context.getLocale());
+        this.zoneIds.addFirst(context.getZoneId());
+        this.formatters.addFirst(context.formatters.getFirst());
+        this.outputFormats.addFirst(context.getOutputFormat());
+    }
+
+    public ProcessContext(BaseEnvironment baseEnvironment, Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs, Map<String, TemplateFunction> functions, List<Map<NameSpaced, UserDirective>> userDirectives, Map<Class<? extends TemplateObject>, Formatter> formatters, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
         this.baseEnvironment = baseEnvironment;
         this.environment = environment;
         this.builtIns = builtIns;
         this.outputs = outputs;
-        this.writer = baseEnvironment.getWriter();
+        this.writer = writer;
         this.functions = functions;
         this.userDirectives = userDirectives;
-        this.locals.addFirst(baseEnvironment.getLocale());
-        this.zoneIds.addFirst(baseEnvironment.getZoneId());
+        this.locals.addFirst(locale);
+        this.zoneIds.addFirst(zoneId);
         this.formatters.addFirst(formatters);
         this.outputFormats.addFirst(outputFormat);
     }

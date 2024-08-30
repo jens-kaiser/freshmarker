@@ -66,8 +66,7 @@ class NumberPluginProviderTest {
 
     @Test
     void format(@Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
-        Mockito.when(baseEnvironment.getLocale()).thenReturn(Locale.GERMANY);
-        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null, null, null, null);
+        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null, null, null, null, Locale.GERMANY, null, null);
         BuiltIn builtIn = builtIns.get(builder.of("format"));
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
         context.push(Locale.US);

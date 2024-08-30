@@ -14,7 +14,6 @@ import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.environment.Settings;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -120,7 +119,7 @@ public final class Configuration {
         outputs.put("JSON", none);
         outputs.put("CSS", new OutputFormatBuilder().withComment("/* ", " */").build());
         outputs.put("ADOC", new OutputFormatBuilder().withComment("\n////\n", "\n////\n").build());
-        
+
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
@@ -217,10 +216,9 @@ public final class Configuration {
 
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
         OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-        Settings settings = new Settings(locale, zoneId, format, formatter);
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, writer, settings);
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers);
         Environment environment = new VariableEnvironment(baseEnvironment);
-        return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions, List.of(userDirectives, this.userDirectives), formatter, format);
+        return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions, List.of(userDirectives, this.userDirectives), formatter, format, locale, zoneId, writer);
     }
 
     public void setLocale(Locale locale) {

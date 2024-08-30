@@ -8,12 +8,9 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
-import java.io.Writer;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -23,15 +20,11 @@ public class BaseEnvironment implements Environment {
     private final Map<String, Object> dataModel;
     private final Map<String, TemplateObject> cached;
     private final List<TemplateObjectProvider> providers;
-    private final Writer writer;
-    private final Settings settings;
     private final Set<Object> checks = new HashSet<>();
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Writer writer, Settings settings) {
+    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers) {
         this.dataModel = dataModel;
         this.providers = providers;
-        this.writer = writer;
-        this.settings = settings;
         cached = HashMap.newHashMap(dataModel.size());
     }
 
@@ -64,18 +57,6 @@ public class BaseEnvironment implements Environment {
             }
         }
         throw new UnsupportedDataTypeException("unsupported data type: " + o.getClass());
-    }
-
-    public Locale getLocale() {
-        return settings.locale();
-    }
-
-    public ZoneId getZoneId() {
-        return settings.zoneId();
-    }
-
-    public Writer getWriter() {
-        return writer;
     }
 
     @Override

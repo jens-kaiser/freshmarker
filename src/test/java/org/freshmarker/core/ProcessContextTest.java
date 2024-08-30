@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ProcessContextTest {
     @Test
     void getStore(@Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
-        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null, null, null, null);
+        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null, null, null, null, null, null, null);
         context.getStore("store1").put("key", "value");
         assertEquals("value", context.getStore("store1").get("key"));
         assertNull(context.getStore("store2").get("key"));
