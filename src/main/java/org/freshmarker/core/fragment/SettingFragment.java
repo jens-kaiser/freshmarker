@@ -41,11 +41,11 @@ public class SettingFragment implements Fragment {
     public void process(ProcessContext context) {
         TemplateObject setting = expression.evaluateToObject(context);
         switch (name) {
-            case "locale" -> processLocale(context, setting);
+            case "locale" -> context.push(Locale.forLanguageTag(setting.evaluate(context, TemplateString.class).getValue()));
             case "date_format" -> processDateFormat(context, setting);
             case "time_format" -> processTimeFormat(context, setting);
             case "datetime_format" -> processDateTimeFormat(context, setting);
-            case "zone_id" -> processZoneId(context, setting);
+            case "zone_id" -> context.push(ZoneId.of(setting.evaluate(context, TemplateString.class).getValue()));
             default -> throw new ProcessException("unknown setting: " + name, ftl);
         }
     }
@@ -69,13 +69,5 @@ public class SettingFragment implements Fragment {
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
         context.pushFormatter(formatter);
-    }
-
-    private static void processLocale(ProcessContext context, TemplateObject setting) {
-        context.push(Locale.forLanguageTag(setting.evaluate(context, TemplateString.class).getValue()));
-    }
-
-    private static void processZoneId(ProcessContext context, TemplateObject setting) {
-        context.push(ZoneId.of(setting.evaluate(context, TemplateString.class).getValue()));
     }
 }

@@ -37,7 +37,7 @@ public class MacroUserDirective implements UserDirective {
       @Override
       public TemplateObject getValue(String name) {
         TemplateObject value = values.get(name);
-        return value != null ? value : super.getValue(name);
+        return value != null ? value : wrapped.getValue(name);
       }
 
       @Override

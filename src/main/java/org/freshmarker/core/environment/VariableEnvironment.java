@@ -5,6 +5,7 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class VariableEnvironment extends WrapperEnvironment {
 
@@ -35,13 +36,11 @@ public class VariableEnvironment extends WrapperEnvironment {
 
     @Override
     public TemplateObject getValue(String name) {
-        TemplateObject result = dataModel.get(name);
-        return result != null ? result : wrapped.getValue(name);
+        return Objects.requireNonNullElseGet(dataModel.get(name), () -> wrapped.getValue(name));
     }
 
     @Override
     public TemplateObject getVariable(String name) {
-        TemplateObject result = dataModel.get(name);
-        return result != null ? result : wrapped.getVariable(name);
+        return Objects.requireNonNullElseGet(dataModel.get(name), () -> wrapped.getValue(name));
     }
 }

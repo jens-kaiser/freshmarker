@@ -20,7 +20,7 @@ public class BaseEnvironment implements Environment {
     private final Map<String, Object> dataModel;
     private final Map<String, TemplateObject> cached;
     private final List<TemplateObjectProvider> providers;
-    private final Set<Object> checks = new HashSet<>();
+    private final Set<Class<?>> checks = new HashSet<>();
 
     public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers) {
         this.dataModel = dataModel;
@@ -79,7 +79,7 @@ public class BaseEnvironment implements Environment {
         throw new ProcessException("variable " + name + " not found");
     }
 
-    public Set<Object> getChecks() {
+    public Set<Class<?>> getChecks() {
         return checks;
     }
 }

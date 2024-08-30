@@ -17,6 +17,6 @@ class BuiltInVariableTestIT {
     void builtInVariables() throws ParseException {
         Configuration configuration = new Configuration();
         Template template = configuration.getTemplate("test", "test: ${.version}; ${.version?major}-${.version?minor}-${.version?patch}");
-        assertEquals("test: 1.1.0, 1-1-0", template.process(Map.of()));
+        assertEquals("test: 1.4.3, 1-4-3", template.process(Map.of()));
     }
 }
