@@ -3,17 +3,25 @@ package org.freshmarker.core;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
+import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.UndefinedOutputFormat;
 
 import java.io.Writer;
+import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 public class ProcessContext {
+    private static final Formatter SIMPLE = (object, locale) -> object.toString();
 
     private Writer writer;
     protected Environment environment;
@@ -22,14 +30,24 @@ public class ProcessContext {
     protected final Map<BuiltInKey, BuiltIn> builtIns;
     protected final Map<String, OutputFormat> outputs;
     protected final Map<String, TemplateFunction> functions;
+    protected final List<Locale> locals = new LinkedList<>();
+    protected final List<ZoneId> zoneIds = new LinkedList<>();
+    protected final List<OutputFormat> outputFormats = new LinkedList<>();
+    protected final List<Map<Class<? extends TemplateObject>, Formatter>> formatters = new LinkedList<>();
+    protected final List<Map<NameSpaced, UserDirective>> userDirectives;
 
-    public ProcessContext(BaseEnvironment baseEnvironment, Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs, Map<String, TemplateFunction> functions) {
+    public ProcessContext(BaseEnvironment baseEnvironment, Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs, Map<String, TemplateFunction> functions, List<Map<NameSpaced, UserDirective>> userDirectives, Map<Class<? extends TemplateObject>, Formatter> formatters, OutputFormat outputFormat) {
         this.baseEnvironment = baseEnvironment;
         this.environment = environment;
         this.builtIns = builtIns;
         this.outputs = outputs;
         this.writer = baseEnvironment.getWriter();
         this.functions = functions;
+        this.userDirectives = userDirectives;
+        this.locals.addFirst(baseEnvironment.getLocale());
+        this.zoneIds.addFirst(baseEnvironment.getZoneId());
+        this.formatters.addFirst(formatters);
+        this.outputFormats.addFirst(outputFormat);
     }
 
     public Environment getEnvironment() {
@@ -74,5 +92,57 @@ public class ProcessContext {
 
     public boolean reductionCheck(TemplateObject templateObject) {
         return !templateObject.isNull();
+    }
+
+    public void push(Locale locale) {
+        locals.addFirst(locale);
+    }
+
+    public Locale getLocale() {
+        return locals.getFirst();
+    }
+
+    public void push(ZoneId zoneId) {
+        zoneIds.addFirst(zoneId);
+    }
+
+    public ZoneId getZoneId() {
+        return zoneIds.getFirst();
+    }
+
+    public void pushOutputFormat(OutputFormat format) {
+        outputFormats.addFirst(format);
+    }
+
+    public void pullOutputFormat() {
+        outputFormats.removeFirst();
+    }
+
+    public OutputFormat getOutputFormat() {
+        return outputFormats.getFirst();
+    }
+
+    public void pushFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {
+        formatters.addFirst(formatter);
+    }
+
+    public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
+        for (Map<Class<? extends TemplateObject>, Formatter> map : formatters) {
+            Formatter formatter = map.get(type);
+            if (formatter != null) {
+                return formatter;
+            }
+        }
+        return SIMPLE;
+    }
+
+    public UserDirective getDirective(String nameSpace, String name) {
+        for (Map<NameSpaced, UserDirective> map : userDirectives) {
+            UserDirective userDirective = map.get(new NameSpaced(nameSpace, name));
+            if (userDirective != null) {
+                return userDirective;
+            }
+        }
+        throw new ProcessException("unknown directive: " + name);
     }
 }

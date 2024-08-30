@@ -56,39 +56,39 @@ public class StringPluginProvider implements PluginProvider {
     }
 
     private static TemplateString upperCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().toUpperCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().toUpperCase(context.getLocale()));
     }
 
     private static TemplateString lowerCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().toLowerCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().toLowerCase(context.getLocale()));
     }
 
     public static TemplateString capitalize(TemplateString value, ProcessContext context) {
         Matcher matcher = CAPITALIZE.matcher(value.getValue());
-        return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toUpperCase(context.getEnvironment().getLocale()) + matcher.group(2)));
+        return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toUpperCase(context.getLocale()) + matcher.group(2)));
     }
 
     public static TemplateString uncapitalize(TemplateString value, ProcessContext context) {
         Matcher matcher = UNCAPITALIZE.matcher(value.getValue());
-        return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(context.getEnvironment().getLocale()) + matcher.group(2)));
+        return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(context.getLocale()) + matcher.group(2)));
     }
 
     public static TemplateString camelCase(TemplateString value, ProcessContext context) {
-        Locale locale = context.getEnvironment().getLocale();
+        Locale locale = context.getLocale();
         Matcher matcher = CAMEL_CASE.matcher(value.getValue().toLowerCase(locale));
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(locale) + matcher.group(2).toUpperCase(locale)));
     }
 
     public static TemplateString kebabCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getLocale()));
     }
 
     public static TemplateString snakeCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getLocale()));
     }
 
     public static TemplateString screamingSnakeCase(TemplateString value, ProcessContext context) {
-        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getEnvironment().getLocale()));
+        return new TemplateString(value.getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getLocale()));
     }
 
     public static TemplateBoolean contains(TemplateString value, TemplateString contains) {
@@ -113,8 +113,7 @@ public class StringPluginProvider implements PluginProvider {
     }
 
     public static TemplateStringMarkup esc(TemplateString value, ProcessContext context, TemplateString parameter) {
-        OutputFormat outputFormat = parameter.asString().map(String::valueOf).map(context::getOutputFormat)
-                .orElse(context.getEnvironment().getOutputFormat());
+        OutputFormat outputFormat = parameter.asString().map(String::valueOf).map(context::getOutputFormat).orElse(context.getOutputFormat());
         return new TemplateStringMarkup(value, outputFormat);
     }
 }

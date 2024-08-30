@@ -1,12 +1,7 @@
 package org.freshmarker.core.fragment;
 
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.environment.SettingEnvironment;
-import org.freshmarker.core.environment.Settings;
-
-import java.util.Map;
 
 public class OutputFormatFragment implements Fragment {
 
@@ -20,12 +15,11 @@ public class OutputFormatFragment implements Fragment {
 
     @Override
     public void process(ProcessContext context) {
-        Environment environment = context.getEnvironment();
-        context.setEnvironment(new SettingEnvironment(environment, new Settings(null, null, context.getOutputFormat(format), Map.of())));
+        context.pushOutputFormat(context.getOutputFormat(format));
         try {
             content.process(context);
         } finally {
-            context.setEnvironment(environment);
+            context.pullOutputFormat();
         }
     }
 

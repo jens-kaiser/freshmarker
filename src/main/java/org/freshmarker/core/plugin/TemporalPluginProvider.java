@@ -79,7 +79,7 @@ public class TemporalPluginProvider implements PluginProvider {
     }
 
     private static TemplateString formatTemporal(List<TemplateObject> y, ProcessContext e, Temporal value) {
-        return new TemplateString(getDateTimeFormatter(y, e).withZone(e.getEnvironment().getZoneId()).format(value));
+        return new TemplateString(getDateTimeFormatter(y, e).withZone(e.getZoneId()).format(value));
     }
 
     private static TemplateString formatTemporal(List<TemplateObject> y, ProcessContext e, Instant value) {
@@ -91,7 +91,7 @@ public class TemporalPluginProvider implements PluginProvider {
     }
 
     private static java.time.format.DateTimeFormatter getDateTimeFormatter(List<TemplateObject> y, ProcessContext e) {
-        return java.time.format.DateTimeFormatter.ofPattern(getFormatString(y, e), e.getEnvironment().getLocale());
+        return java.time.format.DateTimeFormatter.ofPattern(getFormatString(y, e), e.getLocale());
     }
 
     private static String getFormatString(List<TemplateObject> y, ProcessContext e) {

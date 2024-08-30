@@ -25,7 +25,7 @@ public class UserDirectiveFragment implements Fragment {
         Environment environment = context.getEnvironment();
         try {
             context.setEnvironment(new VariableEnvironment(environment));
-            context.getEnvironment().getDirective(nameSpace, directive).execute(context, namedArgs, body);
+            context.getDirective(nameSpace, directive).execute(context, namedArgs, body);
         } finally {
             context.setEnvironment(environment);
         }

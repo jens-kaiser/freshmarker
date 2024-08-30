@@ -6,7 +6,6 @@ import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.ReducingVariableEnvironment;
-import org.freshmarker.core.environment.WrapperEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
@@ -42,8 +41,8 @@ public final class Template {
     }
 
     public void process(Map<String, Object> dataModel, Writer writer) {
-        ProcessContext context = configuration.createContext(dataModel, writer);
-        context.setEnvironment(getWrapperEnvironment(context));
+        ProcessContext context = configuration.createContext(dataModel, writer, userDirectives);
+        context.setEnvironment(context.getEnvironment());
         try {
             rootFragment.process(context);
         } catch (TemplateReturnException e) {
@@ -63,8 +62,8 @@ public final class Template {
 
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.total().set(rootFragment.getSize());
-        ProcessContext context = configuration.createContext(dataModel, new StringBuilderWriter());
-        context.setEnvironment(new ReducingVariableEnvironment(getWrapperEnvironment(context)));
+        ProcessContext context = configuration.createContext(dataModel, new StringBuilderWriter(), userDirectives);
+        context.setEnvironment(new ReducingVariableEnvironment(context.getEnvironment()));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());
@@ -93,15 +92,5 @@ public final class Template {
 
     public Path getPath() {
         return path;
-    }
-
-    private WrapperEnvironment getWrapperEnvironment(ProcessContext context) {
-        return new WrapperEnvironment(context.getEnvironment()) {
-            @Override
-            public UserDirective getDirective(String nameSpace, String name) {
-                UserDirective userDirective = userDirectives.get(new NameSpaced(nameSpace, name));
-                return userDirective != null ? userDirective : super.getDirective(nameSpace, name);
-            }
-        };
     }
 }

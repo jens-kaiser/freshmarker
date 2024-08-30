@@ -66,10 +66,11 @@ class NumberPluginProviderTest {
 
     @Test
     void format(@Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
-        Mockito.when(environment.getLocale()).thenReturn(Locale.GERMANY, Locale.US);
-        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null);
+        Mockito.when(baseEnvironment.getLocale()).thenReturn(Locale.GERMANY);
+        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null, null, null, null);
         BuiltIn builtIn = builtIns.get(builder.of("format"));
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
+        context.push(Locale.US);
         assertEquals("42.00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
     }
 

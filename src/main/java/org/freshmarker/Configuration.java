@@ -13,7 +13,6 @@ import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
-import org.freshmarker.core.environment.BufferedEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.Settings;
 import org.freshmarker.core.environment.VariableEnvironment;
@@ -216,12 +215,12 @@ public final class Configuration {
         return template;
     }
 
-    public ProcessContext createContext(Map<String, Object> dataModel, Writer writer) {
+    public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
         OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
         Settings settings = new Settings(locale, zoneId, format, formatter);
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, userDirectives, writer, settings);
-        Environment environment = new VariableEnvironment(new BufferedEnvironment(baseEnvironment));
-        return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions);
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers, writer, settings);
+        Environment environment = new VariableEnvironment(baseEnvironment);
+        return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions, List.of(userDirectives, this.userDirectives), formatter, format);
     }
 
     public void setLocale(Locale locale) {

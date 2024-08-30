@@ -24,14 +24,13 @@ public class LoggingDirective implements UserDirective {
         message = message.toUpperCase();
       }
       Environment environment = context.getEnvironment();
-      context.getWriter().write(environment.getOutputFormat().comment(environment, message).getValue());
+      context.getWriter().write(context.getOutputFormat().comment(environment, message).getValue());
     } catch (IOException e) {
       throw new ProcessException(e.getMessage(), e);
     }
   }
 
   private Optional<String> getString(Map<String, TemplateObject> args, String message, ProcessContext context) {
-    return Optional.ofNullable(args.get(message)).map(t -> t.evaluate(context, TemplateString.class))
-        .map(TemplateString::getValue);
+    return Optional.ofNullable(args.get(message)).map(t -> t.evaluate(context, TemplateString.class)).map(TemplateString::getValue);
   }
 }

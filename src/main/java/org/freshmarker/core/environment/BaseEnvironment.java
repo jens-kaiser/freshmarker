@@ -3,16 +3,14 @@ package org.freshmarker.core.environment;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedDataTypeException;
-import org.freshmarker.core.directive.UserDirective;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.io.Writer;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -22,22 +20,19 @@ import java.util.Set;
 
 public class BaseEnvironment implements Environment {
 
-    private static final Formatter SIMPLE = (object, locale) -> object.toString();
-
     private final Map<String, Object> dataModel;
+    private final Map<String, TemplateObject> cached;
     private final List<TemplateObjectProvider> providers;
-    private final Map<NameSpaced, UserDirective> userDirectives;
     private final Writer writer;
     private final Settings settings;
     private final Set<Object> checks = new HashSet<>();
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Map<NameSpaced, UserDirective> userDirectives,
-                           Writer writer, Settings settings) {
+    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, Writer writer, Settings settings) {
         this.dataModel = dataModel;
         this.providers = providers;
-        this.userDirectives = userDirectives;
         this.writer = writer;
         this.settings = settings;
+        cached = HashMap.newHashMap(dataModel.size());
     }
 
     public TemplateObject mapObject(Object object) {
@@ -46,7 +41,7 @@ public class BaseEnvironment implements Environment {
 
     @Override
     public TemplateObject getValue(String name) {
-        return wrap(dataModel.get(name));
+        return cached.computeIfAbsent(name, n -> wrap(dataModel.get(n)));
     }
 
     @Override
@@ -71,23 +66,12 @@ public class BaseEnvironment implements Environment {
         throw new UnsupportedDataTypeException("unsupported data type: " + o.getClass());
     }
 
-    @Override
     public Locale getLocale() {
         return settings.locale();
     }
 
-    @Override
     public ZoneId getZoneId() {
         return settings.zoneId();
-    }
-
-    public OutputFormat getOutputFormat() {
-        return settings.format();
-    }
-
-    @Override
-    public UserDirective getDirective(String nameSpace, String name) {
-        return Optional.ofNullable(userDirectives.get(new NameSpaced(nameSpace, name))).orElseThrow(() -> new ProcessException("unknown directive: " + name));
     }
 
     public Writer getWriter() {
@@ -112,10 +96,6 @@ public class BaseEnvironment implements Environment {
     @Override
     public TemplateObject getVariable(String name) {
         throw new ProcessException("variable " + name + " not found");
-    }
-
-    public <T extends TemplateObject> Formatter getFormatter(Class<T> type) {
-        return settings.formatters().getOrDefault(type, SIMPLE);
     }
 
     public Set<Object> getChecks() {

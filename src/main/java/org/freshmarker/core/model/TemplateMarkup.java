@@ -4,11 +4,8 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.freshmarker.core.output.DelegatingOutputFormat;
 
 public class TemplateMarkup implements TemplateObject {
-
-    private static final DelegatingOutputFormat INSTANCE = new DelegatingOutputFormat();
 
     private final TemplateObject content;
 
@@ -33,10 +30,10 @@ public class TemplateMarkup implements TemplateObject {
         }
         Environment environment = context.getEnvironment();
         if (templateObject instanceof TemplateString) {
-            return INSTANCE.escape(environment, templateObject.toString());
+            return context.getOutputFormat().escape(environment, templateObject.toString());
         }
-        String result = environment.getFormatter(templateObject.getClass()).format(templateObject, environment.getLocale());
-        return INSTANCE.escape(environment, result);
+        String result = context.getFormatter(templateObject.getClass()).format(templateObject, context.getLocale());
+        return context.getOutputFormat().escape(environment, result);
     }
 
     public Class<?> getType() {

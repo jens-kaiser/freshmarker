@@ -14,9 +14,9 @@ public record TemplateBuiltInVariable(String name) implements TemplateExpression
     public TemplateObject evaluateToObject(ProcessContext context) {
         return switch (name) {
             case "now" -> new TemplateLocalDateTime(LocalDateTime.now()).at(context);
-            case "locale" -> new TemplateLocale(context.getEnvironment().getLocale());
-            case "country" -> new TemplateString(context.getEnvironment().getLocale().getCountry());
-            case "lang", "language" -> new TemplateString(context.getEnvironment().getLocale().getLanguage());
+            case "locale" -> new TemplateLocale(context.getLocale());
+            case "country" -> new TemplateString(context.getLocale().getCountry());
+            case "lang", "language" -> new TemplateString(context.getLocale().getLanguage());
             case "version" -> new TemplateVersion(getClass().getPackage().getImplementationVersion());
             default -> throw new IllegalStateException("Unexpected value: " + name);
         };

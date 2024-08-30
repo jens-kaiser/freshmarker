@@ -12,6 +12,6 @@ public interface TemplateDateTime extends TemplateTemporal {
   }
 
   default TemplateZonedDateTime at(ProcessContext context) {
-    return atZone(context.getEnvironment().getZoneId());
+    return atZone(context.getZoneId());
   }
 }

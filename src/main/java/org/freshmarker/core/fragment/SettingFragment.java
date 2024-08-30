@@ -4,8 +4,6 @@ import ftl.Node;
 import ftl.ast.SettingInstruction;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.environment.SettingEnvironment;
-import org.freshmarker.core.environment.Settings;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;
@@ -56,32 +54,28 @@ public class SettingFragment implements Fragment {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalDateTime.class, new DateTimeFormatter(value), TemplateClassicDateTime.class, new ClassicDateTimeFormatter(value));
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), new Settings(null, null, null, formatter)));
+        context.pushFormatter(formatter);
     }
 
     private static void processTimeFormat(ProcessContext context, TemplateObject setting) {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalTime.class, new TimeFormatter(value), TemplateClassicTime.class, new ClassicTimeFormatter(value));
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), new Settings(null, null, null, formatter)));
+        context.pushFormatter(formatter);
     }
 
     private static void processDateFormat(ProcessContext context, TemplateObject setting) {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), new Settings(null, null, null, formatter)));
+        context.pushFormatter(formatter);
     }
 
     private static void processLocale(ProcessContext context, TemplateObject setting) {
-        String value = setting.evaluate(context, TemplateString.class).getValue();
-        Locale locale = Locale.forLanguageTag(value);
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), new Settings(locale, null, null, Map.of())));
+        context.push(Locale.forLanguageTag(setting.evaluate(context, TemplateString.class).getValue()));
     }
 
     private static void processZoneId(ProcessContext context, TemplateObject setting) {
-        String value = setting.evaluate(context, TemplateString.class).getValue();
-        ZoneId zoneId = ZoneId.of(value);
-        context.setEnvironment(new SettingEnvironment(context.getEnvironment(), new Settings(null, zoneId, null, Map.of())));
+        context.push(ZoneId.of(setting.evaluate(context, TemplateString.class).getValue()));
     }
 }
