@@ -54,8 +54,8 @@ public class ProcessContext {
         return environment;
     }
 
-    public BaseEnvironment getBaseEnvironment() {
-        return baseEnvironment;
+    public TemplateObject mapObject(Object object) {
+        return baseEnvironment.mapObject(object);
     }
 
     public void setEnvironment(Environment environment) {

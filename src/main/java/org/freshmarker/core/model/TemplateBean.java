@@ -31,7 +31,7 @@ public class TemplateBean implements TemplateMap {
             mapped.put(name, t);
             return t;
         }
-        TemplateObject result = context.getBaseEnvironment().mapObject(object);
+        TemplateObject result = context.mapObject(object);
         mapped.put(name, result);
         return result;
     }

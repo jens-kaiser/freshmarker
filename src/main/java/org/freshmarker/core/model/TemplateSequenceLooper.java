@@ -16,6 +16,6 @@ public class TemplateSequenceLooper extends AbstractTemplateLooper<Object> {
     if (object instanceof TemplateObject templateObject) {
       return templateObject;
     }
-    return context.getBaseEnvironment().mapObject(object);
+    return context.mapObject(object);
   }
 }

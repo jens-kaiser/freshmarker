@@ -16,6 +16,6 @@ public class TemplateHashLoopVariable implements TemplateLoopVariable {
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateHash hash = looper.evaluate(context, TemplateHash.class);
-        return key ? new TemplateString(hash.entry().getKey()) : context.getBaseEnvironment().mapObject(hash.entry().getValue());
+        return key ? new TemplateString(hash.entry().getKey()) : context.mapObject(hash.entry().getValue());
     }
 }
