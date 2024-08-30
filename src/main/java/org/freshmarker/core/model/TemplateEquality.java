@@ -23,7 +23,7 @@ public record TemplateEquality(TemplateObject left, TemplateObject right) implem
 
     private TemplateObject evaluate(TemplateObject object, ProcessContext context) {
         TemplateObject result = object.evaluateToObject(context);
-        if (result.isPrimitive() || result instanceof TemplateNull) {
+        if (result.isPrimitive() || result.isNull()) {
             return result;
         }
         throw new ProcessException("invalid type " + result.getModelType());

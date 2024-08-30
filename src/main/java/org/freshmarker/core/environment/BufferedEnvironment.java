@@ -16,12 +16,6 @@ public class BufferedEnvironment extends WrapperEnvironment {
 
   @Override
   public TemplateObject getValue(String name) {
-    TemplateObject result = dataModel.get(name);
-    if (result != null) {
-      return result;
-    }
-    TemplateObject value = wrapped.getValue(name);
-    dataModel.put(name, value);
-    return value;
+      return dataModel.computeIfAbsent(name, wrapped::getValue);
   }
 }

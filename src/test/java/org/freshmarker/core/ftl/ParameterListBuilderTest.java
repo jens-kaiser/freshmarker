@@ -5,6 +5,7 @@ import ftl.ast.ParameterList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +32,7 @@ class ParameterListBuilderTest {
         parser.Root();
         ParameterList parameterList = parser.rootNode().firstDescendantOfType(ParameterList.class);
         assertNotNull(parameterList);
-        ArrayList<ParameterHolder> parameterHolders = new ArrayList<>();
+        List<ParameterHolder> parameterHolders = new ArrayList<>();
         assertThrows(ParsingException.class, () -> parameterList.accept(PARAMETER_LIST_BUILDER, parameterHolders));
     }
 
@@ -42,7 +43,7 @@ class ParameterListBuilderTest {
         parser.Root();
         ParameterList parameterList = parser.rootNode().firstDescendantOfType(ParameterList.class);
         assertNotNull(parameterList);
-        ArrayList<ParameterHolder> parameterHolders = new ArrayList<>();
+        List<ParameterHolder> parameterHolders = new ArrayList<>();
         parameterList.accept(PARAMETER_LIST_BUILDER, parameterHolders);
         assertEquals(2, parameterHolders.size());
         ParameterHolder first = parameterHolders.getFirst();

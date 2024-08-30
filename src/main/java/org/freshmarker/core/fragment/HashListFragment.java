@@ -58,6 +58,5 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
         } finally {
             context.setEnvironment(environment);
         }
-
     }
 }
