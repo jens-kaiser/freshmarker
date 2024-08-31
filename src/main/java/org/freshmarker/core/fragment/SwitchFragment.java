@@ -34,7 +34,7 @@ public class SwitchFragment extends AbstractConditionalFragment {
     public void process(ProcessContext context) {
         TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
         for (ConditionalFragment fragment : fragments) {
-            if (switchValue.equals(evaluatePrimitive(fragment.getConditional(), context, fragment.getNode()))) {
+            if (switchValue.equals(evaluatePrimitive(fragment.conditional(), context, fragment.node()))) {
                 fragment.process(context);
                 return;
             }
@@ -47,7 +47,7 @@ public class SwitchFragment extends AbstractConditionalFragment {
         try {
             TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
             for (ConditionalFragment fragment : fragments) {
-                if (switchValue.equals(evaluatePrimitive(fragment.getConditional(), context, fragment.getNode()))) {
+                if (switchValue.equals(evaluatePrimitive(fragment.conditional(), context, fragment.node()))) {
                     return fragment.reduce(context);
                 }
             }

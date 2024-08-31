@@ -4,12 +4,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.environment.WrapperEnvironment;
+import org.freshmarker.core.environment.MacroEnvironment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
 import org.freshmarker.core.ftl.ParameterHolder;
@@ -33,18 +32,7 @@ public class MacroUserDirective implements UserDirective {
   public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
     Map<String, TemplateObject> values = evaluateParameterValues(args, context);
     Environment environment = context.getEnvironment();
-    context.setEnvironment(new WrapperEnvironment(context.getEnvironment()) {
-      @Override
-      public TemplateObject getValue(String name) {
-        TemplateObject value = values.get(name);
-        return value != null ? value : wrapped.getValue(name);
-      }
-
-      @Override
-      public Optional<Fragment> getNestedContent() {
-        return Optional.ofNullable(body);
-      }
-    });
+    context.setEnvironment(new MacroEnvironment(environment, values, body));
     try {
       block.process(context);
     } catch (TemplateReturnException e) {

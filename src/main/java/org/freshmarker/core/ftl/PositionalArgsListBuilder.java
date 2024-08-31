@@ -8,8 +8,8 @@ import java.util.List;
 public class PositionalArgsListBuilder implements ExpressionVisitor<List<TemplateObject>, List<TemplateObject>> {
     @Override
     public List<TemplateObject> visit(PositionalArgsList expression, List<TemplateObject> input) {
-        for (int i = 0; i < expression.getChildCount(); i += 2) {
-            input.add(expression.getChild(i).accept(InterpolationBuilder.INSTANCE, null));
+        for (int i = 0; i < expression.size(); i += 2) {
+            input.add(expression.get(i).accept(InterpolationBuilder.INSTANCE, null));
         }
         return input;
     }

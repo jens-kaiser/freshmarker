@@ -24,13 +24,13 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
     @Override
     public IfFragment visit(IfStatement ftl, IfFragment input) {
-        Node expression = ftl.getChild(3);
+        Node expression = ftl.get(3);
         TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
         Fragment ifBlock;
         if (indexAfterIfBlock(ftl) == 5) {
             ifBlock = ConstantFragment.EMPTY;
         } else {
-            ifBlock = Fragments.optimize(ftl.getChild(5).accept(fragmentBuilder, new ArrayList<>()));
+            ifBlock = Fragments.optimize(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
         }
         IfFragment ifFragment = new IfFragment();
         ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
@@ -44,18 +44,18 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
     private static Integer indexAfterIfBlock(IfStatement ftl) {
         return ftl.children().stream().skip(5).filter(n -> List.of(ElseIfBlock.class, ElseBlock.class).contains(n.getClass())).map(ftl::indexOf)
-                .findFirst().orElse(ftl.getChildCount());
+                .findFirst().orElse(ftl.size());
     }
 
     @Override
     public IfFragment visit(ElseIfBlock ftl, IfFragment input) {
-        Node expression = ftl.getChild(3);
+        Node expression = ftl.get(3);
         TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
         Fragment ifBlock;
-        if (ftl.getChildCount() == 5) {
+        if (ftl.size() == 5) {
             ifBlock = ConstantFragment.EMPTY;
         } else {
-            List<Fragment> fragments = ftl.getChild(5).accept(fragmentBuilder, new ArrayList<>());
+            List<Fragment> fragments = ftl.get(5).accept(fragmentBuilder, new ArrayList<>());
             ifBlock = Fragments.optimize(fragments);
         }
         input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
@@ -64,8 +64,8 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
     @Override
     public IfFragment visit(ElseBlock ftl, IfFragment input) {
-        if (ftl.getChildCount() != 3) {
-            Node expression = ftl.getChild(3);
+        if (ftl.size() != 3) {
+            Node expression = ftl.get(3);
             List<Fragment> fragments = expression.accept(fragmentBuilder, new ArrayList<>());
             input.addElseFragment(Fragments.optimize(fragments));
         }

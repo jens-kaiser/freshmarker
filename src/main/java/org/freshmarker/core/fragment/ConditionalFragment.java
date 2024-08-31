@@ -10,28 +10,12 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Objects;
 
-public class ConditionalFragment implements Fragment {
-
-    private final TemplateObject conditional;
-    private final Fragment content;
-    private final Node node;
+public record ConditionalFragment(TemplateObject conditional, Fragment content, Node node) implements Fragment {
 
     public ConditionalFragment(TemplateObject conditional, Fragment content, Node node) {
         this.conditional = Objects.requireNonNull(conditional);
         this.content = Objects.requireNonNull(content);
         this.node = node;
-    }
-
-    public Node getNode() {
-        return node;
-    }
-
-    public TemplateObject getConditional() {
-        return conditional;
-    }
-
-    public Fragment getContent() {
-        return content;
     }
 
     @Override

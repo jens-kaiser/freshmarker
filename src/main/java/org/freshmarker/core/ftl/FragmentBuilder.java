@@ -140,15 +140,15 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(Interpolation ftl, List<Fragment> input) {
-        TemplateObject interpolation = ftl.getChild(1).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject interpolation = ftl.get(1).accept(InterpolationBuilder.INSTANCE, null);
         input.add(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
         return input;
     }
 
     @Override
     public List<Fragment> visit(ListInstruction ftl, List<Fragment> input) {
-        TemplateObject list = ftl.getChild(3).accept(InterpolationBuilder.INSTANCE, null);
-        String identifier = ftl.getChild(5).toString();
+        TemplateObject list = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null);
+        String identifier = ftl.get(5).toString();
         int index = 6;
         Comparator<String> comparator = null;
         if (ftl.get(index).getType() == TokenType.SORTED) {
@@ -156,16 +156,16 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             index += 2;
         }
         String valueIdentifier = null;
-        if (ftl.getChild(index).getType() == TokenType.COMMA) {
-            valueIdentifier = ftl.getChild(index + 1).toString();
+        if (ftl.get(index).getType() == TokenType.COMMA) {
+            valueIdentifier = ftl.get(index + 1).toString();
             index += 2;
         }
         String looperIdentifier = null;
-        if (ftl.getChild(index).getType() == TokenType.WITH) {
-            looperIdentifier = ((IDENTIFIER) ftl.getChild(index + 1)).toString();
+        if (ftl.get(index).getType() == TokenType.WITH) {
+            looperIdentifier = ((IDENTIFIER) ftl.get(index + 1)).toString();
             index += 2;
         }
-        List<Fragment> fragments = ftl.getChild(index + 1).accept(this, new ArrayList<>());
+        List<Fragment> fragments = ftl.get(index + 1).accept(this, new ArrayList<>());
         Fragment block = Fragments.optimize(fragments);
         if (valueIdentifier != null) {
             input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator));
@@ -177,17 +177,17 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(SettingInstruction ftl, List<Fragment> input) {
-        IDENTIFIER identifier = (IDENTIFIER) ftl.getChild(3);
-        TemplateObject expression = ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null);
+        IDENTIFIER identifier = (IDENTIFIER) ftl.get(3);
+        TemplateObject expression = ftl.get(5).accept(InterpolationBuilder.INSTANCE, null);
         input.add(new SettingFragment(identifier.toString(), expression, ftl));
         return input;
     }
 
     @Override
     public List<Fragment> visit(OutputFormatBlock ftl, List<Fragment> input) {
-        List<Fragment> fragments = ftl.getChild(5).accept(this, new ArrayList<>());
+        List<Fragment> fragments = ftl.get(5).accept(this, new ArrayList<>());
         Fragment block = Fragments.optimize(fragments);
-        String image = ftl.getChild(3).toString();
+        String image = ftl.get(3).toString();
         input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
         return input;
     }
@@ -205,7 +205,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
         String name = ftl.get(nameIndex).toString();
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-        ftl.getChild(nameIndex + 1).accept(NAMED_ARGS_BUILDER, namedArgs);
+        ftl.get(nameIndex + 1).accept(NAMED_ARGS_BUILDER, namedArgs);
         logger.debug("user directive: {}.{} {}", currentNameSpace, name, namedArgs);
         Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.<NodeType>of(TokenType.GT, TokenType.CLOSE_TAG).contains(n.getType()))
@@ -222,11 +222,11 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
-        TokenType type = (TokenType) ftl.getChild(1).getType();
+        TokenType type = (TokenType) ftl.get(1).getType();
         if (type != TokenType.MACRO) {
             return input;
         }
-        String name = getName(ftl.getChild(3));
+        String name = getName(ftl.get(3));
         List<ParameterHolder> parameterList = getParameterHolders(ftl);
         Fragment block = getFragment(ftl);
         logger.debug("macro directive: namespace={}, type={}, name={}, block={}", nameSpace, type, name, block);
@@ -235,28 +235,28 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     }
 
     private Fragment getFragment(MacroDefinition ftl) {
-        if (ftl.getChild(ftl.getChildCount() - 1).getType() == TokenType.CLOSE_EMPTY_TAG
-                || ftl.getChild(ftl.getChildCount() - 2).getType() == TokenType.CLOSE_TAG) {
+        if (ftl.getLast().getType() == TokenType.CLOSE_EMPTY_TAG
+                || ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
-        List<Fragment> fragments = ftl.getChild(ftl.getChildCount() - 2).accept(this, new ArrayList<>());
+        List<Fragment> fragments = ftl.get(ftl.size() - 2).accept(this, new ArrayList<>());
         return Fragments.optimize(fragments);
     }
 
     private List<ParameterHolder> getParameterHolders(MacroDefinition ftl) {
         int parameterListIndex = getParameterListIndex(ftl);
-        if (ftl.getChild(parameterListIndex).getType() == TokenType.CLOSE_TAG) {
+        if (ftl.get(parameterListIndex).getType() == TokenType.CLOSE_TAG) {
             return Collections.emptyList();
         }
-        return ftl.getChild(parameterListIndex).accept(PARAMETER_LIST_BUILDER, new ArrayList<>());
+        return ftl.get(parameterListIndex).accept(PARAMETER_LIST_BUILDER, new ArrayList<>());
     }
 
     private int getParameterListIndex(MacroDefinition ftl) {
-        if (ftl.getChild(4).getType() != TokenType.OPEN_PAREN) {
+        if (ftl.get(4).getType() != TokenType.OPEN_PAREN) {
             return 4;
         }
-        if (ftl.getChild(6).getType() != TokenType.CLOSE_PAREN) {
-            throw new ProcessException("missing CLOSE_PAREN at " + ftl.getChild(6).getLocation());
+        if (ftl.get(6).getType() != TokenType.CLOSE_PAREN) {
+            throw new ProcessException("missing CLOSE_PAREN at " + ftl.get(6).getLocation());
         }
         return 5;
     }
@@ -275,31 +275,31 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(Assignment ftl, List<Fragment> input) {
-        TokenType type = (TokenType) ftl.getChild(1).getType();
+        TokenType type = (TokenType) ftl.get(1).getType();
         if (type != TokenType.SET) {
-            throw new ParsingException("assignment type " + type + " not supported", ftl.getChild(1));
+            throw new ParsingException("assignment type " + type + " not supported", ftl.get(1));
         }
-        String name = getName(ftl.getChild(3));
+        String name = getName(ftl.get(3));
         if (name.startsWith(".")) {
             throw new ParsingException("built-in variable name not allowed: " + name, ftl);
         }
-        if (ftl.getChildCount() != 7) {
+        if (ftl.size() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.add(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), true, ftl.getChild(5)));
+        input.add(new VariableFragment(name, ftl.get(5).accept(InterpolationBuilder.INSTANCE, null), true, ftl.get(5)));
         return input;
     }
 
     @Override
     public List<Fragment> visit(VarInstruction ftl, List<Fragment> input) {
-        String name = getName(ftl.getChild(3));
+        String name = getName(ftl.get(3));
         if (name.startsWith(".")) {
             throw new ParsingException("built-in variable name not allowed: " + name, ftl);
         }
-        if (ftl.getChildCount() != 7) {
+        if (ftl.size() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.add(new VariableFragment(name, ftl.getChild(5).accept(InterpolationBuilder.INSTANCE, null), false, ftl.getChild(5)));
+        input.add(new VariableFragment(name, ftl.get(5).accept(InterpolationBuilder.INSTANCE, null), false, ftl.get(5)));
         return input;
     }
 

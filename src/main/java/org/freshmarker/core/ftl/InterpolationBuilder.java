@@ -94,7 +94,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateDefault visit(DefaultToExpression expression, Object input) {
         TemplateObject base = expression.children().get(0).accept(this, input);
-        if (expression.getChildCount() == 2) {
+        if (expression.size() == 2) {
             return new TemplateDefault(base, TemplateString.EMPTY);
         }
         return new TemplateDefault(base, expression.children().get(2).accept(this, input));
@@ -120,7 +120,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(BooleanLiteral expression, Object input) {
-        return expression.getChild(0).accept(this, input);
+        return expression.getFirst().accept(this, input);
     }
 
     @Override
@@ -130,12 +130,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateBuiltIn visit(BuiltIn expression, Object input) {
-        Token buildInName = (Token) expression.getChild(1);
-        if (expression.getChildCount() < 3) {
+        Token buildInName = (Token) expression.get(1);
+        if (expression.size() < 3) {
             return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of());
         }
         List<TemplateObject> parameter = new ArrayList<>();
-        Node child = expression.getChild(3);
+        Node child = expression.get(3);
         if (child instanceof PositionalArgsList) {
             child.accept(BUILDER, parameter);
         } else {
@@ -146,7 +146,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(DynamicKey expression, Object input) {
-        TemplateObject dynamicKey = expression.getChild(1).accept(this, null);
+        TemplateObject dynamicKey = expression.get(1).accept(this, null);
         if (dynamicKey instanceof TemplateRange) {
             return new TemplateSlice((TemplateObject) input, dynamicKey);
         }
@@ -155,7 +155,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateDotKey visit(DotKey expression, Object input) {
-        Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
+        Token lastToken = (Token) expression.getLast();
         return new TemplateDotKey((TemplateObject) input, lastToken.toString());
     }
 
@@ -166,11 +166,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateRange visit(RangeExpression expression, Object input) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        if (expression.getChildCount() < 3) {
+        TemplateObject left = expression.get(0).accept(this, null);
+        if (expression.size() < 3) {
             return new TemplateRightUnlimitedRange(left);
         }
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         return new TemplateRightLimitedRange(left, right);
     }
 
@@ -185,10 +185,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleMultiplicativeAndAdditiveExpression(BaseNode expression) {
-        TemplateObject result = expression.getChild(0).accept(this, null);
-        for (int i = 1; i < expression.getChildCount(); i += 2) {
-            Token token = (Token) expression.getChild(i);
-            TemplateObject second = expression.getChild(i + 1).accept(this, null);
+        TemplateObject result = expression.getFirst().accept(this, null);
+        for (int i = 1; i < expression.size(); i += 2) {
+            Token token = (Token) expression.get(i);
+            TemplateObject second = expression.get(i + 1).accept(this, null);
             TemplateOperation operation = new TemplateOperation(token.getType(), result, second);
             if (result.isPrimitive() && second.isPrimitive()) {
                 result = operation.evaluateToObject(null);
@@ -201,12 +201,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(Parenthesis expression, Object input) {
-        return expression.getChild(1).accept(this, null);
+        return expression.get(1).accept(this, null);
     }
 
     @Override
     public TemplateObject visit(NotExpression expression, Object input) {
-        TemplateObject subExpression = expression.getChild(1).accept(this, null);
+        TemplateObject subExpression = expression.get(1).accept(this, null);
         if (subExpression instanceof TemplateBooleanExpression templateBooleanExpression) {
             return templateBooleanExpression.not();
         }
@@ -215,15 +215,15 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateBuiltInVariable visit(BuiltinVariable expression, Object input) {
-        Token lastToken = (Token) expression.getChild(expression.getChildCount() - 1);
+        Token lastToken = (Token) expression.getLast();
         return new TemplateBuiltInVariable(lastToken.toString());
     }
 
     @Override
     public TemplateObject visit(RelationalExpression expression, Object input) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
-        TokenType type = ((Token) expression.getChild(1)).getType();
+        TemplateObject left = expression.get(0).accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
+        TokenType type = ((Token) expression.get(1)).getType();
         TemplateRelational relational = new TemplateRelational(type, left, right);
         if (left instanceof TemplateNumber && right instanceof TemplateNumber) {
             return relational.evaluateToObject(null);
@@ -233,7 +233,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(AndExpression expression, Object input) {
-        return switch (((Token) expression.getChild(1)).getType()) {
+        return switch (((Token) expression.get(1)).getType()) {
             case AND -> handleAnd(expression);
             case AND2 -> handleAnd2(expression);
             default -> throw new IllegalArgumentException("invalid conjunction");
@@ -241,8 +241,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleAnd(AndExpression expression) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject left = expression.get(0).accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         if (!(right instanceof TemplateBoolean r)) {
             return new TemplateJunction(TokenType.AND, left, right);
         }
@@ -256,8 +256,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleAnd2(AndExpression expression) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         if (TemplateBoolean.TRUE.equals(right)) {
             return left;
         }
@@ -272,7 +272,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(OrExpression expression, Object input) {
-        return switch (((Token) expression.getChild(1)).getType()) {
+        return switch (((Token) expression.get(1)).getType()) {
             case OR -> handleOr(expression);
             case OR2 -> handleOr2(expression);
             case XOR -> handleXor(expression);
@@ -281,8 +281,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateBooleanExpression handleXor(OrExpression expression) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         if (right instanceof TemplateBoolean r && left instanceof TemplateBoolean l) {
             return TemplateBoolean.from(l.getValue() ^ r.getValue());
         }
@@ -290,8 +290,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleOr2(OrExpression expression) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         if (TemplateBoolean.FALSE.equals(left)) {
             return right;
         }
@@ -305,8 +305,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleOr(OrExpression expression) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         if (right instanceof TemplateBoolean r) {
             if (left instanceof TemplateBoolean l) {
                 return TemplateBoolean.from(l.getValue() || r.getValue());
@@ -318,17 +318,17 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(EqualityExpression expression, Object input) {
-        TemplateObject left = expression.getChild(0).accept(this, null);
-        TemplateObject right = expression.getChild(2).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
+        TemplateObject right = expression.get(2).accept(this, null);
         TemplateEquality equality = new TemplateEquality(left, right);
-        TemplateObject result = expression.getChild(1).getType() == TokenType.NOT_EQUALS ? equality.not() : equality;
+        TemplateObject result = expression.get(1).getType() == TokenType.NOT_EQUALS ? equality.not() : equality;
         return left.isPrimitive() && right.isPrimitive() ? result.evaluateToObject(null) : result;
     }
 
     @Override
     public TemplateObject visit(UnaryPlusMinusExpression expression, Object input) {
-        Token token = (Token) expression.getChild(0);
-        TemplateObject templateObject = expression.getChild(1).accept(this, null);
+        Token token = (Token) expression.getFirst();
+        TemplateObject templateObject = expression.get(1).accept(this, null);
         if (token.getType() == TokenType.PLUS) {
             return templateObject;
         }
@@ -339,11 +339,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateMethodCall visit(MethodInvoke expression, Object input) {
         String name = ((TemplateVariable) input).name();
         logger.debug("method invoke: {}", name);
-        if (expression.getChild(1).getType() == TokenType.CLOSE_PAREN) {
+        if (expression.get(1).getType() == TokenType.CLOSE_PAREN) {
             return new TemplateMethodCall(name, null);
         }
         List<TemplateObject> parameter = new ArrayList<>();
-        Node child = expression.getChild(1);
+        Node child = expression.get(1);
         logger.debug("child: {}", child.getClass());
         if (child instanceof PositionalArgsList) {
             child.accept(BUILDER, parameter);
