@@ -166,7 +166,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateRange visit(RangeExpression expression, Object input) {
-        TemplateObject left = expression.get(0).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
         if (expression.size() < 3) {
             return new TemplateRightUnlimitedRange(left);
         }
@@ -221,7 +221,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(RelationalExpression expression, Object input) {
-        TemplateObject left = expression.get(0).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         TokenType type = ((Token) expression.get(1)).getType();
         TemplateRelational relational = new TemplateRelational(type, left, right);
@@ -241,7 +241,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject handleAnd(AndExpression expression) {
-        TemplateObject left = expression.get(0).accept(this, null);
+        TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         if (!(right instanceof TemplateBoolean r)) {
             return new TemplateJunction(TokenType.AND, left, right);

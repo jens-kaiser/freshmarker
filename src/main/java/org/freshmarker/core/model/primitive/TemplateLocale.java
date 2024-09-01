@@ -24,10 +24,6 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
         };
     }
 
-    public Optional<Locale> getLocale() {
-        return Optional.ofNullable(getValue());
-    }
-
     public TemplateObject getLanguage() {
         String language = getValue().getLanguage();
         return language == null ? TemplateNull.NULL : new TemplateString(language);

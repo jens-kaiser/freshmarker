@@ -36,10 +36,6 @@ public class TemplateMarkup implements TemplateObject {
         return context.getOutputFormat().escape(environment, result);
     }
 
-    public Class<?> getType() {
-        return getClass();
-    }
-
     private TemplateObject getTemplateObject(ProcessContext context) {
         TemplateObject templateObject = content;
         do {

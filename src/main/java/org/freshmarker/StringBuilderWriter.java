@@ -1,6 +1,5 @@
 package org.freshmarker;
 
-import java.io.IOException;
 import java.io.Writer;
 
 public class StringBuilderWriter extends Writer {
@@ -22,7 +21,7 @@ public class StringBuilderWriter extends Writer {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // intentionally left blank
     }
 
