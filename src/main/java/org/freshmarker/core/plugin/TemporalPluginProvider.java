@@ -32,6 +32,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class TemporalPluginProvider implements PluginProvider {
@@ -72,10 +73,20 @@ public class TemporalPluginProvider implements PluginProvider {
         builtIns.put(DATE_BUILDER.of("date"), (x, y, e) -> x);
         builtIns.put(DATE_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(DATE_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDate) x).getValue()));
+        builtIns.put(DATE_BUILDER.of("h"), (x, y, e) -> formatHuman(y, e, (TemplateLocalDate) x));
 
         builtIns.put(TIME_BUILDER.of("time"), (x, y, e) -> x);
         builtIns.put(TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalTime) x).getValue()));
+    }
+
+    private TemplateObject formatHuman(List<TemplateObject> y, ProcessContext e, TemplateLocalDate value) {
+        LocalDate now = y.isEmpty() ? LocalDate.now() : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
+        int days = now.until(value.getValue()).getDays();
+        if (days < -2 || days > 2) {
+            return value;
+        }
+        return new TemplateString(ResourceBundle.getBundle("freshmarker", e.getLocale()).getString("date." + days));
     }
 
     private static TemplateString formatTemporal(List<TemplateObject> y, ProcessContext e, Temporal value) {

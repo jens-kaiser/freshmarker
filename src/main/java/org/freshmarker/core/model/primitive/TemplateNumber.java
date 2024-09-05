@@ -13,7 +13,11 @@ import java.util.Optional;
 public class TemplateNumber extends TemplatePrimitive<CalculatingNumber> {
 
     public enum Type {
-        BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE
+        BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE;
+
+        public boolean isFloatingPoint() {
+            return this == FLOAT || this == DOUBLE;
+        }
     }
 
     public TemplateNumber(CalculatingNumber value) {

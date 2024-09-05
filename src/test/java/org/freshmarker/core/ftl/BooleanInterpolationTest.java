@@ -35,6 +35,22 @@ class BooleanInterpolationTest {
     }
 
     @ParameterizedTest
+    @CsvSource({
+            "de,test: ${true?h},test: wahr",
+            "de,test: ${false?h},test: falsch",
+            "en,test: ${true?h},test: true",
+            "en,test: ${false?h},test: false",
+            "fr,test: ${true?h},test: vrai",
+            "fr,test: ${false?h},test: faux",
+    })
+    void interpolationHuman(Locale locale, String templateSource, String expected) throws ParseException {
+        configuration.setLocale(locale);
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+
+    @ParameterizedTest
     @CsvSource(value = {
             "test: ${true?string('ja','nein')};test: ja",
             "test: ${false?string('ja','nein')};test: nein",

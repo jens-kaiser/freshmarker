@@ -10,6 +10,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class BooleanPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
@@ -19,6 +20,7 @@ public class BooleanPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(BUILDER.of("then"), BooleanPluginProvider::thenBuildIn);
         builtIns.put(BUILDER.of("string"), BooleanPluginProvider::stringBuiltIn);
+        builtIns.put(BUILDER.of("h"), BooleanPluginProvider::humanBuiltIn);
     }
 
     private static TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
@@ -26,8 +28,12 @@ public class BooleanPluginProvider implements PluginProvider {
         return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluateToObject(context) : parameters.get(1).evaluateToObject(context);
     }
 
-    public static TemplateString stringBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+    private static TemplateString stringBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
         BuiltInHelper.checkParametersLength(parameters, 2);
         return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluate(context, TemplateString.class) : parameters.get(1).evaluate(context, TemplateString.class);
+    }
+
+    private static TemplateString humanBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        return new TemplateString(ResourceBundle.getBundle("freshmarker", context.getLocale()).getString("boolean." + value));
     }
 }

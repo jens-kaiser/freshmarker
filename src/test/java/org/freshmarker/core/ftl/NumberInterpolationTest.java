@@ -151,4 +151,28 @@ class NumberInterpolationTest {
         Template template = configuration.getTemplate("roman", "test:<#list 1..12 as c with l> ${l?clock_roman?lower_case} ${c?clock_roman}</#list>");
         assertEquals("test: ⅰ Ⅰ ⅱ Ⅱ ⅲ Ⅲ ⅳ Ⅳ ⅴ Ⅴ ⅵ Ⅵ ⅶ Ⅶ ⅷ Ⅷ ⅸ Ⅸ ⅹ Ⅹ ⅺ Ⅺ ⅻ Ⅻ", template.process(Map.of()));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "de;test: ${0?h};test: 0",
+            "de;test: ${1?h};test: eins",
+            "de;test: ${2?h};test: zwei",
+            "de;test: ${10?h};test: 10",
+            "de;test: ${1.0?h};test: 1",
+            "en;test: ${0?h};test: 0",
+            "en;test: ${1?h};test: one",
+            "en;test: ${2?h};test: two",
+            "en;test: ${10?h};test: 10",
+            "en;test: ${1.0?h};test: 1",
+            "en;test: ${0?h};test: 0",
+            "fr;test: ${1?h};test: un",
+            "fr;test: ${2?h};test: deux",
+            "fr;test: ${10?h};test: 10",
+            "fr;test: ${1.0?h};test: 1",
+    }, delimiterString = ";")
+    void interpolationHuman(Locale locale, String templateSource, String expected) throws ParseException {
+        configuration.setLocale(locale);
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of()));
+    }
 }

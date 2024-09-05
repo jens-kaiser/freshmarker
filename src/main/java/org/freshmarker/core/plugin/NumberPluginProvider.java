@@ -51,6 +51,18 @@ public class NumberPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("roman"), (x, y, e) -> roman(x));
         builtIns.put(BUILDER.of("utf_roman"), (x, y, e) -> utfRoman(x));
         builtIns.put(BUILDER.of("clock_roman"), (x, y, e) -> clockRoman(x));
+        builtIns.put(BUILDER.of("h"), (x, y, e) -> human((TemplateNumber) x, e));
+    }
+
+    private TemplateObject human(TemplateNumber value, ProcessContext context) {
+        if (value.getType().isFloatingPoint()) {
+            return value;
+        }
+        int number = value.getValue().getNumber().intValue();
+        if (number > 0 && number < 10) {
+            return new TemplateString(ResourceBundle.getBundle("freshmarker", context.getLocale()).getString("number." + value));
+        }
+        return value;
     }
 
     private static TemplateString format(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {

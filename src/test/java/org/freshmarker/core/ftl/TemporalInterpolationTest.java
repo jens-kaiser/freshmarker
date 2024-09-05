@@ -17,6 +17,8 @@ import java.time.Month;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -223,5 +225,20 @@ class TemporalInterpolationTest {
         Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")));
         ProcessException exception = assertThrows(ProcessException.class, () ->template.process(model));
         assertEquals("invalid parameter count:2 at test:1:7 '${temporal?at_zone('Europe/Berlin','Europe/London')}'", exception.getMessage());
+    }
+
+        @ParameterizedTest
+    @CsvSource(value = {
+            "de,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 vorgestern gestern heute morgen übermorgen 1968-08-27 ",
+            "en,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 day before yesterday yesterday today tomorrow day after tomorrow 1968-08-27 ",
+            "fr,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 avant-hier hier aujourd'hui demain après-demain 1968-08-27 ",
+    }, ignoreLeadingAndTrailingWhitespace = false)
+    void interpolationLocalDateHuman(Locale locale, String input, String expected) throws ParseException {
+        configuration.setLocale(locale);
+        Template template = configuration.getTemplate("test", input);
+        LocalDate now = LocalDate.of(1968, Month.AUGUST, 24);
+        List<LocalDate> dates = now.minusDays(3).datesUntil(now.plusDays(4)).toList();
+        Map<String, Object> dataModel = Map.of("now", now, "dates", dates);
+        assertEquals(expected, template.process(dataModel));
     }
 }
