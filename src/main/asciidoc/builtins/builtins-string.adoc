@@ -107,10 +107,10 @@ This built-in converts a text to a _slug_.
 m|the short summer
 m|the-short-summer
 
-m|die heiße wüste
+m|Die heiße Wüste
 m|die-heie-wste
 
-m|die heisse wueste
+m|Die heisse Wueste
 m|die-heisse-wueste
 |===
 
