@@ -9,10 +9,7 @@ This built-in returns the first element of a sequence.
 |===
 |Template |Output
 
-a|
-----
-${list?first}
-----
+m|${list?first}
 m|2
 |===
 
@@ -23,10 +20,7 @@ This built-in returns the last element of a sequence.
 |===
 |Template |Output
 
-a|
-----
-${list?last}
-----
+m|${list?last}
 m|6
 |===
 
@@ -37,10 +31,7 @@ This built-in returns a reversed sequence of a sequence.
 |===
 |Template |Output
 
-a|
-----
-${list?reverse?first}
-----
+m|${list?reverse?first}
 m|6
 |===
 
@@ -51,9 +42,6 @@ This built-in returns the size of a sequence as a number.
 |===
 |Template |Output
 
-a|
-----
-${list?size}
-----
+m|${list?size}
 m|5
 |===

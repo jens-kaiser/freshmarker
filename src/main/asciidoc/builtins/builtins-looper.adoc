@@ -7,10 +7,7 @@ This built-in returns the index (starting with zero) of the current loop value a
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?index}, </#list>
-----
+m|<#list (1..10) as s with l>${l?index}, </#list>
 m|0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 |===
 
@@ -21,10 +18,7 @@ This built-in returns the counter (starting with one) of the current loop value 
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?counter}, </#list>
-----
+m|<#list (1..10) as s with l>${l?counter}, </#list>
 m|1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 |===
 
@@ -35,10 +29,7 @@ This built-in returns the counter (starting with one) of the current loop value 
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?roman}, </#list>
-----
+m|<#list (1..10) as s with l>${l?roman}, </#list>
 m|I, II, III, IV, V, VI, VII, VIII, IX, X,
 |===
 
@@ -50,10 +41,7 @@ This built-in uses the Unicode Characters `\u2160`, `\u2164`, `\u2169` and `\u21
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?utf_roman}, </#list>
-----
+m|<#list (1..10) as s with l>${l?utf_roman}, </#list>
 m|Ⅰ, ⅠⅠ, ⅠⅠⅠ, ⅠⅤ, Ⅴ, ⅤⅠ, ⅤⅠⅠ, ⅤⅠⅠⅠ, ⅠⅩ, Ⅹ,
 |===
 
@@ -64,11 +52,7 @@ This built-in uses the Unicode Characters from `\u2160` to `\u216B`.
 
 |===
 |Template |Output
-
-a|
-----
-<#list (1..12) as s with l>${l?clock_roman}, </#list>
-----
+m|<#list (1..12) as s with l>${l?clock_roman}, </#list>
 m|Ⅰ, Ⅱ, Ⅲ, Ⅳ, Ⅴ, Ⅵ, Ⅶ, Ⅷ, Ⅸ, Ⅹ, Ⅺ, Ⅻ, 
 |===
 
@@ -79,10 +63,7 @@ This built-in returns the boolean value `true`, if the current loop value is the
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?is_first}, </#list>
-----
+m|<#list (1..10) as s with l>${l?is_first}, </#list>
 m|true, false, false, false, false, false, false, false, false, false,
 |===
 
@@ -109,10 +90,7 @@ This built-in returns the boolean value `true`, if the current loop value is the
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?is_last}, </#list>
-----
+m|<#list (1..10) as s with l>${l?is_last}, </#list>
 m|false, false, false, false, false, false, false, false, false, true,
 |===
 
@@ -140,10 +118,7 @@ It is useful for CSS class names.
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?item_parity}, </#list>
-----
+m|<#list (1..10) as s with l>${l?item_parity}, </#list>
 m|odd, even, odd, even, odd, even, odd, even, odd, even,
 |===
 
@@ -155,10 +130,7 @@ It is useful for CSS class names.
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?item_parity_cap}, </#list>
-----
+m|<#list (1..10) as s with l>${l?item_parity_cap}, </#list>
 m|Odd, Even, Odd, Even, Odd, Even, Odd, Even, Odd, Even,
 |===
 
@@ -170,10 +142,7 @@ It is useful for CSS class names.
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?item_cycle('one', 'two', 'three'}, </#list>
-----
+m|<#list (1..10) as s with l>${l?item_cycle('one', 'two', 'three'}, </#list>
 m|one, two, three, one, two, three, one, two, three, one,
 |===
 
@@ -184,10 +153,7 @@ This built-in returns `false`, if the current loop value is the last one and `tr
 |===
 |Template |Output
 
-a|
-----
-<#list (1..10) as s with l>${l?has_next}, </#list>
-----
+m|<#list (1..10) as s with l>${l?has_next}, </#list>
 m|true, true, true, true, true, true, true, true, true, false,
 |===
 
