@@ -45,6 +45,8 @@ include::builtins-date.adoc[]
 
 include::builtins-time.adoc[]
 
+include::builtins-sequence.adoc[]
+
 include::builtins-looper.adoc[]
 
 include::builtins-enum.adoc[]
