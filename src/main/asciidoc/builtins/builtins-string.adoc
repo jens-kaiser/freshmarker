@@ -97,6 +97,23 @@ m|theQuickBrownFoxJumpsOverTheLazyDog
 m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
 |===
 
+==== `slugify` Built-In
+
+This built-in converts a text to a _slug_.
+
+|===
+|Input | Output
+
+m|the short summer
+m|the-short-summer
+
+m|die heiße wüste
+m|die-heie-wste
+
+m|die heisse wueste
+m|die-heisse-wueste
+|===
+
 ==== `trim` Built-In
 
 This built-in removes leading and trailing whitespaces from the text.

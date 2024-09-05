@@ -53,6 +53,11 @@ public class StringPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("esc"), (x, y, e) -> esc((TemplateString) x, e, (TemplateString) y.getFirst()));
         builtIns.put(BUILDER.of("no_esc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
         builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
+        builtIns.put(BUILDER.of("slugify"), (x, y, e) -> slugify((TemplateString) x));
+    }
+
+    private static TemplateString slugify(TemplateString x) {
+        return new TemplateString(x.getValue().replaceAll("[^ a-zA-Z0-9-]", "").replace(' ', '-').toLowerCase());
     }
 
     private static TemplateString upperCase(TemplateString value, ProcessContext context) {

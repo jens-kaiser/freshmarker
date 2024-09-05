@@ -135,6 +135,16 @@ class StringInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
+            "a short summer,test: a-short-summer",
+            "In der Wüste,test: in-der-wste",
+    })
+    void slugify(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", "test: ${text?slugify}");
+        assertEquals(expected, template.process(Map.of("text", input)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
             "'',1<2,test: 1&lt;2",
             "?esc('HTML'),1<2,test: 1&lt;2",
             "?noEsc,1<2,test: 1<2",
