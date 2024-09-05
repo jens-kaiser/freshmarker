@@ -20,6 +20,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 public class NumberPluginProvider implements PluginProvider {
