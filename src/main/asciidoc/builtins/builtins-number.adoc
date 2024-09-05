@@ -6,6 +6,30 @@ This built-in converts a boolean to the string using the `toString()` method of 
 
 NOTE: Without this builtin, the number is formatter with the default number formatted for the current locale.
 
+==== `h` Built-In
+
+This built-in formats the numbers between 1 and 9 as localized strings 'one' to 'nine'. Other numbers are returned as numbers and formatted by default.
+
+|===
+|Interpolation | Locale | Output
+
+m|${0?h}
+m|Locale.GERMANY
+m|0
+
+m|${1?h}
+m|Locale.GERMANY
+m|eins
+
+m|${9?h}
+m|Locale.US
+m|nine
+
+m|${10?h}
+m|Locale.US
+m|10
+|===
+
 ==== `format` Built-In
 
 This built-in format the number by the given format parameter and the current locale. See `java.util.Formatter` for details.

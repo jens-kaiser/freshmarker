@@ -4,6 +4,10 @@
 
 This built-in converts a boolean to the string literals `true` or `false`.
 
+==== `h` (computer language) Built-In
+
+This built-in converts a boolean to the localized string literals `true` or `false`.
+
 ==== `then` Built-In
 
 This built-in returns its first parameter if the value is `true` or the second parameter if the value is `false`.
