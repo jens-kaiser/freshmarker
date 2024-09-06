@@ -230,7 +230,7 @@ class TemporalInterpolationTest {
         @ParameterizedTest
     @CsvSource(value = {
             "de,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 vorgestern gestern heute morgen übermorgen 1968-08-27 ",
-            "en,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 day before yesterday yesterday today tomorrow day after tomorrow 1968-08-27 ",
+            "en,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 the day before yesterday yesterday today tomorrow the day after tomorrow 1968-08-27 ",
             "fr,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 avant-hier hier aujourd'hui demain après-demain 1968-08-27 ",
     }, ignoreLeadingAndTrailingWhitespace = false)
     void interpolationLocalDateHuman(Locale locale, String input, String expected) throws ParseException {
