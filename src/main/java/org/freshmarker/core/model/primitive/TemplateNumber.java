@@ -174,7 +174,7 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
 
             @Override
             public TemplateNumber mod(TemplateNumber first, TemplateNumber second) {
-                return new TemplateNumber(first.getValue().longValue() * second.getValue().longValue());
+                return new TemplateNumber(first.getValue().longValue() % second.getValue().longValue());
             }
 
             @Override

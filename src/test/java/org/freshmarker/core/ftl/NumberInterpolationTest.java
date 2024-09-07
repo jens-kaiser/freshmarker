@@ -66,6 +66,8 @@ class NumberInterpolationTest {
             "test: ${x % 4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
     }, delimiterString = ";")
     void interpolationByteExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
@@ -83,10 +85,50 @@ class NumberInterpolationTest {
             "test: ${x % 4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
     }, delimiterString = ";")
     void interpolationShortExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("x", (short) 42, "y", 42)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${42*x};test: 1.764",
+            "test: ${42.0*x};test: 1.764",
+            "test: ${42*10-0.5};test: 419,5",
+            "test: ${42.23*10};test: 422,3",
+            "test: ${x*x};test: 1.764",
+            "test: ${y*y};test: 1.764",
+            "test: ${x % 4};test: 2",
+            "test: ${-x};test: -42",
+            "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
+    }, delimiterString = ";")
+    void interpolationIntegerExpression(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x",  42, "y", 42)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${42*x};test: 1.764",
+            "test: ${42.0*x};test: 1.764",
+            "test: ${42*10-0.5};test: 419,5",
+            "test: ${42.23*10};test: 422,3",
+            "test: ${x*x};test: 1.764",
+            "test: ${y*y};test: 1.764",
+            "test: ${x % 4};test: 2",
+            "test: ${-x};test: -42",
+            "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
+    }, delimiterString = ";")
+    void interpolationLongExpression(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x",  42L, "y", 42)));
     }
 
     @ParameterizedTest
