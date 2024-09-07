@@ -68,10 +68,12 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationByteExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", (byte) 42, "y", 42)));
+        assertEquals(expected, template.process(Map.of("x", (byte) 42, "y", 42, "z", (byte)-42)));
     }
 
     @ParameterizedTest
@@ -87,10 +89,12 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationShortExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", (short) 42, "y", 42)));
+        assertEquals(expected, template.process(Map.of("x", (short) 42, "y", 42, "z", (short)-42)));
     }
 
     @ParameterizedTest
@@ -106,10 +110,12 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationIntegerExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42, "y", 42)));
+        assertEquals(expected, template.process(Map.of("x",  42, "y", 42, "z", -42)));
     }
 
     @ParameterizedTest
@@ -125,10 +131,12 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationLongExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42L, "y", 42)));
+        assertEquals(expected, template.process(Map.of("x",  42L, "y", 42, "z", -42L)));
     }
 
     @ParameterizedTest
@@ -144,10 +152,12 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42.0f, "y", 42)));
+        assertEquals(expected, template.process(Map.of("x",  42.0f, "y", 42, "z", 42.0f)));
     }
 
     @ParameterizedTest
@@ -163,10 +173,12 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42.0, "y", 42)));
+        assertEquals(expected, template.process(Map.of("x",  42.0, "y", 42, "z", 42.0)));
     }
 
     @ParameterizedTest
