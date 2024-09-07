@@ -157,7 +157,7 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42.0f, "y", 42, "z", 42.0f)));
+        assertEquals(expected, template.process(Map.of("x",  42.0f, "y", 42, "z", -42.0f)));
     }
 
     @ParameterizedTest
@@ -178,7 +178,7 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42.0, "y", 42, "z", 42.0)));
+        assertEquals(expected, template.process(Map.of("x",  42.0, "y", 42, "z", -42.0)));
     }
 
     @ParameterizedTest
