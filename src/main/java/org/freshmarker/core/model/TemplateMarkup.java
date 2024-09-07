@@ -24,7 +24,13 @@ public class TemplateMarkup implements TemplateObject {
 
     @Override
     public TemplateString evaluateToObject(ProcessContext context) {
-        TemplateObject templateObject = getTemplateObject(context);
+        TemplateObject templateObject = content.evaluateToObject(context);
+        if (templateObject.isNull()) {
+            throw new ProcessException("null");
+        }
+        if (!templateObject.isPrimitive() && !templateObject.isMarkup()) {
+            throw new ProcessException("missing reduction detected. Unsupported primitive? " + templateObject.getModelType());
+        }
         if (templateObject.isMarkup()) {
             return templateObject.evaluate(context, TemplateString.class);
         }
@@ -34,23 +40,5 @@ public class TemplateMarkup implements TemplateObject {
         }
         String result = context.getFormatter(templateObject.getClass()).format(templateObject, context.getLocale());
         return context.getOutputFormat().escape(environment, result);
-    }
-
-    private TemplateObject getTemplateObject(ProcessContext context) {
-        TemplateObject templateObject = content;
-        do {
-            if (templateObject.isNull()) {
-                throw new ProcessException("null");
-            }
-            TemplateObject last = templateObject;
-            templateObject = templateObject.evaluateToObject(context);
-            if (last == templateObject && !templateObject.isPrimitive()) {
-                throw new ProcessException("missing reduction detected. Unsupported primitive? " + templateObject.getModelType());
-            }
-        } while (!templateObject.isNull() && !templateObject.isPrimitive() && !templateObject.isMarkup());
-        if (templateObject.isNull()) {
-            throw new ProcessException("null");
-        }
-        return templateObject;
     }
 }
