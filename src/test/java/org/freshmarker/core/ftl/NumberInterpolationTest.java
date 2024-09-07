@@ -133,6 +133,44 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "test: ${42*x};test: 1.764",
+            "test: ${42.0*x};test: 1.764",
+            "test: ${42*10-0.5};test: 419,5",
+            "test: ${42.23*10};test: 422,3",
+            "test: ${x*x};test: 1.764",
+            "test: ${y*y};test: 1.764",
+            "test: ${x % 4};test: 2",
+            "test: ${-x};test: -42",
+            "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
+    }, delimiterString = ";")
+    void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x",  42.0f, "y", 42)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${42*x};test: 1.764",
+            "test: ${42.0*x};test: 1.764",
+            "test: ${42*10-0.5};test: 419,5",
+            "test: ${42.23*10};test: 422,3",
+            "test: ${x*x};test: 1.764",
+            "test: ${y*y};test: 1.764",
+            "test: ${x % 4};test: 2",
+            "test: ${-x};test: -42",
+            "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
+    }, delimiterString = ";")
+    void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x",  42.0, "y", 42)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
             "test: ${π?c};test: 3.141592653589793",
             "test: ${π?format('%10.4f')};test:     3,1416",
             "test: ${π?format('%.2f')};test: 3,14",
