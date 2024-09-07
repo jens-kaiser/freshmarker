@@ -74,7 +74,7 @@ class ParameterListBuilderTest {
         assertAll(
                 () -> assertNotNull(first),
                 () -> assertEquals("parameter1", first.name()),
-                () -> assertEquals(42, first.defaultValue().asNumber().orElseThrow().getValue().getNumber())
+                () -> assertEquals(42, first.defaultValue().asNumber().orElseThrow().getValue())
         );
         ParameterHolder last = parameterHolders.getLast();
         assertAll(

@@ -19,7 +19,7 @@ public class EnumPluginProvider implements PluginProvider {
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
         builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));
-        builtIns.put(BUILDER.of("ordinal"), (x, y, e) -> new TemplateNumber(((TemplateEnum<?>) x).getValue().ordinal()));
+        builtIns.put(BUILDER.of("ordinal"), (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()));
     }
 
     @Override

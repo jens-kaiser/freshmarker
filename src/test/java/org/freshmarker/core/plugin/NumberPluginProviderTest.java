@@ -7,12 +7,6 @@ import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.number.ByteNumber;
-import org.freshmarker.core.model.number.DoubleNumber;
-import org.freshmarker.core.model.number.FloatNumber;
-import org.freshmarker.core.model.number.IntegerNumber;
-import org.freshmarker.core.model.number.LongNumber;
-import org.freshmarker.core.model.number.ShortNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,66 +69,66 @@ class NumberPluginProviderTest {
     @Test
     void castInt() {
         BuiltIn builtIn = builtIns.get(builder.of("int"));
-        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
-        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
-        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
-        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
-        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
-        assertNumberType(IntegerNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(Integer.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(Integer.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(Integer.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(Integer.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(Integer.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(Integer.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castLong() {
         BuiltIn builtIn = builtIns.get(builder.of("long"));
-        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
-        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
-        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
-        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
-        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
-        assertNumberType(LongNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(Long.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(Long.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(Long.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(Long.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(Long.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(Long.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castShort() {
         BuiltIn builtIn = builtIns.get(builder.of("short"));
-        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
-        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
-        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
-        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
-        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
-        assertNumberType(ShortNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(Short.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(Short.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(Short.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(Short.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(Short.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(Short.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castByte() {
         BuiltIn builtIn = builtIns.get(builder.of("byte"));
-        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
-        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
-        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
-        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
-        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
-        assertNumberType(ByteNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(Byte.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(Byte.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(Byte.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(Byte.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(Byte.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(Byte.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castDouble() {
         BuiltIn builtIn = builtIns.get(builder.of("double"));
-        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
-        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
-        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
-        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
-        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
-        assertNumberType(DoubleNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(Double.class, builtIn.apply(new TemplateNumber((byte) 42), List.of(), null));
+        assertNumberType(Double.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(Double.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(Double.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(Double.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(Double.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     @Test
     void castFloat() {
         BuiltIn builtIn = builtIns.get(builder.of("float"));
-        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
-        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
-        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
-        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
-        assertNumberType(FloatNumber.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(Float.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(Float.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(Float.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(Float.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(Float.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     void assertNumberType(Class<?> type, TemplateObject object) {

@@ -6,13 +6,6 @@ import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.number.ByteNumber;
-import org.freshmarker.core.model.number.CalculatingNumber;
-import org.freshmarker.core.model.number.DoubleNumber;
-import org.freshmarker.core.model.number.FloatNumber;
-import org.freshmarker.core.model.number.IntegerNumber;
-import org.freshmarker.core.model.number.LongNumber;
-import org.freshmarker.core.model.number.ShortNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -43,12 +36,12 @@ public class NumberPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("abs"), (x, y, e) -> ((TemplateNumber) x).abs());
         builtIns.put(BUILDER.of("sign"), (x, y, e) -> ((TemplateNumber) x).sign());
         builtIns.put(BUILDER.of("format"), NumberPluginProvider::format);
-        builtIns.put(BUILDER.of("int"), (x, y, e) -> cast(x, Type.INTEGER, n -> new IntegerNumber(n.getNumber().intValue())));
-        builtIns.put(BUILDER.of("long"), (x, y, e) -> cast(x, Type.LONG, n -> new LongNumber(n.getNumber().longValue())));
-        builtIns.put(BUILDER.of("short"), (x, y, e) -> cast(x, Type.SHORT, n -> new ShortNumber(n.getNumber().shortValue())));
-        builtIns.put(BUILDER.of("byte"), (x, y, e) -> cast(x, Type.BYTE, n -> new ByteNumber(n.getNumber().byteValue())));
-        builtIns.put(BUILDER.of("double"), (x, y, e) -> cast(x, Type.DOUBLE, n -> new DoubleNumber(n.getNumber().doubleValue())));
-        builtIns.put(BUILDER.of("float"), (x, y, e) -> cast(x, Type.FLOAT, n -> new FloatNumber(n.getNumber().floatValue())));
+        builtIns.put(BUILDER.of("int"), (x, y, e) -> cast(x, Type.INTEGER, Number::intValue));
+        builtIns.put(BUILDER.of("long"), (x, y, e) -> cast(x, Type.LONG, Number::longValue));
+        builtIns.put(BUILDER.of("short"), (x, y, e) -> cast(x, Type.SHORT, Number::shortValue));
+        builtIns.put(BUILDER.of("byte"), (x, y, e) -> cast(x, Type.BYTE, Number::byteValue));
+        builtIns.put(BUILDER.of("double"), (x, y, e) -> cast(x, Type.DOUBLE, Number::doubleValue));
+        builtIns.put(BUILDER.of("float"), (x, y, e) -> cast(x, Type.FLOAT, Number::floatValue));
         builtIns.put(BUILDER.of("roman"), (x, y, e) -> roman(x));
         builtIns.put(BUILDER.of("utf_roman"), (x, y, e) -> utfRoman(x));
         builtIns.put(BUILDER.of("clock_roman"), (x, y, e) -> clockRoman(x));
@@ -59,7 +52,7 @@ public class NumberPluginProvider implements PluginProvider {
         if (value.getType().isFloatingPoint()) {
             return value;
         }
-        int number = value.getValue().getNumber().intValue();
+        int number = value.getValue().intValue();
         if (number > 0 && number < 10) {
             return new TemplateString(ResourceBundle.getBundle("freshmarker", context.getLocale()).getString("number." + value));
         }
@@ -70,13 +63,13 @@ public class NumberPluginProvider implements PluginProvider {
         BuiltInHelper.checkParametersLength(parameters, 1);
         TemplateString format = parameters.getFirst().evaluate(context, TemplateString.class);
         try (Formatter formatter = new Formatter(context.getLocale())) {
-            return new TemplateString(formatter.format(format.getValue(), ((TemplateNumber) value).getValue().getNumber()).toString());
+            return new TemplateString(formatter.format(format.getValue(), ((TemplateNumber) value).getValue()).toString());
         }
     }
 
-    private static TemplateNumber cast(TemplateObject value, TemplateNumber.Type type, UnaryOperator<CalculatingNumber> converter) {
+    private static TemplateNumber cast(TemplateObject value, TemplateNumber.Type type, UnaryOperator<Number> converter) {
         TemplateNumber number = (TemplateNumber) value;
-        return number.getType() == type ? number : new TemplateNumber(converter.apply(number.getValue()));
+        return number.getType() == type ? number : TemplateNumber.of(converter.apply(number.getValue()), type);
     }
 
     public static TemplateString roman(TemplateObject value) {

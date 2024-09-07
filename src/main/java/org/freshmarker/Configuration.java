@@ -97,7 +97,7 @@ public final class Configuration {
 
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
         mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
-        mappingTemplateObjectProvider.addMapper(Integer.class, o -> new TemplateNumber((Integer) o));
+        mappingTemplateObjectProvider.addMapper(Integer.class, o -> TemplateNumber.of((Integer) o));
         mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber((Short) o));
         mappingTemplateObjectProvider.addMapper(Byte.class, o -> new TemplateNumber((Byte) o));
         mappingTemplateObjectProvider.addMapper(Double.class, o -> new TemplateNumber((Double) o));

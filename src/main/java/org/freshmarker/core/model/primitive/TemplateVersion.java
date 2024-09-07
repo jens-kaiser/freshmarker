@@ -1,5 +1,6 @@
 package org.freshmarker.core.model.primitive;
 
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.version.Version;
 
 import java.util.Optional;
@@ -10,15 +11,15 @@ public class TemplateVersion extends TemplatePrimitive<Version> {
     }
 
     public TemplateNumber major() {
-        return new TemplateNumber(getValue().major());
+        return TemplateNumber.of(getValue().major());
     }
 
     public TemplateNumber minor() {
-        return new TemplateNumber(getValue().minor());
+        return TemplateNumber.of(getValue().minor());
     }
 
     public TemplateNumber patch() {
-        return new TemplateNumber(getValue().patch());
+        return TemplateNumber.of(getValue().patch());
     }
 
     public TemplateBoolean isBefore(TemplateVersion value) {

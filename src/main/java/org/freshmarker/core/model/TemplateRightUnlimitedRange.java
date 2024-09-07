@@ -44,7 +44,7 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
   @Override
   public TemplateNumber get(ProcessContext context, int index) {
     lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
-    return new TemplateNumber(lowerNumber  + index);
+    return TemplateNumber.of(lowerNumber  + index);
   }
 
   @Override

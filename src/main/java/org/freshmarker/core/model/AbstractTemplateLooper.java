@@ -14,11 +14,11 @@ public abstract class AbstractTemplateLooper<T> implements TemplateLooper {
     }
 
     public TemplateNumber getIndex() {
-        return new TemplateNumber(index);
+        return TemplateNumber.of(index);
     }
 
     public TemplateNumber getCounter() {
-        return new TemplateNumber(index + 1);
+        return TemplateNumber.of(index + 1);
     }
 
     public TemplateBoolean isFirst() {

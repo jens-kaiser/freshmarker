@@ -15,7 +15,7 @@ public class SequencePluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(BUILDER.of("size"), (x, y, e) -> new TemplateNumber(((TemplateListSequence) x).size(e)));
+        builtIns.put(BUILDER.of("size"), (x, y, e) -> TemplateNumber.of(((TemplateListSequence) x).size(e)));
         builtIns.put(BUILDER.of("first"), (x, y, e) -> first((TemplateListSequence) x, e));
         builtIns.put(BUILDER.of("last"), (x, y, e) -> last((TemplateListSequence) x, e));
         builtIns.put(BUILDER.of("reverse"), (x, y, e) -> reverse((TemplateListSequence) x, e));
