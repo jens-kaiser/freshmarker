@@ -218,7 +218,7 @@ m|${'de_DE'?locale}
 m|de_DE
 m|locale
 
-m|${'de_DE'?language}
+m|${'de_DE'?locale?language}
 m|de
 m|string
 
