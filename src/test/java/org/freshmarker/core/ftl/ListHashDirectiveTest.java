@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,23 +21,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ListHashDirectiveTest {
 
-    private Configuration configuration;
-
+    private TemplateBuilder builder;
+    
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
+        builder = new Configuration().builder();
     }
 
     @Test
     void output() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${sequence}");
+        Template template = builder.getTemplate("test", "test: ${sequence}");
         Map<String, Object> model = Map.of("sequence", Map.of("a", 1, "b", 2, "c", 3, "d", 4));
         assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @Test
     void loopIndex() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test: <#list sequence as k sorted asc, v with l>${l?index}. ${k} ${v}\n</#list>");
         Map<String, Object> model = Map.of("sequence", Map.of("a", 1, "b", 2, "c", 3, "d", 4));
         assertEquals("test: 0. a 1\n1. b 2\n2. c 3\n3. d 4\n", template.process(model));
@@ -44,7 +45,7 @@ class ListHashDirectiveTest {
 
     @Test
     void loopRoman() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test: <#list sequence as k sorted asc, v with l>${l?roman}. ${k} ${v}\n</#list>");
         Map<String, Object> model = Map.of("sequence", Map.of("a", 1, "b", 2, "c", 3, "d", 4));
         assertEquals("test: I. a 1\nII. b 2\nIII. c 3\nIV. d 4\n", template.process(model));
@@ -52,7 +53,7 @@ class ListHashDirectiveTest {
 
     @Test
     void emptyList() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test:\n<#list sequence as k, v with l>\n${l?index}. ${k} ${v}\n</#list>");
         assertEquals("test:\n", template.process(Map.of("sequence", Map.of())));
     }
@@ -67,7 +68,7 @@ class ListHashDirectiveTest {
             "${l?has_next};test: yes yes yes no "
     }, ignoreLeadingAndTrailingWhitespace = false, delimiterString = ";")
     void looperBuildIns(String interpolation, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test: <#list sequence as k, v with l>" + interpolation + " </#list>");
         Map<String, Integer> sequence = Map.of("a", 1, "b", 2, "c", 3, "d", 4);
         assertEquals(expected, template.process(Map.of("sequence", sequence)));
@@ -79,14 +80,14 @@ class ListHashDirectiveTest {
 
     @Test
     void sortedHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
+        Template template = builder.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
         Map<String, String> map = Map.of("c", "C", "b", "B", "a", "A");
         assertEquals("a A,b B,c C,", template.process(Map.of("hash", map)));
     }
 
     @Test
     void sortedDescendingHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
+        Template template = builder.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
         Map<String, String> map = Map.of("a", "A", "b", "B", "c", "C");
         assertEquals("c C,b B,a A,", template.process(Map.of("hash", map)));
     }
@@ -123,7 +124,7 @@ class ListHashDirectiveTest {
 
     @Test
     void sortedDescendingBeanHashList() {
-        Template template = configuration.getTemplate("test", """
+        Template template = builder.getTemplate("test", """
                 <#list hash as k, v with l>${k} ${v}<#if l?has_next>,</#if></#list>
                 <#list hash as k sorted desc, v with l>${k} ${v}<#if l?has_next>,</#if></#list>
                 """);
@@ -136,7 +137,7 @@ class ListHashDirectiveTest {
 
     @Test
     void sortedRecordHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
+        Template template = builder.getTemplate("test", "<#list hash as k sorted asc, v>${k} ${v},</#list>");
         HashRecord recordHash = new HashRecord("1", "2", "3");
         assertEquals("a 2,b 3,c 1,", template.process(Map.of("hash", recordHash)));
     }
@@ -146,14 +147,14 @@ class ListHashDirectiveTest {
 
     @Test
     void sortedDescendingRecordHashList() {
-        Template template = configuration.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
+        Template template = builder.getTemplate("test", "<#list hash as k sorted desc, v>${k} ${v},</#list>");
         HashRecord recordHash = new HashRecord("1", "2", "3");
         assertEquals("c 1,b 3,a 2,", template.process(Map.of("hash", recordHash)));
     }
 
     @Test
     void hashListWithLooper() {
-        Template template = configuration.getTemplate("test", "<#list hash as k, v with l>${l?counter} ${k} ${v},</#list>");
+        Template template = builder.getTemplate("test", "<#list hash as k, v with l>${l?counter} ${k} ${v},</#list>");
         Map<String, String> map = Stream.of("a", "b", "c").collect(Collectors.toMap(Function.identity(), String::toUpperCase, (a, b) -> a, LinkedHashMap::new));
         assertEquals("1 a A,2 b B,3 c C,", template.process(Map.of("hash", map)));
     }

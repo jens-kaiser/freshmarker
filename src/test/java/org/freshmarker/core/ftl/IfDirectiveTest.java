@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,10 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class IfDirectiveTest {
 
     private Configuration configuration;
+    private TemplateBuilder builder;
 
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
+        builder = configuration.builder();
     }
 
     @ParameterizedTest
@@ -30,7 +33,7 @@ class IfDirectiveTest {
             "CCC, test: CCC3",
     })
     void ifElseifElse(String text, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test: <#if text?contains('A')>${text}1<#elseif text?contains('BB')>${text}2<#else>${text}3</#if>");
         assertEquals(expected, template.process(Map.of("text", text)));
     }
@@ -42,7 +45,7 @@ class IfDirectiveTest {
             "CCC, 'test: '",
     })
     void ifElseif(String text, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test: <#if text?contains('A')>${text}1<#elseif text?contains('BB')>${text}2</#if>");
         assertEquals(expected, template.process(Map.of("text", text)));
     }
@@ -54,7 +57,7 @@ class IfDirectiveTest {
             "CCC, test: CCC3",
     })
     void ifElse(String text, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "test: <#if text?contains('A')>${text}1<#else>${text}3</#if>");
         assertEquals(expected, template.process(Map.of("text", text)));
     }
@@ -66,14 +69,14 @@ class IfDirectiveTest {
             "CCC",
     })
     void emptyIfElseifElse(String text) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "<#if text?contains('A')><#elseif text?contains('BB')><#else></#if>");
         assertEquals("", template.process(Map.of("text", text)));
     }
 
     @Test
     void variableScope() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = builder.getTemplate("test",
                 "<#if text?contains('A')><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}");
         assertEquals("Gonzo Kermit", template.process(Map.of("text", "A")));
     }
@@ -88,7 +91,7 @@ class IfDirectiveTest {
             "<#if null == null><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit"
     }, ignoreLeadingAndTrailingWhitespace = false)
     void nullCompare(String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", input);
+        Template template = builder.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("text", "A")));
     }
 
@@ -98,7 +101,7 @@ class IfDirectiveTest {
             "<#if text2 != text1><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'}"
     })
     void invalidNullCompare(String input) throws ParseException {
-        Template template = configuration.getTemplate("test", input);
+        Template template = builder.getTemplate("test", input);
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
     }
