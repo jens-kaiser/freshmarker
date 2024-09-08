@@ -27,7 +27,7 @@ class DefaultInterpolationTest {
             "test: ${test4!},'test: '",
     })
     void exists(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = configuration.builder().getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test2", "test")));
     }
 }

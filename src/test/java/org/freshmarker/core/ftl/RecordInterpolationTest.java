@@ -26,13 +26,13 @@ class RecordInterpolationTest {
 
     @Test
     void generateWithBean() throws ParseException {
-        Template template = configuration.getTemplate("test", "${record.name} ${record.active}");
+        Template template = configuration.builder().getTemplate("test", "${record.name} ${record.active}");
         assertEquals("Record Name yes", template.process(Map.of("record", new TestRecord("Record Name", true))));
     }
 
     @Test
     void generateWithUnknownBeanAttribute() throws ParseException {
-        Template template = configuration.getTemplate("test", "${record.value} ${record.active}");
+        Template template = configuration.builder().getTemplate("test", "${record.value} ${record.active}");
         Map<String, Object> data = Map.of("record", new TestRecord("Record Name", true));
         assertThrows(ProcessException.class, () -> template.process(data));
     }

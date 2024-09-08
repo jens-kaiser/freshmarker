@@ -21,7 +21,7 @@ class ManualTest {
 
     @Test
     void range() throws ParseException {
-        Template template = configuration.getTemplate("test", """
+        Template template = configuration.builder().getTemplate("test", """
                 <#list 1..5 as s>
                 ${s} * ${s} = ${s*s}
                 </#list>
@@ -37,7 +37,7 @@ class ManualTest {
 
     @Test
     void variableRange() throws ParseException {
-        Template template = configuration.getTemplate("test", """
+        Template template = configuration.builder().getTemplate("test", """
                 <#list a..b as s>
                 ${s} * ${s} = ${s*s}
                 </#list>

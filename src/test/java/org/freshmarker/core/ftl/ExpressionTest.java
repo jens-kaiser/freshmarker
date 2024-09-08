@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,28 +17,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExpressionTest {
 
-    private Configuration configuration;
+    private TemplateBuilder builder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
+        builder = new Configuration().builder();
     }
 
     @Test
     void stringConcat() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${('abcdefg' + 'hijklmnop' + 'qrstuvwxyz')?upper_case}");
+        Template template = builder.getTemplate("test", "test: ${('abcdefg' + 'hijklmnop' + 'qrstuvwxyz')?upper_case}");
         assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of()));
     }
 
     @Test
     void stringConcatWithVars() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
+        Template template = builder.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
         assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of("prefix", "abcdefg", "suffix", "qrstuvwxyz")));
     }
 
     @Test
     void stringConcatWithEmptyVars() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
+        Template template = builder.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
         assertEquals("test: HIJKLMNOP", template.process(Map.of("prefix", "", "suffix", "")));
     }
 
@@ -61,7 +62,7 @@ class ExpressionTest {
             "1 lte 3, true",
     })
     void numberRelation(String expression, boolean result) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
+        Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
 
@@ -75,7 +76,7 @@ class ExpressionTest {
             "1 != 2, true",
     })
     void primitiveEquality(String expression, boolean result) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
+        Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }
 
@@ -95,7 +96,7 @@ class ExpressionTest {
             "!(second >= first), false",
     })
     void negatedRelation(String expression, boolean result) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
+        Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("first", 1, "second", 2)));
     }
 
@@ -113,7 +114,7 @@ class ExpressionTest {
             "5 gt (test?ordinal), true"
     })
     void relationWithEnum(String expression, boolean result) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
+        Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("test", StandardOpenOption.CREATE)));
     }
 
@@ -158,7 +159,7 @@ class ExpressionTest {
             "second && second, false",
     })
     void junction(String expression, boolean result) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(" + expression + ")?c}");
+        Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("first", true, "second", false)));
     }
 
@@ -203,39 +204,39 @@ class ExpressionTest {
             "second && second, false",
     })
     void negatedJunction(String expression, boolean result) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${(!(" + expression + "))?c}");
+        Template template = builder.getTemplate("test", "test: ${(!(" + expression + "))?c}");
         assertEquals("test: " + !result, template.process(Map.of("first", false, "second", true)));
     }
 
     @Test
     void simpleHashLiteral() {
-        Template template = configuration.getTemplate("test", "${{ 'key': 42 }.key}");
+        Template template = builder.getTemplate("test", "${{ 'key': 42 }.key}");
         assertEquals("42", template.process(Map.of()));
     }
 
     @Test
     void invalidKeyInHashLiteral() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> configuration.getTemplate("test", "${{ key: 42 } }.key}"));
+                () -> builder.getTemplate("test", "${{ key: 42 } }.key}"));
         assertEquals("key is not a string", exception.getMessage());
     }
 
     @Test
     void invalidValueInHashLiteral() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> configuration.getTemplate("test", "${{ 'key1': { 'key2' : 42 } } }.key1.key2}"));
+                () -> builder.getTemplate("test", "${{ 'key1': { 'key2' : 42 } } }.key1.key2}"));
         assertEquals("value is not a primitive", exception.getMessage());
     }
 
     @Test
     void simpleListLiteral() {
-        Template template = configuration.getTemplate("test", "${[1,2,'3',4,5<6][2]}");
+        Template template = builder.getTemplate("test", "${[1,2,'3',4,5<6][2]}");
         assertEquals("3", template.process(Map.of()));
     }
 
     @Test
     void simpleListLiteralWithoutComma() {
-        Template template = configuration.getTemplate("test", "${[1  2 '3'  true 3 < 4][2]}");
+        Template template = builder.getTemplate("test", "${[1  2 '3'  true 3 < 4][2]}");
         assertEquals("3", template.process(Map.of()));
     }
 }

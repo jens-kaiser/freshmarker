@@ -27,7 +27,7 @@ class SwitchDirectiveTest {
             "CCC, test: CCC3",
     })
     void switchCaseDefault(String text, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = configuration.builder().getTemplate("test",
                 "test: <#switch text><#case 'AAA'>${text}1<#case 'BBB'>${text}2<#default>${text}3</#switch>");
         assertEquals(expected, template.process(Map.of("text", text)));
     }
@@ -39,7 +39,7 @@ class SwitchDirectiveTest {
             "CCC, 'test: '",
     })
     void switchCase(String text, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = configuration.builder().getTemplate("test",
                 "test: <#switch text><#case 'AAA'>${text}1<#case 'BBB'>${text}2</#switch>");
         assertEquals(expected, template.process(Map.of("text", text)));
     }
@@ -51,7 +51,7 @@ class SwitchDirectiveTest {
             "CCC, test: CCC3",
     })
     void switchDefault(String text, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = configuration.builder().getTemplate("test",
                 "test: <#switch text><#case 'AAA'>${text}1<#default>${text}3</#switch>");
         assertEquals(expected, template.process(Map.of("text", text)));
     }

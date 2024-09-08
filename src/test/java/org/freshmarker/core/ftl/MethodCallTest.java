@@ -33,7 +33,7 @@ class MethodCallTest {
             "test: ${abs(-10)};test: 10",
     }, delimiterString = ";")
     void avg(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = configuration.builder().getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test", "test")));
     }
 }

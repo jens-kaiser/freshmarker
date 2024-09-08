@@ -16,7 +16,7 @@ class BuiltInVariableTestIT {
     @EnabledIfMavenBuild
     void builtInVariables() throws ParseException {
         Configuration configuration = new Configuration();
-        Template template = configuration.getTemplate("test", "test: ${.version}; ${.version?major}-${.version?minor}-${.version?patch}");
+        Template template = configuration.builder().getTemplate("test", "test: ${.version}; ${.version?major}-${.version?minor}-${.version?patch}");
         assertEquals("test: 1.4.3, 1-4-3", template.process(Map.of()));
     }
 }

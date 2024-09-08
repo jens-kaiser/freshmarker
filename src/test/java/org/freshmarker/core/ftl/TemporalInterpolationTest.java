@@ -131,13 +131,26 @@ class TemporalInterpolationTest {
         assertEquals("test: PT43M", template.process(dataModel));
     }
 
-    @Test
-    void interpolationPeriod() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal}");
-        Map<String, Object> dataModel = Map.of("temporal", Period.of(2, 4, 1));
-        assertEquals("test: P2Y4M1D", template.process(dataModel));
+    @ParameterizedTest
+    @CsvSource(value = {
+            "de;P2Y4M1D;test: ${temporal};test: P2Y4M1D",
+            "de;P2Y4M1D;test: ${temporal?h};test: 2 Jahre, 4 Monate und 1 Tag",
+            "de;P4M1D;test: ${temporal};test: P4M1D",
+            "de;P4M1D;test: ${temporal?h};test: 4 Monate und 1 Tag",
+            "de;P2Y2D;test: ${temporal};test: P2Y2D",
+            "de;P2Y2D;test: ${temporal?h};test: 2 Jahre und 2 Tage",
+            "en;P2Y4M1D;test: ${temporal};test: P2Y4M1D",
+            "en;P2Y4M1D;test: ${temporal?h};test: 2 years, 4 months and 1 day",
+            "en;P4M1D;test: ${temporal};test: P4M1D",
+            "en;P4M1D;test: ${temporal?h};test: 4 months and 1 day",
+            "en;P2Y2D;test: ${temporal};test: P2Y2D",
+            "en;P2Y2D;test: ${temporal?h};test: 2 years and 2 days",
+    }, delimiterString = ";")
+    void interpolationPeriod(Locale locale, Period period, String input, String expected) throws ParseException {
+        Template template = templateBuilder.withLocale(locale).getTemplate("test", input);
+        Map<String, Object> dataModel = Map.of("temporal", period);
+        assertEquals(expected, template.process(dataModel));
     }
-
 
     @ParameterizedTest
     @CsvSource({

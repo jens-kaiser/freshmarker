@@ -26,13 +26,13 @@ class NullLiteralTest {
             "expected=${null??},expected=no"
     })
     void nullLiteralOperations(String input, String expected) {
-        Template template = configuration.getTemplate("test", input);
+        Template template = configuration.builder().getTemplate("test", input);
         Assertions.assertEquals(expected, template.process(Map.of()));
     }
 
     @Test
     void nullLiteralInterpolation() {
-        Template template = configuration.getTemplate("test", "${null}");
+        Template template = configuration.builder().getTemplate("test", "${null}");
         Map<String, Object> model = Map.of();
         Assertions.assertThrows(ProcessException.class, () -> template.process(model));
     }

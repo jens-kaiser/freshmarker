@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,11 +18,11 @@ class DateInterpolationTest {
 
     private static final GregorianCalendar CALENDAR = new GregorianCalendar(1968, Calendar.AUGUST, 24, 12, 30, 45);
 
-    private Configuration configuration;
+    private TemplateBuilder templateBuilder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
+        templateBuilder = new Configuration().builder();
     }
 
     @ParameterizedTest
@@ -31,7 +32,7 @@ class DateInterpolationTest {
             "${temporal?c},test: 1968-08-24",
     })
     void dateBuiltIns(String interpolation, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: " + interpolation);
+        Template template = templateBuilder.getTemplate("test", "test: " + interpolation);
         assertEquals(expected, template.process(Map.of("temporal", new java.sql.Date(CALENDAR.getTimeInMillis()))));
     }
 
@@ -42,7 +43,7 @@ class DateInterpolationTest {
             "${temporal?c},test: 12:30:45",
     })
     void interpolationTime() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal}");
         String result = template.process(Map.of("temporal", new java.sql.Time(CALENDAR.getTimeInMillis())));
         assertEquals("test: 12:30:45", result);
     }
@@ -55,7 +56,7 @@ class DateInterpolationTest {
             "test: ${temporal?time},test: 12:30:45"
     })
     void interpolationDateTime(String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", input);
+        Template template = templateBuilder.getTemplate("test", input);
         String result = template.process(Map.of("temporal", CALENDAR.getTime()));
         assertEquals(expected, result);
     }
