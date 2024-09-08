@@ -6,6 +6,8 @@ import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Map;
@@ -113,10 +115,15 @@ ListDirectiveTest {
         assertEquals("test: 1234", template.process(Map.of()));
     }
 
-    @Test
-    void variableRange() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: <#list a..b as s>${s}</#list>");
-        assertEquals("test: 2345678", template.process(Map.of("a", 2, "b", 8)));
+    @ParameterizedTest
+    @CsvSource({
+            "test: <#list a..b as s>${s}</#list>,test: 2345678",
+            "test: <#list b..a as s>${s}</#list>,test: 8765432",
+            "test: <#list b+2..a*10-1 as s>${s-10}</#list>,test: 0123456789",
+    })
+    void variableRange(String input, String expected) throws ParseException {
+        Template template = configuration.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("a", 2, "b", 8)));
     }
 
     @Test

@@ -271,7 +271,6 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().doubleValue());
             }
-
         };
 
         public boolean isFloatingPoint() {

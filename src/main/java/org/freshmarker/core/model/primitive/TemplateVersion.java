@@ -1,6 +1,5 @@
 package org.freshmarker.core.model.primitive;
 
-import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.version.Version;
 
 import java.util.Optional;
