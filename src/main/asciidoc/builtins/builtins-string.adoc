@@ -218,6 +218,10 @@ m|${'de_DE'?locale}
 m|de_DE
 m|locale
 
+m|${'de_DE'?language}
+m|de
+m|string
+
 m|${'de'?locale}
 m|de
 m|locale
