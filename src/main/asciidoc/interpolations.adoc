@@ -13,7 +13,8 @@ An interpolation must always return a result.
 [source,java]
 ----
 private final Configuration configuration = new Configuration();
-private Template template = configuration.getTemplate("test", "Hello ${example}!");
+private final TemplateBuilder templateBuilder = configuration.builder();
+private Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
 System.out.println(template.process(Map.of()));
 ----
 
@@ -29,7 +30,8 @@ If the parameter is missing, the value is replaced with an empty text.
 [source,java]
 ----
 private final Configuration configuration = new Configuration();
-private Template template = configuration.getTemplate("test", "Hello ${example!'World'}!");
+private final TemplateBuilder templateBuilder = configuration.builder();
+private Template template = templateBuilder.getTemplate("test", "Hello ${example!'World'}!");
 System.out.println(template.process(Map.of()));
 ----
 
@@ -42,7 +44,8 @@ The _exists_ operator evaluates to `true` if the value exists, and it evaluates 
 [source,java]
 ----
 private final Configuration configuration = new Configuration();
-private Template template = configuration.getTemplate("test", "Hello ${example???then(example, 'World')}!");
+private final TemplateBuilder templateBuilder = configuration.builder();
+private Template template = templateBuilder.getTemplate("test", "Hello ${example???then(example, 'World')}!");
 System.out.println(template.process(Map.of()));
 ----
 

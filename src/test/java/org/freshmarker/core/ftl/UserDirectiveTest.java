@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +20,6 @@ class UserDirectiveTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
-        configuration.setOutputFormat("XML");
     }
 
     @ParameterizedTest
@@ -32,7 +29,7 @@ class UserDirectiveTest {
     })
     void logDirectiveXML(String templateSource, String expected) throws ParseException {
         configuration.registerUserDirective("log", new LoggingDirective());
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = configuration.builder().withOutputFormat("XML").getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
 
@@ -43,8 +40,7 @@ class UserDirectiveTest {
     })
     void logDirectiveADOC(String templateSource, String expected) throws ParseException {
         configuration.registerUserDirective("log", new LoggingDirective());
-        configuration.setOutputFormat("ADOC");
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = configuration.builder().withOutputFormat("ADOC").getTemplate("test", templateSource);
         assertEquals(expected.replace('#', '\n'), template.process(Map.of()));
     }
 
@@ -55,7 +51,7 @@ class UserDirectiveTest {
     }, ignoreLeadingAndTrailingWhitespace = false, delimiterString = ":")
     void oneLiner(String templateSource, String expected) throws ParseException {
         configuration.registerUserDirective("oneliner", new OneLinerDirective());
-        Template template = configuration.getTemplate("test", templateSource.replace(";", ";\n"));
+        Template template = configuration.builder().getTemplate("test", templateSource.replace(";", ";\n"));
         assertEquals(expected, template.process(Map.of("values", List.of(1, 2, 3))));
     }
 }

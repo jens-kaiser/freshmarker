@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,12 +15,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BooleanInterpolationTest {
-    private Configuration configuration;
+    private TemplateBuilder templateBuilder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
+        Configuration configuration = new Configuration();
+        templateBuilder = configuration.builder();
+        templateBuilder.withLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -30,7 +32,7 @@ class BooleanInterpolationTest {
             "test: ${!flag},test: no",
     })
     void interpolationConstant(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("flag", true)));
     }
 
@@ -44,11 +46,9 @@ class BooleanInterpolationTest {
             "fr,test: ${false?h},test: faux",
     })
     void interpolationHuman(Locale locale, String templateSource, String expected) throws ParseException {
-        configuration.setLocale(locale);
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.withLocale(locale).getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
-
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -60,13 +60,13 @@ class BooleanInterpolationTest {
             "test: ${(!var)?then('ja',text)};test: test",
     }, delimiterString = ";")
     void interpolationBuildIn(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("var", true, "text", "test")));
     }
 
     @Test
     void interpolationNumericalThen() throws ParseException {
-        Template template = configuration.getTemplate("test", "${100 + (x > y)?then(x, y)}");
+        Template template = templateBuilder.getTemplate("test", "${100 + (x > y)?then(x, y)}");
         assertEquals("142", template.process(Map.of("var", true, "x", 42, "y", 23)));
     }
 }

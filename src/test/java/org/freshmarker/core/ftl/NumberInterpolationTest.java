@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NumberInterpolationTest {
-    private Configuration configuration;
+    private TemplateBuilder templateBuilder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
+        templateBuilder = new Configuration().builder().withLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -32,7 +32,7 @@ class NumberInterpolationTest {
             "test: ${d?c};test: 42",
     }, delimiterString = ";")
     void interpolationNumberC(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42)));
     }
 
@@ -51,7 +51,7 @@ class NumberInterpolationTest {
             "test: ${3.14159?abs};test: 3,142",
     }, delimiterString = ";")
     void interpolationConstant(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("pi", 3.14159)));
     }
 
@@ -72,8 +72,8 @@ class NumberInterpolationTest {
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationByteExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", (byte) 42, "y", 42, "z", (byte)-42)));
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", (byte) 42, "y", 42, "z", (byte) -42)));
     }
 
     @ParameterizedTest
@@ -93,8 +93,8 @@ class NumberInterpolationTest {
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationShortExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", (short) 42, "y", 42, "z", (short)-42)));
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", (short) 42, "y", 42, "z", (short) -42)));
     }
 
     @ParameterizedTest
@@ -114,8 +114,8 @@ class NumberInterpolationTest {
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationIntegerExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42, "y", 42, "z", -42)));
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", 42, "y", 42, "z", -42)));
     }
 
     @ParameterizedTest
@@ -135,8 +135,8 @@ class NumberInterpolationTest {
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationLongExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42L, "y", 42, "z", -42L)));
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", 42L, "y", 42, "z", -42L)));
     }
 
     @ParameterizedTest
@@ -156,8 +156,8 @@ class NumberInterpolationTest {
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42.0f, "y", 42, "z", -42.0f)));
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", 42.0f, "y", 42, "z", -42.0f)));
     }
 
     @ParameterizedTest
@@ -177,8 +177,8 @@ class NumberInterpolationTest {
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
     void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42.0, "y", 42, "z", -42.0)));
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", 42.0, "y", 42, "z", -42.0)));
     }
 
     @ParameterizedTest
@@ -189,7 +189,7 @@ class NumberInterpolationTest {
             "<#setting locale='en_US'>test: ${π?format('%.2f')};test: 3.14",
     }, delimiterString = ";")
     void format(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("π", Math.PI)));
     }
 
@@ -203,7 +203,7 @@ class NumberInterpolationTest {
             "test: ${x?double?c};test: 42.0",
     }, delimiterString = ";")
     void interpolationIntegerCast(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("x", 42, "y", 420000)));
     }
 
@@ -219,7 +219,7 @@ class NumberInterpolationTest {
             "test: MMXII ⅯⅯⅩⅠⅠ,2012",
     })
     void interpolationRoman(String expected, int value) throws ParseException {
-        Template template = configuration.getTemplate("roman", "test: ${x?roman} ${x?utf_roman}");
+        Template template = templateBuilder.getTemplate("roman", "test: ${x?roman} ${x?utf_roman}");
         assertEquals(expected, template.process(Map.of("x", value)));
     }
 
@@ -233,14 +233,14 @@ class NumberInterpolationTest {
             "test: ${x?clock_roman},13",
     })
     void interpolationInvalidRoman(String input, int value) throws ParseException {
-        Template template = configuration.getTemplate("roman", input);
+        Template template = templateBuilder.getTemplate("roman", input);
         Map<String, Object> model = Map.of("x", value);
         assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @Test
     void interpolationClockRoman() throws ParseException {
-        Template template = configuration.getTemplate("roman", "test:<#list 1..12 as c with l> ${l?clock_roman?lower_case} ${c?clock_roman}</#list>");
+        Template template = templateBuilder.getTemplate("roman", "test:<#list 1..12 as c with l> ${l?clock_roman?lower_case} ${c?clock_roman}</#list>");
         assertEquals("test: ⅰ Ⅰ ⅱ Ⅱ ⅲ Ⅲ ⅳ Ⅳ ⅴ Ⅴ ⅵ Ⅵ ⅶ Ⅶ ⅷ Ⅷ ⅸ Ⅸ ⅹ Ⅹ ⅺ Ⅺ ⅻ Ⅻ", template.process(Map.of()));
     }
 
@@ -263,8 +263,7 @@ class NumberInterpolationTest {
             "fr;test: ${1.0?h};test: 1",
     }, delimiterString = ";")
     void interpolationHuman(Locale locale, String templateSource, String expected) throws ParseException {
-        configuration.setLocale(locale);
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.withLocale(locale).getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
 }

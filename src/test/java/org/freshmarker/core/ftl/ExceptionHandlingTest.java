@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
@@ -18,12 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExceptionHandlingTest {
 
-    private Configuration configuration;
+    private TemplateBuilder templateBuilder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
+        templateBuilder = new Configuration().builder().withLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -32,12 +32,12 @@ class ExceptionHandlingTest {
             "test: ${false?string('ja','nein')",
     })
     void parseError(String templateSource) {
-        assertThrows(ParseException.class, () -> configuration.getTemplate("test", templateSource));
+        assertThrows(ParseException.class, () -> templateBuilder.getTemplate("test", templateSource));
     }
 
     @Test
     void builtInTypeError() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${true?upper_case}");
+        Template template = templateBuilder.getTemplate("test", "test: ${true?upper_case}");
         Map<String, Object> dataModel = Map.of();
         UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
                 () -> template.process(dataModel));
@@ -47,7 +47,7 @@ class ExceptionHandlingTest {
 
     @Test
     void wrongTypeError() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${!test}");
+        Template template = templateBuilder.getTemplate("test", "test: ${!test}");
         Map<String, Object> dataModel = Map.of("test", 42);
         WrongTypeException exception = assertThrows(WrongTypeException.class, () -> template.process(dataModel));
         assertEquals("expected TemplateBoolean but is TemplateNumber (42) at test:1:7 '${!test}'",
@@ -56,7 +56,7 @@ class ExceptionHandlingTest {
 
     @Test
     void ifConditionError() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = templateBuilder.getTemplate("test",
                 """
                         test:\s
                         <#if text?contains('A')>
@@ -74,7 +74,7 @@ class ExceptionHandlingTest {
 
     @Test
     void elseIfConditionError() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = templateBuilder.getTemplate("test",
                 """
                         test:\s
                         <#if text1?contains('A')>
@@ -91,7 +91,7 @@ class ExceptionHandlingTest {
 
     @Test
     void ifBlockError() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = templateBuilder.getTemplate("test",
                 """
                         test:
                         <#if text?contains('A')>
@@ -108,7 +108,7 @@ class ExceptionHandlingTest {
 
     @Test
     void switchExpressionError() throws ParseException {
-        Template template = configuration.getTemplate("test",
+        Template template = templateBuilder.getTemplate("test",
                 "test:\n<#switch text?upper_case>\n<#case 'AAA'>${text}1\n<#case 'BBB'>${text}2\n</#switch>");
         Map<String, Object> dataModel = Map.of("text", 42);
         UnsupportedBuiltInException exception = assertThrows(UnsupportedBuiltInException.class,
