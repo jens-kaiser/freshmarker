@@ -4,7 +4,7 @@
 
 This built-in converts a boolean to the string literals `true` or `false`.
 
-==== `h` (computer language) Built-In
+==== `h` (computer language) Built-In  (since 1.4.6)
 
 This built-in converts a boolean to the localized string literals `true` or `false`.
 

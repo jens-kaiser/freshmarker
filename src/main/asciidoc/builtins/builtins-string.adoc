@@ -97,7 +97,7 @@ m|theQuickBrownFoxJumpsOverTheLazyDog
 m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
 |===
 
-==== `slugify` Built-In
+==== `slugify` Built-In (since 1.4.6)
 
 This built-in converts a text to a _slug_.
 
@@ -234,5 +234,9 @@ This built-in converts a string value into a version value.
 m|${'1.0.2'?version}
 m|1.0.2
 m|version
+
+m|${'1.0.2'?version?patch}
+m|2
+m|number
 
 |===
