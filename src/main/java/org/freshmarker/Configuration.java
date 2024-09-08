@@ -62,18 +62,87 @@ public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
+    public class TemplateBuilder {
+        private final TemplateLoader templateLoader;
+        private final Configuration configuration;
+
+        private final Locale locale;
+        private final ZoneId zoneId;
+        private final String outputFormat;
+
+        TemplateBuilder(TemplateLoader templateLoader, Configuration configuration, Locale locale, ZoneId zoneId, String outputFormat) {
+            this.templateLoader = templateLoader;
+            this.configuration = configuration;
+            this.locale = locale;
+            this.zoneId = zoneId;
+            this.outputFormat = outputFormat;
+        }
+
+        public TemplateBuilder withLocale(Locale locale) {
+            return new TemplateBuilder(templateLoader, configuration, locale, zoneId, outputFormat);
+        }
+
+        public TemplateBuilder withZoneId(ZoneId zoneId) {
+            return new TemplateBuilder(templateLoader, configuration, locale, zoneId, outputFormat);
+        }
+
+        public TemplateBuilder withOutputFormat(String outputFormat) {
+            return new TemplateBuilder(templateLoader, configuration, locale, zoneId, outputFormat);
+        }
+
+        public Template getTemplate(Path path) throws ParseException, IOException {
+            return getTemplate(path.getParent(), path.toString(), Files.readString(path));
+        }
+
+        public Template getTemplate(Path path, Charset charset) throws ParseException, IOException {
+            return getTemplate(path.getParent(), path.toString(), Files.readString(path, charset));
+        }
+
+        public Template getTemplate(String name, Reader reader) throws ParseException {
+            return getTemplate(Path.of("."), name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+        }
+
+        public Template getTemplate(String name, String content) throws ParseException {
+            return getTemplate(Path.of("."), name, content);
+        }
+
+        public Template getTemplate(Path importPath, String name, Reader reader) throws ParseException {
+            return getTemplate(importPath, name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+        }
+
+        public Template getTemplate(Path importPath, String name, String content) throws ParseException {
+            FreshMarkerParser parser = new FreshMarkerParser(content);
+            parser.setInputSource(name);
+            parser.Root();
+            Root root = (Root) parser.rootNode();
+            new TokenLineNormalizer().normalize(root);
+            FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
+            if (ftlHeader != null) {
+                throw new ProcessException("ftl header is not supported", ftlHeader);
+            }
+            Template template = new Template(this, templateLoader, importPath);
+            List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null), new ArrayList<>());
+            fragments.forEach(template.getRootFragment()::addFragment);
+            return template;
+        }
+
+        ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
+            OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
+            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers);
+            Environment environment = new VariableEnvironment(baseEnvironment);
+            return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions, List.of(userDirectives, Configuration.this.userDirectives), formatter, format, locale, zoneId, writer);
+        }
+    }
+
     private Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
     private Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
     private Map<String, OutputFormat> outputs = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
-    private Locale locale;
-    private ZoneId zoneId;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
     private final List<TemplateObjectProvider> providers;
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
 
-    private String outputFormat = "undefined";
     private TemplateLoader templateLoader;
 
     public enum FeatureFlag {
@@ -91,10 +160,7 @@ public final class Configuration {
         RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(featureFlag, modelSecurityGateway);
         providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, recordTemplateObjectProvider, new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
 
-        locale = Locale.getDefault();
-        zoneId = ZoneId.systemDefault();
         templateLoader = new DefaultFileSystemTemplateLoader();
-
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
         mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
         mappingTemplateObjectProvider.addMapper(Integer.class, o -> TemplateNumber.of((Integer) o));
@@ -178,59 +244,16 @@ public final class Configuration {
         functions.putAll(additionalFunctions);
     }
 
-    public Template getTemplate(Path path) throws ParseException, IOException {
-        return getTemplate(path.getParent(), path.toString(), Files.readString(path));
+    public TemplateBuilder builder() {
+        return new TemplateBuilder(templateLoader, this, Locale.getDefault(), ZoneId.systemDefault(),  "undefined");
     }
 
-    public Template getTemplate(Path path, Charset charset) throws ParseException, IOException {
-        return getTemplate(path.getParent(), path.toString(), Files.readString(path, charset));
-    }
-
-    public Template getTemplate(String name, Reader reader) throws ParseException {
-        return getTemplate(Path.of("."), name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
-    }
-
+    /**
+     * @deprecated in favour of the TemplateBuilder#getTemplate call
+     */
+    @Deprecated(forRemoval = true, since = "1.4.6")
     public Template getTemplate(String name, String content) throws ParseException {
-        return getTemplate(Path.of("."), name, content);
-    }
-
-    public Template getTemplate(Path importPath, String name, Reader reader) throws ParseException {
-        return getTemplate(importPath, name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
-    }
-
-    public Template getTemplate(Path importPath, String name, String content) throws ParseException {
-        FreshMarkerParser parser = new FreshMarkerParser(content);
-        parser.setInputSource(name);
-        parser.Root();
-        Root root = (Root) parser.rootNode();
-        new TokenLineNormalizer().normalize(root);
-        FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
-        if (ftlHeader != null) {
-            throw new ProcessException("ftl header is not supported", ftlHeader);
-        }
-        Template template = new Template(this, templateLoader, importPath);
-        List<Fragment> fragments = root.accept(new FragmentBuilder(template, this, null), new ArrayList<>());
-        fragments.forEach(template.getRootFragment()::addFragment);
-        return template;
-    }
-
-    public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-        OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers);
-        Environment environment = new VariableEnvironment(baseEnvironment);
-        return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions, List.of(userDirectives, this.userDirectives), formatter, format, locale, zoneId, writer);
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public void setZoneId(ZoneId zoneId) {
-        this.zoneId = zoneId;
-    }
-
-    public void setOutputFormat(String outputFormat) {
-        this.outputFormat = outputFormat;
+        return builder().getTemplate(Path.of("."), name, content);
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {

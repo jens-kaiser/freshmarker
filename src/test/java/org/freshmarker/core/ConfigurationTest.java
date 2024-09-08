@@ -29,7 +29,7 @@ class ConfigurationTest {
 
     @Test
     void getStringTemplate() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${temporal}");
+        Template template = configuration.builder().getTemplate("test", "test: ${temporal}");
         assertNotNull(template);
         String result = template.process(Map.of("temporal", LocalTime.of(12, 30)));
         assertEquals("test: 12:30:00", result);
@@ -37,7 +37,7 @@ class ConfigurationTest {
 
     @Test
     void getReaderTemplate() throws ParseException {
-        Template template = configuration.getTemplate("test", new StringReader("test: ${temporal}"));
+        Template template = configuration.builder().getTemplate("test", new StringReader("test: ${temporal}"));
         assertNotNull(template);
         String result = template.process(Map.of("temporal", LocalTime.of(12, 30)));
         assertEquals("test: 12:30:00", result);
@@ -48,7 +48,7 @@ class ConfigurationTest {
         try (FileSystem fileSystem = Jimfs.newFileSystem(com.google.common.jimfs.Configuration.unix())) {
             Path path = fileSystem.getPath("test.fmt");
             Files.writeString(path, "test: ${temporal}");
-            Template template = configuration.getTemplate(path);
+            Template template = configuration.builder().getTemplate(path);
             assertNotNull(template);
             String result = template.process(Map.of("temporal", LocalTime.of(12, 30)));
             assertEquals("test: 12:30:00", result);
@@ -60,7 +60,7 @@ class ConfigurationTest {
         try (FileSystem fileSystem = Jimfs.newFileSystem(com.google.common.jimfs.Configuration.unix())) {
             Path path = fileSystem.getPath("test.fmt");
             Files.writeString(path, "test: ${temporal}");
-            Template template = configuration.getTemplate(path, StandardCharsets.UTF_8);
+            Template template = configuration.builder().getTemplate(path, StandardCharsets.UTF_8);
             assertNotNull(template);
             String result = template.process(Map.of("temporal", LocalTime.of(12, 30)));
             assertEquals("test: 12:30:00", result);

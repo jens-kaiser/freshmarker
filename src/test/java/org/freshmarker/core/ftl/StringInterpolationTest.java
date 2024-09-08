@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +19,11 @@ class StringInterpolationTest {
 
     private static final String TEXT = "The lazy Dog jumps over the Quick brown Fox";
 
-    private Configuration configuration;
+    private TemplateBuilder templateBuilder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
-        configuration.setOutputFormat("HTML");
+        templateBuilder = new Configuration().builder().withOutputFormat("HTML");
     }
 
     @ParameterizedTest
@@ -34,7 +34,7 @@ class StringInterpolationTest {
             "test: ${text?upper_case?lower_case},test: the lazy dog jumps over the quick brown fox"
     })
     void interpolationString(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", TEXT)));
     }
 
@@ -44,32 +44,32 @@ class StringInterpolationTest {
             "test: ${b?boolean},test: no"
     })
     void interpolationBoolean(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("a", "true", "b", "false")));
     }
 
     @Test
     void invalidInterpolationBoolean() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text?boolean}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text?boolean}");
         Map<String, Object> model = Map.of("text", "gonzo");
         assertThrows(ProcessException.class, () ->  template.process(model));
     }
 
     @Test
     void interpolationTrim() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text?trim}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text?trim}");
         assertEquals("test: text", template.process(Map.of("text", "  text  ")));
     }
 
     @Test
     void interpolationLength() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text?length} ${text?trim?length}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text?length} ${text?trim?length}");
         assertEquals("test: 8 4", template.process(Map.of("text", "  text  ")));
     }
 
     @Test
     void interpolationDynamicKey() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text[2]} ${text[3]}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text[2]} ${text[3]}");
         assertEquals("test: x t", template.process(Map.of("text", "text")));
     }
 
@@ -83,7 +83,7 @@ class StringInterpolationTest {
             "test: ${text?starts_with('TE')},test: no",
     })
     void interpolationContainsAndStartOrEndWith(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", "text")));
     }
 
@@ -93,7 +93,7 @@ class StringInterpolationTest {
             "test: ${text[2..]},test: CDEF",
     })
     void interpolationSlices(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", "ABCDEF")));
     }
 
@@ -105,7 +105,7 @@ class StringInterpolationTest {
             "test: ${text?camelCase},SCREAMING_SNAKE_CASE, test: screamingSnakeCase",
     })
     void camelCase(String templateSource, String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", input)));
     }
 
@@ -115,7 +115,7 @@ class StringInterpolationTest {
             "test: ${text?uncapitalize},The Quick BROWN fox jumps Over the lazy Dog,test: the quick bROWN fox jumps over the lazy dog",
     })
     void capitalizeAndUncapitalize(String templateSource, String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", input)));
     }
 
@@ -129,7 +129,7 @@ class StringInterpolationTest {
             "kebabCase,thisIsAnAsapTest, test: this-is-an-asap-test",
     })
     void developerCases(String builtIn, String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text?" + builtIn + "}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text?" + builtIn + "}");
         assertEquals(expected, template.process(Map.of("text", input)));
     }
 
@@ -139,7 +139,7 @@ class StringInterpolationTest {
             "In der Wüste,test: in-der-wste",
     })
     void slugify(String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text?slugify}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text?slugify}");
         assertEquals(expected, template.process(Map.of("text", input)));
     }
 
@@ -150,7 +150,7 @@ class StringInterpolationTest {
             "?noEsc,1<2,test: 1<2",
     })
     void escape(String builtIn, String input, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${text" + builtIn + "}");
+        Template template = templateBuilder.getTemplate("test", "test: ${text" + builtIn + "}");
         assertEquals(expected, template.process(Map.of("text", input)));
     }
 
@@ -166,7 +166,7 @@ class StringInterpolationTest {
             "language?locale?lang,test: de",
     })
     void locale(String builtIn, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${" + builtIn + "}");
+        Template template = templateBuilder.getTemplate("test", "test: ${" + builtIn + "}");
         assertEquals(expected, template.process(Map.of(
                 "languageCountryVariant", "de_DE_BFE", "languageCountry", "de_DE", "language", "de")));
     }}

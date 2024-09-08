@@ -21,7 +21,6 @@ class SimpleToStringMapperTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -31,7 +30,7 @@ class SimpleToStringMapperTest {
     })
     void renderLeitwegIdAsString(String expected, String leitwegId) {
         configuration.registerSimpleMapping(LeitwegId.class);
-        Template template = configuration.getTemplate("test", "Leitweg-Id: ${id}");
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "Leitweg-Id: ${id}");
         assertEquals(expected, template.process(Map.of("id", LeitwegId.parse(leitwegId))));
     }
 
@@ -42,11 +41,11 @@ class SimpleToStringMapperTest {
     })
     void renderLeitwegIdAsStringWithExplizitMapper(String expected, String leitwegId) {
         configuration.registerSimpleMapping(LeitwegId.class, x -> "<<" + x.toString() + ">>");
-        Template template = configuration.getTemplate("test", "Leitweg-Id: ${id}");
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "Leitweg-Id: ${id}");
         assertEquals(expected, template.process(Map.of("id", LeitwegId.parse(leitwegId))));
     }
 
-        @ParameterizedTest
+    @ParameterizedTest
     @CsvSource(value = {
             "https://schegge.de,${url}",
             "https://schegge.de,${uri}",
@@ -55,7 +54,7 @@ class SimpleToStringMapperTest {
             "buffer,${buffer}",
     })
     void renderDefaultSimpleToStringMapper(String expected, String input) throws MalformedURLException {
-        Template template = configuration.getTemplate("test", input);
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", input);
         assertEquals(expected, template.process(Map.of(
                 "uri", URI.create("https://schegge.de"),
                 "url", URI.create("https://schegge.de").toURL(),

@@ -37,7 +37,6 @@ class EnumInterpolationTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -47,7 +46,7 @@ class EnumInterpolationTest {
             "test: ${test?ordinal},test: 4",
     })
     void interpolationExpression(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test", StandardOpenOption.CREATE)));
     }
 
@@ -67,7 +66,7 @@ class EnumInterpolationTest {
             "test: ${test?ordinal},DELTA,test: 3",
     })
     void interpolationExpressionWithCustomToString(String templateSource, TestEnum value, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test", value)));
     }
 }

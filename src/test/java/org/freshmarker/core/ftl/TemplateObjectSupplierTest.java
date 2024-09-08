@@ -19,12 +19,11 @@ class TemplateObjectSupplierTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
     }
 
     @Test
     void test() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${test}");
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "test: ${test}");
         assertEquals("test: eins", template.process(Map.of("test", (TemplateObjectSupplier<Object>) () -> "eins")));
         assertEquals("test: eins", template.process(Map.of("test", TemplateObjectSupplier.of(() -> "eins"))));
     }

@@ -245,7 +245,8 @@ the template can be preprocessed.
 .Example Template with reduction on company
 [source,java]
 ----
-Template template = configuration.getTemplate("test", """"
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
    <#list employee as e>${e.firstname}.${e.lastname}@${company.domain}</#list>
    """);
 Template reducedTemplate = template.reduce("company", new Company("schegge.de"));

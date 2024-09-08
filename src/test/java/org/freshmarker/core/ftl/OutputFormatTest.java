@@ -12,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +22,6 @@ class OutputFormatTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -38,20 +36,19 @@ class OutputFormatTest {
             "CSS,<>\"',test: <>\"'",
     })
     void interpolation(String format, String content, String expected) throws ParseException {
-        configuration.setOutputFormat(format);
-        Template template = configuration.getTemplate("test", "test: ${content}");
+        Template template = configuration.builder().withOutputFormat(format).getTemplate("test", "test: ${content}");
         assertEquals(expected, template.process(Map.of("content", content)));
     }
 
     @Test
     void htmlOutputFormatBlock() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${content}<#outputformat 'HTML'>${content}</#outputformat>${content}");
+        Template template = configuration.builder().getTemplate("test", "test: ${content}<#outputformat 'HTML'>${content}</#outputformat>${content}");
         assertEquals("test: <>\"'&lt;&gt;&quot;&#39;<>\"'", template.process(Map.of("content", "<>\"'")));
     }
 
     @Test
     void noEscHtmlOutputFormatBlock() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${content}<#outputformat 'HTML'>${content?noEsc}</#outputformat>${content}");
+        Template template = configuration.builder().getTemplate("test", "test: ${content}<#outputformat 'HTML'>${content?noEsc}</#outputformat>${content}");
         assertEquals("test: <>\"'<>\"'<>\"'", template.process(Map.of("content", "<>\"'")));
     }
 
@@ -67,8 +64,7 @@ class OutputFormatTest {
             "CSS,<>\"',test: <>\"'",
     })
     void unescapeInterpolation(String format, String content, String expected) throws ParseException {
-        configuration.setOutputFormat(format);
-        Template template = configuration.getTemplate("test", "test: ${content?noEsc}");
+        Template template = configuration.builder().withOutputFormat(format).getTemplate("test", "test: ${content?noEsc}");
         assertEquals(expected, template.process(Map.of("content", content)));
     }
 
@@ -93,7 +89,7 @@ class OutputFormatTest {
                 return new TemplateString(value);
             }
         });
-        Template template = configuration.getTemplate("test", """
+        Template template = configuration.builder().getTemplate("test", """
                 VALUE1,VALUE2
                 <#outputformat 'CSV'>
                 <#list sequence as s>

@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,12 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BuiltInVariableTest {
-    private Configuration configuration;
+    private TemplateBuilder templateBuilder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
-        configuration.setLocale(Locale.GERMANY);
+        templateBuilder = new Configuration().builder().withLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
@@ -36,7 +36,7 @@ class BuiltInVariableTest {
             "test: ${.country},test: DE",
     })
     void builtInVariables(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
 
@@ -66,26 +66,26 @@ class BuiltInVariableTest {
             "test: ${version?is_after(after)},test: no",
     })
     void version(String templateSource, String expected) throws ParseException {
-        Template template = configuration.getTemplate("test", templateSource);
+        Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("version", new TemplateVersion("1.0.2"), "after", new TemplateVersion("1.1.0"))));
     }
 
     @Test
     void now() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${.now?date}");
+        Template template = templateBuilder.getTemplate("test", "test: ${.now?date}");
         assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
     }
 
     @Test
     void invalidVersion() throws ParseException {
-        Template template = configuration.getTemplate("test", "${'1.0'?version}");
+        Template template = templateBuilder.getTemplate("test", "${'1.0'?version}");
         Map<String, Object> model = Map.of();
         assertThrows(IllegalStateException.class, () -> template.process(model));
     }
 
     @Test
     void unknownBuiltInVariable() throws ParseException {
-        Template template = configuration.getTemplate("test", "test: ${.gonzo}");
+        Template template = templateBuilder.getTemplate("test", "test: ${.gonzo}");
         Map<String, Object> model = Map.of();
         assertThrows(IllegalStateException.class, () -> template.process(model));
     }
