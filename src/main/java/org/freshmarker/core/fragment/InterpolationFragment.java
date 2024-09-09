@@ -6,17 +6,17 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
-import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.io.IOException;
 
 public class InterpolationFragment implements Fragment {
 
-    private final TemplateObject expression;
+    private final TemplateMarkup expression;
     private final Interpolation ftl;
 
-    public InterpolationFragment(TemplateObject expression, Interpolation ftl) {
+    public InterpolationFragment(TemplateMarkup expression, Interpolation ftl) {
         this.expression = expression;
         this.ftl = ftl;
     }
@@ -24,8 +24,7 @@ public class InterpolationFragment implements Fragment {
     @Override
     public void process(ProcessContext context) {
         try {
-            TemplateString templateObject = expression.evaluate(context, TemplateString.class);
-            context.getWriter().write(templateObject.getValue());
+            context.getWriter().write(expression.evaluate(context, TemplateString.class).getValue());
         } catch (UnsupportedBuiltInException e) {
             throw new UnsupportedBuiltInException(e.getMessage(), ftl, e);
         } catch (WrongTypeException e) {
