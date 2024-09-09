@@ -4,17 +4,16 @@ import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.FTLHeader;
 import ftl.ast.Root;
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
@@ -26,7 +25,7 @@ import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
-import org.freshmarker.core.output.OutputFormatBuilder;
+import org.freshmarker.core.output.StandardOutputFormats;
 import org.freshmarker.core.output.UndefinedOutputFormat;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.core.providers.BeanTemplateObjectProvider;
@@ -62,32 +61,36 @@ public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-    public class TemplateBuilder {
-        private final TemplateLoader templateLoader;
+    public static class TemplateBuilder {
         private final Configuration configuration;
 
         private final Locale locale;
         private final ZoneId zoneId;
-        private final String outputFormat;
+        private final OutputFormat outputFormat;
+        private final StaticContext context;
 
-        TemplateBuilder(TemplateLoader templateLoader, Configuration configuration, Locale locale, ZoneId zoneId, String outputFormat) {
-            this.templateLoader = templateLoader;
+        TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat) {
             this.configuration = configuration;
             this.locale = locale;
             this.zoneId = zoneId;
             this.outputFormat = outputFormat;
+            this.context = context;
         }
 
         public TemplateBuilder withLocale(Locale locale) {
-            return new TemplateBuilder(templateLoader, configuration, locale, zoneId, outputFormat);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat);
         }
 
         public TemplateBuilder withZoneId(ZoneId zoneId) {
-            return new TemplateBuilder(templateLoader, configuration, locale, zoneId, outputFormat);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat);
         }
 
         public TemplateBuilder withOutputFormat(String outputFormat) {
-            return new TemplateBuilder(templateLoader, configuration, locale, zoneId, outputFormat);
+            return withOutputFormat(context.outputs().getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE));
+        }
+
+        private TemplateBuilder withOutputFormat(OutputFormat format) {
+            return new TemplateBuilder(configuration, context, locale, zoneId, format);
         }
 
         public Template getTemplate(Path path) throws ParseException, IOException {
@@ -120,17 +123,15 @@ public final class Configuration {
             if (ftlHeader != null) {
                 throw new ProcessException("ftl header is not supported", ftlHeader);
             }
-            Template template = new Template(this, templateLoader, importPath);
+            Template template = new Template(this, context.templateLoader(), importPath);
             List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null), new ArrayList<>());
             fragments.forEach(template.getRootFragment()::addFragment);
             return template;
         }
 
         ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-            OutputFormat format = outputs.getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE);
-            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, providers);
-            Environment environment = new VariableEnvironment(baseEnvironment);
-            return new ProcessContext(baseEnvironment, environment, builtIns, outputs, functions, List.of(userDirectives, Configuration.this.userDirectives), formatter, format, locale, zoneId, writer);
+            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers());
+            return new ProcessContext(context, baseEnvironment, List.of(userDirectives, context.userDirectives()), outputFormat, locale, zoneId, writer);
         }
     }
 
@@ -173,18 +174,14 @@ public final class Configuration {
         formatter.put(TemplateNumber.class, new NumberFormatter());
         formatter.put(TemplateBoolean.class, new BooleanFormatter("yes", "no"));
 
-        OutputFormat html = new OutputFormatBuilder().withEscape('<', "&lt;").withEscape('>', "&gt;").withEscape('"', "&quot;").withEscape('&', "&amph;").withEscape('\'', "&#39;").withComment("<!-- ", " -->").build();
-        OutputFormat xml = new OutputFormatBuilder().withEscape('<', "&lt;").withEscape('>', "&gt;").withEscape('"', "&quot;").withEscape('&', "&amph;").withEscape('\'', "&apos;").withComment("<!-- ", " -->").build();
-        OutputFormat none = new OutputFormat() {
-        };
-        outputs.put("HTML", html);
-        outputs.put("XHTML", html);
-        outputs.put("XML", xml);
-        outputs.put("plainText", none);
-        outputs.put("JavaScript", new OutputFormatBuilder().withComment("/* ", " */").build());
-        outputs.put("JSON", none);
-        outputs.put("CSS", new OutputFormatBuilder().withComment("/* ", " */").build());
-        outputs.put("ADOC", new OutputFormatBuilder().withComment("\n////\n", "\n////\n").build());
+        outputs.put("HTML", StandardOutputFormats.HTML);
+        outputs.put("XHTML", StandardOutputFormats.HTML);
+        outputs.put("XML", StandardOutputFormats.XML);
+        outputs.put("plainText", StandardOutputFormats.NONE);
+        outputs.put("JavaScript", StandardOutputFormats.SCRIPT);
+        outputs.put("JSON", StandardOutputFormats.NONE);
+        outputs.put("CSS", StandardOutputFormats.SCRIPT);
+        outputs.put("ADOC", StandardOutputFormats.ADOC);
 
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
@@ -245,7 +242,7 @@ public final class Configuration {
     }
 
     public TemplateBuilder builder() {
-        return new TemplateBuilder(templateLoader, this, Locale.getDefault(), ZoneId.systemDefault(),  "undefined");
+        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), UndefinedOutputFormat.INSTANCE);
     }
 
     /**
@@ -262,5 +259,9 @@ public final class Configuration {
 
     public ModelSecurityGateway getSecurity() {
         return modelSecurityGateway;
+    }
+
+    public StaticContext getContext() {
+        return new StaticContext(builtIns, formatter, outputs, providers, userDirectives, templateLoader, functions);
     }
 }

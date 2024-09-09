@@ -6,6 +6,7 @@ import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
@@ -50,17 +51,17 @@ public class ProcessContext {
         this.outputFormats.addFirst(context.getOutputFormat());
     }
 
-    public ProcessContext(BaseEnvironment baseEnvironment, Environment environment, Map<BuiltInKey, BuiltIn> builtIns, Map<String, OutputFormat> outputs, Map<String, TemplateFunction> functions, List<Map<NameSpaced, UserDirective>> userDirectives, Map<Class<? extends TemplateObject>, Formatter> formatters, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, List<Map<NameSpaced, UserDirective>> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
         this.baseEnvironment = baseEnvironment;
-        this.environment = environment;
-        this.builtIns = builtIns;
-        this.outputs = outputs;
+        this.environment = new VariableEnvironment(baseEnvironment);
         this.writer = writer;
-        this.functions = functions;
         this.userDirectives = userDirectives;
+        this.builtIns = context.builtIns();
+        this.outputs = context.outputs();
+        this.functions = context.functions();
+        this.formatters.addFirst(context.formatter());
         this.locals.addFirst(locale);
         this.zoneIds.addFirst(zoneId);
-        this.formatters.addFirst(formatters);
         this.outputFormats.addFirst(outputFormat);
     }
 

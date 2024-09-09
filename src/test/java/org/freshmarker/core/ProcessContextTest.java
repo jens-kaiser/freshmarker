@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @ExtendWith(MockitoExtension.class)
 class ProcessContextTest {
     @Test
-    void getStore(@Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
-        ProcessContext context = new ProcessContext(baseEnvironment, environment, null, null, null, null, null, null, null, null, null);
+    void getStore(@Mock StaticContext staticContext, @Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
+        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, null, null, null, null, null);
         context.getStore("store1").put("key", "value");
         assertEquals("value", context.getStore("store1").get("key"));
         assertNull(context.getStore("store2").get("key"));
