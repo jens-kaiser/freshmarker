@@ -178,9 +178,9 @@ public final class Configuration {
         outputs.put("XHTML", StandardOutputFormats.HTML);
         outputs.put("XML", StandardOutputFormats.XML);
         outputs.put("plainText", StandardOutputFormats.NONE);
-        outputs.put("JavaScript", StandardOutputFormats.SCRIPT);
+        outputs.put("JavaScript", StandardOutputFormats.JAVASCRIPT);
         outputs.put("JSON", StandardOutputFormats.NONE);
-        outputs.put("CSS", StandardOutputFormats.SCRIPT);
+        outputs.put("CSS", StandardOutputFormats.CSS);
         outputs.put("ADOC", StandardOutputFormats.ADOC);
 
         registerPlugins();
