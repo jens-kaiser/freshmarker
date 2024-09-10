@@ -169,7 +169,7 @@ the last two lines indicate how comments can be inserted into the output using t
 
 === Template Loading
 
-The `Configuration` class offers four methods for loading templates.
+The `Configuration` (`TemplateBuilder` since 1.5.0) class offers four methods for loading templates.
 
 .Template Loading Methods
 |===
