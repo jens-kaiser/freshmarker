@@ -30,14 +30,14 @@ include::pom.xml[lines=7..9]
 [source,java]
 ----
 Configuration configuration = new Configuration();
-Template template = configuration.getTemplate("test", "temporal=${temporal}, path=${path.size}");
+Template template = configuration.builder().getTemplate("test", "temporal=${temporal}, path=${path.size}");
 String result = template.process(Map.of("temporal", LocalTime.of(12, 30), "path", Path.of("text.pdf")));
 ----
 
 .List with loop Variable
 [source,java]
 ----
-Template template = configuration.getTemplate("ancestors-loop",
+Template template = configuration.builder().getTemplate("ancestors-loop",
     """
     <#list ancestors as ancestor with loop>
       ${loop?index}. ${ancestor.givenname} ${ancestor.surename}
@@ -49,7 +49,7 @@ String result = template.process(Map.of("ancestors", ancestorService.ancestorsBy
 .Partial reduction of a Template
 [source,java]
 ----
-Template template = configuration.getTemplate("ancestors-loop",
+Template template = configuration.builder().getTemplate("ancestors-loop",
     """
     <h1>$title</h1>
     <#list ancestors as ancestor with loop>
