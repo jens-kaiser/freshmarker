@@ -8,7 +8,7 @@ import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AbstractConditionalFragment implements Fragment {
@@ -16,7 +16,7 @@ public abstract class AbstractConditionalFragment implements Fragment {
     protected Fragment endFragment;
 
     protected AbstractConditionalFragment() {
-        this(new ArrayList<>(), ConstantFragment.EMPTY);
+        this(new LinkedList<>(), ConstantFragment.EMPTY);
     }
 
     protected AbstractConditionalFragment(List<ConditionalFragment> fragments, Fragment endFragment) {

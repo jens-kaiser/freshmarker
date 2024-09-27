@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class LooperPluginProvider implements PluginProvider {
 
-    private static final List<TemplateObject> ITEM_PARITYTY = List.of(new TemplateString("odd"), new TemplateString("even"));
-    private static final List<TemplateObject> ITEM_PARITYTY_CAP = List.of(new TemplateString("Odd"), new TemplateString("Even"));
+    private static final List<TemplateObject> ITEM_PARITY = List.of(new TemplateString("odd"), new TemplateString("even"));
+    private static final List<TemplateObject> ITEM_PARITY_CAP = List.of(new TemplateString("Odd"), new TemplateString("Even"));
 
     private static final BuiltInKeyBuilder<TemplateHashLooper> HASH = new BuiltInKeyBuilder<>(TemplateHashLooper.class);
     private static final BuiltInKeyBuilder<TemplateSequenceLooper> SEQUENCE = new BuiltInKeyBuilder<>(TemplateSequenceLooper.class);
@@ -28,14 +28,14 @@ public class LooperPluginProvider implements PluginProvider {
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
         add(builtIns, "counter", (x, y, e) -> ((TemplateLooper) x).getCounter());
-        add(builtIns, "item_parity", (x, y, e) -> ((TemplateLooper) x).cycle(ITEM_PARITYTY));
+        add(builtIns, "item_parity", (x, y, e) -> ((TemplateLooper) x).cycle(ITEM_PARITY));
         add(builtIns, "index", (x, y, e) -> ((TemplateLooper) x).getIndex());
         add(builtIns, "roman", (x, y, e) -> NumberPluginProvider.roman(((TemplateLooper) x).getCounter()));
         add(builtIns, "utf_roman", (x, y, e) -> NumberPluginProvider.utfRoman(((TemplateLooper) x).getCounter()));
         add(builtIns, "clock_roman", (x, y, e) -> NumberPluginProvider.clockRoman(((TemplateLooper) x).getCounter()));
         add(builtIns, "is_first", (x, y, e) -> ((TemplateLooper) x).isFirst());
         add(builtIns, "is_last", (x, y, e) -> ((TemplateLooper) x).isLast());
-        add(builtIns, "item_parity_cap", (x, y, e) -> ((TemplateLooper) x).cycle(ITEM_PARITYTY_CAP));
+        add(builtIns, "item_parity_cap", (x, y, e) -> ((TemplateLooper) x).cycle(ITEM_PARITY_CAP));
         add(builtIns, "item_cycle", (x, y, e) -> ((TemplateLooper) x).cycle(y));
         add(builtIns, "has_next", (x, y, e) -> ((TemplateLooper) x).hasNext());
     }

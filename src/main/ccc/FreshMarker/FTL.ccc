@@ -193,7 +193,7 @@ TOKEN :
     |
     <IMPORT : "import">
     |
-    <DEFAUL : "default">
+    <DEFAULT : "default">
     |
     <RETURN : "return">
     |
@@ -387,7 +387,7 @@ Case #CaseInstruction :
 
 Default #DefaultInstruction : 
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <DEFAUL><CLOSE_TAG>
+    <DEFAULT><CLOSE_TAG>
     Block
 ;
 

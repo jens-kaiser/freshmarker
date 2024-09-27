@@ -45,6 +45,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         logger.debug("{} {}", ftl.size(), ftl.children());
         Node expression = ftl.get(3);
         TemplateObject caseExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
+        checkMissingBlock(5, ftl);
         Node block = ftl.get(5);
         List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
         Fragment caseBlock = Fragments.optimize(fragments);
@@ -55,9 +56,16 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
 
     @Override
     public SwitchFragment visit(DefaultInstruction ftl, SwitchFragment input) {
+        checkMissingBlock(3, ftl);
         Node block = ftl.get(3);
         List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
         input.addDefaultFragment(Fragments.optimize(fragments));
         return input;
+    }
+
+    private static void checkMissingBlock(int position, Node ftl) {
+        if (ftl.size() == position) {
+            throw new ParsingException("missing block", ftl);
+        }
     }
 }

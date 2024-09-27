@@ -19,17 +19,17 @@ public class SystemPluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        register(builtIns, VERSION.of("is_before"), (x, y, e) -> version(x, e).isBefore(parameter(y, e)));
-        register(builtIns, VERSION.of("is_after"), (x, y, e) -> version(x, e).isAfter(parameter(y, e)));
-        register(builtIns, VERSION.of("is_equal"), (x, y, e) -> version(x, e).isEqual(parameter(y, e)));
-        register(builtIns, VERSION.of("major"), (x, y, e) -> version(x, e).major());
-        register(builtIns, VERSION.of("minor"), (x, y, e) -> version(x, e).minor());
-        register(builtIns, VERSION.of("patch"), (x, y, e) -> version(x, e).patch());
-        register(builtIns, STRING.of("version"), (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString()));
-        register(builtIns, LOCALE.of("lang"), (x, y, e) -> locale(x, e).getLanguage());
-        register(builtIns, LOCALE.of("language"), (x, y, e) -> locale(x, e).getLanguage());
-        register(builtIns, LOCALE.of("country"), (x, y, e) -> locale(x, e).getCountry());
-        register(builtIns, STRING.of("locale"), (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString()));
+        builtIns.put(VERSION.of("is_before"), (x11, y11, e11) -> version(x11, e11).isBefore(parameter(y11, e11)));
+        builtIns.put(VERSION.of("is_after"), (x10, y10, e10) -> version(x10, e10).isAfter(parameter(y10, e10)));
+        builtIns.put(VERSION.of("is_equal"), (x9, y9, e9) -> version(x9, e9).isEqual(parameter(y9, e9)));
+        builtIns.put(VERSION.of("major"), (x8, y8, e8) -> version(x8, e8).major());
+        builtIns.put(VERSION.of("minor"), (x7, y7, e7) -> version(x7, e7).minor());
+        builtIns.put(VERSION.of("patch"), (x6, y6, e6) -> version(x6, e6).patch());
+        builtIns.put(STRING.of("version"), (x5, y5, e5) -> new TemplateVersion(x5.evaluate(e5, TemplateString.class).toString()));
+        builtIns.put(LOCALE.of("lang"), (x4, y4, e4) -> locale(x4, e4).getLanguage());
+        builtIns.put(LOCALE.of("language"), (x3, y3, e3) -> locale(x3, e3).getLanguage());
+        builtIns.put(LOCALE.of("country"), (x2, y2, e2) -> locale(x2, e2).getCountry());
+        builtIns.put(STRING.of("locale"), (x1, y1, e1) -> new TemplateLocale(x1.evaluate(e1, TemplateString.class).toString()));
     }
 
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {
@@ -50,9 +50,5 @@ public class SystemPluginProvider implements PluginProvider {
             case TemplateString string -> new TemplateVersion(string.toString());
             default -> throw new IllegalStateException("invalid type: " + value.getModelType());
         };
-    }
-
-    private void register(Map<BuiltInKey, BuiltIn> buildIns, BuiltInKey builtInKey, BuiltIn function) {
-        buildIns.put(builtInKey, function);
     }
 }
