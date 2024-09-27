@@ -1,6 +1,6 @@
 === Sequence Built-Ins
 
-The Built-Ins in the examples operate on  a sequence with the values `2`, `3`, `4`, `5` and `6`.
+The Built-Ins in the examples operate on a sequence with the values `2`, `3`, `4`, `5` and `6`.
 
 ==== `first` Built-In
 
@@ -44,4 +44,21 @@ This built-in returns the size of a sequence as a number.
 
 m|${list?size}
 m|5
+|===
+
+==== `join` Built-In
+
+This built-in returns the elements of a sequence as a string.
+
+|===
+|Template |Output
+
+m|${list?join}
+m|2, 3, 4, 5, 6
+
+m|${list?join(':')}
+m|2:3:4:5:6
+
+m|${list?join(', ', ' and ')}
+m|2, 3, 4, 5 and 6
 |===

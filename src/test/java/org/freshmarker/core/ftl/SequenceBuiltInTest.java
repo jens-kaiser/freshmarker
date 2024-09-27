@@ -38,4 +38,10 @@ class SequenceBuiltInTest {
         assertEquals("1", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?reverse?last}").process(Map.of()));
         assertEquals("64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?reverse?first}").process(Map.of()));
     }
+
+    @Test
+    void join() {
+        assertEquals("1, 2, 4, 8, 16, 32, 64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?join}").process(Map.of()));
+        assertEquals("1;2;4;8;16;32;64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?join(';')}").process(Map.of()));
+    }
 }
