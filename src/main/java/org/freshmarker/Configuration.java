@@ -89,7 +89,7 @@ public final class Configuration {
             return withOutputFormat(context.outputs().getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE));
         }
 
-        private TemplateBuilder withOutputFormat(OutputFormat format) {
+        public TemplateBuilder withOutputFormat(OutputFormat format) {
             return new TemplateBuilder(configuration, context, locale, zoneId, format);
         }
 
@@ -189,7 +189,7 @@ public final class Configuration {
 
     public void registerOutputFormat(String name, OutputFormat format) {
         Map<String, OutputFormat> newOutputs = new HashMap<>(outputs);
-        newOutputs.put(name, format);
+        newOutputs.put(Objects.requireNonNull(name), Objects.requireNonNull(format));
         outputs = newOutputs;
     }
 

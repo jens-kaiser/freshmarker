@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.owasp.html.Sanitizers;
 
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,7 @@ class OutputFormatTest {
             "value1,\"value\"\"2\"#value1#value\"2",
             "value1,\"value@2\"#value1#value@2",
     }, delimiterString = "#")
-    void CsvOutputFormatBlock(String expected, String value1, String value2) throws ParseException {
+    void csvOutputFormatBlock(String expected, String value1, String value2) throws ParseException {
         configuration.registerOutputFormat("CSV", new OutputFormat() {
             @Override
             public TemplateString escape(Environment environment, String value) {
@@ -98,5 +99,38 @@ class OutputFormatTest {
                 </#outputformat>""");
         Map<String, String> row = Map.of("value1", value1, "value2", value2.replace('@', '\n'));
         assertEquals("VALUE1,VALUE2\n" + expected.replace('@', '\n') + "\n", template.process(Map.of("sequence", List.of(row))));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "<h1>This is a header</h1> <p>this is a paragraph</p>,This is a header this is a paragraph",
+        "This is <i>italic</i> and <b>bold</b> text,This is <i>italic</i> and <b>bold</b> text",
+    })
+    void interpolationWithCustomOutputFormat(String content, String expected) throws ParseException {
+        Template template = configuration.builder().withOutputFormat(new OutputFormat() {
+
+            @Override
+            public TemplateString escape(Environment environment, String value) {
+                return new TemplateString(Sanitizers.FORMATTING.sanitize(value));
+            }
+        }).getTemplate("test", "${content}");
+        assertEquals(expected, template.process(Map.of("content", content)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "<h1>This is a header</h1> <p>this is a paragraph</p>,&lt;h1&gt;This is a header&lt;/h1&gt; &lt;p&gt;this is a paragraph&lt;/p&gt;#This is a header this is a paragraph",
+            "This is <i>italic</i> and <b>bold</b> text,This is &lt;i&gt;italic&lt;/i&gt; and &lt;b&gt;bold&lt;/b&gt; text#This is <i>italic</i> and <b>bold</b> text",
+    })
+    void interpolationWithRegisteredCustomOutputFormat(String content, String expected) throws ParseException {
+        configuration.registerOutputFormat("OWASP", new OutputFormat() {
+
+            @Override
+            public TemplateString escape(Environment environment, String value) {
+                return new TemplateString(Sanitizers.FORMATTING.sanitize(value));
+            }
+        });
+        Template template = configuration.builder().withOutputFormat("HTML").getTemplate("test", "${content}#<#outputformat 'OWASP'>${content}</#outputformat>");
+        assertEquals(expected, template.process(Map.of("content", content)));
     }
 }
