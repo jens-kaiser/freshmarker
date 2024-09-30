@@ -67,10 +67,11 @@ You can find a detailed description of al FreshMarker features in the https://gi
 |===
 |Type | Java Type(s) | Template Type
 
-|String|`String`|TemplateString
-|Number|`Long`, `Integer`, `Short`, `Byte`|TemplateNumber
-|Number|`long`, `int`, `short`, `byte`|TemplateNumber
-|Number|`Double`, `Float`, `double`, `float`|TemplateNumber
+|String|`String`,`StringBuffer`,`StringBuilder`|TemplateString
+|String|`URI`,`URL`,`UUID`|TemplateString
+|Number|`BigInteger`, `Long`, `Integer`, `Short`, `Byte`|TemplateNumber
+|Number|long`, `int`, `short`, `byte`,`double`, `float`|TemplateNumber
+|Number|`BigDecimal`, `Double`, `Float`|TemplateNumber
 |Boolean|`Boolean`, `boolean`|TemplateBoolean
 |DateTime|`LocalDateTime`, `Date`|TemplateDateTime
 |Date|`LocalDate`, `java.sql.Date`|TemplateDate
