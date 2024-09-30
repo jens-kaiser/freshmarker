@@ -25,9 +25,9 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 
 |String|`String`, `StringBuilder`, `StringBuffer`|yes
 |String|`UUID`, `URI`, `URL`|yes
-|Number|`Long`, `Integer`, `Short`, `Byte`|yes
-|Number|`long`, `int`, `short`, `byte`|yes
-|Number|`Double`, `Float`, `double`, `float`|yes
+|Number|`BigInteger`, `Long`, `Integer`, `Short`, `Byte`|yes
+|Number|`long`, `int`, `short`, `byte`, `double`, `float`|yes
+|Number|`BigDecimal`, `Double`, `Float`|yes
 |Boolean|`Boolean`, `boolean`|yes
 |DateTime|`Instant`, `ZonedDateTime`, `LocalDateTime`, `Date`|yes
 |Date|`LocalDate`, `java.sql.Date`|yes

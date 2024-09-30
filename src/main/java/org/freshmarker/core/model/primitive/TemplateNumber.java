@@ -1,5 +1,9 @@
 package org.freshmarker.core.model.primitive;
 
+import org.freshmarker.core.ProcessException;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -46,7 +50,8 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber((byte) -number.getValue().byteValue());
             }
-        }, SHORT {
+        },
+        SHORT {
             @Override
             public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
                 return new TemplateNumber((short) (first.getValue().shortValue() + second.getValue().shortValue()));
@@ -86,7 +91,8 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber((short) -number.getValue().shortValue());
             }
-        }, INTEGER {
+        },
+        INTEGER {
             @Override
             public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
                 int firstValue = first.getValue().intValue();
@@ -151,7 +157,8 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return TemplateNumber.of(-number.getValue().intValue());
             }
-        }, LONG {
+        },
+        LONG {
             @Override
             public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
                 return new TemplateNumber(first.getValue().longValue() + second.getValue().longValue());
@@ -191,7 +198,8 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().longValue());
             }
-        }, FLOAT {
+        },
+        FLOAT {
             @Override
             public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
                 return new TemplateNumber(first.getValue().floatValue() + second.getValue().floatValue());
@@ -231,7 +239,8 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().floatValue());
             }
-        }, DOUBLE {
+        },
+        DOUBLE {
             @Override
             public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
                 return new TemplateNumber(first.getValue().doubleValue() + second.getValue().doubleValue());
@@ -270,6 +279,114 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             @Override
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().doubleValue());
+            }
+        },
+        BIG_INTEGER {
+            @Override
+            public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
+                BigInteger firstBigInteger = getBigInteger(first);
+                BigInteger secondBigInteger = getBigInteger(second);
+                return new TemplateNumber(firstBigInteger.add(secondBigInteger));
+            }
+
+            @Override
+            public TemplateNumber sub(TemplateNumber first, TemplateNumber second) {
+                BigInteger firstBigInteger = getBigInteger(first);
+                BigInteger secondBigInteger = getBigInteger(second);
+                return new TemplateNumber(firstBigInteger.subtract(secondBigInteger));
+            }
+
+            @Override
+            public TemplateNumber mul(TemplateNumber first, TemplateNumber second) {
+                BigInteger firstBigInteger = getBigInteger(first);
+                BigInteger secondBigInteger = getBigInteger(second);
+                return new TemplateNumber(firstBigInteger.multiply(secondBigInteger));
+            }
+
+            @Override
+            public TemplateNumber div(TemplateNumber first, TemplateNumber second) {
+                BigInteger firstBigInteger = getBigInteger(first);
+                BigInteger secondBigInteger = getBigInteger(second);
+                return new TemplateNumber(firstBigInteger.divide(secondBigInteger));
+            }
+
+            @Override
+            public TemplateNumber mod(TemplateNumber first, TemplateNumber second) {
+                BigInteger firstBigInteger = getBigInteger(first);
+                BigInteger secondBigInteger = getBigInteger(second);
+                return new TemplateNumber(firstBigInteger.mod(secondBigInteger));
+            }
+
+            @Override
+            public TemplateNumber abs(TemplateNumber number) {
+                return new TemplateNumber(getBigInteger(number).abs());
+            }
+
+            @Override
+            public TemplateNumber sign(TemplateNumber number) {
+                return new TemplateNumber(getBigInteger(number).signum());
+            }
+
+            @Override
+            public TemplateNumber negate(TemplateNumber number) {
+                return new TemplateNumber(getBigInteger(number).negate());
+            }
+
+            private static BigInteger getBigInteger(TemplateNumber first) {
+                return first.getValue() instanceof BigInteger bigInteger ? bigInteger : BigInteger.valueOf(first.getValue().longValue());
+            }
+        },
+        BIG_DECIMAL {
+            @Override
+            public TemplateNumber add(TemplateNumber first, TemplateNumber second) {
+                BigDecimal firstBig = getBigDecimal(first);
+                BigDecimal secondBig = getBigDecimal(second);
+                return new TemplateNumber(firstBig.add(secondBig));
+            }
+
+            @Override
+            public TemplateNumber sub(TemplateNumber first, TemplateNumber second) {
+                BigDecimal firstBig = getBigDecimal(first);
+                BigDecimal secondBig = getBigDecimal(second);
+                return new TemplateNumber(firstBig.subtract(secondBig));
+            }
+
+            @Override
+            public TemplateNumber mul(TemplateNumber first, TemplateNumber second) {
+                BigDecimal firstBig = getBigDecimal(first);
+                BigDecimal secondBig = getBigDecimal(second);
+                return new TemplateNumber(firstBig.multiply(secondBig));
+            }
+
+            @Override
+            public TemplateNumber div(TemplateNumber first, TemplateNumber second) {
+                BigDecimal firstBig = getBigDecimal(first);
+                BigDecimal secondBig = getBigDecimal(second);
+                return new TemplateNumber(firstBig.divide(secondBig));
+            }
+
+            @Override
+            public TemplateNumber mod(TemplateNumber first, TemplateNumber second) {
+                throw new ProcessException("cannot calculate modulo on BigDecimal");
+            }
+
+            @Override
+            public TemplateNumber abs(TemplateNumber number) {
+                return new TemplateNumber(getBigDecimal(number).abs());
+            }
+
+            @Override
+            public TemplateNumber sign(TemplateNumber number) {
+                return new TemplateNumber(getBigDecimal(number).signum());
+            }
+
+            @Override
+            public TemplateNumber negate(TemplateNumber number) {
+                return new TemplateNumber(getBigDecimal(number).negate());
+            }
+
+            private static BigDecimal getBigDecimal(TemplateNumber first) {
+                return first.getValue() instanceof BigDecimal bigInteger ? bigInteger : BigDecimal.valueOf(first.getValue().longValue());
             }
         };
 
@@ -315,6 +432,16 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     }
 
     private final Type type;
+
+    public TemplateNumber(BigInteger value) {
+        super(value);
+        type = Type.BIG_INTEGER;
+    }
+
+    public TemplateNumber(BigDecimal value) {
+        super(value);
+        type = Type.BIG_DECIMAL;
+    }
 
     public TemplateNumber(byte value) {
         super(value);
