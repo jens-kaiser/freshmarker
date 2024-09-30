@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
 
@@ -30,10 +32,15 @@ class NumberInterpolationTest {
             "test: ${b?c};test: 42",
             "test: ${c?c};test: 42",
             "test: ${d?c};test: 42",
+            "test: ${e?c};test: 42.0",
+            "test: ${f?c};test: 42.0",
+            "test: ${g?c};test: 42",
+            "test: ${h?c};test: 42",
     }, delimiterString = ";")
     void interpolationNumberC(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42)));
+        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
+                "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"))));
     }
 
     @ParameterizedTest
@@ -266,4 +273,47 @@ class NumberInterpolationTest {
         Template template = templateBuilder.withLocale(locale).getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${42*x};test: 1.764",
+            "test: ${42.0*x};test: 1.764",
+            "test: ${42*10-0.5};test: 419,5",
+            "test: ${42.23*10};test: 422,3",
+            "test: ${x*x};test: 1.764",
+            "test: ${y*y};test: 1.764",
+            "test: ${x % 4};test: 2",
+            "test: ${-x};test: -42",
+            "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
+    }, delimiterString = ";")
+    void interpolationBigIntegerExpression(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", new BigInteger("42"), "y", 42, "z", new BigInteger("-42"))));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${42*x};test: 1.764",
+            "test: ${42.0*x};test: 1.764",
+            "test: ${42*10-0.5};test: 419,5",
+            "test: ${42.23*10};test: 422,3",
+            "test: ${x*x};test: 1.764",
+            "test: ${y*y};test: 1.764",
+            //"test: ${x % 4};test: 2",
+            "test: ${-x};test: -42",
+            "test: ${+x};test: 42",
+            "test: ${x+x};test: 84",
+            "test: ${x-x};test: 0",
+            "test: ${z?abs};test: 42",
+            "test: ${z?sign};test: -1",
+    }, delimiterString = ";")
+    void interpolationBigDecimalExpression(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("x", new BigDecimal("42"), "y", 42, "z", new BigDecimal("-42"))));
+    }
+
 }

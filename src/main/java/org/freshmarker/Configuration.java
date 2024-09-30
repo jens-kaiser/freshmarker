@@ -40,6 +40,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -169,6 +171,8 @@ public final class Configuration {
         mappingTemplateObjectProvider.addMapper(Byte.class, o -> new TemplateNumber((Byte) o));
         mappingTemplateObjectProvider.addMapper(Double.class, o -> new TemplateNumber((Double) o));
         mappingTemplateObjectProvider.addMapper(Float.class, o -> new TemplateNumber((Float) o));
+        mappingTemplateObjectProvider.addMapper(BigInteger.class, o -> new TemplateNumber((BigInteger) o));
+        mappingTemplateObjectProvider.addMapper(BigDecimal.class, o -> new TemplateNumber((BigDecimal) o));
         mappingTemplateObjectProvider.addMapper(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
 
         formatter.put(TemplateNumber.class, new NumberFormatter());
