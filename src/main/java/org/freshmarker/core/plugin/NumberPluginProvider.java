@@ -55,8 +55,9 @@ public class NumberPluginProvider implements PluginProvider {
     }
 
     private Number castBigInteger(Number number) {
-        System.err.println(number.getClass());
         return switch (number) {
+            case Byte b -> new BigInteger(String.valueOf(b));
+            case Short s -> new BigInteger(String.valueOf(s));
             case Integer i -> new BigInteger(String.valueOf(i));
             case Long l -> new BigInteger(String.valueOf(l));
             case BigInteger bi -> bi;
@@ -67,6 +68,8 @@ public class NumberPluginProvider implements PluginProvider {
 
     private Number castBigDecimal(Number number) {
         return switch (number) {
+            case Byte b -> new BigDecimal(String.valueOf(b));
+            case Short s -> new BigDecimal(String.valueOf(s));
             case Integer i -> new BigDecimal(String.valueOf(i));
             case Long l -> new  BigDecimal(String.valueOf(l));
             case BigInteger bi -> new BigDecimal(bi.toString());

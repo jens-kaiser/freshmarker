@@ -202,18 +202,16 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${x?byte?c};test: 42",
-            "test: ${x?short?c};test: 42",
-            "test: ${x?int?c};test: 42",
-            "test: ${x?long?c};test: 42",
-            "test: ${x?float?c};test: 42.0",
-            "test: ${x?double?c};test: 42.0",
-            "test: ${x?big_integer?c};test: 42",
-            "test: ${x?big_decimal?c};test: 42",
+            "test: ${a?byte?c} ${a?short?c} ${a?int?c} ${a?int?c};test: 42 42 42 42",
+            "test: ${a?float?c} ${a?double?c};test: 42.0 42.0",
+            "test: ${a?big_integer?c} ${a?big_decimal?c};test: 42 42",
+            "test: ${b?byte?c} ${b?short?c} ${b?int?c} ${b?int?c};test: 42 42 42 42",
+            "test: ${c?byte?c} ${c?short?c} ${c?int?c} ${c?int?c};test: 42 42 42 42",
+            "test: ${d?byte?c} ${d?short?c} ${d?int?c} ${d?int?c};test: 42 42 42 42",
     }, delimiterString = ";")
     void interpolationIntegerCast(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", 42, "y", 420000)));
+        assertEquals(expected, template.process(Map.of("a", (byte)42, "b", (short)42, "c", 42, "d", 42L)));
     }
 
     @ParameterizedTest
