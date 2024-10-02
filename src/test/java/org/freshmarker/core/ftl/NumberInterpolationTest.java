@@ -208,6 +208,8 @@ class NumberInterpolationTest {
             "test: ${x?long?c};test: 42",
             "test: ${x?float?c};test: 42.0",
             "test: ${x?double?c};test: 42.0",
+            "test: ${x?big_integer?c};test: 42",
+            "test: ${x?big_decimal?c};test: 42",
     }, delimiterString = ";")
     void interpolationIntegerCast(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);

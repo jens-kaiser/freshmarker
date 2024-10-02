@@ -10,6 +10,8 @@ import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +44,35 @@ public class NumberPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("byte"), (x, y, e) -> cast(x, Type.BYTE, Number::byteValue));
         builtIns.put(BUILDER.of("double"), (x, y, e) -> cast(x, Type.DOUBLE, Number::doubleValue));
         builtIns.put(BUILDER.of("float"), (x, y, e) -> cast(x, Type.FLOAT, Number::floatValue));
+        builtIns.put(BUILDER.of("big_integer"), (x, y, e) -> cast(x, Type.BIG_INTEGER, this::castBigInteger));
+        builtIns.put(BUILDER.of("big_decimal"), (x, y, e) -> cast(x, Type.BIG_DECIMAL, this::castBigDecimal));
         builtIns.put(BUILDER.of("roman"), (x, y, e) -> roman(x));
         builtIns.put(BUILDER.of("utf_roman"), (x, y, e) -> utfRoman(x));
         builtIns.put(BUILDER.of("clock_roman"), (x, y, e) -> clockRoman(x));
         builtIns.put(BUILDER.of("h"), (x, y, e) -> human(getNumberParameter(x), e));
         builtIns.put(BUILDER.of("min"), (x, y, e) -> getNumberParameter(x).min(getNumberParameter(y.getFirst())));
         builtIns.put(BUILDER.of("max"), (x, y, e) -> getNumberParameter(x).max(getNumberParameter(y.getFirst())));
+    }
+
+    private Number castBigInteger(Number number) {
+        System.err.println(number.getClass());
+        return switch (number) {
+            case Integer i -> new BigInteger(String.valueOf(i));
+            case Long l -> new BigInteger(String.valueOf(l));
+            case BigInteger bi -> bi;
+            case BigDecimal bd -> bd.toBigInteger();
+            default -> throw new ProcessException("cannot cast " + number.getClass().getSimpleName() + " to BigInteger");
+        };
+    }
+
+    private Number castBigDecimal(Number number) {
+        return switch (number) {
+            case Integer i -> new BigDecimal(String.valueOf(i));
+            case Long l -> new  BigDecimal(String.valueOf(l));
+            case BigInteger bi -> new BigDecimal(bi.toString());
+            case BigDecimal bd -> bd;
+            default -> throw new ProcessException("cannot cast " + number.getClass().getSimpleName() + " to BigDecimal");
+        };
     }
 
     private static TemplateNumber getNumberParameter(TemplateObject object) {

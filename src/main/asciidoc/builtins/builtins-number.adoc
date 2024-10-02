@@ -117,27 +117,35 @@ These built-ins cast the number to a TemplateNumber instance in the specified ty
 
 m|${42?byte}
 m|42
-m|byte
+m|Byte
 
 m|${42?short}
 m|42
-m|short
+m|Short
 
 m|${42?int}
 m|42
-m|integer
+m|Integer
 
 m|${42?long}
 m|42
-m|long
+m|Long
 
 m|${42.0?float}
 m|42.0
-m|float
+m|Float
 
 m|${42.0?double}
 m|42.0
-m|double
+m|Double
+
+m|${42.0?big_integer}
+m|42
+m|BigInteger
+
+m|${42.0?big_decimal}
+m|42.0
+m|BigDecimal
 |===
 
 ==== `roman` Built-In (since 1.3.5)
