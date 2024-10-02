@@ -2,11 +2,9 @@ package org.freshmarker;
 
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
-import ftl.ast.FTLHeader;
 import ftl.ast.Root;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
@@ -121,10 +119,6 @@ public final class Configuration {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            FTLHeader ftlHeader = root.firstDescendantOfType(FTLHeader.class);
-            if (ftlHeader != null) {
-                throw new ProcessException("ftl header is not supported", ftlHeader);
-            }
             Template template = new Template(this, context.templateLoader(), importPath);
             List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null), new ArrayList<>());
             fragments.forEach(template.getRootFragment()::addFragment);

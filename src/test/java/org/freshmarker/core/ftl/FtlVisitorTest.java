@@ -8,7 +8,6 @@ import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
-import ftl.ast.FTLHeader;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
 import ftl.ast.Interpolation;
@@ -51,11 +50,6 @@ class FtlVisitorTest {
     @Test
     void visitToken() {
         assertEquals("", visitor.visit((Token) null, ""));
-    }
-
-    @Test
-    void visitFTLHeader() {
-        assertEquals("", visitor.visit((FTLHeader) null, ""));
     }
 
     @Test

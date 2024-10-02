@@ -7,7 +7,6 @@ import ftl.Node.TerminalNode;
 import ftl.Token;
 import ftl.Token.TokenType;
 import ftl.ast.Assignment;
-import ftl.ast.FTLHeader;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
@@ -104,11 +103,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
                 input.add(new ConstantFragment(image));
             }
         }
-        return input;
-    }
-
-    @Override
-    public List<Fragment> visit(FTLHeader ftl, List<Fragment> input) {
         return input;
     }
 

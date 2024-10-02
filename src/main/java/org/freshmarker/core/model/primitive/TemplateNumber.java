@@ -50,6 +50,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber((byte) -number.getValue().byteValue());
             }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return Byte.compare(first.getValue().byteValue(), second.getValue().byteValue());
+            }
         },
         SHORT {
             @Override
@@ -90,6 +95,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             @Override
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber((short) -number.getValue().shortValue());
+            }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return Short.compare(first.getValue().shortValue(), second.getValue().shortValue());
             }
         },
         INTEGER {
@@ -157,6 +167,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return TemplateNumber.of(-number.getValue().intValue());
             }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return Integer.compare(first.getValue().intValue(), second.getValue().intValue());
+            }
         },
         LONG {
             @Override
@@ -197,6 +212,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             @Override
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().longValue());
+            }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return Long.compare(first.getValue().longValue(), second.getValue().longValue());
             }
         },
         FLOAT {
@@ -239,6 +259,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().floatValue());
             }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return Float.compare(first.getValue().floatValue(), second.getValue().floatValue());
+            }
         },
         DOUBLE {
             @Override
@@ -279,6 +304,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             @Override
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(-number.getValue().doubleValue());
+            }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return Double.compare(first.getValue().doubleValue(), second.getValue().doubleValue());
             }
         },
         BIG_INTEGER {
@@ -330,6 +360,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             @Override
             public TemplateNumber negate(TemplateNumber number) {
                 return new TemplateNumber(getBigInteger(number).negate());
+            }
+
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return getBigInteger(first).compareTo(getBigInteger(second));
             }
 
             private static BigInteger getBigInteger(TemplateNumber first) {
@@ -385,6 +420,11 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
                 return new TemplateNumber(getBigDecimal(number).negate());
             }
 
+            @Override
+            public int compare(TemplateNumber first, TemplateNumber second) {
+                return getBigDecimal(first).compareTo(getBigDecimal(second));
+            }
+
             private static BigDecimal getBigDecimal(TemplateNumber first) {
                 return first.getValue() instanceof BigDecimal bigInteger ? bigInteger : BigDecimal.valueOf(first.getValue().longValue());
             }
@@ -409,6 +449,16 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
         public abstract TemplateNumber sign(TemplateNumber number);
 
         public abstract TemplateNumber negate(TemplateNumber number);
+
+        public TemplateNumber min(TemplateNumber first, TemplateNumber second) {
+            return compare(first, second) == -1 ? first : second;
+        }
+
+        public TemplateNumber max(TemplateNumber first, TemplateNumber second) {
+            return compare(first, second) == 1 ? first : second;
+        }
+
+        public abstract int compare(TemplateNumber first, TemplateNumber second);
 
         public static Type getNewType(TemplateNumber first, TemplateNumber second) {
             return Type.values()[Math.max(first.getType().ordinal(), second.getType().ordinal())];
@@ -515,7 +565,15 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     }
 
     public TemplateNumber compare(TemplateNumber other) {
-        return subtract(other);
+        return TemplateNumber.of(Type.getNewType(this, other).compare(this, other));
+    }
+
+    public TemplateNumber min(TemplateNumber other) {
+        return Type.getNewType(this, other).min(this, other);
+    }
+
+    public TemplateNumber max(TemplateNumber other) {
+        return Type.getNewType(this, other).max(this, other);
     }
 
     @Override
