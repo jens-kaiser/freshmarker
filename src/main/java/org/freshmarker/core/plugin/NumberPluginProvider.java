@@ -33,8 +33,8 @@ public class NumberPluginProvider implements PluginProvider {
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
         builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
-        builtIns.put(BUILDER.of("abs"), (x, y, e) -> ((TemplateNumber) x).abs());
-        builtIns.put(BUILDER.of("sign"), (x, y, e) -> ((TemplateNumber) x).sign());
+        builtIns.put(BUILDER.of("abs"), (x, y, e) -> getNumberParameter(x).abs());
+        builtIns.put(BUILDER.of("sign"), (x, y, e) -> getNumberParameter(x).sign());
         builtIns.put(BUILDER.of("format"), NumberPluginProvider::format);
         builtIns.put(BUILDER.of("int"), (x, y, e) -> cast(x, Type.INTEGER, Number::intValue));
         builtIns.put(BUILDER.of("long"), (x, y, e) -> cast(x, Type.LONG, Number::longValue));
@@ -45,7 +45,16 @@ public class NumberPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("roman"), (x, y, e) -> roman(x));
         builtIns.put(BUILDER.of("utf_roman"), (x, y, e) -> utfRoman(x));
         builtIns.put(BUILDER.of("clock_roman"), (x, y, e) -> clockRoman(x));
-        builtIns.put(BUILDER.of("h"), (x, y, e) -> human((TemplateNumber) x, e));
+        builtIns.put(BUILDER.of("h"), (x, y, e) -> human(getNumberParameter(x), e));
+        builtIns.put(BUILDER.of("min"), (x, y, e) -> getNumberParameter(x).min(getNumberParameter(y.getFirst())));
+        builtIns.put(BUILDER.of("max"), (x, y, e) -> getNumberParameter(x).max(getNumberParameter(y.getFirst())));
+    }
+
+    private static TemplateNumber getNumberParameter(TemplateObject object) {
+        if (object instanceof TemplateNumber number) {
+            return number;
+        }
+        throw new ProcessException("expected TemplateNumber but found " + object.getClass().getSimpleName());
     }
 
     private TemplateObject human(TemplateNumber value, ProcessContext context) {
@@ -63,25 +72,25 @@ public class NumberPluginProvider implements PluginProvider {
         BuiltInHelper.checkParametersLength(parameters, 1);
         TemplateString format = parameters.getFirst().evaluate(context, TemplateString.class);
         try (Formatter formatter = new Formatter(context.getLocale())) {
-            return new TemplateString(formatter.format(format.getValue(), ((TemplateNumber) value).getValue()).toString());
+            return new TemplateString(formatter.format(format.getValue(), getNumberParameter(value).getValue()).toString());
         }
     }
 
     private static TemplateNumber cast(TemplateObject value, TemplateNumber.Type type, UnaryOperator<Number> converter) {
-        TemplateNumber number = (TemplateNumber) value;
+        TemplateNumber number = getNumberParameter(value);
         return number.getType() == type ? number : TemplateNumber.of(converter.apply(number.getValue()), type);
     }
 
     public static TemplateString roman(TemplateObject value) {
-        return new TemplateString(toRoman(checkRomanNumber((TemplateNumber) value)));
+        return new TemplateString(toRoman(checkRomanNumber(getNumberParameter(value))));
     }
 
     public static TemplateString utfRoman(TemplateObject value) {
-        return new TemplateString(toUtfRoman(checkRomanNumber((TemplateNumber) value)));
+        return new TemplateString(toUtfRoman(checkRomanNumber(getNumberParameter(value))));
     }
 
     public static TemplateString clockRoman(TemplateObject value) {
-        int numberValue = ((TemplateNumber) value).asInt();
+        int numberValue = getNumberParameter(value).asInt();
         if (numberValue < 1 || numberValue > 12) {
             throw new ProcessException("roman clock numerals only between 1 and 12");
         }

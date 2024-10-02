@@ -316,4 +316,28 @@ class NumberInterpolationTest {
         assertEquals(expected, template.process(Map.of("x", new BigDecimal("42"), "y", 42, "z", new BigDecimal("-42"))));
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${a?min(40)};40",
+            "${b?min(40)};40",
+            "${c?min(40)};40",
+            "${d?min(40)};40",
+            "${e?min(40)};40",
+            "${f?min(40)};40",
+            "${g?min(40)};40",
+            "${h?min(40)};40",
+            "${a?max(45)};45",
+            "${b?max(45)};45",
+            "${c?max(45)};45",
+            "${d?max(45)};45",
+            "${e?max(45)};45",
+            "${f?max(45)};45",
+            "${g?max(45)};45",
+            "${h?max(45)};45",
+    }, delimiterString = ";")
+    void interpolationMinMax(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
+                "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"))));
+    }
 }

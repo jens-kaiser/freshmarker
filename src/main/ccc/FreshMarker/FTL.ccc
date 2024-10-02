@@ -167,8 +167,6 @@ TOKEN :
     |
     <IF : "if">
     |
-    <FTL : "ftl">
-    |
     <SET : "set">
     |
     <VAR : "var">
@@ -187,8 +185,6 @@ TOKEN :
     |
     <NESTED : "nested">
     |
-    <VISIT : "visit">
-    |
     <SWITCH : "switch">
     |
     <IMPORT : "import">
@@ -205,13 +201,9 @@ TOKEN :
     |
     <FUNCTION : "function">
     |
-    <FALLBACK : "fallback">
-    |
     <SETTING : "setting">
     |
     <_INCLUDE : "include">
-    |
-    <FOREACH : "foreach">
     |
     <BLANK : "\n" | "\r" | "\t" | " "> : FTL_EXPRESSION
     |
@@ -540,28 +532,8 @@ Block :
   )*
 ;
 
-FTLHeader : 
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <FTL>
-    [
-       <BLANK>
-       (
-          <IDENTIFIER>
-          <EQUALS>
-          Expression
-       )*
-    ]
-    (<CLOSE_TAG> |<CLOSE_EMPTY_TAG>)
-;
-
 Root : 
-    [
-        SCAN [<WHITESPACE>]
-        (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-        <FTL> =>
-        [<WHITESPACE>]
-        FTLHeader {token_source.rightAfterHeader = true;}
-    ]
+    [<WHITESPACE>]
     Block
     <EOF>
 ;

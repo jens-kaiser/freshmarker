@@ -80,6 +80,34 @@ m|${0?sign}
 m|0
 |===
 
+==== `min` Built-In
+
+This built-in returns the smaller value of the variable and the specified parameter.
+
+|===
+|Interpolation | Output
+
+m|${3.14159?min(3)}
+m|3
+
+m|${3.14159?min(4)}
+m|3.14159
+|===
+
+==== `max` Built-In
+
+This built-in returns the bigger value of the variable and the specified parameter.
+
+|===
+|Interpolation | Output
+
+m|${3.14159?max(3)}
+m|3.14159
+
+m|${3.14159?max(4)}
+m|4
+|===
+
 ==== Cast Built-Ins (since 1.0.0)
 
 These built-ins cast the number to a TemplateNumber instance in the specified type range.

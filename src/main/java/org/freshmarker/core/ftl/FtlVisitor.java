@@ -8,7 +8,6 @@ import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
-import ftl.ast.FTLHeader;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
 import ftl.ast.Interpolation;
@@ -37,10 +36,6 @@ public interface FtlVisitor<I, O> {
   }
 
   default O visit(Token ftl, I input) {
-    return handleWithException(ftl);
-  }
-
-  default O visit(FTLHeader ftl, I input) {
     return handleWithException(ftl);
   }
 

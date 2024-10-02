@@ -1,0 +1,37 @@
+= Release Notes
+
+== Release 1.6.0 (2024-10-XX)
+
+=== Improvements
+
+- number built-ins `min` and `max`
+
+=== Breaking Changes
+
+- `ftl` header removed
+
+== Release 1.5.3 (2024-09-30)
+
+=== Improvements
+
+- `BigInteger` and `BigDecimal` support
+
+== Release 1.5.2 (2024-09-29)
+
+=== Improvements
+
+- added `TemplateBuilder#withOutputFormat`
+
+== Release 1.5.1 (2024-09-27)
+
+=== Improvements
+
+- sequence built-in `join`
+- introduce `TemplateBuilder`
+
+== Release 1.4.6 (2024-09-08)
+
+=== Improvements
+
+- add string built-in `slugify`
+- add number, boolean and date built-ins `h` (_human language_)
