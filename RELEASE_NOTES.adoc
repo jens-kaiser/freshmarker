@@ -27,6 +27,11 @@
 === Improvements
 
 - sequence built-in `join`
+
+== Release 1.5.0 (2024-09-09)
+
+=== Breaking Changes
+
 - introduce `TemplateBuilder`
 
 == Release 1.4.6 (2024-09-08)
