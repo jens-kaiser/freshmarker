@@ -1,8 +1,10 @@
 = FreshMarker Manual
 Jens Kaiser <schegge42@gmail.com>
 Version 0.2.8-SNAPSHOT
-:toc:
+:toc: left
 :icons: font
+
+image::freshmarker.png[]
 
 == Introduction
 
