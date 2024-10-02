@@ -12,9 +12,9 @@ An interpolation must always return a result.
 .Example with Processing Exception
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private final TemplateBuilder templateBuilder = configuration.builder();
-private Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
 System.out.println(template.process(Map.of()));
 ----
 
@@ -29,9 +29,9 @@ If the parameter is missing, the value is replaced with an empty text.
 .Example with _default_ operator
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private final TemplateBuilder templateBuilder = configuration.builder();
-private Template template = templateBuilder.getTemplate("test", "Hello ${example!'World'}!");
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example!'World'}!");
 System.out.println(template.process(Map.of()));
 ----
 
@@ -43,9 +43,9 @@ The _exists_ operator evaluates to `true` if the value exists, and it evaluates 
 .Example with _exists_ operator
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private final TemplateBuilder templateBuilder = configuration.builder();
-private Template template = templateBuilder.getTemplate("test", "Hello ${example???then(example, 'World')}!");
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example???then(example, 'World')}!");
 System.out.println(template.process(Map.of()));
 ----
 

@@ -5,8 +5,9 @@ Built-Ins are interpolation operations which are called on the current value of 
 .Example with `upper_case` built-in
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private Template template = configuration.getTemplate("test", "HELLO ${example?upper_case}!");
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "HELLO ${example?upper_case}!");
 System.out.println(template.process(Map.of("example", "world")));
 ----
 
@@ -24,8 +25,9 @@ This means a built-in is called on the result of a previous built-in or the init
 .Example with two built-ins
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private Template template = configuration.getTemplate("test", "HELLO ${example?upper_case?lower_case}!");
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = configuration.getTemplate("test", "HELLO ${example?upper_case?lower_case}!");
 System.out.println(template.process(Map.of("example", "WorlD")));
 ----
 

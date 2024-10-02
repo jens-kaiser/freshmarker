@@ -4,7 +4,7 @@ Version 0.2.8-SNAPSHOT
 :toc: macro
 :icons: font
 
-image::freshmarker.png[width=800,align="center"]
+image::freshmarker.png[width=800,align="left"]
 
 toc::[]
 

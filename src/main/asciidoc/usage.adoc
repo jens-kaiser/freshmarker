@@ -7,8 +7,8 @@ Finally, the template is processed with the data from the model. The return valu
 .Example Engine Call
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private Template template = configuration.getTemplate("test", "Hello ${example}!");
+Configuration configuration = new Configuration();
+Template template = configuration.getTemplate("test", "Hello ${example}!");
 System.out.println(template.process(Map.of("example", "World")));
 ----
 
@@ -17,9 +17,9 @@ Since version 1.5.0, the `Template` is no longer created directly via the `Confi
 .Example Engine Call (since 1.5.0)
 [source,java]
 ----
-private final Configuration configuration = new Configuration();
-private final TemplateBuilder templateBuilder = configuration.builder();
-private Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
 System.out.println(template.process(Map.of("example", "World")));
 ----
 
