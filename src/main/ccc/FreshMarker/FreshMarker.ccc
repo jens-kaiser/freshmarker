@@ -37,14 +37,6 @@ INJECT Token :
    }
 }
 
-INJECT FTLHeader :
-  import org.freshmarker.core.ftl.FtlVisitor;
-{
-   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
-      return (O)visitor.visit(this, input);
-   }
-}
-
 INJECT Root :
   import org.freshmarker.core.ftl.FtlVisitor;
 {
