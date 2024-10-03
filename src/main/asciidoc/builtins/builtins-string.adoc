@@ -208,7 +208,7 @@ It cannot be processed further because there are no built-ins for markup.
 |Interpolation | Output
 
 m|${'<>'?esc('HTML')}
-m|&lt;&gt;
+m|\&lt;\&gt;
 
 m|${'<>'?esc('plainText')}
 m|<>

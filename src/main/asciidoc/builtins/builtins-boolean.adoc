@@ -4,9 +4,19 @@
 
 This built-in converts a boolean to the string literals `true` or `false`.
 
-==== `h` (computer language) Built-In  (since 1.4.6)
+==== `h` (human language) Built-In  (since 1.4.6)
 
 This built-in converts a boolean to the localized string literals `true` or `false`.
+
+|===
+|Interpolation | Output
+
+m|<#setting locale="fr-FR">${true?h}
+m|vrai
+
+m|<#setting locale="de">${false?h}
+m|falsch
+|===
 
 ==== `then` Built-In
 

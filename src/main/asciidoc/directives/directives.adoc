@@ -93,9 +93,9 @@ The _Setting Directive_ changes some standard values in the template.
 
 [source]
 ----
-<#setting locale="de_DE">
+<#setting locale="de-DE">
 ${42.23}
-<#setting locale="en_US">
+<#setting locale="en-US">
 ${42.23}
 ----
 
