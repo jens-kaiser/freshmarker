@@ -20,8 +20,7 @@ class BooleanInterpolationTest {
     @BeforeEach
     void setUp() {
         Configuration configuration = new Configuration();
-        templateBuilder = configuration.builder();
-        templateBuilder.withLocale(Locale.GERMANY);
+        templateBuilder = configuration.builder().withLocale(Locale.GERMANY);
     }
 
     @ParameterizedTest
