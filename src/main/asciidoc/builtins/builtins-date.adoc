@@ -51,7 +51,7 @@ include::../../resources/freshmarker.properties[]
 |===
 | Interpolation | Output | Type
 
-m|${temporal?h}
+m|${.now?h}
 m|today
 |string
 

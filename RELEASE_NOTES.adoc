@@ -6,10 +6,13 @@
 
 - number built-ins `min` and `max`
 - number built-ins `big_integer` und `big_decimal`
+- add alternative name `escape` for built-in `esc`
+- add alternative names `no_esc` and `no_escape` for built-in `noEsc`
 
 === Breaking Changes
 
 - `ftl` header removed
+- `esc` without a parameter generates a process exception
 
 == Release 1.5.3 (2024-09-30)
 

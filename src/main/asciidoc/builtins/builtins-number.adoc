@@ -2,11 +2,11 @@
 
 ==== `c` (computer language) Built-In
 
-This built-in converts a boolean to the string using the `toString()` method of the corresponding base types `Double`, `Float`, `Long`, `Integer`, `Byte` or `Short`.
+This built-in converts a boolean to the string using the `toString()` method of the corresponding base types `BigDecimal`, `BigInteger`, `Double`, `Float`, `Long`, `Integer`, `Byte` or `Short`.
 
-NOTE: Without this builtin, the number is formatter with the default number formatted for the current locale.
+NOTE: Without this builtin, the number is formatted with the default number formatter for the current locale.
 
-==== `h` Built-In
+==== `h` (human language) Built-In (since 1.4.6)
 
 This built-in formats the numbers between 1 and 9 as localized strings 'one' to 'nine'. Other numbers are returned as numbers and formatted by default.
 
@@ -80,7 +80,7 @@ m|${0?sign}
 m|0
 |===
 
-==== `min` Built-In
+==== `min` Built-In (since 1.6.0)
 
 This built-in returns the smaller value of the variable and the specified parameter.
 
@@ -94,7 +94,7 @@ m|${3.14159?min(4)}
 m|3.14159
 |===
 
-==== `max` Built-In
+==== `max` Built-In (since 1.6.0)
 
 This built-in returns the bigger value of the variable and the specified parameter.
 

@@ -46,9 +46,11 @@ m|${list?size}
 m|5
 |===
 
-==== `join` Built-In
+==== `join` Built-In (since 1.5.1)
 
 This built-in returns the elements of a sequence as a string.
+The default limiter is ", " but can be changed with the first optional parameter of the built-in.
+The second optional parameter is an alternative parameter for the last element in the sequence.
 
 |===
 |Template |Output
