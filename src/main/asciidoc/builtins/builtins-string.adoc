@@ -199,11 +199,34 @@ m|${'false'?length}
 m|5
 |===
 
-==== `esc` Built-In
+==== `esc`, `escape` Built-In
 
-TBD
+This built-in convert the text into markup with the specified output format.
+It cannot be processed further because there are no built-ins for markup.
 
-==== `noEsc` Built-In
+|===
+|Interpolation | Output
+
+m|${'<>'?esc('HTML')}
+m|&lt;&gt;
+
+m|${'<>'?esc('plainText')}
+m|<>
+|===
+
+==== `noEsc`, `no_esc`, `no_escape` Built-In
+
+This built-in convert the text into markup without an output format.
+This can be useful if the current vallue should not escaped with the current output format.
+It cannot be processed further because there are no built-ins for markup.
+
+|===
+|Interpolation | Output
+
+m|${'<>'?no_esc}
+m|<>
+
+|===
 
 TBD
 

@@ -147,7 +147,10 @@ class StringInterpolationTest {
     @CsvSource({
             "'',1<2,test: 1&lt;2",
             "?esc('HTML'),1<2,test: 1&lt;2",
+            "?escape('HTML'),1<2,test: 1&lt;2",
             "?noEsc,1<2,test: 1<2",
+            "?no_esc,1<2,test: 1<2",
+            "?no_escape,1<2,test: 1<2",
     })
     void escape(String builtIn, String input, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${text" + builtIn + "}");
