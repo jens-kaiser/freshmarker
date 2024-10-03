@@ -217,7 +217,7 @@ m|<>
 ==== `noEsc`, `no_esc`, `no_escape` Built-In
 
 This built-in convert the text into markup without an output format.
-This can be useful if the current vallue should not escaped with the current output format.
+This can be useful if the current value should not escape with the current output format.
 It cannot be processed further because there are no built-ins for markup.
 
 |===
