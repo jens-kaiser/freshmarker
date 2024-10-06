@@ -62,6 +62,8 @@ String result = reduced.process(Map.of("ancestors", ancestorService.ancestorsByF
 
 You can find a detailed description of al FreshMarker features in the https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/asciidoc/manual.adoc[manual].
 
+The https://gitlab.com/schegge/freshmarker/-/blob/develop/RELEASE_NOTES.adoc[release notes] contain changes to the template engine since version 1.4.6.
+
 == Template Types
 
 |===

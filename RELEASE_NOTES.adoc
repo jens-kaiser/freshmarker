@@ -1,6 +1,6 @@
 = Release Notes
 
-== Release 1.6.1 (2024-10-XX)
+== Release 1.6.1 (planned 2024-10-XX)
 
 === Improvements
 
