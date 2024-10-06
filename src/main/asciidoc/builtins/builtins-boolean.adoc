@@ -8,6 +8,8 @@ This built-in converts a boolean to the string literals `true` or `false`.
 
 This built-in converts a boolean to the localized string literals `true` or `false`.
 
+include::localization_tip.adoc[]
+
 |===
 |Interpolation | Output
 

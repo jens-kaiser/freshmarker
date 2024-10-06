@@ -36,17 +36,7 @@ If the parameter is missing, `LocalDate.now()` is used.
 
 It is only available for the `TemplateLocalDate` type.
 
-[TIP]
-====
-Localizations is only supported for `de`, `en` and `fr`.
-If you need another one or want to change a supported one put a resource file `freshmarker_xx.properties` on the classpath.
-It should contain all localized values of the original ones where `xx` is the selected language.
-
-.default values in `freshmarker.properties`
-----
-include::../../resources/freshmarker.properties[]
-----
-====
+include::localization_tip.adoc[]
 
 |===
 | Interpolation | Output | Type

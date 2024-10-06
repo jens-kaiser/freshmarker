@@ -10,6 +10,8 @@ NOTE: Without this builtin, the number is formatted with the default number form
 
 This built-in formats the numbers between 1 and 9 as localized strings 'one' to 'nine'. Other numbers are returned as numbers and formatted by default.
 
+include::localization_tip.adoc[]
+
 |===
 |Interpolation | Locale | Output
 

@@ -33,6 +33,7 @@ import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 import java.util.function.Function;
 
 public class TemporalPluginProvider implements PluginProvider {
@@ -41,6 +42,8 @@ public class TemporalPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateLocalDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalDateTime.class);
     private static final BuiltInKeyBuilder<TemplateLocalDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalDate.class);
     private static final BuiltInKeyBuilder<TemplateLocalTime> TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalTime.class);
+    private static final BuiltInKeyBuilder<TemplatePeriod> PERIOD_BUILDER = new BuiltInKeyBuilder<>(TemplatePeriod.class);
+
     private static final String AT_ZONE = "at_zone";
     private static final String STRING = "string";
 
@@ -56,7 +59,7 @@ public class TemporalPluginProvider implements PluginProvider {
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date_time"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalDateTime());
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalDate());
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("time"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalTime());
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of("c"),(x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue()));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateZonedDateTime) x).atZone(getZoneId(y, e)));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"),
@@ -78,6 +81,9 @@ public class TemporalPluginProvider implements PluginProvider {
         builtIns.put(TIME_BUILDER.of("time"), (x, y, e) -> x);
         builtIns.put(TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalTime) x).getValue()));
+
+        builtIns.put(PERIOD_BUILDER.of("h"), (x, y, e) -> getPeriod((TemplatePeriod) x, e));
+        builtIns.put(PERIOD_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
     }
 
     private TemplateObject formatHuman(List<TemplateObject> y, ProcessContext e, TemplateLocalDate value) {
@@ -106,13 +112,34 @@ public class TemporalPluginProvider implements PluginProvider {
     }
 
     private static String getFormatString(List<TemplateObject> y, ProcessContext e) {
-        BuiltInHelper.checkParametersLength(y,1);
+        BuiltInHelper.checkParametersLength(y, 1);
         return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
     }
 
     private static ZoneId getZoneId(List<TemplateObject> y, ProcessContext e) {
-        BuiltInHelper.checkParametersLength(y,1);
+        BuiltInHelper.checkParametersLength(y, 1);
         return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).map(ZoneId::of).orElseThrow(() -> new IllegalArgumentException("no valid zoneId"));
+    }
+
+    private TemplateString getPeriod(TemplatePeriod period, ProcessContext e) {
+        if (period.getValue().isZero()) {
+            return TemplateString.EMPTY;
+        }
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("freshmarker", e.getLocale());
+        StringJoiner stringJoiner = new StringJoiner(", ");
+        get(stringJoiner, period.getValue().getYears(), resourceBundle, "year");
+        get(stringJoiner, period.getValue().getMonths(), resourceBundle, "month");
+        get(stringJoiner, period.getValue().getDays(), resourceBundle, "day");
+        return new TemplateString(stringJoiner.toString());
+    }
+
+    private void get(StringJoiner stringJoiner, int value, ResourceBundle resourceBundle, String key) {
+        switch (value) {
+            case 0 -> {
+            }
+            case 1, -1 -> stringJoiner.add(value + " " + resourceBundle.getString("period." + key));
+            default -> stringJoiner.add(value + " " + resourceBundle.getString("period." + key + "s"));
+        }
     }
 
     @Override

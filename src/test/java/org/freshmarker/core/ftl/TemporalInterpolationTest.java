@@ -139,6 +139,18 @@ class TemporalInterpolationTest {
             "en;P2Y4M1D;test: ${temporal};test: P2Y4M1D",
             "en;P4M1D;test: ${temporal};test: P4M1D",
             "en;P2Y2D;test: ${temporal};test: P2Y2D",
+            "de;P2Y4M1D;test: ${temporal?c};test: P2Y4M1D",
+            "de;P4M1D;test: ${temporal?c};test: P4M1D",
+            "de;P2Y2D;test: ${temporal?c};test: P2Y2D",
+            "en;P2Y4M1D;test: ${temporal?c};test: P2Y4M1D",
+            "en;P4M1D;test: ${temporal?c};test: P4M1D",
+            "en;P2Y2D;test: ${temporal?c};test: P2Y2D",
+            "de;P2Y4M1D;test: ${temporal?h};test: 2 Jahre, 4 Monate, 1 Tag",
+            "de;P4M1D;test: ${temporal?h};test: 4 Monate, 1 Tag",
+            "de;P2Y2D;test: ${temporal?h};test: 2 Jahre, 2 Tage",
+            "en;P2Y4M1D;test: ${temporal?h};test: 2 years, 4 months, 1 day",
+            "en;P4M1D;test: ${temporal?h};test: 4 months, 1 day",
+            "en;P2Y2D;test: ${temporal?h};test: 2 years, 2 days",
     }, delimiterString = ";")
     void interpolationPeriod(Locale locale, Period period, String input, String expected) throws ParseException {
         Template template = templateBuilder.withLocale(locale).getTemplate("test", input);

@@ -1,6 +1,10 @@
 == Customization
 
-=== Configuration
+=== `Configuration`
+
+TBD
+
+=== `TemplateBuilder`
 
 TBD
 
@@ -30,6 +34,23 @@ Template template = templateBuilder.getTemplate("id", "${id}!");
 LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
 String resullt = template.process(Map.of("id", leitwegId);
 // ID: <<04011000-1234512345-06>>!
+----
+
+=== Custom `OutputFormat`
+
+TBD
+
+[source,java]
+----
+public interface OutputFormat {
+    default TemplateString escape(Environment environment, String value) {
+        return new TemplateString(value);
+    }
+
+    default TemplateString comment(Environment environment, String value) {
+        return TemplateString.EMPTY;
+    }
+}
 ----
 
 === Custom Plug-Ins
