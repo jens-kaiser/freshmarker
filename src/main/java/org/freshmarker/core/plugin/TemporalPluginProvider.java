@@ -11,6 +11,7 @@ import org.freshmarker.core.formatter.DurationFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.temporal.TemplateDuration;
 import org.freshmarker.core.model.temporal.TemplateInstant;
@@ -84,6 +85,9 @@ public class TemporalPluginProvider implements PluginProvider {
 
         builtIns.put(PERIOD_BUILDER.of("h"), (x, y, e) -> getPeriod((TemplatePeriod) x, e));
         builtIns.put(PERIOD_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(PERIOD_BUILDER.of("years"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getYears()));
+        builtIns.put(PERIOD_BUILDER.of("months"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getMonths()));
+        builtIns.put(PERIOD_BUILDER.of("days"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getDays()));
     }
 
     private TemplateObject formatHuman(List<TemplateObject> y, ProcessContext e, TemplateLocalDate value) {

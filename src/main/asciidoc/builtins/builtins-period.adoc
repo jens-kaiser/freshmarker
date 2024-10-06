@@ -27,3 +27,39 @@ m|${temporal?h}
 m|1 year, 2 months, 3 days
 |string
 |===
+
+==== `years` Built-In (since 1.6.1)
+
+This built-in returns the years of the value as a number.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?years}
+m|1
+|number
+|===
+
+==== `months` Built-In (since 1.6.1)
+
+This built-in returns the months of the value as a number.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|2
+|number
+|===
+
+==== `days` Built-In (since 1.6.1)
+
+This built-in returns the days of the value as a number
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?days}
+m|3
+|number
+|===

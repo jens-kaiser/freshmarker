@@ -159,6 +159,18 @@ class TemporalInterpolationTest {
     }
 
     @ParameterizedTest
+    @CsvSource(value = {
+            "P1Y2M3D;test: ${temporal?years?max(0)};test: 1",
+            "P1Y2M3D;test: ${temporal?months?max(0)};test: 2",
+            "P1Y2M3D;test: ${temporal?days?max(0)};test: 3",
+    }, delimiterString = ";")
+    void interpolationPeriodToNumbers(Period period, String input, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> dataModel = Map.of("temporal", period);
+        assertEquals(expected, template.process(dataModel));
+    }
+
+    @ParameterizedTest
     @CsvSource({
             "test: ${temporal},test: 12:30:45",
             "test: ${temporal?c},test: 12:30:45",
