@@ -271,4 +271,24 @@ class TemporalInterpolationTest {
         Map<String, Object> dataModel = Map.of("now", now, "dates", dates);
         assertEquals(expected, template.process(dataModel));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "P0D,${now?until}",
+            "P1D,${yesterday?until}",
+            "P2D,${dayBefore?until}",
+            "P1D,${dayBefore?until(yesterday)}",
+            "P3D,${dayBefore?until(tomorrow)}",
+            "P0D,${now?since}",
+            "P1D,${tomorrow?since}",
+            "P2D,${tomorrow?since(yesterday)}",
+    })
+    void interpolateSinceAndUntil(String expected, String input) {
+        Template template = templateBuilder.getTemplate("test", input);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate dayBefore = LocalDate.now().minusDays(2);
+        Map<String, Object> dataModel = Map.of("now", LocalDate.now(), "yesterday", yesterday, "tomorrow", tomorrow, "dayBefore", dayBefore);
+        assertEquals(expected, template.process(dataModel));
+    }
 }

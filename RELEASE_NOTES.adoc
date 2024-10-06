@@ -1,11 +1,19 @@
 = Release Notes
 
+== Release 1.6.1 (2024-10-XX)
+
+=== Improvements
+
+- add date built-ins `since` and `until`
+- add duration built-ins `c` and `h`
+- add duration built-ins `years`, `months` and `days`
+
 == Release 1.6.0 (2024-10-03)
 
 === Improvements
 
-- number built-ins `min` and `max`
-- number built-ins `big_integer` und `big_decimal`
+- add number built-ins `min` and `max`
+- add number built-ins `big_integer` und `big_decimal`
 - add alternative name `escape` for built-in `esc`
 - add alternative names `no_esc` and `no_escape` for built-in `noEsc`
 
@@ -24,7 +32,7 @@
 
 === Improvements
 
-- added `TemplateBuilder#withOutputFormat`
+- add `TemplateBuilder#withOutputFormat`
 
 == Release 1.5.1 (2024-09-27)
 

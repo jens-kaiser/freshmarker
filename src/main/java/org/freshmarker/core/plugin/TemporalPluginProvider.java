@@ -78,6 +78,8 @@ public class TemporalPluginProvider implements PluginProvider {
         builtIns.put(DATE_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(DATE_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDate) x).getValue()));
         builtIns.put(DATE_BUILDER.of("h"), (x, y, e) -> formatHuman(y, e, (TemplateLocalDate) x));
+        builtIns.put(DATE_BUILDER.of("until"), (x, y, e) -> until((TemplateLocalDate) x, y, e));
+        builtIns.put(DATE_BUILDER.of("since"), (x, y, e) -> since((TemplateLocalDate) x, y, e));
 
         builtIns.put(TIME_BUILDER.of("time"), (x, y, e) -> x);
         builtIns.put(TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
@@ -88,6 +90,16 @@ public class TemporalPluginProvider implements PluginProvider {
         builtIns.put(PERIOD_BUILDER.of("years"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getYears()));
         builtIns.put(PERIOD_BUILDER.of("months"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getMonths()));
         builtIns.put(PERIOD_BUILDER.of("days"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getDays()));
+    }
+
+    private TemplateObject until(TemplateLocalDate x, List<TemplateObject> y, ProcessContext e) {
+        LocalDate otherDate = y.isEmpty() ? LocalDate.now() : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
+        return new TemplatePeriod(x.getValue().until(otherDate));
+    }
+
+    private TemplateObject since(TemplateLocalDate x, List<TemplateObject> y, ProcessContext e) {
+        LocalDate otherDate = y.isEmpty() ? LocalDate.now() : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
+        return new TemplatePeriod(otherDate.until(x.getValue()));
     }
 
     private TemplateObject formatHuman(List<TemplateObject> y, ProcessContext e, TemplateLocalDate value) {
