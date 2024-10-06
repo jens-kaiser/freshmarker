@@ -10,7 +10,7 @@ import org.freshmarker.core.model.TemplateStringMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.freshmarker.core.output.UndefinedOutputFormat;
+import org.freshmarker.core.output.StandardOutputFormats;
 
 import java.util.List;
 import java.util.Locale;
@@ -53,9 +53,9 @@ public class StringPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("length"), (x, y, e) -> TemplateNumber.of(((TemplateString) x).getValue().length()));
         builtIns.put(BUILDER.of("esc"), (x, y, e) -> esc((TemplateString) x, e, y));
         builtIns.put(BUILDER.of("escape"), (x, y, e) -> esc((TemplateString) x, e, y));
-        builtIns.put(BUILDER.of("no_esc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
-        builtIns.put(BUILDER.of("no_escape"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
-        builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, UndefinedOutputFormat.INSTANCE));
+        builtIns.put(BUILDER.of("no_esc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
+        builtIns.put(BUILDER.of("no_escape"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
+        builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
         builtIns.put(BUILDER.of("slugify"), (x, y, e) -> slugify((TemplateString) x));
     }
 

@@ -10,7 +10,7 @@ import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
-import org.freshmarker.core.output.UndefinedOutputFormat;
+import org.freshmarker.core.output.StandardOutputFormats;
 
 import java.io.Writer;
 import java.time.ZoneId;
@@ -102,7 +102,7 @@ public class ProcessContext {
     }
 
     public OutputFormat getOutputFormat(String name) {
-        return outputs.getOrDefault(name, UndefinedOutputFormat.INSTANCE);
+        return outputs.getOrDefault(name, StandardOutputFormats.NONE);
     }
 
     public boolean reductionCheck(TemplateObject templateObject) {

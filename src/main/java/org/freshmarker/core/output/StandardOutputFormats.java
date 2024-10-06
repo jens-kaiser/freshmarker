@@ -6,7 +6,6 @@ public class StandardOutputFormats {
         super();
     }
 
-
     public static final OutputFormat NONE = new OutputFormat() {
     };
 

@@ -24,7 +24,6 @@ import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
-import org.freshmarker.core.output.UndefinedOutputFormat;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.core.providers.BeanTemplateObjectProvider;
 import org.freshmarker.core.providers.CompoundTemplateObjectProvider;
@@ -86,7 +85,7 @@ public final class Configuration {
         }
 
         public TemplateBuilder withOutputFormat(String outputFormat) {
-            return withOutputFormat(context.outputs().getOrDefault(outputFormat, UndefinedOutputFormat.INSTANCE));
+            return withOutputFormat(context.outputs().getOrDefault(outputFormat, StandardOutputFormats.NONE));
         }
 
         public TemplateBuilder withOutputFormat(OutputFormat format) {
@@ -240,7 +239,7 @@ public final class Configuration {
     }
 
     public TemplateBuilder builder() {
-        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), UndefinedOutputFormat.INSTANCE);
+        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE);
     }
 
     /**
