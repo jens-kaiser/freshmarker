@@ -60,7 +60,6 @@ public class NumberPluginProvider implements PluginProvider {
             case Short s -> new BigInteger(String.valueOf(s));
             case Integer i -> new BigInteger(String.valueOf(i));
             case Long l -> new BigInteger(String.valueOf(l));
-            case BigInteger bi -> bi;
             case BigDecimal bd -> bd.toBigInteger();
             default -> throw new ProcessException("cannot cast " + number.getClass().getSimpleName() + " to BigInteger");
         };
@@ -75,7 +74,6 @@ public class NumberPluginProvider implements PluginProvider {
             case Float f -> new BigDecimal(String.valueOf(f));
             case Double d -> new  BigDecimal(String.valueOf(d));
             case BigInteger bi -> new BigDecimal(bi.toString());
-            case BigDecimal bd -> bd;
             default -> throw new ProcessException("cannot cast " + number.getClass().getSimpleName() + " to BigDecimal");
         };
     }
