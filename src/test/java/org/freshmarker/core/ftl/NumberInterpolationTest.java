@@ -117,6 +117,7 @@ class NumberInterpolationTest {
             "test: ${+x};test: 42",
             "test: ${x+x};test: 84",
             "test: ${x-x};test: 0",
+            "test: ${x/x};test: 1",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
     }, delimiterString = ";")
