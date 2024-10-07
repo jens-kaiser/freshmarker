@@ -12,8 +12,6 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -49,8 +47,8 @@ class NumberPluginProviderTest {
         BuiltIn builtIn = builtIns.get(builder.of("abs"));
         assertEquals("42", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
         assertEquals("42", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
-        assertEquals("42", builtIn.apply(new TemplateNumber((byte)42), List.of(), null).toString());
-        assertEquals("42", builtIn.apply(new TemplateNumber((byte)-42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber((byte) 42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber((byte) -42), List.of(), null).toString());
         assertEquals("42", builtIn.apply(new TemplateNumber((short) 42), List.of(), null).toString());
         assertEquals("42", builtIn.apply(new TemplateNumber((short) -42), List.of(), null).toString());
         assertEquals("42", builtIn.apply(new TemplateNumber(42L), List.of(), null).toString());
