@@ -4,8 +4,10 @@ Localizations is only supported for `de`, `en` and `fr`.
 If you need another one or want to change a supported one put a resource file `freshmarker_xx.properties` on the classpath.
 It should contain all localized values of the original ones where `xx` is the selected language.
 
+ifndef::gitlab-html5[]
 .default values in `freshmarker.properties`
 ----
 include::../../resources/freshmarker.properties[]
 ----
 ====
+endif::[]
