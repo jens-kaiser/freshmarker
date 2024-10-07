@@ -3,6 +3,7 @@ Jens Kaiser <schegge42@gmail.com>
 Version 0.2.8-SNAPSHOT
 :toc: macro
 :icons: font
+:sourceMainDir: ../..
 
 image::freshmarker.png[width=800,align="left"]
 
