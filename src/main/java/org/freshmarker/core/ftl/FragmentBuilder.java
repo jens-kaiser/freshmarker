@@ -86,11 +86,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(Token ftl, List<Fragment> input) {
-        if (!input.isEmpty()) {
-            if (input.getLast() instanceof ConstantFragment constantFragment) {
-                constantFragment.add(ftl.toString());
-                return input;
-            }
+        if (!input.isEmpty() && input.getLast() instanceof ConstantFragment constantFragment) {
+            constantFragment.add(ftl.toString());
+            return input;
         }
         String image = ftl.toString();
         if (ftl.getType() == TokenType.PRINTABLE_CHARS) {
@@ -108,11 +106,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(Text ftl, List<Fragment> input) {
         String content = ftl.getAllTokens(false).stream().map(TerminalNode::toString).collect(Collectors.joining());
-        if (!input.isEmpty()) {
-            if (input.getLast() instanceof ConstantFragment constantFragment) {
-                constantFragment.add(content);
-                return input;
-            }
+        if (!input.isEmpty() && input.getLast() instanceof ConstantFragment constantFragment) {
+            constantFragment.add(content);
+            return input;
         }
         input.add(new ConstantFragment(content));
         return input;
