@@ -72,6 +72,8 @@ public class NumberPluginProvider implements PluginProvider {
             case Short s -> new BigDecimal(String.valueOf(s));
             case Integer i -> new BigDecimal(String.valueOf(i));
             case Long l -> new  BigDecimal(String.valueOf(l));
+            case Float f -> new BigDecimal(String.valueOf(f));
+            case Double d -> new  BigDecimal(String.valueOf(d));
             case BigInteger bi -> new BigDecimal(bi.toString());
             case BigDecimal bd -> bd;
             default -> throw new ProcessException("cannot cast " + number.getClass().getSimpleName() + " to BigDecimal");

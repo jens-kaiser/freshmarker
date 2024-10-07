@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -151,6 +153,24 @@ class NumberPluginProviderTest {
         assertNumberType(Float.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
         assertNumberType(Float.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
         assertNumberType(Float.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+    }
+
+    @Test
+    void castBigInteger() {
+        BuiltIn builtIn = builtIns.get(builder.of("big_integer"));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+    }
+
+    @Test
+    void castBigDecimal() {
+        BuiltIn builtIn = builtIns.get(builder.of("big_decimal"));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
     }
 
     void assertNumberType(Class<?> type, TemplateObject object) {
