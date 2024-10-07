@@ -6,6 +6,7 @@ It should contain all localized values of the original ones where `xx` is the se
 
 .default values in `freshmarker.properties`
 ----
-include::{sourceMainDir}/resources/freshmarker.properties[]
+include::../../resources/freshmarker.properties[]
+include::../../../resources/freshmarker.properties[]
 ----
 ====
