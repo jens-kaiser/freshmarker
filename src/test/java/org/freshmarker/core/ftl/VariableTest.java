@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,8 @@ class VariableTest {
 
     @Test
     void unsupported() {
-        assertThrows(ParsingException.class, () -> configuration.builder().getTemplate("test", "<#var test1='eins' test2='zwei'/>"));
+        TemplateBuilder builder = configuration.builder();
+        assertThrows(ParsingException.class, () -> builder.getTemplate("test", "<#var test1='eins' test2='zwei'/>"));
     }
 
     @Test
