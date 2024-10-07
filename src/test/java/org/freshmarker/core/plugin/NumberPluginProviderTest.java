@@ -161,6 +161,8 @@ class NumberPluginProviderTest {
         assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber((short) 42), List.of(), null));
         assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(42), List.of(), null));
         assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(new BigInteger("42")), List.of(), null));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(new BigDecimal("42")), List.of(), null));
     }
 
     @Test
@@ -171,6 +173,8 @@ class NumberPluginProviderTest {
         assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
         assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(42.0), List.of(), null));
         assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(new BigInteger("42")), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(new BigDecimal("42")), List.of(), null));
     }
 
     void assertNumberType(Class<?> type, TemplateObject object) {
