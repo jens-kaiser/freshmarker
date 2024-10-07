@@ -1,6 +1,5 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.buildin.BuiltIn;
@@ -13,6 +12,8 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -48,6 +49,16 @@ class NumberPluginProviderTest {
         BuiltIn builtIn = builtIns.get(builder.of("abs"));
         assertEquals("42", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
         assertEquals("42", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber((byte)42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber((byte)-42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber((short) 42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber((short) -42), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber(42L), List.of(), null).toString());
+        assertEquals("42", builtIn.apply(new TemplateNumber(-42L), List.of(), null).toString());
+        assertEquals("42.0", builtIn.apply(new TemplateNumber(42.0), List.of(), null).toString());
+        assertEquals("42.0", builtIn.apply(new TemplateNumber(-42.0), List.of(), null).toString());
+        assertEquals("42.0", builtIn.apply(new TemplateNumber(42.0f), List.of(), null).toString());
+        assertEquals("42.0", builtIn.apply(new TemplateNumber(-42.0f), List.of(), null).toString());
     }
 
     @Test
@@ -56,10 +67,22 @@ class NumberPluginProviderTest {
         assertEquals("1", builtIn.apply(new TemplateNumber(42), List.of(), null).toString());
         assertEquals("-1", builtIn.apply(new TemplateNumber(-42), List.of(), null).toString());
         assertEquals("0", builtIn.apply(new TemplateNumber(0), List.of(), null).toString());
+        assertEquals("1", builtIn.apply(new TemplateNumber((byte) 42), List.of(), null).toString());
+        assertEquals("-1", builtIn.apply(new TemplateNumber((byte) -42), List.of(), null).toString());
+        assertEquals("0", builtIn.apply(new TemplateNumber((byte) 0), List.of(), null).toString());
+        assertEquals("1", builtIn.apply(new TemplateNumber((short) 42), List.of(), null).toString());
+        assertEquals("-1", builtIn.apply(new TemplateNumber((short) -42), List.of(), null).toString());
+        assertEquals("0", builtIn.apply(new TemplateNumber((short) 0), List.of(), null).toString());
+        assertEquals("1.0", builtIn.apply(new TemplateNumber(42.0), List.of(), null).toString());
+        assertEquals("-1.0", builtIn.apply(new TemplateNumber(-42.0), List.of(), null).toString());
+        assertEquals("0.0", builtIn.apply(new TemplateNumber(0.0), List.of(), null).toString());
+        assertEquals("1.0", builtIn.apply(new TemplateNumber(42.0f), List.of(), null).toString());
+        assertEquals("-1.0", builtIn.apply(new TemplateNumber(-42.0f), List.of(), null).toString());
+        assertEquals("0.0", builtIn.apply(new TemplateNumber(0.0f), List.of(), null).toString());
     }
 
     @Test
-    void format(@Mock StaticContext staticContext, @Mock Environment environment, @Mock BaseEnvironment baseEnvironment) {
+    void format(@Mock StaticContext staticContext, @Mock BaseEnvironment baseEnvironment) {
         ProcessContext context = new ProcessContext(staticContext, baseEnvironment, null, null, Locale.GERMANY, null, null);
         BuiltIn builtIn = builtIns.get(builder.of("format"));
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
