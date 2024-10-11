@@ -95,7 +95,7 @@ TOKEN :
     |
     <AND : "&">
     |
-    <XOR : "^">
+    <XOR : ["⊻", "^"]>
     |
     <LT : "<">
     |
@@ -111,35 +111,29 @@ TOKEN :
     |
     <EXCLAM : "!">
     |
+    <NOT : "¬">
+    |
     <BUILT_IN : "?">
     |
     <DOUBLE_EQUALS : "==">
     |
-    <NOT_EQUALS : "!=">
+    <NOT_EQUALS : "≠" | "!=">
     |
-    <EXISTS_OPERATOR : "??">
+    <EXISTS_OPERATOR : "∃" | "??">
     |
-    <LTE : "<=">
+    <LTE : "≤" | "<=">
     |
-    <GTE : ">=">
+    <GTE : "≥" | ">=">
     |
-    <OR2 : "||">
+    <OR2 : "∨" | "||">
     |
-    <AND2 : "&&">
+    <AND2 : "∧" | "&&">
     |
     <DOT_DOT : "..">
-    |
-    <ALT_GT : "gt">
-    |
-    <ALT_LT : "lt">
     |
     <AS : "as">
     |
     <IN : "in">
-    |
-    <ALT_GTE : "gte">
-    |
-    <ALT_LTE : "lte">
     |
     <ELLIPSIS : "...">
     |
@@ -213,7 +207,7 @@ EqualityExpression :
 RelationalExpression :
     RangeExpression
     [
-        (<GT>|<GTE>|<LT>|<LTE>|<ALT_GT>|<ALT_GTE>|<ALT_LTE>|<ALT_LT>)
+        (<GT>|<GTE>|<LT>|<LTE>)
         RangeExpression
     ]
 ;
@@ -258,7 +252,7 @@ UnaryPlusMinusExpression :
 ;
 
 NotExpression :
-    <EXCLAM>
+    (<EXCLAM> | <NOT>)
     DefaultToExpression
 ;
 

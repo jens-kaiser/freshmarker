@@ -7,6 +7,11 @@
 - add date built-ins `since` and `until`
 - add duration built-ins `c` and `h`
 - add duration built-ins `years`, `months` and `days`
+- add `⊻`, `¬`, `≠`, `≤`, `≥`, `∨`, `∧` operators
+
+=== Breaking Changes
+
+- remove `lt`, `gt`, `lte`, `gte` operators
 
 == Release 1.6.0 (2024-10-03)
 

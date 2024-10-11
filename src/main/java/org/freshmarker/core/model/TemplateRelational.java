@@ -21,10 +21,10 @@ public class TemplateRelational implements TemplateBooleanExpression {
     TemplateNumber leftValue = left.evaluate(context, TemplateNumber.class);
     TemplateNumber rightValue = right.evaluate(context, TemplateNumber.class);
       return switch (type) {
-          case LT, ALT_LT -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() < 0);
-          case GT, ALT_GT -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() > 0);
-          case LTE, ALT_LTE -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() <= 0);
-          case GTE, ALT_GTE -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() >= 0);
+          case LT -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() < 0);
+          case GT -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() > 0);
+          case LTE -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() <= 0);
+          case GTE -> TemplateBoolean.from(leftValue.compare(rightValue).sign().asInt() >= 0);
           default -> throw new IllegalArgumentException("unsupported relation: " + type);
       };
   }
@@ -32,10 +32,10 @@ public class TemplateRelational implements TemplateBooleanExpression {
   @Override
   public TemplateRelational not() {
       return switch (type) {
-          case LT, ALT_LT -> new TemplateRelational(TokenType.GTE, left, right);
-          case GT, ALT_GT -> new TemplateRelational(TokenType.LTE, left, right);
-          case LTE, ALT_LTE -> new TemplateRelational(TokenType.GT, left, right);
-          case GTE, ALT_GTE -> new TemplateRelational(TokenType.LT, left, right);
+          case LT -> new TemplateRelational(TokenType.GTE, left, right);
+          case GT -> new TemplateRelational(TokenType.LTE, left, right);
+          case LTE -> new TemplateRelational(TokenType.GT, left, right);
+          case GTE -> new TemplateRelational(TokenType.LT, left, right);
           default -> throw new IllegalArgumentException("unsupported relation: " + type);
       };
   }
