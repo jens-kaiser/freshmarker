@@ -6,14 +6,172 @@ TBD
 
 TBD
 
-=== Negation
+=== Variables
 
 TBD
 
-=== Conjunctions and Disjunctions
+===  Logical Expressions
 
-TBD
+==== Negation
 
-=== Relational Expressions
+|===
+|Operator | Description |Example
 
-TBD
+m|!
+|Logical Not Operator
+m|!false
+
+m|¬
+|Logical Not Operator
+m|¬true
+
+|===
+
+==== Conjunctions
+
+|===
+|Operator | Name | Description |Example
+
+m|&
+|Logical And Operator
+|evaluates both operands
+m|true & true
+
+m|∧
+|Logical And Operator
+|evaluates both operands
+m|true ∧ true
+
+m|&&
+|Conditional And Operator
+|evaluates only the first operand, if it evaluates to false
+m|false && true
+|===
+
+==== Disjunctions
+
+|===
+|Operator | Name | Description |Example
+
+m|\|
+|Logical Or Operator
+|evaluates both operands
+m|true \| true
+
+m|∨
+|Logical Or Operator
+|evaluates both operands
+m|true ∧ true
+
+m|\|\|
+|Conditional Or
+|evaluates only the first operand, if it evaluates to true
+m|false \|\| true
+|===
+
+=== Relational Operators
+
+==== Numerical Comparison Operators
+
+|===
+|Operator | Name | Description |Example
+
+m|<
+|Less Operator
+|
+m|x < 4
+
+m|\<=
+|Less Equals Operator
+|
+m|x \<= 5
+
+m|≤
+|Less Equals Operator
+|
+m|x ≤ 6
+
+m|>
+|Greater Operator
+|
+m|x < 7
+
+m|>=
+|Greater Equals Operator
+|
+m|x >= 8
+
+m|≥
+|Greater Equals Operator
+|
+m|x ≥ 9
+
+|===
+
+=== Equality Operators
+
+|===
+|Operator | Name |Example
+
+m|=
+|Equals Operator
+m|x == 1
+
+m|!=
+|Not Equals Operator
+m|x != 2
+
+m|≠
+|Not Equals Operator
+m|x ≠ 3
+|===
+
+===  Unary Operators
+
+|===
+|Operator | Name |Example
+
+m|+
+|Unary Plus Operator
+m|+4
+
+m|-
+|Unary Minus Operator
+m|-4
+|===
+
+=== Multiplicative Operators
+
+|===
+|Operator | Name |Example
+
+m|*
+|Multiplication Operator
+m|x * 2
+
+m|/
+|Division Operator
+m|x / 3
+
+m|%
+|Remainder Operator
+m|x % 4
+|===
+
+=== Additive Operators
+
+|===
+|Operator | Name |Example
+
+m|+
+|String Concatenation Operator
+m|x + ' '
+
+m|+
+|Addition Operator
+m|x + 3
+
+m|-
+|Subtraction Operator
+m|x - 4
+|===
