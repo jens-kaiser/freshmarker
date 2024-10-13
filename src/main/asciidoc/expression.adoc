@@ -1,14 +1,71 @@
 == Expressions
 
+Expressions are an important part of template evaluation. They are evaluated within _Conditional Directives_ and _Interpolations_.
+
+The expressions are based on _Java_ expressions, but have some differences. The majority of the deviations result from the basic implementation decisions for _FreshMarker_ as a template engine.
+
+As far as practicable, calculations should not take place within the template engine but in the external application. Basically, expressions should be used to make decisions in the _Conditional Directives_ and to influence the output of _Interpolations_.
+
+For this reason, _FreshMarker_ does not have any bit shift operators, for example.
+Variables are assigned values within the template via the _Var_ and _Set Directives_, so FreshMarker does not have an assignment operator or compound operators like _Java_.
+
+=== Literal Expressions
+
 TBD
 
-=== Literals
+=== Inline Sequences
 
 TBD
 
 === Variables
 
 TBD
+
+=== Properties
+
+TBD
+
+=== Build-Ins
+
+TBD
+
+=== Functions
+
+TBD
+
+=== Default Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|!
+|Default Operator
+m|value!
+
+m|!
+|Default Operator with parameter
+m|value!"default"
+
+|===
+
+==== Existence Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|??
+|Existence Operator
+m|value??
+
+m|∃
+|Unicode Existence Operator
+m|value∃
+
+|===
 
 ===  Logical Expressions
 
@@ -22,7 +79,7 @@ m|!
 m|!false
 
 m|¬
-|Logical Not Operator
+|Unicode Logical Not Operator
 m|¬true
 
 |===
@@ -38,7 +95,7 @@ m|&
 m|true & true
 
 m|∧
-|Logical And Operator
+|Unicode Logical And Operator
 |evaluates both operands
 m|true ∧ true
 
@@ -87,7 +144,7 @@ m|\<=
 m|x \<= 5
 
 m|≤
-|Less Equals Operator
+|Unicode Less Equals Operator
 |
 m|x ≤ 6
 
@@ -102,13 +159,15 @@ m|>=
 m|x >= 8
 
 m|≥
-|Greater Equals Operator
+|Unicode Greater Equals Operator
 |
 m|x ≥ 9
 
 |===
 
 === Equality Operators
+
+This operator works only on _FreshMarkers_ primitive types. There is nno Equality defines on _Hashes_, _Sequences_ and _Ranges_.
 
 |===
 |Operator | Name |Example
@@ -122,11 +181,11 @@ m|!=
 m|x != 2
 
 m|≠
-|Not Equals Operator
+|Unicode Not Equals Operator
 m|x ≠ 3
 |===
 
-===  Unary Operators
+=== Unary Numerical Operators
 
 |===
 |Operator | Name |Example
