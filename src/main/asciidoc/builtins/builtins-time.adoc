@@ -6,6 +6,8 @@ The Built-Ins in the examples operate on the `java.time.LocalTime` respectively 
 
 This built-in returns the time part of the value.
 
+NOTE: This built-in seems pointless at first because the result corresponds to the original value. However, it is often not certain what type the variable actually has. With a `datetime` value, the date would otherwise also be used without `?time`.
+
 |===
 | Interpolation | Output | Type
 

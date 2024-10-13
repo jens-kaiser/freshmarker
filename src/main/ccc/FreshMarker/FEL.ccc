@@ -309,7 +309,6 @@ BaseExpression :
     BuiltinVariable
 ;
 
-
 DotKey  :
     <DOT>
     (<IDENTIFIER>|<TIMES>)

@@ -6,6 +6,8 @@ The Built-Ins in the examples operate on the `java.time.LocalDate` respectively 
 
 This built-in returns the date part of the value.
 
+NOTE: This built-in seems pointless at first because the result corresponds to the original value. However, it is often not certain what type the variable actually has. With a `datetime` value, the time would otherwise also be used without `?date`.
+
 |===
 | Interpolation | Output | Type
 
@@ -70,7 +72,7 @@ m|24. August 1968
 ==== `since` Built-In (since 1.6.1)
 
 This built-in returns a duration between the value and the parameter.
-If the parameter is missing, `LocalDate.now()` is used.
+If the parameter is missing, `java.time.LocalDate.now()` is used.
 footnote:legacyTemporal[]
 
 |===
@@ -88,7 +90,7 @@ m|P2D
 ==== `until` Built-In (since 1.6.1)
 
 This built-in returns a duration between the value and the parameter.
-If the parameter is missing, `LocalDate.now()` is used.
+If the parameter is missing, `java.time.LocalDate.now()` is used.
 footnote:legacyTemporal[]
 
 |===

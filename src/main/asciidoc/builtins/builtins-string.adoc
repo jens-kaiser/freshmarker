@@ -228,8 +228,6 @@ m|<>
 
 |===
 
-TBD
-
 ==== `locale` Built-In
 
 This built-in converts a string value into a locale value.

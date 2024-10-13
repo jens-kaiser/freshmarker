@@ -15,7 +15,7 @@ Most of the basic concepts are the same.
 
 _FreshMarker_'s area of application is the processing of simple templates with reduced programming features.
 Despite reduced programming features, _FreshMarker_ is open to new data types and built-ins.
-In particular, the lack of modern data types like `LocalDate` in _FreeMarker_ was the reason for the implementation of _FreshMarker_.
+In particular, the lack of modern data types like `java.time.LocalDate` in _FreeMarker_ was the reason for the implementation of _FreshMarker_.
 
 include::usage.adoc[]
 
