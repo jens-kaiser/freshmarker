@@ -61,7 +61,7 @@ m|true \| true
 m|∨
 |Logical Or Operator
 |evaluates both operands
-m|true ∧ true
+m|true ∨ true
 
 m|\|\|
 |Conditional Or
