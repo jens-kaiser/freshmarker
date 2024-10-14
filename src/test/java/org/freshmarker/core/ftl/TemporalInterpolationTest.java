@@ -291,4 +291,18 @@ class TemporalInterpolationTest {
         Map<String, Object> dataModel = Map.of("now", LocalDate.now(), "yesterday", yesterday, "tomorrow", tomorrow, "dayBefore", dayBefore);
         assertEquals(expected, template.process(dataModel));
     }
+
+    @Test
+    void datePlusDuration() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal + period}");
+        Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate(), "period", Period.of(0, 0, 3));
+        assertEquals("test: 1968-08-27", template.process(model));
+    }
+
+    @Test
+    void datePlusInteger() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal + 1}");
+        Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate());
+        assertEquals("test: 1968-08-25", template.process(model));
+    }
 }
