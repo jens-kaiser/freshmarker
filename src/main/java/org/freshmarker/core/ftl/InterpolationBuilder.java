@@ -357,11 +357,15 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateBean visit(HashLiteral expression, Object input) {
         LinkedHashMap<String, Object> hash = new LinkedHashMap<>();
         for (int i = 0; i < expression.size() - 1; i += 4) {
-            String key = expression.get(i + 1).accept(this, null).asString().map(TemplateString::getValue)
-                    .orElseThrow(() -> new IllegalArgumentException("key is not a string"));
-            TemplatePrimitive<?> value = expression.get(i + 3).accept(this, null).asPrimitive()
-                    .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
-            hash.put(key, value);
+            TemplateObject key = expression.get(i + 1).accept(this, null);
+            if (!(key instanceof TemplateString string)) {
+                throw new IllegalArgumentException("key is not a string");
+            }
+            TemplateObject value = expression.get(i + 3).accept(this, null);
+            if (!value.isPrimitive()) {
+                throw new IllegalArgumentException("value is not a primitive");
+            }
+            hash.put(string.getValue(), value);
         }
         return new TemplateBean(hash, null);
     }

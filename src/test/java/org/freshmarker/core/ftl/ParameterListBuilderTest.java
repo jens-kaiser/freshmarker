@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.FreshMarkerParser;
 import ftl.ast.ParameterList;
+import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ class ParameterListBuilderTest {
         assertAll(
                 () -> assertNotNull(last),
                 () -> assertEquals("parameter2", last.name()),
-                () -> assertEquals("test", last.defaultValue().asString().orElseThrow().getValue())
+                () -> assertEquals("test", last.defaultValue() instanceof TemplateString string ? string.getValue() : null)
         );
     }
 }

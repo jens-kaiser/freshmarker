@@ -129,12 +129,17 @@ public class TemporalPluginProvider implements PluginProvider {
 
     private static String getFormatString(List<TemplateObject> y, ProcessContext e) {
         BuiltInHelper.checkParametersLength(y, 1);
-        return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).orElseThrow(() -> new ProcessException("invalid format parameter"));
+        return y.getFirst().evaluate(e, TemplateString.class).getValue();
     }
 
     private static ZoneId getZoneId(List<TemplateObject> y, ProcessContext e) {
         BuiltInHelper.checkParametersLength(y, 1);
-        return y.getFirst().evaluateToObject(e).asString().map(TemplateString::getValue).map(ZoneId::of).orElseThrow(() -> new IllegalArgumentException("no valid zoneId"));
+        String value = y.getFirst().evaluate(e, TemplateString.class).getValue();
+        try {
+            return ZoneId.of(value);
+        } catch (Exception ex) {
+            throw new ProcessException("no valid zoneId");
+        }
     }
 
     private TemplateString getPeriod(TemplatePeriod period, ProcessContext e) {

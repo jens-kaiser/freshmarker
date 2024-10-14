@@ -2,8 +2,6 @@ package org.freshmarker.core.model.primitive;
 
 import org.freshmarker.core.model.version.Version;
 
-import java.util.Optional;
-
 public class TemplateVersion extends TemplatePrimitive<Version> {
     public TemplateVersion(String value) {
         super(Version.byString(value));
@@ -36,10 +34,5 @@ public class TemplateVersion extends TemplatePrimitive<Version> {
     @Override
     public String toString() {
         return getValue().toString();
-    }
-
-    @Override
-    public Optional<TemplateString> asString() {
-        return Optional.of(new TemplateString(toString()));
     }
 }
