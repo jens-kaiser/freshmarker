@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +21,7 @@ class MethodCallTest {
     void setUp() {
         configuration = new Configuration();
         configuration.registerFunction("abs",
-                (context, args) -> args.getFirst().evaluateToObject(context).asNumber().map(TemplateNumber::abs).orElseThrow());
+                (context, args) -> args.getFirst() instanceof  TemplateNumber number ? number.abs() : TemplateNull.NULL);
         configuration.registerFunction("avg",
                 (context, args) -> args.stream().map(o -> o.evaluate(context, TemplateNumber.class))
                         .reduce(TemplateNumber::add).orElseThrow().divide(new TemplateNumber(args.size())));

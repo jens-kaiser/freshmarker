@@ -3,7 +3,7 @@ package org.freshmarker.core.formatter;
 import java.text.NumberFormat;
 import java.util.Locale;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplatePrimitive;
+import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class NumberFormatter implements Formatter {
 
@@ -15,6 +15,9 @@ public class NumberFormatter implements Formatter {
 
   @Override
   public String format(TemplateObject object, Locale locale) {
-    return object.asNumber().map(TemplatePrimitive::getValue).map(v -> numberFormat.get(locale).format(v)).orElse("");
+    if (object instanceof TemplateNumber number) {
+      return numberFormat.get(locale).format(number.getValue());
+    }
+    return "";
   }
 }

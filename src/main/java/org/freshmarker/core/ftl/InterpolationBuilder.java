@@ -332,7 +332,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (token.getType() == TokenType.PLUS) {
             return templateObject;
         }
-        return templateObject.asNumber().<TemplateObject>map(TemplateNumber::negate).orElseGet(() -> new TemplateSign(templateObject));
+        if (templateObject instanceof TemplateNumber number) {
+            return number.negate();
+        }
+        return new TemplateSign(templateObject);
     }
 
     @Override

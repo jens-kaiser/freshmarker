@@ -7,7 +7,6 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class TemplateNumber extends TemplatePrimitive<Number> {
@@ -577,11 +576,6 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
 
     public TemplateNumber max(TemplateNumber other) {
         return Type.getNewType(this, other).max(this, other);
-    }
-
-    @Override
-    public Optional<TemplateNumber> asNumber() {
-        return Optional.of(this);
     }
 
     public int asInt() {

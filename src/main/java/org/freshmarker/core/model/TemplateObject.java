@@ -4,7 +4,6 @@ import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrongTypeException;
-import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 import java.util.Optional;
@@ -24,10 +23,6 @@ public interface TemplateObject {
     }
 
     default <T> Optional<TemplatePrimitive<T>> asPrimitive() {
-        return Optional.empty();
-    }
-
-    default Optional<TemplateNumber> asNumber() {
         return Optional.empty();
     }
 
