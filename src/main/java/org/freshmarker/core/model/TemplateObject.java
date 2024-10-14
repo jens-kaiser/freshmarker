@@ -4,9 +4,6 @@ import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrongTypeException;
-import org.freshmarker.core.model.primitive.TemplatePrimitive;
-
-import java.util.Optional;
 
 public interface TemplateObject {
 
@@ -20,10 +17,6 @@ public interface TemplateObject {
 
     default boolean isNull() {
         return false;
-    }
-
-    default <T> Optional<TemplatePrimitive<T>> asPrimitive() {
-        return Optional.empty();
     }
 
     TemplateObject evaluateToObject(ProcessContext context);

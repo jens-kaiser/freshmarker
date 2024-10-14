@@ -4,7 +4,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public class TemplatePrimitive<P> implements TemplateObject {
 
@@ -17,12 +16,6 @@ public class TemplatePrimitive<P> implements TemplateObject {
     @Override
     public boolean isPrimitive() {
         return true;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Optional<TemplatePrimitive<?>> asPrimitive() {
-        return Optional.of(this);
     }
 
     public P getValue() {

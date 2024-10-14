@@ -53,7 +53,6 @@ import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -379,9 +378,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 1; i < expression.size() - 1; i++) {
             Node node = expression.get(i);
             if (node.getType() != TokenType.COMMA) {
-                TemplatePrimitive<?> primitive = node.accept(this, null).asPrimitive()
-                        .orElseThrow(() -> new IllegalArgumentException("value is not a primitive"));
-                list.add(primitive);
+                TemplateObject templateObject = node.accept(this, null);
+                if (!templateObject.isPrimitive()) {
+                    throw new IllegalArgumentException("value is not a primitive");
+                }
+                list.add(templateObject);
             }
         }
         return new TemplateListSequence(list);

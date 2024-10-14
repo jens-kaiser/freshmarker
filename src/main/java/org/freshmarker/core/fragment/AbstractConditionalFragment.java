@@ -30,7 +30,11 @@ public abstract class AbstractConditionalFragment implements Fragment {
 
     protected TemplatePrimitive<?> evaluatePrimitive(TemplateObject conditional, ProcessContext context, Node node) {
         try {
-            return conditional.evaluateToObject(context).asPrimitive().orElseThrow(() -> new WrongTypeException("not a primitive type", node));
+            TemplateObject templateObject = conditional.evaluateToObject(context);
+            if (templateObject instanceof TemplatePrimitive<?> primitive) {
+                return primitive;
+            }
+            throw new WrongTypeException("not a primitive type", node);
         } catch (UnsupportedBuiltInException e) {
             throw new UnsupportedBuiltInException(e.getMessage(), node, e);
         } catch (WrongTypeException e) {
