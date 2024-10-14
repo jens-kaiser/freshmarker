@@ -38,9 +38,4 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
     public String toString() {
         return getValue().toString();
     }
-
-    @Override
-    public Optional<TemplateString> asString() {
-        return Optional.of(new TemplateString(toString()));
-    }
 }

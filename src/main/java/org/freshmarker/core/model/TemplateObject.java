@@ -1,10 +1,11 @@
 package org.freshmarker.core.model;
 
+import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
-import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.util.Optional;
 
@@ -30,10 +31,6 @@ public interface TemplateObject {
         return Optional.empty();
     }
 
-    default Optional<TemplateString> asString() {
-        return Optional.empty();
-    }
-
     TemplateObject evaluateToObject(ProcessContext context);
 
     default <T extends TemplateObject> T evaluate(ProcessContext context, Class<T> type) {
@@ -46,5 +43,9 @@ public interface TemplateObject {
 
     default Class<?> getModelType() {
         return getClass();
+    }
+
+    default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: " + operator);
     }
 }
