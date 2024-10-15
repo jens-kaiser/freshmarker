@@ -325,4 +325,16 @@ class TemporalInterpolationTest {
         Map<String, Object> model = Map.of( "period1", Period.of(0, 0, 1), "period2", Period.of(0, 0, 2));
         assertEquals(expected, template.process(model));
     }
+    
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal * period}",
+            "test: ${temporal + 1.0}",
+            "test: ${period / period}"
+    })
+    void invalidOperation(String input) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate(), "period", Period.of(0, 0, 3));
+        assertThrows(ProcessException.class, () ->  template.process(model));
+    }
 }
