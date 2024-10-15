@@ -292,17 +292,37 @@ class TemporalInterpolationTest {
         assertEquals(expected, template.process(dataModel));
     }
 
-    @Test
-    void datePlusDuration() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal + period}");
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal + period},test: 1968-08-27",
+            "test: ${temporal - period},test: 1968-08-21"
+    })
+    void dateOperationPeriod(String input, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate(), "period", Period.of(0, 0, 3));
-        assertEquals("test: 1968-08-27", template.process(model));
+        assertEquals(expected, template.process(model));
     }
 
-    @Test
-    void datePlusInteger() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal + 1}");
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal + 1},test: 1968-08-25",
+            "test: ${temporal - 1},test: 1968-08-23"
+    })
+    void dateOperationInteger(String input, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate());
-        assertEquals("test: 1968-08-25", template.process(model));
+        assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${period1 + period2},test: P3D",
+            "test: ${period1 - period1},test: P0D",
+            "test: ${period1 - period2},test: P-1D"
+    })
+    void periodOperationPeriod(String input, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of( "period1", Period.of(0, 0, 1), "period2", Period.of(0, 0, 2));
+        assertEquals(expected, template.process(model));
     }
 }

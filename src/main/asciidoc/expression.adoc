@@ -198,11 +198,12 @@ m|-
 |Unary Minus Operator
 m|-4
 |===
-
 === Multiplicative Operators
 
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operator.
+
 |===
-|Operator | Name |Example
+|Operator |Name |Example
 
 m|*
 |Multiplication Operator
@@ -219,18 +220,64 @@ m|x % 4
 
 === Additive Operators
 
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+In addition to the additive operators for the numeric types and the string concatenation, there are some _experimental_ overloaded operators for date and period.
+
 |===
-|Operator | Name |Example
+|Operator | Name |Example | Description
 
 m|+
 |String Concatenation Operator
 m|x + ' '
+|
 
 m|+
-|Addition Operator
+|Numerical Addition Operator
 m|x + 3
+|
 
 m|-
-|Subtraction Operator
+|Numerical Subtraction Operator
 m|x - 4
+|
+
+m|+
+|Temporal Addition Operator
+m|date + period
+|add the period to the given date (experimental).
+
+m|-
+|Temporal Subtraction Operator
+m|date - period
+|subtract the period from the given date (experimental).
+
+m|+
+|Temporal Addition Operator
+m|date + 3
+|add the amount of days to the given date (experimental).
+
+m|-
+|Temporal Subtraction Operator
+m|date - 7
+|subtract the amount of days from the given date (experimental).
+
+m|+
+|Period Addition Operator
+m|period + period
+|add the period to the given period (experimental).
+
+m|-
+|Period Subtraction Operator
+m|period - period
+|subtract the period from the given period (experimental).
+
+m|+
+|Period Addition Operator
+m|period + 3
+|add the amount of days to the given period (experimental).
+
+m|-
+|Period Subtraction Operator
+m|period - 7
+|subtract the amount of days from the given period (experimental).
 |===

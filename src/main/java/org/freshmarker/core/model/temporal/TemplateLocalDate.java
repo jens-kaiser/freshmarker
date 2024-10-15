@@ -7,9 +7,8 @@ import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 import java.time.temporal.TemporalAmount;
 
 public class TemplateLocalDate extends TemplatePrimitive<LocalDate> implements TemplateDate {
@@ -33,7 +32,7 @@ public class TemplateLocalDate extends TemplatePrimitive<LocalDate> implements T
             return period.getValue();
         }
         if (object instanceof TemplateNumber number && !number.getType().isFloatingPoint()) {
-            return Duration.of(number.asInt(), ChronoUnit.DAYS);
+            return Period.of(0, 0, number.getValue().intValue());
         }
         throw new ProcessException("wrong type: " + object.getModelType());
     }
