@@ -167,7 +167,7 @@ m|x ≥ 9
 
 === Equality Operators
 
-This operator works only on _FreshMarkers_ primitive types. There is nno Equality defines on _Hashes_, _Sequences_ and _Ranges_.
+This operator works only on _FreshMarkers_ primitive types. There is no Equality defines on _Hashes_, _Sequences_ and _Ranges_.
 
 |===
 |Operator | Name |Example
@@ -200,7 +200,7 @@ m|-4
 |===
 === Multiplicative Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operator.
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
 
 |===
 |Operator |Name |Example
@@ -221,7 +221,7 @@ m|x % 4
 === Additive Operators
 
 NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
-In addition to the additive operators for the numeric types and the string concatenation, there are some _experimental_ overloaded operators for date and period.
+In addition to the additive operators for the numeric types and the string concatenation, there are some overloaded operators for date and period.
 
 |===
 |Operator | Name |Example | Description
