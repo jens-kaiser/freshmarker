@@ -1,5 +1,15 @@
 = Release Notes
 
+== Release 1.6.3 (planned 2024-10-XX)
+
+=== Improvements
+
+- add operator overloading
+
+=== Experimental
+
+- add `+` and `-` operators for `java.time.LocalDate` and `java.time.Period`
+
 == Release 1.6.2 (2024-10-13)
 
 === Improvements
