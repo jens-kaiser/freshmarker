@@ -128,7 +128,7 @@ m|false \|\| true
 
 === Relational Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators. 
 
 ==== Numerical Comparison Operators
 
@@ -161,6 +161,8 @@ m|x ≥ 9
 |===
 
 ==== Version Comparison Operators
+
+NOTE: These operators are in experimental stage.
 
 |===
 |Operator | Name | Example
