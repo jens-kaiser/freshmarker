@@ -36,4 +36,8 @@ public interface TemplateObject {
     default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
         throw new ProcessException("unsupported operation: " + operator);
     }
+
+    default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: " + operator);
+    }
 }

@@ -594,4 +594,16 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             default -> super.operation(operator, operand, context);
         };
     }
+
+    @Override
+    public boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
+        TemplateNumber rightValue = operand.evaluate(context, TemplateNumber.class);
+        return switch (operator) {
+            case LT -> compare(rightValue).sign().asInt() < 0;
+            case GT -> compare(rightValue).sign().asInt() > 0;
+            case LTE -> compare(rightValue).sign().asInt() <= 0;
+            case GTE -> compare(rightValue).sign().asInt() >= 0;
+            default -> throw new IllegalArgumentException("unsupported relation: " + type);
+        };
+    }
 }
