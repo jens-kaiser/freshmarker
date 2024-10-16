@@ -603,7 +603,7 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             case GT -> compare(rightValue).sign().asInt() > 0;
             case LTE -> compare(rightValue).sign().asInt() <= 0;
             case GTE -> compare(rightValue).sign().asInt() >= 0;
-            default -> throw new IllegalArgumentException("unsupported relation: " + type);
+            default -> super.relation(operator, operand, context);
         };
     }
 }

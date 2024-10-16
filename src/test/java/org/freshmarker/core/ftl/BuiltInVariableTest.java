@@ -64,6 +64,14 @@ class BuiltInVariableTest {
             "test: ${'1.0.2'?version?is_after('1.0.2')},test: no",
             "test: ${version?is_before('1.0.0'?version)},test: no",
             "test: ${version?is_after(after)},test: no",
+            "test: ${version < after},test: yes",
+            "test: ${version <= after},test: yes",
+            "test: ${after > version},test: yes",
+            "test: ${after >= version},test: yes",
+            "test: ${version > after},test: no",
+            "test: ${version >= after},test: no",
+            "test: ${after < version},test: no",
+            "test: ${after <= version},test: no",
     })
     void version(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
