@@ -1,6 +1,9 @@
 = Release Notes
 
-== Release 1.6.3 (planned 2024-10-XX)
+== Release 1.6.4 (planned 2024-10-XX)
+
+
+== Release 1.6.3 (2024-10-16)
 
 === Improvements
 
@@ -9,7 +12,7 @@
 === Experimental
 
 - add `+` and `-` operators for `TemplateLocalDate` and `TemplatePeriod`
-- add `<`, `<=`, `>`, `>=`, ≤ and `≥` operators for `TemplateVersion`
+- add `<`, `<=`, `>`, `>=`, `≤` and `≥` operators for `TemplateVersion`
 
 == Release 1.6.2 (2024-10-13)
 
