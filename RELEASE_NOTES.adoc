@@ -4,8 +4,11 @@
 
 == Deprecated
 
-- deprecate `BaseReflectionsMap`, `TemplateMapReflectionsProvider`
-- deprecate `FeatureFlag#REFLECTIONS`
+- remove `BaseReflectionsMap`, `TemplateMapReflectionsProvider`
+
+=== Breaking Changes
+
+- remove `FeatureFlag`
 
 == Release 1.6.3 (2024-10-16)
 

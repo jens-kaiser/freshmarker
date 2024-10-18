@@ -141,20 +141,7 @@ public final class Configuration {
 
     private TemplateLoader templateLoader;
 
-    public enum FeatureFlag {
-        /**
-         * @deprecated it is the feature flag for a deprecated class
-         */
-        @Deprecated(since = "1.6.3", forRemoval = true)
-        REFLECTIONS,
-        LAMBDAS
-    }
-
     public Configuration() {
-        this(FeatureFlag.LAMBDAS);
-    }
-
-    public Configuration(FeatureFlag featureFlag) {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
         BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(modelSecurityGateway);
         RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(modelSecurityGateway);
@@ -248,14 +235,6 @@ public final class Configuration {
      */
     public TemplateBuilder builder() {
         return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE);
-    }
-
-    /**
-     * @deprecated in favour of the {@link TemplateBuilder#getTemplate} call
-     */
-    @Deprecated(forRemoval = true, since = "1.4.6")
-    public Template getTemplate(String name, String content) throws ParseException {
-        return builder().getTemplate(Path.of("."), name, content);
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
