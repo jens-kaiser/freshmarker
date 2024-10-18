@@ -4,7 +4,6 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Locale;
-import java.util.Optional;
 
 public class TemplateLocale extends TemplatePrimitive<Locale> {
     public TemplateLocale(Locale value) {

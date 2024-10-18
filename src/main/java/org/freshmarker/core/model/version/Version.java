@@ -26,8 +26,14 @@ public record Version(int major, int minor, int patch) implements Comparable<Ver
 
     @Override
     public int compareTo(Version version) {
-        int major = this.major - version.major;
-        int minor = this.minor - version.minor;
-        return major != 0 ? major : minor != 0 ? minor : patch - version.patch;
+        int majorCompare = Integer.compare(major, version.major);
+        if (majorCompare != 0) {
+            return majorCompare;
+        }
+        int minorCompare = Integer.compare(minor, version.minor);
+        if (minorCompare != 0) {
+            return minorCompare;
+        }
+        return Integer.compare(patch, version.patch);
     }
 }
