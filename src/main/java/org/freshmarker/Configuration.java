@@ -142,6 +142,7 @@ public final class Configuration {
     private TemplateLoader templateLoader;
 
     public enum FeatureFlag {
+        @Deprecated(since = "1.6.3")
         REFLECTIONS,
         LAMBDAS
     }
@@ -238,6 +239,10 @@ public final class Configuration {
         functions.putAll(additionalFunctions);
     }
 
+    /**
+     * Creates a new {@link TemplateBuilder} based on the current  {@code Configuration}.
+     * @return a new {@code TemplateBuilder}
+     */
     public TemplateBuilder builder() {
         return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE);
     }

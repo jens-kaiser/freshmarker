@@ -2,6 +2,10 @@
 
 == Release 1.6.4 (planned 2024-10-XX)
 
+== Deprecated
+
+- deprecate `BaseReflectionsMap`, `TemplateMapReflectionsProvider`
+- deprecate `FeatureFlag#REFLECTIONS`
 
 == Release 1.6.3 (2024-10-16)
 
