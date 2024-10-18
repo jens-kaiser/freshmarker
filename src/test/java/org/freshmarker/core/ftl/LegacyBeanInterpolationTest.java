@@ -2,7 +2,6 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
-import org.freshmarker.Configuration.FeatureFlag;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
@@ -45,7 +44,7 @@ class LegacyBeanInterpolationTest {
 
     @BeforeEach
     void setUp() {
-        templateBuilder = new Configuration(FeatureFlag.REFLECTIONS).builder();
+        templateBuilder = new Configuration().builder();
     }
 
     @Test

@@ -151,13 +151,9 @@ public final class Configuration {
     }
 
     public Configuration() {
-        this(FeatureFlag.LAMBDAS);
-    }
-
-    public Configuration(FeatureFlag featureFlag) {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
-        BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(featureFlag, modelSecurityGateway);
-        RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(featureFlag, modelSecurityGateway);
+        BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(modelSecurityGateway);
+        RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(modelSecurityGateway);
         providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, recordTemplateObjectProvider, new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
 
         templateLoader = new DefaultFileSystemTemplateLoader();
