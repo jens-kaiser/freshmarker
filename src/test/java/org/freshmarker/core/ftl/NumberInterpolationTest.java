@@ -76,6 +76,12 @@ class NumberInterpolationTest {
             "test: ${x-x};test: 0",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
+            "test: ${x?abs};test: 42",
+            "test: ${x?sign};test: 1",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationByteExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -96,6 +102,12 @@ class NumberInterpolationTest {
             "test: ${x-x};test: 0",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
+            "test: ${x?abs};test: 42",
+            "test: ${x?sign};test: 1",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationShortExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -117,6 +129,12 @@ class NumberInterpolationTest {
             "test: ${x/x};test: 1",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
+            "test: ${x?abs};test: 42",
+            "test: ${x?sign};test: 1",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationIntegerExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -137,6 +155,12 @@ class NumberInterpolationTest {
             "test: ${x-x};test: 0",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
+            "test: ${x?abs};test: 42",
+            "test: ${x?sign};test: 1",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationLongExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -158,6 +182,8 @@ class NumberInterpolationTest {
             "test: ${x-x};test: 0",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
+            "test: ${x?abs};test: 42",
+            "test: ${x?sign};test: 1",
     }, delimiterString = ";")
     void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -179,6 +205,8 @@ class NumberInterpolationTest {
             "test: ${x-x};test: 0",
             "test: ${z?abs};test: 42",
             "test: ${z?sign};test: -1",
+            "test: ${x?abs};test: 42",
+            "test: ${x?sign};test: 1",
     }, delimiterString = ";")
     void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
