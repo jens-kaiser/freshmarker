@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @deprecated in favor of the {@link BaseGetterMap}
+ */
 @Deprecated(since = "1.6.3")
 class BaseReflectionsMap extends AbstractMap<String, Object> {
 

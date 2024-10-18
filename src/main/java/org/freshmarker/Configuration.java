@@ -142,7 +142,10 @@ public final class Configuration {
     private TemplateLoader templateLoader;
 
     public enum FeatureFlag {
-        @Deprecated(since = "1.6.3")
+        /**
+         * @deprecated it is the feature flag for a deprecated class
+         */
+        @Deprecated(since = "1.6.3", forRemoval = true)
         REFLECTIONS,
         LAMBDAS
     }
@@ -248,7 +251,7 @@ public final class Configuration {
     }
 
     /**
-     * @deprecated in favour of the TemplateBuilder#getTemplate call
+     * @deprecated in favour of the {@link TemplateBuilder#getTemplate} call
      */
     @Deprecated(forRemoval = true, since = "1.4.6")
     public Template getTemplate(String name, String content) throws ParseException {

@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Deprecated(since = "1.6.3")
+/**
+ * @deprecated in favor of the {@link TemplateMapGetterProvider}
+ */
+@Deprecated(since = "1.6.3", forRemoval = true)
 public class TemplateMapReflectionsProvider {
 
     private final Map<Class<?>, Map<String, Method>> methodBeans = new HashMap<>();
