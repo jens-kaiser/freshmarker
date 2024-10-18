@@ -50,19 +50,19 @@ public class TemporalPluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(INSTANT_BUILDER.of("date_time"), (x, y, e) -> ((TemplateInstant) x).at(e).toLocalDateTime());
-        builtIns.put(INSTANT_BUILDER.of("date"), (x, y, e) -> ((TemplateInstant) x).at(e).toLocalDate());
-        builtIns.put(INSTANT_BUILDER.of("time"), (x, y, e) -> ((TemplateInstant) x).at(e).toLocalTime());
+        builtIns.put(INSTANT_BUILDER.of("date_time"), (x, y, e) -> atZone((TemplateInstant) x, e.getZoneId()).toLocalDateTime());
+        builtIns.put(INSTANT_BUILDER.of("date"), (x, y, e) -> atZone((TemplateInstant) x, e.getZoneId()).toLocalDate());
+        builtIns.put(INSTANT_BUILDER.of("time"), (x, y, e) -> atZone((TemplateInstant) x, e.getZoneId()).toLocalTime());
         builtIns.put(INSTANT_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(INSTANT_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateInstant) x).getValue()));
-        builtIns.put(INSTANT_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateInstant) x).atZone(getZoneId(y, e)));
+        builtIns.put(INSTANT_BUILDER.of(AT_ZONE), (x, y, e) -> atZone((TemplateInstant) x, getZoneId(y, e)));
 
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date_time"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalDateTime());
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalDate());
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("time"), (x, y, e) -> ((TemplateZonedDateTime) x).toLocalTime());
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue()));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateZonedDateTime) x).atZone(getZoneId(y, e)));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> atZone((TemplateZonedDateTime) x, getZoneId(y, e)));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"),
                 (x, y, e) -> new TemplateString(((TemplateZonedDateTime) x).getValue().getZone().toString()));
 
@@ -72,7 +72,7 @@ public class TemporalPluginProvider implements PluginProvider {
                 (x, y, e) -> new TemplateLocalTime(((TemplateLocalDateTime) x).getValue().toLocalTime()));
         builtIns.put(DATE_TIME_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
         builtIns.put(DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDateTime) x).getValue()));
-        builtIns.put(DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> ((TemplateLocalDateTime) x).atZone(getZoneId(y, e)));
+        builtIns.put(DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> atZone((TemplateLocalDateTime) x, getZoneId(y, e)));
 
         builtIns.put(DATE_BUILDER.of("date"), (x, y, e) -> x);
         builtIns.put(DATE_BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
@@ -161,6 +161,18 @@ public class TemporalPluginProvider implements PluginProvider {
             case 1, -1 -> stringJoiner.add(value + " " + resourceBundle.getString("period." + key));
             default -> stringJoiner.add(value + " " + resourceBundle.getString("period." + key + "s"));
         }
+    }
+
+    private TemplateZonedDateTime atZone(TemplateLocalDateTime localDateTime, ZoneId zoneId) {
+        return new TemplateZonedDateTime(localDateTime.getValue().atZone(zoneId));
+    }
+
+    private TemplateZonedDateTime atZone(TemplateZonedDateTime zonedDateTime, ZoneId zoneId) {
+        return new TemplateZonedDateTime(zonedDateTime.getValue().withZoneSameInstant(zoneId));
+    }
+
+    private TemplateZonedDateTime atZone(TemplateInstant instant, ZoneId zoneId) {
+        return new TemplateZonedDateTime(instant.getValue().atZone(zoneId));
     }
 
     @Override

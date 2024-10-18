@@ -1,17 +1,11 @@
 package org.freshmarker.core.model.temporal;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 public class TemplateLocalDateTime extends TemplatePrimitive<LocalDateTime> implements TemplateDateTime {
   public TemplateLocalDateTime(LocalDateTime value) {
     super(value);
-  }
-
-  @Override
-  public TemplateZonedDateTime atZone(ZoneId zoneId) {
-    return new TemplateZonedDateTime(getValue().atZone(zoneId));
   }
 }
