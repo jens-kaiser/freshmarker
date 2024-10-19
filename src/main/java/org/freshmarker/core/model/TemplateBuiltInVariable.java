@@ -4,7 +4,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
-import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 
 import java.time.LocalDateTime;

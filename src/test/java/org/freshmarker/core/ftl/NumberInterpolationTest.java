@@ -64,20 +64,115 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "test: ${b+b};test: 84",
+            "test: ${s+s};test: 84",
+            "test: ${i+i};test: 84",
+            "test: ${l+l};test: 84",
+            "test: ${f+f};test: 84",
+            "test: ${d+d};test: 84",
+            "test: ${bd+bd};test: 84",
+            "test: ${bi+bi};test: 84",
+
+            "test: ${b-b};test: 0",
+            "test: ${s-s};test: 0",
+            "test: ${i-i};test: 0",
+            "test: ${l-l};test: 0",
+            "test: ${f-f};test: 0",
+            "test: ${d-d};test: 0",
+            "test: ${bd-bd};test: 0",
+            "test: ${bi-bi};test: 0",
+
+            "test: ${b*b};test: -28",
+            "test: ${s*s};test: 1.764",
+            "test: ${i*i};test: 1.764",
+            "test: ${l*l};test: 1.764",
+            "test: ${f*f};test: 1.764",
+            "test: ${d*d};test: 1.764",
+            "test: ${bd*bd};test: 1.764",
+            "test: ${bi*bi};test: 1.764",
+
+            "test: ${b/b};test: 1",
+            "test: ${s/s};test: 1",
+            "test: ${i/i};test: 1",
+            "test: ${l/l};test: 1",
+            "test: ${f/f};test: 1",
+            "test: ${d/d};test: 1",
+            "test: ${bd/bd};test: 1",
+            "test: ${bi/bi};test: 1",
+
+            "test: ${b%b};test: 0",
+            "test: ${s%s};test: 0",
+            "test: ${i%i};test: 0",
+            "test: ${l%l};test: 0",
+            "test: ${f%f};test: 0",
+            "test: ${d%d};test: 0",
+            "test: ${bi%bi};test: 0",
+    }, delimiterString = ";")
+    void additiveMultiplicative(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        Map<String, Object> model = Map.of(
+                "b", (byte) 42, "s", (short) 42, "i", 42, "l", 42L, "f", 42.0f, "d", 42.0, "bd", new BigDecimal("42.0"), "bi", new BigInteger("42")
+        );
+        Map<String, Object> negativeModel = Map.of(
+                "nb", (byte) -42, "ns", (short) -42, "ni", -42, "nl", -42L, "nf", -42.0f, "nd", -42.0, "nbd", new BigDecimal("-42.0"), "nbi", new BigInteger("-42")
+        );
+        assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${b?abs};test: 42",
+            "test: ${s?abs};test: 42",
+            "test: ${i?abs};test: 42",
+            "test: ${l?abs};test: 42",
+            "test: ${f?abs};test: 42",
+            "test: ${d?abs};test: 42",
+            "test: ${bd?abs};test: 42",
+            "test: ${bi?abs};test: 42",
+
+            "test: ${nb?abs};test: 42",
+            "test: ${ns?abs};test: 42",
+            "test: ${ni?abs};test: 42",
+            "test: ${nl?abs};test: 42",
+            "test: ${nf?abs};test: 42",
+            "test: ${nd?abs};test: 42",
+            "test: ${nbd?abs};test: 42",
+            "test: ${nbi?abs};test: 42",
+
+            "test: ${b?sign};test: 1",
+            "test: ${s?sign};test: 1",
+            "test: ${i?sign};test: 1",
+            "test: ${l?sign};test: 1",
+            "test: ${f?sign};test: 1",
+            "test: ${d?sign};test: 1",
+            "test: ${bd?sign};test: 1",
+            "test: ${bi?sign};test: 1",
+
+            "test: ${nb?sign};test: -1",
+            "test: ${ns?sign};test: -1",
+            "test: ${ni?sign};test: -1",
+            "test: ${nl?sign};test: -1",
+            "test: ${nf?sign};test: -1",
+            "test: ${nd?sign};test: -1",
+            "test: ${nbd?sign};test: -1",
+            "test: ${nbi?sign};test: -1",
+    }, delimiterString = ";")
+    void absAndSign(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        Map<String, Object> model = Map.ofEntries(Map.entry("b", (byte) 42), Map.entry("s", (short) 42), Map.entry("i", 42), Map.entry("l", 42L),
+                Map.entry("f", 42.0f), Map.entry("d", 42.0), Map.entry("bd", new BigDecimal("42.0")), Map.entry("bi", new BigInteger("42")),
+                Map.entry("nb", (byte) -42), Map.entry("ns", (short) -42), Map.entry("ni", -42), Map.entry("nl", -42L), Map.entry("nf", -42.0f),
+                Map.entry("nd", -42.0), Map.entry("nbd", new BigDecimal("-42.0")), Map.entry("nbi", new BigInteger("-42")));
+        assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
             "test: ${42*x};test: 1.764",
             "test: ${42.0*x};test: 1.764",
-            "test: ${x*x};test: -28",
-            "test: ${x/x};test: 1",
             "test: ${x%x};test: 0",
-            "test: ${x%4?byte};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
-            "test: ${x?abs};test: 42",
-            "test: ${x?sign};test: 1",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -90,20 +185,8 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${x*x};test: 1.764",
-            "test: ${x/x};test: 1",
-            "test: ${x%x};test: 0",
-            "test: ${x%4?short};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
-            "test: ${x?abs};test: 42",
-            "test: ${x?sign};test: 1",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -116,21 +199,8 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${x*x};test: 1.764",
-            "test: ${x/x};test: 1",
-            "test: ${x%x};test: 0",
-            "test: ${x%4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${x/x};test: 1",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
-            "test: ${x?abs};test: 42",
-            "test: ${x?sign};test: 1",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -138,25 +208,13 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationIntegerExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", 42,  "z", -42)));
+        assertEquals(expected, template.process(Map.of("x", 42, "z", -42)));
     }
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${x*x};test: 1.764",
-            "test: ${x/x};test: 1",
-            "test: ${x%x};test: 0",
-            "test: ${x%4?long};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
-            "test: ${x?abs};test: 42",
-            "test: ${x?sign};test: 1",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -164,53 +222,27 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationLongExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", 42L,  "z", -42L)));
+        assertEquals(expected, template.process(Map.of("x", 42L, "z", -42L)));
     }
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${x*x};test: 1.764",
-            "test: ${x/x};test: 1",
-            "test: ${x%x};test: 0",
-            "test: ${x%4?float};test: 2",
-            "test: ${x%4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
-            "test: ${x?abs};test: 42",
-            "test: ${x?sign};test: 1",
     }, delimiterString = ";")
     void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", 42.0f,  "z", -42.0f)));
+        assertEquals(expected, template.process(Map.of("x", 42.0f, "z", -42.0f)));
     }
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${x*x};test: 1.764",
-            "test: ${x/x};test: 1",
-            "test: ${x%x};test: 0",
-            "test: ${x%4.0};test: 2",
-            "test: ${x%4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
-            "test: ${x?abs};test: 42",
-            "test: ${x?sign};test: 1",
     }, delimiterString = ";")
     void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x",  42, "z", -42.0)));
+        assertEquals(expected, template.process(Map.of("x", 42, "z", -42.0)));
     }
 
     @ParameterizedTest
@@ -236,7 +268,7 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationIntegerCast(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("a", (byte)42, "b", (short)42, "c", 42, "d", 42L)));
+        assertEquals(expected, template.process(Map.of("a", (byte) 42, "b", (short) 42, "c", 42, "d", 42L)));
     }
 
     @ParameterizedTest
