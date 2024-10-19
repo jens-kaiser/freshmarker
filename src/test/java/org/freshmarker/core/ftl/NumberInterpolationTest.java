@@ -113,9 +113,6 @@ class NumberInterpolationTest {
         Map<String, Object> model = Map.of(
                 "b", (byte) 42, "s", (short) 42, "i", 42, "l", 42L, "f", 42.0f, "d", 42.0, "bd", new BigDecimal("42.0"), "bi", new BigInteger("42")
         );
-        Map<String, Object> negativeModel = Map.of(
-                "nb", (byte) -42, "ns", (short) -42, "ni", -42, "nl", -42L, "nf", -42.0f, "nd", -42.0, "nbd", new BigDecimal("-42.0"), "nbi", new BigInteger("-42")
-        );
         assertEquals(expected, template.process(model));
     }
 
@@ -201,6 +198,10 @@ class NumberInterpolationTest {
     @CsvSource(value = {
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
+            "test: ${0+x};test: 42",
+            "test: ${x+0};test: 42",
+            "test: ${x-0};test: 42",
+            "test: ${x*1};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",

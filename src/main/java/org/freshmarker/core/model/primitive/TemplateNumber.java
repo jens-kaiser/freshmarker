@@ -122,9 +122,6 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber sub(TemplateNumber first, TemplateNumber second) {
                 int firstValue = first.getValue().intValue();
                 int secondValue = second.getValue().intValue();
-                if (firstValue == 0) {
-                    return second;
-                }
                 if (secondValue == 0) {
                     return first;
                 }
