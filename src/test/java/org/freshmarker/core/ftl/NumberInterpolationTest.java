@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,6 +48,7 @@ class NumberInterpolationTest {
     @ParameterizedTest
     @CsvSource(value = {
             "test: ${42};test: 42",
+            "test: ${-42};test: -42",
             "test: ${42.23};test: 42,23",
             "test: ${(-42)?abs};test: 42",
             "test: ${42?abs};test: 42",
@@ -72,6 +75,8 @@ class NumberInterpolationTest {
             "test: ${d+d};test: 84",
             "test: ${bd+bd};test: 84",
             "test: ${bi+bi};test: 84",
+            "test: ${ai+ai};test: 84",
+            "test: ${al+al};test: 84",
 
             "test: ${b-b};test: 0",
             "test: ${s-s};test: 0",
@@ -81,6 +86,8 @@ class NumberInterpolationTest {
             "test: ${d-d};test: 0",
             "test: ${bd-bd};test: 0",
             "test: ${bi-bi};test: 0",
+            "test: ${ai-ai};test: 0",
+            "test: ${al-al};test: 0",
 
             "test: ${b*b};test: -28",
             "test: ${s*s};test: 1.764",
@@ -90,6 +97,8 @@ class NumberInterpolationTest {
             "test: ${d*d};test: 1.764",
             "test: ${bd*bd};test: 1.764",
             "test: ${bi*bi};test: 1.764",
+            "test: ${ai*ai};test: 1.764",
+            "test: ${al*al};test: 1.764",
 
             "test: ${b/b};test: 1",
             "test: ${s/s};test: 1",
@@ -99,6 +108,8 @@ class NumberInterpolationTest {
             "test: ${d/d};test: 1",
             "test: ${bd/bd};test: 1",
             "test: ${bi/bi};test: 1",
+            "test: ${ai/ai};test: 1",
+            "test: ${al/al};test: 1",
 
             "test: ${b%b};test: 0",
             "test: ${s%s};test: 0",
@@ -107,11 +118,14 @@ class NumberInterpolationTest {
             "test: ${f%f};test: 0",
             "test: ${d%d};test: 0",
             "test: ${bi%bi};test: 0",
+            "test: ${ai%ai};test: 0",
+            "test: ${al%al};test: 0",
     }, delimiterString = ";")
     void additiveMultiplicative(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         Map<String, Object> model = Map.of(
-                "b", (byte) 42, "s", (short) 42, "i", 42, "l", 42L, "f", 42.0f, "d", 42.0, "bd", new BigDecimal("42.0"), "bi", new BigInteger("42")
+                "b", (byte) 42, "s", (short) 42, "i", 42, "l", 42L, "f", 42.0f, "d", 42.0,
+                "bd", new BigDecimal("42.0"), "bi", new BigInteger("42"), "ai", new AtomicInteger(42), "al", new AtomicLong(42)
         );
         assertEquals(expected, template.process(model));
     }
@@ -126,6 +140,8 @@ class NumberInterpolationTest {
             "test: ${d?abs};test: 42",
             "test: ${bd?abs};test: 42",
             "test: ${bi?abs};test: 42",
+            "test: ${ai?abs};test: 42",
+            "test: ${al?abs};test: 42",
 
             "test: ${nb?abs};test: 42",
             "test: ${ns?abs};test: 42",
@@ -135,6 +151,8 @@ class NumberInterpolationTest {
             "test: ${nd?abs};test: 42",
             "test: ${nbd?abs};test: 42",
             "test: ${nbi?abs};test: 42",
+            "test: ${nai?abs};test: 42",
+            "test: ${nal?abs};test: 42",
 
             "test: ${b?sign};test: 1",
             "test: ${s?sign};test: 1",
@@ -144,6 +162,8 @@ class NumberInterpolationTest {
             "test: ${d?sign};test: 1",
             "test: ${bd?sign};test: 1",
             "test: ${bi?sign};test: 1",
+            "test: ${ai?sign};test: 1",
+            "test: ${al?sign};test: 1",
 
             "test: ${nb?sign};test: -1",
             "test: ${ns?sign};test: -1",
@@ -153,13 +173,19 @@ class NumberInterpolationTest {
             "test: ${nd?sign};test: -1",
             "test: ${nbd?sign};test: -1",
             "test: ${nbi?sign};test: -1",
+            "test: ${nai?sign};test: -1",
+            "test: ${nal?sign};test: -1",
     }, delimiterString = ";")
     void absAndSign(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         Map<String, Object> model = Map.ofEntries(Map.entry("b", (byte) 42), Map.entry("s", (short) 42), Map.entry("i", 42), Map.entry("l", 42L),
                 Map.entry("f", 42.0f), Map.entry("d", 42.0), Map.entry("bd", new BigDecimal("42.0")), Map.entry("bi", new BigInteger("42")),
                 Map.entry("nb", (byte) -42), Map.entry("ns", (short) -42), Map.entry("ni", -42), Map.entry("nl", -42L), Map.entry("nf", -42.0f),
-                Map.entry("nd", -42.0), Map.entry("nbd", new BigDecimal("-42.0")), Map.entry("nbi", new BigInteger("-42")));
+                Map.entry("nd", -42.0), Map.entry("nbd", new BigDecimal("-42.0")), Map.entry("nbi", new BigInteger("-42")),
+                Map.entry("ai", new AtomicInteger(42)), Map.entry("al", new AtomicLong(42)),
+                Map.entry("nai", new AtomicInteger(-42)), Map.entry("nal", new AtomicLong(-42))
+
+        );
         assertEquals(expected, template.process(model));
     }
 

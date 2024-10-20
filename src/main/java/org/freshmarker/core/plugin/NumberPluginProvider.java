@@ -16,6 +16,8 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.UnaryOperator;
 
 public class NumberPluginProvider implements PluginProvider {
@@ -60,6 +62,8 @@ public class NumberPluginProvider implements PluginProvider {
             case Short s -> new BigInteger(String.valueOf(s));
             case Integer i -> new BigInteger(String.valueOf(i));
             case Long l -> new BigInteger(String.valueOf(l));
+            case AtomicInteger i -> new BigInteger(String.valueOf(i));
+            case AtomicLong l -> new BigInteger(String.valueOf(l));
             case BigDecimal bd -> bd.toBigInteger();
             default -> throw new ProcessException("cannot cast " + number.getClass().getSimpleName() + " to BigInteger");
         };
@@ -71,6 +75,8 @@ public class NumberPluginProvider implements PluginProvider {
             case Short s -> new BigDecimal(String.valueOf(s));
             case Integer i -> new BigDecimal(String.valueOf(i));
             case Long l -> new  BigDecimal(String.valueOf(l));
+            case AtomicInteger i -> new BigDecimal(String.valueOf(i));
+            case AtomicLong l -> new  BigDecimal(String.valueOf(l));
             case Float f -> new BigDecimal(String.valueOf(f));
             case Double d -> new  BigDecimal(String.valueOf(d));
             case BigInteger bi -> new BigDecimal(bi.toString());

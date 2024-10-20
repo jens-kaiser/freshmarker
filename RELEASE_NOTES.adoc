@@ -2,6 +2,10 @@
 
 == Release 1.6.4 (planned 2024-10-XX)
 
+=== Improvements
+
+- add `AtomicInteger` and `AtomLong` support
+
 == Deprecated
 
 - remove `BaseReflectionsMap`, `TemplateMapReflectionsProvider`

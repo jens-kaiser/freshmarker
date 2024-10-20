@@ -53,6 +53,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -149,6 +151,8 @@ public final class Configuration {
 
         templateLoader = new DefaultFileSystemTemplateLoader();
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
+        mappingTemplateObjectProvider.addMapper(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o));
+        mappingTemplateObjectProvider.addMapper(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o));
         mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
         mappingTemplateObjectProvider.addMapper(Integer.class, o -> TemplateNumber.of((Integer) o));
         mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber((Short) o));
