@@ -40,4 +40,8 @@ public interface TemplateObject {
     default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
         throw new ProcessException("unsupported operation: " + operator);
     }
+
+    default TemplateObject negate() {
+        throw new ProcessException("unsupported operation: negate");
+    }
 }

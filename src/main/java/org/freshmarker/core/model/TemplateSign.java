@@ -1,7 +1,6 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateSign implements TemplateExpression {
 
@@ -12,7 +11,7 @@ public class TemplateSign implements TemplateExpression {
   }
 
   @Override
-  public TemplateNumber evaluateToObject(ProcessContext context) {
-    return expression.evaluate(context, TemplateNumber.class).negate();
+  public TemplateObject evaluateToObject(ProcessContext context) {
+    return expression.evaluateToObject(context).negate();
   }
 }
