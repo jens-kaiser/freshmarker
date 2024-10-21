@@ -52,9 +52,10 @@ public final class Template {
     }
 
     public String process(Map<String, Object> dataModel) {
-        StringBuilderWriter writer = new StringBuilderWriter();
-        process(dataModel, writer);
-        return writer.toString();
+        try (StringBuilderWriter writer = new StringBuilderWriter()) {
+            process(dataModel, writer);
+            return writer.toString();
+        }
     }
 
     public Template reduce(Map<String, Object> dataModel) {
@@ -68,7 +69,7 @@ public final class Template {
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());
-            log.info("reduced by: {}", status);
+            log.debug("reduced by: {}", status);
             return new Template(builder, templateLoader, path, reducedFragment);
         } catch (RuntimeException e) {
             throw new ReduceException("cannot reduce: " + e.getMessage(), e);
