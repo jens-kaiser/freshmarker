@@ -120,7 +120,7 @@ Without escaping, the script fragment is inserted and a more or less dangerous _
 
 _FreshMarker_'s escape mechanism replaces the necessary meta characters of an output format to neutralize them.
 The following table lists the supported output formats and their meta character replacements.
-the last two lines indicate how comments can be inserted into the output using the @log directive.
+the last two lines indicate how comments can be inserted into the output using the @log directive. The `␣` character is used to indicate whitespaces in prefixes and suffixes.
 
 .Output Formate
 |===
@@ -129,19 +129,19 @@ the last two lines indicate how comments can be inserted into the output using t
 | HTML
 | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
-| `<!--`
-| ` -->`
+| `<!--␣`
+| `␣-\->`
 
 | XHTML
 | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
-| `<!-- `
-| ` -->`
+| `<!--␣`
+| `␣-\->`
 
 | XML  | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `\&apos;`;
-| `<!-- `
-| ` -->`
+| `<!--␣`
+| `␣-\->`
 
 | ADOC
 2+| no escaping
@@ -154,13 +154,13 @@ the last two lines indicate how comments can be inserted into the output using t
 
 | JavaScript
 2+| no escaping
-| `/* `
-| ` */`
+| `/*␣`
+| `␣*/`
 
 | CSS
 2+| no escaping
-| `/* `
-| ` */`
+| `/*`
+| `*/`
 
 | JSON
 2+| no escaping
