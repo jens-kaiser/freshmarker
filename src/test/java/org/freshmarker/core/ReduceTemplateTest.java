@@ -47,6 +47,17 @@ class ReduceTemplateTest {
     }
 
     @Test
+    void reduceOutputFormat() {
+        Map<String, Object> model = Map.of("company", "schegge.de");
+        Template template = templateBuilder.getTemplate("test", "<#outputformat 'HTML'>${company}: ${name}</#outputformat>").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de: Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals(6, reductionStatus.total().get());
+        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(1, reductionStatus.changed().get());
+    }
+
+    @Test
     void reduceIf() {
         Map<String, Object> model = Map.of("company", "schegge.de", "flag", true);
         Template template = templateBuilder.getTemplate("test", "<#if flag>${company}<#else>${name}</#if>").reduce(model, reductionStatus);

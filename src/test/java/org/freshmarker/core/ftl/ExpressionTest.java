@@ -274,4 +274,16 @@ class ExpressionTest {
         Template template = builder.getTemplate("test", "${null.value}");
         assertThrows(ProcessException.class, () -> template.process(Map.of()));
     }
+
+    @Test
+    void invalidRelationUsage() {
+        Template template = builder.getTemplate("test", "${true > false}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of()));
+    }
+
+    @Test
+    void invalidNegateUsage() {
+        Template template = builder.getTemplate("test", "${-.now}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of()));
+    }
 }
