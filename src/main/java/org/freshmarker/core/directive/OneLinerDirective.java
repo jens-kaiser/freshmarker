@@ -26,9 +26,6 @@ public class OneLinerDirective implements UserDirective {
 
     @Override
     public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
-        if (body == null) {
-            throw new ProcessException("one-liner body missing");
-        }
         Writer oldWriter = context.getWriter();
         FlattenFilterWriter writer = new FlattenFilterWriter(context.getWriter());
         context.setWriter(writer);

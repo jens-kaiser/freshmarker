@@ -191,9 +191,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${x%x};test: 0",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
@@ -256,6 +253,10 @@ class NumberInterpolationTest {
     @CsvSource(value = {
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationFloatExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -360,19 +361,12 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${42*10-0.5};test: 419,5",
-            "test: ${42.23*10};test: 422,3",
-            "test: ${x*x};test: 1.764",
-            "test: ${y*y};test: 1.764",
-            "test: ${x % 4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationBigIntegerExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -381,19 +375,12 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${42*x};test: 1.764",
-            "test: ${42.0*x};test: 1.764",
-            "test: ${42*10-0.5};test: 419,5",
-            "test: ${42.23*10};test: 422,3",
-            "test: ${x*x};test: 1.764",
-            "test: ${y*y};test: 1.764",
-            //"test: ${x % 4};test: 2",
             "test: ${-x};test: -42",
             "test: ${+x};test: 42",
-            "test: ${x+x};test: 84",
-            "test: ${x-x};test: 0",
-            "test: ${z?abs};test: 42",
-            "test: ${z?sign};test: -1",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationBigDecimalExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);

@@ -8,6 +8,7 @@ import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
+import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -163,6 +166,8 @@ class NumberPluginProviderTest {
         assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(42L), List.of(), null));
         assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(new BigInteger("42")), List.of(), null));
         assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(new BigDecimal("42")), List.of(), null));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(new AtomicInteger(42), Type.INTEGER), List.of(), null));
+        assertNumberType(BigInteger.class, builtIn.apply(new TemplateNumber(new AtomicLong(42), Type.LONG), List.of(), null));
     }
 
     @Test
@@ -175,6 +180,8 @@ class NumberPluginProviderTest {
         assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber((float) 42.0), List.of(), null));
         assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(new BigInteger("42")), List.of(), null));
         assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(new BigDecimal("42")), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(new AtomicInteger(42), Type.INTEGER), List.of(), null));
+        assertNumberType(BigDecimal.class, builtIn.apply(new TemplateNumber(new AtomicLong(42), Type.LONG), List.of(), null));
     }
 
     void assertNumberType(Class<?> type, TemplateObject object) {
