@@ -22,9 +22,4 @@ public class TemplateStringMarkup implements TemplateObject {
     public TemplateString evaluateToObject(ProcessContext context) {
         return outputFormat.escape(context.getEnvironment(), content);
     }
-
-    public Class<?> getType() {
-        return getClass();
-    }
-
 }

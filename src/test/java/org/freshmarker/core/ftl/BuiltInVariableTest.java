@@ -92,6 +92,20 @@ class BuiltInVariableTest {
     }
 
     @Test
+    void invalidIsBeforeWithoutParameter() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before}");
+        Map<String, Object> model = Map.of();
+        assertThrows(IllegalArgumentException.class, () -> template.process(model));
+    }
+
+    @Test
+    void invalidIsBeforeWithWrongParameterType() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before(42)}");
+        Map<String, Object> model = Map.of();
+        assertThrows(IllegalStateException.class, () -> template.process(model));
+    }
+
+    @Test
     void unknownBuiltInVariable() throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${.gonzo}");
         Map<String, Object> model = Map.of();
