@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReduceTemplateTest {
     private ReductionStatus reductionStatus;
@@ -320,6 +321,13 @@ class ReduceTemplateTest {
         assertEquals(1, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS",
                 reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4), "firstname", "jens")));
+    }
+
+    @Test
+    void reduceWithWrongType() {
+        Map<String, Object> reduceModel = Map.of("company", "schegge.de");
+        Template template = templateBuilder.getTemplate("test", "${1 + company}");
+        assertThrows(ReduceException.class, () -> template.reduce(reduceModel, reductionStatus));
     }
 
     @Test

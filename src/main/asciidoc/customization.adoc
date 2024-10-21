@@ -53,6 +53,19 @@ public interface OutputFormat {
 }
 ----
 
+=== Custom primitive Model Types
+
+==== Evaluate Value
+TBD
+
+==== Type Mapper
+
+TBD
+
+==== Operator Overloading
+
+TBD
+
 === Custom Plug-Ins
 
 The _Plug-in_ mechanism is the core of _FreshMarker_'s modular extension concept. _Plug-ins_ can be used to add new types, formatters, functions, user directives, built-ins and mappers.
