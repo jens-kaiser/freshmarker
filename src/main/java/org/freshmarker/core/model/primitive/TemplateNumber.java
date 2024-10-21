@@ -7,8 +7,6 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 public class TemplateNumber extends TemplatePrimitive<Number> {
@@ -490,14 +488,6 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
 
     public TemplateNumber(BigDecimal value) {
         this(value, Type.BIG_DECIMAL);
-    }
-
-    public TemplateNumber(AtomicInteger value) {
-        this(value, Type.INTEGER);
-    }
-
-    public TemplateNumber(AtomicLong value) {
-        this(value, Type.LONG);
     }
 
     public TemplateNumber(byte value) {

@@ -228,7 +228,7 @@ class TemporalInterpolationTest {
 
     @Test
     void localDateTimeAtZoneWithWrongParameter() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone(42)}");
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone('42')}");
         assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
     }
 

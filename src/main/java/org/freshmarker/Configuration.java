@@ -21,6 +21,7 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
+import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
@@ -151,8 +152,8 @@ public final class Configuration {
 
         templateLoader = new DefaultFileSystemTemplateLoader();
         mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
-        mappingTemplateObjectProvider.addMapper(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o));
-        mappingTemplateObjectProvider.addMapper(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o));
+        mappingTemplateObjectProvider.addMapper(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o, Type.LONG));
+        mappingTemplateObjectProvider.addMapper(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o, Type.INTEGER));
         mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
         mappingTemplateObjectProvider.addMapper(Integer.class, o -> TemplateNumber.of((Integer) o));
         mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber((Short) o));

@@ -446,4 +446,49 @@ class NumberInterpolationTest {
         assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
                 "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"))));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${a?max('45')}",
+            "${b?max('45')}",
+            "${c?max('45')}",
+            "${d?max('45')}",
+            "${e?max('45')}",
+            "${f?max('45')}",
+            "${g?max('45')}",
+            "${h?max('45')}",
+
+            "${a?max}",
+            "${b?max}",
+            "${c?max}",
+            "${d?max}",
+            "${e?max}",
+            "${f?max}",
+            "${g?max}",
+            "${h?max}",
+
+            "${a?min('45')}",
+            "${b?min('45')}",
+            "${c?min('45')}",
+            "${d?min('45')}",
+            "${e?min('45')}",
+            "${f?min('45')}",
+            "${g?min('45')}",
+            "${h?min('45')}",
+
+            "${a?min}",
+            "${b?min}",
+            "${c?min}",
+            "${d?min}",
+            "${e?min}",
+            "${f?min}",
+            "${g?min}",
+            "${h?min}",
+    }, delimiterString = ";")
+    void interpolationInvalidMinMax(String templateSource) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        Map<String, Object> model = Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
+                "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"));
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
 }
