@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -285,5 +286,11 @@ class ExpressionTest {
     void invalidNegateUsage() {
         Template template = builder.getTemplate("test", "${-.now}");
         assertThrows(ProcessException.class, () -> template.process(Map.of()));
+    }
+
+    @Test
+    void invalidEqualityUsage() {
+        Template template = builder.getTemplate("test", "${list != list}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of("list", List.of())));
     }
 }

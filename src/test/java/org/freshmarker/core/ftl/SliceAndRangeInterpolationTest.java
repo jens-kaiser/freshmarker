@@ -3,6 +3,9 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.UnsupportedDataTypeException;
+import org.freshmarker.core.WrongTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SliceAndRangeInterpolationTest {
     private Configuration configuration;
@@ -41,5 +45,12 @@ class SliceAndRangeInterpolationTest {
     void interpolationRange() throws ParseException {
         Template template = configuration.builder().getTemplate("test", "test: ${(0..20)[10]}");
         assertEquals("test: 10", template.process(Map.of()));
+    }
+
+    @Test
+    void invalidSliceUsage() throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "test: ${map[1..3]}");
+        Map<String, Object> model = Map.of("map", Map.of());
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 }
