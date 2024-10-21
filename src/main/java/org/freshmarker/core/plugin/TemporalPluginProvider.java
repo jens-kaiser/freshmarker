@@ -154,8 +154,8 @@ public class TemporalPluginProvider implements PluginProvider {
         String value = y.getFirst().evaluate(e, TemplateString.class).getValue();
         try {
             return ZoneId.of(value);
-        } catch (Exception ex) {
-            throw new ProcessException("no valid zoneId");
+        } catch (RuntimeException ex) {
+            throw new ProcessException("no valid zoneId", ex);
         }
     }
 

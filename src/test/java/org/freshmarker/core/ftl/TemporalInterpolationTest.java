@@ -133,6 +133,8 @@ class TemporalInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "de;P0D;test: ${temporal};test: P0D",
+            "de;P0Y0M0D;test: ${temporal};test: P0D",
             "de;P2Y4M1D;test: ${temporal};test: P2Y4M1D",
             "de;P4M1D;test: ${temporal};test: P4M1D",
             "de;P2Y2D;test: ${temporal};test: P2Y2D",
@@ -145,13 +147,15 @@ class TemporalInterpolationTest {
             "en;P2Y4M1D;test: ${temporal?c};test: P2Y4M1D",
             "en;P4M1D;test: ${temporal?c};test: P4M1D",
             "en;P2Y2D;test: ${temporal?c};test: P2Y2D",
+            "de;P0D;test: ${temporal?h};test: ",
+            "de;P0Y0M0D;test: ${temporal?h};test: ",
             "de;P2Y4M1D;test: ${temporal?h};test: 2 Jahre, 4 Monate, 1 Tag",
             "de;P4M1D;test: ${temporal?h};test: 4 Monate, 1 Tag",
             "de;P2Y2D;test: ${temporal?h};test: 2 Jahre, 2 Tage",
             "en;P2Y4M1D;test: ${temporal?h};test: 2 years, 4 months, 1 day",
             "en;P4M1D;test: ${temporal?h};test: 4 months, 1 day",
             "en;P2Y2D;test: ${temporal?h};test: 2 years, 2 days",
-    }, delimiterString = ";")
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void interpolationPeriod(Locale locale, Period period, String input, String expected) throws ParseException {
         Template template = templateBuilder.withLocale(locale).getTemplate("test", input);
         Map<String, Object> dataModel = Map.of("temporal", period);
@@ -217,6 +221,18 @@ class TemporalInterpolationTest {
     }
 
     @Test
+    void localDateTimeAtZoneWithoutParameter() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone}");
+        assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
+    }
+
+    @Test
+    void localDateTimeAtZoneWithWrongParameter() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone(42)}");
+        assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
+    }
+
+    @Test
     void interpolationLocalDateTimeAtZoneC() throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')?c}");
         assertEquals("test: 1968-08-24T12:30:45+01:00[Europe/Berlin]", template.process(TEMPORAL));
@@ -258,7 +274,7 @@ class TemporalInterpolationTest {
         assertEquals("invalid parameter count:2 at test:1:7 '${temporal?at_zone('Europe/Berlin','Europe/London')}'", exception.getMessage());
     }
 
-        @ParameterizedTest
+    @ParameterizedTest
     @CsvSource(value = {
             "de,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 vorgestern gestern heute morgen übermorgen 1968-08-27 ",
             "en,test: <#list dates as date>${date?h(now)} </#list>,test: 1968-08-21 the day before yesterday yesterday today tomorrow the day after tomorrow 1968-08-27 ",

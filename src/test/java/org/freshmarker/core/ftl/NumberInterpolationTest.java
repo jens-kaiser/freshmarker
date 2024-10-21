@@ -120,6 +120,28 @@ class NumberInterpolationTest {
             "test: ${bi%bi};test: 0",
             "test: ${ai%ai};test: 0",
             "test: ${al%al};test: 0",
+
+            "test: ${+b};test: 42",
+            "test: ${+s};test: 42",
+            "test: ${+i};test: 42",
+            "test: ${+l};test: 42",
+            "test: ${+f};test: 42",
+            "test: ${+d};test: 42",
+            "test: ${+bd};test: 42",
+            "test: ${+bi};test: 42",
+            "test: ${+ai};test: 42",
+            "test: ${+al};test: 42",
+
+            "test: ${-b};test: -42",
+            "test: ${-s};test: -42",
+            "test: ${-i};test: -42",
+            "test: ${-l};test: -42",
+            "test: ${-f};test: -42",
+            "test: ${-d};test: -42",
+            "test: ${-bd};test: -42",
+            "test: ${-bi};test: -42",
+            "test: ${-ai};test: -42",
+            "test: ${-al};test: -42",
     }, delimiterString = ";")
     void additiveMultiplicative(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -191,8 +213,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -205,8 +225,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -219,8 +237,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${0+x};test: 42",
             "test: ${x+0};test: 42",
             "test: ${x-0};test: 42",
@@ -237,8 +253,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -251,8 +265,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -265,8 +277,10 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
+            "test: ${z < x};test: yes",
+            "test: ${z <= x};test: yes",
+            "test: ${z > x};test: no",
+            "test: ${z >= x};test: no",
     }, delimiterString = ";")
     void interpolationDoubleExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
@@ -361,8 +375,6 @@ class NumberInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -370,13 +382,11 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationBigIntegerExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", new BigInteger("42"), "y", 42, "z", new BigInteger("-42"))));
+        assertEquals(expected, template.process(Map.of("x", new BigInteger("42"), "z", new BigInteger("-42"))));
     }
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${-x};test: -42",
-            "test: ${+x};test: 42",
             "test: ${z < x};test: yes",
             "test: ${z <= x};test: yes",
             "test: ${z > x};test: no",
@@ -384,7 +394,13 @@ class NumberInterpolationTest {
     }, delimiterString = ";")
     void interpolationBigDecimalExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("x", new BigDecimal("42"), "y", 42, "z", new BigDecimal("-42"))));
+        assertEquals(expected, template.process(Map.of("x", new BigDecimal("42"), "z", new BigDecimal("-42"))));
+    }
+
+    @Test
+    void unsupportedBigDecimalExpression() throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "${z % 2}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of("z", new BigDecimal("42"))));
     }
 
     @ParameterizedTest
@@ -397,6 +413,25 @@ class NumberInterpolationTest {
             "${f?min(40)};40",
             "${g?min(40)};40",
             "${h?min(40)};40",
+
+            "${a?min(45)};42",
+            "${b?min(45)};42",
+            "${c?min(45)};42",
+            "${d?min(45)};42",
+            "${e?min(45)};42",
+            "${f?min(45)};42",
+            "${g?min(45)};42",
+            "${h?min(45)};42",
+
+            "${a?max(40)};42",
+            "${b?max(40)};42",
+            "${c?max(40)};42",
+            "${d?max(40)};42",
+            "${e?max(40)};42",
+            "${f?max(40)};42",
+            "${g?max(40)};42",
+            "${h?max(40)};42",
+
             "${a?max(45)};45",
             "${b?max(45)};45",
             "${c?max(45)};45",
