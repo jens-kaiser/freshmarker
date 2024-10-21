@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.WrongTypeException;
 
 public class TemplateDotKey implements TemplateExpression {
 
@@ -17,9 +18,9 @@ public class TemplateDotKey implements TemplateExpression {
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateObject templateObject = map.evaluateToObject(context);
         return switch (templateObject) {
-            case TemplateNull templateNull -> templateNull;
+            case TemplateNull ignored -> throw new ProcessException("null map: " + dotKey);
             case TemplateMap templateMap -> templateMap.get(context, dotKey);
-            case null, default -> throw new ProcessException("index out of range: " + dotKey + " " + templateObject);
+            case null, default -> throw new WrongTypeException("wrong map type: " + dotKey + " " + templateObject);
         };
     }
 }

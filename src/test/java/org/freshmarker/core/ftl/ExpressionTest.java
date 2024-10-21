@@ -4,6 +4,8 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.WrongTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -259,5 +261,17 @@ class ExpressionTest {
     void simpleListLiteralWithoutComma() {
         Template template = builder.getTemplate("test", "${[1  2 '3'  true 3 < 4][2]}");
         assertEquals("3", template.process(Map.of()));
+    }
+
+    @Test
+    void invalidDotKeyUsage() {
+        Template template = builder.getTemplate("test", "${''.value}");
+        assertThrows(WrongTypeException.class, () -> template.process(Map.of()));
+    }
+
+    @Test
+    void dotKeyOnNull() {
+        Template template = builder.getTemplate("test", "${null.value}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of()));
     }
 }
