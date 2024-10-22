@@ -28,6 +28,7 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 |Number|`BigInteger`, `Long`, `Integer`, `Short`, `Byte`|yes
 |Number|`long`, `int`, `short`, `byte`, `double`, `float`|yes
 |Number|`BigDecimal`, `Double`, `Float`|yes
+|Number|`AtomicLong`, `AtomicInteger`|yes
 |Boolean|`Boolean`, `boolean`|yes
 |DateTime|`Instant`, `ZonedDateTime`, `LocalDateTime`, `Date`|yes
 |Date|`LocalDate`, `java.sql.Date`|yes
