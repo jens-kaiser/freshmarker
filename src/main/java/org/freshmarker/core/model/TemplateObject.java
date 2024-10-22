@@ -1,12 +1,11 @@
 package org.freshmarker.core.model;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrongTypeException;
+import org.freshmarker.core.fragment.RelationType;
 
-public interface TemplateObject {
-
+public interface TemplateObject extends TemplateOperation {
     default boolean isPrimitive() {
         return false;
     }
@@ -33,15 +32,7 @@ public interface TemplateObject {
         return getClass();
     }
 
-    default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+    default boolean relation(RelationType operator, TemplateObject operand, ProcessContext context) {
         throw new ProcessException("unsupported operation: " + operator);
-    }
-
-    default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        throw new ProcessException("unsupported operation: " + operator);
-    }
-
-    default TemplateObject negate() {
-        throw new ProcessException("unsupported operation: negate");
     }
 }

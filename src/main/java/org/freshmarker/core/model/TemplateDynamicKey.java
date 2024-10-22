@@ -30,13 +30,13 @@ public class TemplateDynamicKey implements TemplateExpression {
         if (templateObject instanceof TemplateRange range) {
             TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
             if (range.isRightUnlimited()) {
-                return lower.add(index);
+                return lower.add(index, context);
             }
             TemplateNumber upper = range.getUpper().evaluate(context, TemplateNumber.class);
             if (Math.abs(lower.asInt() - upper.asInt()) <= index.asInt()) {
                 throw new ProcessException("index out of range: " + index);
             }
-            return lower.add(lower.asInt() < upper.asInt() ? index : index.negate());
+            return lower.add(lower.asInt() < upper.asInt() ? index : index.negate(), context);
         }
         TemplateListSequence list = (TemplateListSequence) templateObject;
         return list.get(context, beginIndex);

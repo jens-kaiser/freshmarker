@@ -1,24 +1,30 @@
 package org.freshmarker.core.model;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 
-public class TemplateOperation implements TemplateExpression {
-
-    private final TokenType op;
-    private final TemplateObject left;
-    private final TemplateObject right;
-
-    public TemplateOperation(TokenType op, TemplateObject left, TemplateObject right) {
-        this.op = op;
-        this.left = left;
-        this.right = right;
+public interface TemplateOperation {
+    default TemplateObject add(TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: *");
     }
 
-    @Override
-    public TemplateObject evaluateToObject(ProcessContext processContext) {
-        TemplateObject leftValue = left.evaluateToObject(processContext);
-        TemplateObject rightValue = right.evaluateToObject(processContext);
-        return leftValue.operation(op, rightValue, processContext);
+    default TemplateObject subtract(TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: *");
+    }
+
+    default TemplateObject multiply(TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: *");
+    }
+
+    default TemplateObject divide(TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: /");
+    }
+
+    default TemplateObject modulo(TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: %");
+    }
+
+    default TemplateObject negate() {
+        throw new ProcessException("unsupported operation: negate");
     }
 }

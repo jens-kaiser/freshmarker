@@ -1,8 +1,8 @@
 package org.freshmarker.core.model.primitive;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.fragment.RelationType;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.math.BigDecimal;
@@ -523,24 +523,34 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
         return type;
     }
 
-    public TemplateNumber add(TemplateNumber other) {
-        return Type.getNewType(this, other).add(this, other);
+    @Override
+    public TemplateNumber add(TemplateObject other, ProcessContext context) {
+        TemplateNumber number = other.evaluate(context, TemplateNumber.class);
+        return Type.getNewType(this, number).add(this, number);
     }
 
-    public TemplateNumber subtract(TemplateNumber other) {
-        return Type.getNewType(this, other).sub(this, other);
+    @Override
+    public TemplateNumber subtract(TemplateObject other, ProcessContext context) {
+        TemplateNumber number = other.evaluate(context, TemplateNumber.class);
+        return Type.getNewType(this, number).sub(this, number);
     }
 
-    public TemplateNumber multiply(TemplateNumber other) {
-        return Type.getNewType(this, other).mul(this, other);
+    @Override
+    public TemplateNumber multiply(TemplateObject other, ProcessContext context) {
+        TemplateNumber number = other.evaluate(context, TemplateNumber.class);
+        return Type.getNewType(this, number).mul(this, number);
     }
 
-    public TemplateNumber divide(TemplateNumber other) {
-        return Type.getNewType(this, other).div(this, other);
+    @Override
+    public TemplateNumber divide(TemplateObject other, ProcessContext context) {
+        TemplateNumber number = other.evaluate(context, TemplateNumber.class);
+        return Type.getNewType(this, number).div(this, number);
     }
 
-    public TemplateNumber modulo(TemplateNumber other) {
-        return Type.getNewType(this, other).mod(this, other);
+    @Override
+    public TemplateNumber modulo(TemplateObject other, ProcessContext context) {
+        TemplateNumber number = other.evaluate(context, TemplateNumber.class);
+        return Type.getNewType(this, number).mod(this, number);
     }
 
     public TemplateNumber sign() {
@@ -553,10 +563,6 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
 
     public TemplateNumber negate() {
         return getType().negate(this);
-    }
-
-    public TemplateNumber compare(TemplateNumber other) {
-        return TemplateNumber.of(Type.getNewType(this, other).compare(this, other));
     }
 
     public TemplateNumber min(TemplateNumber other) {
@@ -572,27 +578,8 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     }
 
     @Override
-    public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        TemplateNumber rightNumber = operand.evaluate(context, TemplateNumber.class);
-        return switch (operator) {
-            case PLUS -> add(rightNumber);
-            case MINUS -> subtract(rightNumber);
-            case TIMES -> multiply(rightNumber);
-            case DIVIDE -> divide(rightNumber);
-            case PERCENT -> modulo(rightNumber);
-            default -> super.operation(operator, operand, context);
-        };
-    }
-
-    @Override
-    public boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        TemplateNumber rightValue = operand.evaluate(context, TemplateNumber.class);
-        return switch (operator) {
-            case LT -> compare(rightValue).sign().asInt() < 0;
-            case GT -> compare(rightValue).sign().asInt() > 0;
-            case LTE -> compare(rightValue).sign().asInt() <= 0;
-            case GTE -> compare(rightValue).sign().asInt() >= 0;
-            default -> super.relation(operator, operand, context);
-        };
+    public boolean relation(RelationType operator, TemplateObject operand, ProcessContext context) {
+        TemplateNumber evaluate = operand.evaluate(context, TemplateNumber.class);
+        return operator.compare(Type.getNewType(this, evaluate).compare(this, evaluate));
     }
 }

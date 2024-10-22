@@ -4,7 +4,7 @@ import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateJunction implements TemplateBooleanExpression {
+public class TemplateJunction implements TemplateBooleanExpression, TemplateObject {
     private final TokenType type;
     private final TemplateObject left;
     private final TemplateObject right;

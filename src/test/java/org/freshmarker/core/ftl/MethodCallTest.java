@@ -24,7 +24,7 @@ class MethodCallTest {
                 (context, args) -> args.getFirst() instanceof  TemplateNumber number ? number.abs() : TemplateNull.NULL);
         configuration.registerFunction("avg",
                 (context, args) -> args.stream().map(o -> o.evaluate(context, TemplateNumber.class))
-                        .reduce(TemplateNumber::add).orElseThrow().divide(new TemplateNumber(args.size())));
+                        .reduce((n, m) -> n.add(m, context)).orElseThrow().divide(new TemplateNumber(args.size()), context));
     }
 
     @ParameterizedTest

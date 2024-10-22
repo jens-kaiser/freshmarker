@@ -6,7 +6,6 @@ import ftl.Token.TokenType;
 import ftl.ast.AdditiveExpression;
 import ftl.ast.AndExpression;
 import ftl.ast.BaseExpression;
-import ftl.ast.BaseNode;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
@@ -28,11 +27,17 @@ import ftl.ast.PrimaryExpression;
 import ftl.ast.RangeExpression;
 import ftl.ast.RelationalExpression;
 import ftl.ast.UnaryPlusMinusExpression;
+import org.freshmarker.core.model.operation.TemplateGtRelational;
+import org.freshmarker.core.model.operation.TemplateGteRelational;
+import org.freshmarker.core.model.operation.TemplateLtRelational;
+import org.freshmarker.core.model.operation.TemplateLteRelational;
+import org.freshmarker.core.model.operation.TemplateAddOperation;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
 import org.freshmarker.core.model.TemplateBuiltInVariable;
 import org.freshmarker.core.model.TemplateDefault;
+import org.freshmarker.core.model.operation.TemplateDivOperation;
 import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
@@ -40,16 +45,17 @@ import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateMethodCall;
+import org.freshmarker.core.model.operation.TemplateModOperation;
+import org.freshmarker.core.model.operation.TemplateMulOperation;
 import org.freshmarker.core.model.TemplateNegative;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.TemplateOperation;
 import org.freshmarker.core.model.TemplateRange;
-import org.freshmarker.core.model.TemplateRelational;
 import org.freshmarker.core.model.TemplateRightLimitedRange;
 import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.TemplateSign;
 import org.freshmarker.core.model.TemplateSlice;
+import org.freshmarker.core.model.operation.TemplateSubOperation;
 import org.freshmarker.core.model.TemplateVariable;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
@@ -175,28 +181,44 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(AdditiveExpression expression, Object input) {
-        return handleMultiplicativeAndAdditiveExpression(expression);
+        TemplateObject result = expression.getFirst().accept(this, null);
+        for (int i = 1; i < expression.size(); i += 2) {
+            TokenType tokenType = (TokenType) expression.get(i).getType();
+            TemplateObject second = expression.get(i + 1).accept(this, null);
+            TemplateObject operation = switch (tokenType) {
+                case PLUS -> new TemplateAddOperation(result, second);
+                case MINUS -> new TemplateSubOperation(result, second);
+                default -> throw new ParsingException("unsupported operation: " + tokenType, expression);
+            };
+            result = handlePrimitives(result, second, operation);
+        }
+        return result;
     }
 
     @Override
     public TemplateObject visit(MultiplicativeExpression expression, Object input) {
-        return handleMultiplicativeAndAdditiveExpression(expression);
-    }
-
-    private TemplateObject handleMultiplicativeAndAdditiveExpression(BaseNode expression) {
         TemplateObject result = expression.getFirst().accept(this, null);
         for (int i = 1; i < expression.size(); i += 2) {
-            Token token = (Token) expression.get(i);
+            TokenType tokenType = (TokenType) expression.get(i).getType();
             TemplateObject second = expression.get(i + 1).accept(this, null);
-            TemplateOperation operation = new TemplateOperation(token.getType(), result, second);
-            if (result.isPrimitive() && second.isPrimitive()) {
-                result = operation.evaluateToObject(null);
-            } else {
-                result = operation;
-            }
+            TemplateObject operation = switch (tokenType) {
+                case TIMES -> new TemplateMulOperation(result, second);
+                case DIVIDE -> new TemplateDivOperation(result, second);
+                case PERCENT -> new TemplateModOperation(result, second);
+                default -> throw new ParsingException("invalid operation: " + tokenType, expression);
+            };
+            result = handlePrimitives(result, second, operation);
         }
         return result;
     }
+
+    private static TemplateObject handlePrimitives(TemplateObject result, TemplateObject second, TemplateObject operation) {
+        if (result.isPrimitive() && second.isPrimitive()) {
+            return operation.evaluateToObject(null);
+        }
+        return operation;
+    }
+
 
     @Override
     public TemplateObject visit(Parenthesis expression, Object input) {
@@ -223,7 +245,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         TokenType type = ((Token) expression.get(1)).getType();
-        TemplateRelational relational = new TemplateRelational(type, left, right);
+        TemplateObject relational = switch (type) {
+            case GT -> new TemplateGtRelational(left, right);
+            case GTE -> new TemplateGteRelational(left, right);
+            case LTE -> new TemplateLteRelational(left, right);
+            case LT -> new TemplateLtRelational(left, right);
+            default -> throw new ParsingException("invalid relation: " + type, expression);
+        };
         if (left instanceof TemplateNumber && right instanceof TemplateNumber) {
             return relational.evaluateToObject(null);
         }
@@ -232,10 +260,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(AndExpression expression, Object input) {
-        return switch (((Token) expression.get(1)).getType()) {
+        TokenType type = ((Token) expression.get(1)).getType();
+        return switch (type) {
             case AND -> handleAnd(expression);
             case AND2 -> handleAnd2(expression);
-            default -> throw new IllegalArgumentException("invalid conjunction");
+            default -> throw new ParsingException("invalid conjunction: " + type, expression);
         };
     }
 
@@ -271,11 +300,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateObject visit(OrExpression expression, Object input) {
-        return switch (((Token) expression.get(1)).getType()) {
+        TokenType type = ((Token) expression.get(1)).getType();
+        return switch (type) {
             case OR -> handleOr(expression);
             case OR2 -> handleOr2(expression);
             case XOR -> handleXor(expression);
-            default -> throw new IllegalArgumentException("invalid disjunction");
+            default -> throw new ParsingException("invalid disjunction: " + type, expression);
         };
     }
 

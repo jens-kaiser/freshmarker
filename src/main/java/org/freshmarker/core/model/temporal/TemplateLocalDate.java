@@ -1,6 +1,5 @@
 package org.freshmarker.core.model.temporal;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
@@ -18,13 +17,15 @@ public class TemplateLocalDate extends TemplatePrimitive<LocalDate> implements T
     }
 
     @Override
-    public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+    public TemplateObject add(TemplateObject operand, ProcessContext context) {
         TemplateObject duration = operand.evaluateToObject(context);
-        return switch (operator) {
-            case PLUS -> new TemplateLocalDate(getValue().plus(getValue(duration)));
-            case MINUS -> new TemplateLocalDate(getValue().minus(getValue(duration)));
-            default -> super.operation(operator, operand, context);
-        };
+        return new TemplateLocalDate(getValue().plus(getValue(duration)));
+    }
+
+    @Override
+    public TemplateObject subtract(TemplateObject operand, ProcessContext context) {
+        TemplateObject duration = operand.evaluateToObject(context);
+        return new TemplateLocalDate(getValue().minus(getValue(duration)));
     }
 
     private static TemporalAmount getValue(TemplateObject object) {
