@@ -59,11 +59,13 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
 
     @Override
     public TemplateRange slice(int min, ProcessContext context) {
+        lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
         return new TemplateRightUnlimitedRange(TemplateNumber.of(lowerNumber + min));
     }
 
     @Override
     public TemplateRange slice(int min, int max, ProcessContext context) {
-        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), TemplateNumber.of(max));
+        lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
+        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), TemplateNumber.of(lowerNumber + max));
     }
 }

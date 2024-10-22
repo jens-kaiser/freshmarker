@@ -84,11 +84,12 @@ class SliceAndRangeInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "1;7;2;4;test: 3, 4, 5",
-            "7;1;2;4;test: 5, 4, 3",
+            "test: ${(a..b)[c..d]?join};1;7;2;4;test: 3, 4, 5",
+            "test: ${(a..b)[c..d]?join};7;1;2;4;test: 5, 4, 3",
+            "test: ${(a..)[c..d]?join};1;7;2;4;test: 3, 4, 5",
     }, delimiterString = ";")
-    void interpolationLimitedSliceOnRange(int a, int b, int c, int d, String expected) throws ParseException {
-        Template template = configuration.builder().getTemplate("test", "test: ${(a..b)[c..d]?join}");
+    void interpolationLimitedSliceOnRange(String input, int a, int b, int c, int d, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("a", a, "b", b, "c", c, "d", d)));
     }
 
