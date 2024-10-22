@@ -1,7 +1,6 @@
 package org.freshmarker.core.directive;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 

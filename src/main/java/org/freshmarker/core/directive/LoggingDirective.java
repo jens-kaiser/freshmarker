@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -14,8 +15,8 @@ public class LoggingDirective implements UserDirective {
 
   @Override
   public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
-    if (body != null) {
-      throw new ProcessException("body on log not allowed");
+    if (body != ConstantFragment.EMPTY) {
+      throw new ProcessException("body on log not allowed:");
     }
     try {
       String message = getString(args, "message", context).orElse("");

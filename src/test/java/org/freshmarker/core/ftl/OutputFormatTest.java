@@ -98,7 +98,7 @@ class OutputFormatTest {
                 </#list>
                 </#outputformat>""");
         Map<String, String> row = Map.of("value1", value1, "value2", value2.replace('@', '\n'));
-        assertEquals("VALUE1,VALUE2\n" + expected.replace('@', '\n') + "\n", template.process(Map.of("sequence", List.of(row))));
+        assertEquals("VALUE1,VALUE2\n" + expected.replace('@', '\n') + "\n" + expected.replace('@', '\n') + "\n", template.process(Map.of("sequence", List.of(row,row))));
     }
 
     @ParameterizedTest

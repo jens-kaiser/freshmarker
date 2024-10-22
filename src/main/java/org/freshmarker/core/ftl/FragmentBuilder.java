@@ -53,6 +53,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -204,7 +205,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             body = Fragments.optimize(fragments);
         }
         logger.debug("user directive: {} {}", node, body);
-        input.add(new UserDirectiveFragment(name, currentNameSpace, namedArgs, body));
+        input.add(new UserDirectiveFragment(name, currentNameSpace, namedArgs, Objects.requireNonNullElse(body, ConstantFragment.EMPTY)));
         return input;
     }
 
@@ -223,8 +224,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     }
 
     private Fragment getFragment(MacroDefinition ftl) {
-        if (ftl.getLast().getType() == TokenType.CLOSE_EMPTY_TAG
-                || ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
+        if (ftl.getLast().getType() == TokenType.CLOSE_EMPTY_TAG || ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
         List<Fragment> fragments = ftl.get(ftl.size() - 2).accept(this, new ArrayList<>());

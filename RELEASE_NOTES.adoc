@@ -13,6 +13,7 @@
 === Breaking Changes
 
 - remove `FeatureFlag`
+- empty user directives body is always `ConstantFragment.EMPTY` and never `null`
 
 == Release 1.6.3 (2024-10-16)
 

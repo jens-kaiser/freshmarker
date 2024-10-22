@@ -3,9 +3,11 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.directive.LoggingDirective;
 import org.freshmarker.core.directive.OneLinerDirective;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserDirectiveTest {
     private Configuration configuration;
@@ -20,6 +23,13 @@ class UserDirectiveTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
+    }
+
+    @Test
+    void invalidLog() {
+        configuration.registerUserDirective("log", new LoggingDirective());
+        Template template = configuration.builder().withOutputFormat("XML").getTemplate("test", "test: <@log level='info' message='test'>Test</@log>");
+        assertThrows(ProcessException.class, () -> template.process(Map.of()));
     }
 
     @ParameterizedTest
