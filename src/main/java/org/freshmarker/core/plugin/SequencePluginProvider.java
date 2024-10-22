@@ -29,11 +29,11 @@ public class SequencePluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("reverse"), (x, y, e) -> reverse((TemplateListSequence) x, e));
         builtIns.put(BUILDER.of("join"), (x, y, e) -> join(y, e, ((TemplateListSequence) x).getSequence(e)));
         builtIns.put(LIMITED.of("size"), (x, y, e) -> TemplateNumber.of(((TemplateRightLimitedRange) x).size(e)));
-        builtIns.put(LIMITED.of("first"), (x, y, e) -> ((TemplateRightLimitedRange) x).getLower());
-        builtIns.put(LIMITED.of("last"), (x, y, e) -> ((TemplateRightLimitedRange) x).getUpper());
+        builtIns.put(LIMITED.of("lower"), (x, y, e) -> ((TemplateRightLimitedRange) x).getLower());
+        builtIns.put(LIMITED.of("upper"), (x, y, e) -> ((TemplateRightLimitedRange) x).getUpper());
         builtIns.put(LIMITED.of("reverse"), (x, y, e) -> reverse((TemplateRightLimitedRange) x, e));
         builtIns.put(LIMITED.of("join"), (x, y, e) -> join(y, e, ((TemplateRightLimitedRange) x).getSequence(e)));
-        builtIns.put(UNLIMITED.of("first"), (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
+        builtIns.put(UNLIMITED.of("lower"), (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
     }
 
     private TemplateObject reverse(TemplateRightLimitedRange x, ProcessContext e) {

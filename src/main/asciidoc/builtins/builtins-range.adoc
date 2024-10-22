@@ -1,0 +1,67 @@
+=== Range Built-Ins
+
+==== `lower` Built-In (since 1.6.4)
+
+This built-in returns the lower bound of a range.
+
+|===
+|Template |Output
+
+m|${(2..6)?lower}
+m|2
+
+m|${(2..?lower}
+m|2
+|===
+
+==== `upper` Built-In (since 1.6.4)
+
+This built-in returns the upper bound of a limited range.
+
+|===
+|Template |Output
+
+m|${(2..6)?last}
+m|6
+|===
+
+==== `reverse` Built-In (since 1.6.4)
+
+This built-in returns a reversed limited range.
+
+|===
+|Template |Output
+
+m|${(2..6)?reverse?join}
+m|6, 5, 4, 3, 2
+|===
+
+==== `size` Built-In (since 1.6.4)
+
+This built-in returns the size of a limited range as a number.
+
+|===
+|Template |Output
+
+m|${(2..6)?size}
+m|5
+|===
+
+==== `join` Built-In (since 1.6.4)
+
+This built-in returns the elements of a limited range as a string.
+The default limiter is ", " but can be changed with the first optional parameter of the built-in.
+The second optional parameter is an alternative parameter for the last element in the sequence.
+
+|===
+|Template |Output
+
+m|${(2..6)?join}
+m|2, 3, 4, 5, 6
+
+m|${(2..6)?join(':')}
+m|2:3:4:5:6
+
+m|${(2..6)?join(', ', ' and ')}
+m|2, 3, 4, 5 and 6
+|===

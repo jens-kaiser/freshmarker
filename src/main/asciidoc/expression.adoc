@@ -226,6 +226,10 @@ m|-
 m|-4
 |===
 
+=== Range Operator
+
+TBD
+
 === Multiplicative Operators
 
 NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.

@@ -49,6 +49,8 @@ include::builtins-time.adoc[]
 
 include::builtins-sequence.adoc[]
 
+include::builtins-range.adoc[]
+
 include::builtins-looper.adoc[]
 
 include::builtins-enum.adoc[]
