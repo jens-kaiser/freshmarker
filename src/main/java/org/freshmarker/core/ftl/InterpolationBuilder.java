@@ -166,11 +166,24 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateRange visit(RangeExpression expression, Object input) {
         TemplateObject left = expression.getFirst().accept(this, null);
+        Token range = (Token)expression.get(1);
         if (expression.size() < 3) {
+            if (range.getType() != TokenType.DOT_DOT) {
+                throw new ParsingException("right unlimited does not support: " + range, expression);
+            }
             return new TemplateRightUnlimitedRange(left);
         }
-        TemplateObject right = expression.get(2).accept(this, null);
+        TemplateObject right = switch (range.getType()) {
+            case DOT_DOT -> expression.get(2).accept(this, null);
+            case DOT_DOT_EXCLUSIVE -> minus1(expression.get(2).accept(this, null));
+            case DOT_DOT_LENGTH -> minus1(new TemplateOperation(TokenType.PLUS, expression.get(2).accept(this, null), left));
+            default -> throw new ParsingException("right limited does not support: " + range, expression);
+        };
         return new TemplateRightLimitedRange(left, right);
+    }
+
+    private TemplateObject minus1(TemplateObject left) {
+        return new TemplateOperation(TokenType.MINUS, left, TemplateNumber.of(1));
     }
 
     @Override

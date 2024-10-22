@@ -8,52 +8,62 @@ import java.util.List;
 
 public class TemplateRightUnlimitedRange implements TemplateRange {
 
-  private final TemplateObject lower;
+    private final TemplateObject lower;
 
-  private int lowerNumber;
+    private int lowerNumber;
 
-  public TemplateRightUnlimitedRange(TemplateObject lower) {
-    this.lower = lower;
-  }
+    public TemplateRightUnlimitedRange(TemplateObject lower) {
+        this.lower = lower;
+    }
 
-  @Override
-  public TemplateObject evaluateToObject(ProcessContext context) {
-    return this;
-  }
+    @Override
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        return this;
+    }
 
-  @Override
-  public boolean isLengthLimited() {
-    return false;
-  }
+    @Override
+    public boolean isLengthLimited() {
+        return false;
+    }
 
-  @Override
-  public boolean isRightUnlimited() {
-    return true;
-  }
+    @Override
+    public boolean isRightUnlimited() {
+        return true;
+    }
 
-  @Override
-  public TemplateObject getLower() {
-    return lower;
-  }
+    @Override
+    public TemplateObject getLower() {
+        return lower;
+    }
 
-  @Override
-  public TemplateNull getUpper() {
-    return TemplateNull.NULL;
-  }
+    @Override
+    public TemplateNull getUpper() {
+        return TemplateNull.NULL;
+    }
 
-  @Override
-  public TemplateNumber get(ProcessContext context, int index) {
-    lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
-    return TemplateNumber.of(lowerNumber  + index);
-  }
+    @Override
+    public TemplateNumber get(ProcessContext context, int index) {
+        lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
+        return TemplateNumber.of(lowerNumber + index);
+    }
 
-  @Override
-  public int size(ProcessContext context) {
-    throw new ProcessException("right unlimited range not supported");
-  }
+    @Override
+    public int size(ProcessContext context) {
+        throw new ProcessException("right unlimited range not supported");
+    }
 
-  @Override
-  public List<Object> getSequence(ProcessContext context) {
-      throw new ProcessException("right unlimited range not supported");
-  }
+    @Override
+    public List<Object> getSequence(ProcessContext context) {
+        throw new ProcessException("right unlimited range not supported");
+    }
+
+    @Override
+    public TemplateRange slice(int min, ProcessContext context) {
+        return new TemplateRightUnlimitedRange(TemplateNumber.of(lowerNumber + min));
+    }
+
+    @Override
+    public TemplateRange slice(int min, int max, ProcessContext context) {
+        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), TemplateNumber.of(max));
+    }
 }

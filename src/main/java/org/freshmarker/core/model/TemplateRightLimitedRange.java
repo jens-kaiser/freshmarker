@@ -53,7 +53,7 @@ public class TemplateRightLimitedRange implements TemplateRange {
     @Override
     public int size(ProcessContext context) {
         evaluate(context);
-        return Math.abs(upperNumber - lowerNumber);
+        return Math.abs(upperNumber - lowerNumber) + 1;
     }
 
     @Override
@@ -61,8 +61,12 @@ public class TemplateRightLimitedRange implements TemplateRange {
         evaluate(context);
         int size = Math.abs(upperNumber - lowerNumber) + 1;
         return new AbstractList<>() {
+
             @Override
             public Object get(int index) {
+                if (index > size) {
+                    throw new IndexOutOfBoundsException(index);
+                }
                 return lowerNumber < upperNumber ? lowerNumber + index : lowerNumber - index;
             }
 
@@ -76,5 +80,20 @@ public class TemplateRightLimitedRange implements TemplateRange {
     private void evaluate(ProcessContext context) {
         lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
         upperNumber = upperNumber != 0 ? upperNumber : upper.evaluate(context, TemplateNumber.class).asInt();
+    }
+
+    @Override
+    public TemplateRange slice(int min, ProcessContext context) {
+        evaluate(context);
+        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), upper);
+    }
+
+    @Override
+    public TemplateRange slice(int min, int max, ProcessContext context) {
+        evaluate(context);
+        if (lowerNumber < upperNumber) {
+            return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), TemplateNumber.of(Math.min(lowerNumber + max, upperNumber)));
+        }
+        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber - min), TemplateNumber.of(Math.max(lowerNumber - max, upperNumber)));
     }
 }

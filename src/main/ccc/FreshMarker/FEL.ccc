@@ -85,9 +85,9 @@ TOKEN :
     |
     <MINUS : "-">
     |
-    <TIMES : "*">
+    <TIMES : "*" | "×">
     |
-    <DIVIDE : "/">
+    <DIVIDE : "/" | "÷">
     |
     <PERCENT : "%">
     |
@@ -130,6 +130,10 @@ TOKEN :
     <AND2 : "&&">
     |
     <DOT_DOT : "..">
+    |
+    <DOT_DOT_EXCLUSIVE : "..<">
+    |
+    <DOT_DOT_LENGTH : "..*">
     |
     <AS : "as">
     |
@@ -215,7 +219,7 @@ RelationalExpression :
 RangeExpression :
     AdditiveExpression
     [
-       <DOT_DOT>
+       (<DOT_DOT>|<DOT_DOT_EXCLUSIVE>|<DOT_DOT_LENGTH>)
        [
           AdditiveExpression =>||
        ]

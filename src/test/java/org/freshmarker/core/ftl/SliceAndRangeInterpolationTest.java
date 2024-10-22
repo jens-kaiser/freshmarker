@@ -4,10 +4,10 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.UnsupportedDataTypeException;
-import org.freshmarker.core.WrongTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Map;
@@ -23,16 +23,44 @@ class SliceAndRangeInterpolationTest {
         configuration = new Configuration();
     }
 
-    @Test
-    void interpolationSliceInclusive() throws ParseException {
-        Template template = configuration.builder().getTemplate("test", "test: ${list[2..4][1]}");
-        assertEquals("test: 4", template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7))));
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${(1..10)?size};10",
+            "${(1..10)?first};1",
+            "${(1..10)?last};10",
+            "${(1..<10)?join};1, 2, 3, 4, 5, 6, 7, 8, 9",
+            "${(1..<10)?reverse?join};9, 8, 7, 6, 5, 4, 3, 2, 1",
+            "${(1..)?first};1",
+    }, delimiterString = ";")
+    void interpolationRangeBuiltIns(String input, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of()));
     }
 
     @Test
-    void interpolationSliceRightUnbound() throws ParseException {
-        Template template = configuration.builder().getTemplate("test", "test: ${list[2..][1]}");
-        assertEquals("test: 4", template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7))));
+    void interpolationSlice() throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "test: ${list[2..4]?join}");
+        assertEquals("test: 3, 4, 5", template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7))));
+    }
+
+    @Test
+    void interpolationInvertedSlice() throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "test: ${list[4..2]?join}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7))));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,3",
+            "1,4",
+            "2,5",
+            "3,6",
+            "4,7"
+    })
+    void interpolationSliceRightUnbound(int index, int expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "test: ${list[2..][i]}");
+        assertEquals("test: " + expected, template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7), "i", index)));
     }
 
     @Test
@@ -52,5 +80,32 @@ class SliceAndRangeInterpolationTest {
         Template template = configuration.builder().getTemplate("test", "test: ${map[1..3]}");
         Map<String, Object> model = Map.of("map", Map.of());
         assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1;7;2;4;test: 3, 4, 5",
+            "7;1;2;4;test: 5, 4, 3",
+    }, delimiterString = ";")
+    void interpolationSliceOnRange(int a, int b, int c, int d, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "test: ${(a..b)[c..d]?join}");
+        assertEquals(expected, template.process(Map.of("a", a, "b", b, "c", c, "d", d)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${(1..9)?size},test: 9",
+            "test: ${(1..(10-1))?size},test: 9",
+            "test: ${(1..10-1)?size},test: 9",
+            "test: ${(1..<10)?size},test: 9",
+            "test: ${(1..count-1)?size},test: 9",
+            "test: ${(1..<count)?size},test: 9",
+            "test: ${(1..1+5-1)?size},test: 5",
+            "test: ${(1..*5)?size},test: 5",
+            "test: ${(start..*count)?size},test: 10",
+    })
+    void interpolationRangeExclusiveAndRangeLimited(String input, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("count", 10, "start", 1)));
     }
 }
