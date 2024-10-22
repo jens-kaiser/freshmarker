@@ -2,7 +2,7 @@
 
 ==== `c` (computer language) Built-In
 
-This built-in converts a number to the string using the `toString()` method of the corresponding base types `BigDecimal`, `BigInteger`, `Double`, `Float`, `Long`, `Integer`, `Byte` or `Short`.
+This built-in converts a number to the string using the `toString()` method of the corresponding base types `BigDecimal`, `BigInteger`, `Double`, `Float`, `Long`, `AtomicLong`, `Integer`, `AtomiInteger`, `Byte` or `Short`.
 
 NOTE: Without this builtin, the number is formatted with the default number formatter for the current locale.
 

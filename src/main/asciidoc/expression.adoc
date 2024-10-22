@@ -21,70 +21,11 @@ TBD
 
 TBD
 
-=== Properties
+=== Method Invocation
 
 TBD
 
-=== Build-Ins
-
-TBD
-
-=== Functions
-
-TBD
-
-=== Default Operator
-
-Returns `true` if the operant is not `NULL`.
-
-|===
-|Operator | Description |Example
-
-m|!
-|Default Operator
-m|value!
-
-m|!
-|Default Operator with parameter
-m|value!"default"
-
-|===
-
-==== Existence Operator
-
-Returns `true` if the operant is not `NULL`.
-
-|===
-|Operator | Description |Example
-
-m|??
-|Existence Operator
-m|value??
-
-m|∃
-|Unicode Existence Operator
-m|value∃
-
-|===
-
-===  Logical Expressions
-
-==== Negation
-
-|===
-|Operator | Description |Example
-
-m|!
-|Logical Not Operator
-m|!false
-
-m|¬
-|Unicode Logical Not Operator
-m|¬true
-
-|===
-
-==== Conjunctions
+=== Conjunctions
 
 |===
 |Operator | Name | Description |Example
@@ -105,7 +46,7 @@ m|&&
 m|false && true
 |===
 
-==== Disjunctions
+=== Disjunctions
 
 |===
 |Operator | Name | Description |Example
@@ -124,6 +65,30 @@ m|\|\|
 |Conditional Or
 |evaluates only the first operand, if it evaluates to true
 m|false \|\| true
+|===
+
+=== Range Operator
+
+TBD
+
+=== Equality Operators
+
+This operator works only on _FreshMarkers_ primitive types. There is no Equality defined on _Hashes_, _Sequences_ or _Ranges_.
+
+|===
+|Operator | Name |Example
+
+m|=
+|Equals Operator
+m|x == 1
+
+m|!=
+|Not Equals Operator
+m|x != 2
+
+m|≠
+|Unicode Not Equals Operator
+m|x ≠ 3
 |===
 
 === Relational Operators
@@ -191,44 +156,6 @@ m|≥
 |Unicode Greater Equals Operator
 m|'1.0.0'?version ≥ .version
 |===
-
-=== Equality Operators
-
-This operator works only on _FreshMarkers_ primitive types. There is no Equality defined on _Hashes_, _Sequences_ or _Ranges_.
-
-|===
-|Operator | Name |Example
-
-m|=
-|Equals Operator
-m|x == 1
-
-m|!=
-|Not Equals Operator
-m|x != 2
-
-m|≠
-|Unicode Not Equals Operator
-m|x ≠ 3
-|===
-
-=== Unary Numerical Operators
-
-|===
-|Operator | Name |Example
-
-m|+
-|Unary Plus Operator
-m|+4
-
-m|-
-|Unary Minus Operator
-m|-4
-|===
-
-=== Range Operator
-
-TBD
 
 === Multiplicative Operators
 
@@ -312,4 +239,79 @@ m|-
 |Period Subtraction Operator
 m|period - 7
 |subtract the amount of days from the given period. This operation is not a commutativity. (experimental)
+|===
+
+=== Negation
+
+|===
+|Operator | Description |Example
+
+m|!
+|Logical Not Operator
+m|!false
+
+m|¬
+|Unicode Logical Not Operator
+m|¬true
+
+|===
+
+=== Unary Numerical Operators
+
+|===
+|Operator | Name |Example
+
+m|+
+|Unary Plus Operator
+m|+4
+
+m|-
+|Unary Minus Operator
+m|-4
+|===
+
+=== Default Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|!
+|Default Operator
+m|value!
+
+m|!
+|Default Operator with parameter
+m|value!"default"
+
+|===
+
+=== Dot Key Operator
+
+TBD
+
+=== Dynamic Key Operator
+
+TBD
+
+=== Built-In Operator
+
+TBD
+
+==== Existence Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|??
+|Existence Operator
+m|value??
+
+m|∃
+|Unicode Existence Operator
+m|value∃
+
 |===
