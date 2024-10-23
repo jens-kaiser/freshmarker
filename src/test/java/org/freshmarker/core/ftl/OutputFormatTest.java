@@ -4,6 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.Environment;
+import org.freshmarker.core.directive.LoggingDirective;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +68,13 @@ class OutputFormatTest {
     void unescapeInterpolation(String format, String content, String expected) throws ParseException {
         Template template = configuration.builder().withOutputFormat(format).getTemplate("test", "test: ${content?noEsc}");
         assertEquals(expected, template.process(Map.of("content", content)));
+    }
+
+    @Test
+    void ignoredComment() throws ParseException {
+        configuration.registerUserDirective("log", new LoggingDirective());
+        Template template = configuration.builder().getTemplate("test", "test: <@log message='ignored'/>");
+        assertEquals("test: ", template.process(Map.of()));
     }
 
     @ParameterizedTest
