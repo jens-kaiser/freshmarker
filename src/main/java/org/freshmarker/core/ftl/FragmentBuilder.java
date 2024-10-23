@@ -154,8 +154,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             looperIdentifier = ((IDENTIFIER) ftl.get(index + 1)).toString();
             index += 2;
         }
-        List<Fragment> fragments = ftl.get(index + 1).accept(this, new ArrayList<>());
-        Fragment block = Fragments.optimize(fragments);
+        Fragment block = Fragments.optimize(ftl.get(index + 1).accept(this, new ArrayList<>()));
         if (valueIdentifier != null) {
             input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator));
         } else {
@@ -174,8 +173,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(OutputFormatBlock ftl, List<Fragment> input) {
-        List<Fragment> fragments = ftl.get(5).accept(this, new ArrayList<>());
-        Fragment block = Fragments.optimize(fragments);
+        Fragment block = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()));
         String image = ftl.get(3).toString();
         input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
         return input;
@@ -201,8 +199,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
                 .skip(1).findFirst().orElse(null);
         Fragment body = null;
         if (node != null) {
-            List<Fragment> fragments = node.accept(this, new ArrayList<>());
-            body = Fragments.optimize(fragments);
+            body = Fragments.optimize(node.accept(this, new ArrayList<>()));
         }
         logger.debug("user directive: {} {}", node, body);
         input.add(new UserDirectiveFragment(name, currentNameSpace, namedArgs, Objects.requireNonNullElse(body, ConstantFragment.EMPTY)));
@@ -227,8 +224,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (ftl.getLast().getType() == TokenType.CLOSE_EMPTY_TAG || ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
-        List<Fragment> fragments = ftl.get(ftl.size() - 2).accept(this, new ArrayList<>());
-        return Fragments.optimize(fragments);
+        return Fragments.optimize(ftl.get(ftl.size() - 2).accept(this, new ArrayList<>()));
     }
 
     private List<ParameterHolder> getParameterHolders(MacroDefinition ftl) {

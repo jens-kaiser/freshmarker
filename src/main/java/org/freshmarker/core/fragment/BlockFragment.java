@@ -26,12 +26,7 @@ public class BlockFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        List<Fragment> list = fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList();
-        return switch (list.size()) {
-            case 0 -> ConstantFragment.EMPTY;
-            case 1 -> list.getFirst();
-            default -> new BlockFragment(list);
-        };
+        return Fragments.optimize(fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList());
     }
 
     @Override

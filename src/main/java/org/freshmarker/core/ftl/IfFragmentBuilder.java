@@ -55,8 +55,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
         if (ftl.size() == 5) {
             ifBlock = ConstantFragment.EMPTY;
         } else {
-            List<Fragment> fragments = ftl.get(5).accept(fragmentBuilder, new ArrayList<>());
-            ifBlock = Fragments.optimize(fragments);
+            ifBlock = Fragments.optimize(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
         }
         input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
         return input;
