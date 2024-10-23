@@ -346,6 +346,7 @@ class TemporalInterpolationTest {
     @CsvSource({
             "test: ${temporal * period}",
             "test: ${temporal + 1.0}",
+            "test: ${temporal + 1.0?float}",
             "test: ${period / period}"
     })
     void invalidOperation(String input) throws ParseException {
