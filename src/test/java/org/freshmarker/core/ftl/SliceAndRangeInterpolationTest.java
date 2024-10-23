@@ -83,6 +83,18 @@ class SliceAndRangeInterpolationTest {
     }
 
     @ParameterizedTest
+    @CsvSource({
+            "test: <#list (1..) as i>${i}</#list>,right unlimited range not supported at test:1:7 '<#list (1..) as i>${i}</#list>'",
+            "test: ${(1..)?upper},unsupported builtin 'upper' for TemplateRightUnlimitedRange at test:1:7 '${(1..)?upper}'"
+    })
+    void invalidUnlimitedRangeUsage(String input, String message) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", input);
+        Map<String, Object> model = Map.of("map", Map.of());
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(model));
+        assertEquals(message, exception.getMessage());
+    }
+
+    @ParameterizedTest
     @CsvSource(value = {
             "test: ${(a..b)[c..d]?join};1;7;2;4;test: 3, 4, 5",
             "test: ${(a..b)[c..d]?join};7;1;2;4;test: 5, 4, 3",
@@ -95,11 +107,12 @@ class SliceAndRangeInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "1;7;2;test: 3, 4, 5, 6, 7",
-            "7;1;3;test: 4, 3, 2, 1",
+            "test: ${(a..b)[c..]?join};1;7;2;test: 3, 4, 5, 6, 7",
+            "test: ${(a..b)[c..]?join};7;1;3;test: 4, 3, 2, 1",
+            "test: ${(a..)[b..][c..c+1]?join};1;2;3;test: 6, 7"
     }, delimiterString = ";")
-    void interpolationUnlimitedSliceOnRange(int a, int b, int c, String expected) throws ParseException {
-        Template template = configuration.builder().getTemplate("test", "test: ${(a..b)[c..]?join}");
+    void interpolationUnlimitedSliceOnRange(String input, int a, int b, int c, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("a", a, "b", b, "c", c)));
     }
 
