@@ -551,6 +551,7 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
         return getType().abs(this);
     }
 
+    @Override
     public TemplateNumber negate() {
         return getType().negate(this);
     }

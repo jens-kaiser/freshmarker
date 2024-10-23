@@ -23,7 +23,6 @@ class SliceAndRangeInterpolationTest {
         configuration = new Configuration();
     }
 
-
     @ParameterizedTest
     @CsvSource(value = {
             "${(1..10)?size};10",
@@ -47,7 +46,8 @@ class SliceAndRangeInterpolationTest {
     @Test
     void interpolationInvertedSlice() throws ParseException {
         Template template = configuration.builder().getTemplate("test", "test: ${list[4..2]?join}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7))));
+        Map<String, Object> model = Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7));
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @ParameterizedTest

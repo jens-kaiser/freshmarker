@@ -29,7 +29,8 @@ class UserDirectiveTest {
     void invalidLog() {
         configuration.registerUserDirective("log", new LoggingDirective());
         Template template = configuration.builder().withOutputFormat("XML").getTemplate("test", "test: <@log level='info' message='test'>Test</@log>");
-        assertThrows(ProcessException.class, () -> template.process(Map.of()));
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @ParameterizedTest

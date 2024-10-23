@@ -174,6 +174,7 @@ public class TemporalPluginProvider implements PluginProvider {
     private void get(StringJoiner stringJoiner, int value, ResourceBundle resourceBundle, String key) {
         switch (value) {
             case 0 -> {
+                // intentionally left blank
             }
             case 1, -1 -> stringJoiner.add(value + " " + resourceBundle.getString("period." + key));
             default -> stringJoiner.add(value + " " + resourceBundle.getString("period." + key + "s"));

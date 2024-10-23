@@ -267,30 +267,20 @@ class ExpressionTest {
     @Test
     void invalidDotKeyUsage() {
         Template template = builder.getTemplate("test", "${''.value}");
-        assertThrows(WrongTypeException.class, () -> template.process(Map.of()));
+        Map<String, Object> model = Map.of();
+        assertThrows(WrongTypeException.class, () -> template.process(model));
     }
 
-    @Test
-    void dotKeyOnNull() {
-        Template template = builder.getTemplate("test", "${null.value}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of()));
-    }
-
-    @Test
-    void invalidRelationUsage() {
-        Template template = builder.getTemplate("test", "${true > false}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of()));
-    }
-
-    @Test
-    void invalidNegateUsage() {
-        Template template = builder.getTemplate("test", "${-.now}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of()));
-    }
-
-    @Test
-    void invalidEqualityUsage() {
-        Template template = builder.getTemplate("test", "${list != list}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("list", List.of())));
+    @ParameterizedTest
+    @CsvSource({
+            "${null.value}",
+            "${true > false}",
+            "${-.now}",
+            "${list != list}"
+    })
+    void invalidUsages(String input) {
+        Template template = builder.getTemplate("test", input);
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 }

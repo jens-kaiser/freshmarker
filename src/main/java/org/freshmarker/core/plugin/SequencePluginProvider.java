@@ -31,12 +31,12 @@ public class SequencePluginProvider implements PluginProvider {
         builtIns.put(LIMITED.of("size"), (x, y, e) -> TemplateNumber.of(((TemplateRightLimitedRange) x).size(e)));
         builtIns.put(LIMITED.of("lower"), (x, y, e) -> ((TemplateRightLimitedRange) x).getLower());
         builtIns.put(LIMITED.of("upper"), (x, y, e) -> ((TemplateRightLimitedRange) x).getUpper());
-        builtIns.put(LIMITED.of("reverse"), (x, y, e) -> reverse((TemplateRightLimitedRange) x, e));
+        builtIns.put(LIMITED.of("reverse"), (x, y, e) -> reverse((TemplateRightLimitedRange) x));
         builtIns.put(LIMITED.of("join"), (x, y, e) -> join(y, e, ((TemplateRightLimitedRange) x).getSequence(e)));
         builtIns.put(UNLIMITED.of("lower"), (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
     }
 
-    private TemplateObject reverse(TemplateRightLimitedRange x, ProcessContext e) {
+    private TemplateObject reverse(TemplateRightLimitedRange x) {
         return new TemplateRightLimitedRange(x.getUpper(), x.getLower());
     }
 
