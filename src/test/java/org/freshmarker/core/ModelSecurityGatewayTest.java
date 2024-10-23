@@ -1,5 +1,7 @@
 package org.freshmarker.core;
 
+import org.freshmarker.Configuration;
+import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,6 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,5 +59,13 @@ class ModelSecurityGatewayTest {
         assertThrows(UnsupportedDataTypeException.class, () -> modelSecurityGateway.check(Path.class));
         modelSecurityGateway.addAllowedPackages(Path.class);
         assertDoesNotThrow(() -> modelSecurityGateway.check(Path.class));
+    }
+
+    @Test
+    void templateSecurity() {
+        Configuration configuration = new Configuration();
+        configuration.getSecurity().addForbiddenPackages("java.nio");
+        Template template = configuration.builder().getTemplate("test", "${path}");
+        assertThrows(ProcessException.class, () -> template.process(Map.of()));
     }
 }

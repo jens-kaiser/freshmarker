@@ -64,14 +64,6 @@ class ExpressionTest {
             "1 ≥ 3, false",
             "3 ≤ 1, false",
             "1 ≤ 3, true",
-    })
-    void numberRelation(String expression, boolean result) throws ParseException {
-        Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
-        assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
             "1 == 1, true",
             "1 == 2, false",
             "1 = 1, true",
@@ -79,7 +71,7 @@ class ExpressionTest {
             "1 != 1, false",
             "1 != 2, true",
     })
-    void primitiveEquality(String expression, boolean result) throws ParseException {
+    void numberRelationAndEquality(String expression, boolean result) throws ParseException {
         Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("prefix", "", "suffix", "")));
     }

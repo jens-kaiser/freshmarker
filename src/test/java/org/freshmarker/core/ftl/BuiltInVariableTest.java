@@ -84,31 +84,22 @@ class BuiltInVariableTest {
         assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
     }
 
-    @Test
-    void invalidVersion() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "${'1.0'?version}");
+    @ParameterizedTest
+    @CsvSource({
+            "${'1.0'?version}",
+            "${.gonzo}",
+            "${'1.6.3'?version?is_before(42)}"
+    })
+    void invalidVersion(String input) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of();
         assertThrows(IllegalStateException.class, () -> template.process(model));
     }
 
     @Test
-    void invalidIsBeforeWithoutParameter() throws ParseException {
+    void invalidVersion() throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before}");
         Map<String, Object> model = Map.of();
         assertThrows(IllegalArgumentException.class, () -> template.process(model));
-    }
-
-    @Test
-    void invalidIsBeforeWithWrongParameterType() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before(42)}");
-        Map<String, Object> model = Map.of();
-        assertThrows(IllegalStateException.class, () -> template.process(model));
-    }
-
-    @Test
-    void unknownBuiltInVariable() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${.gonzo}");
-        Map<String, Object> model = Map.of();
-        assertThrows(IllegalStateException.class, () -> template.process(model));
     }
 }
