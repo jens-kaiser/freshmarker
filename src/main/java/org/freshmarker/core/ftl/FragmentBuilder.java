@@ -107,10 +107,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(Text ftl, List<Fragment> input) {
         String content = ftl.getAllTokens(false).stream().map(TerminalNode::toString).collect(Collectors.joining());
-        if (!input.isEmpty() && input.getLast() instanceof ConstantFragment constantFragment) {
-            constantFragment.add(content);
-            return input;
-        }
         input.add(new ConstantFragment(content));
         return input;
     }

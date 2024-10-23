@@ -27,9 +27,6 @@ public class VariableFragment implements Fragment {
     public void process(ProcessContext context) {
         Environment environment = context.getEnvironment();
         if (exists) {
-            if (environment.getVariable(name) == null) {
-                throw new ProcessException("variable " + name + " must exists", node);
-            }
             environment.setVariable(name, expression.evaluateToObject(context));
         } else {
             if (environment.checkVariable(name)) {

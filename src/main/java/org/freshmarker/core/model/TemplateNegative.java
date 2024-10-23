@@ -5,18 +5,19 @@ import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public class TemplateNegative implements TemplateBooleanExpression {
 
-  private final TemplateObject expression;
+    private final TemplateObject expression;
 
-  public TemplateNegative(TemplateObject expression) {
-    this.expression = expression;
-  }
+    public TemplateNegative(TemplateObject expression) {
+        this.expression = expression;
+    }
 
-  public TemplateObject not() {
-    return expression;
-  }
+    @Override
+    public TemplateObject not() {
+        return expression;
+    }
 
-  @Override
-  public TemplateBoolean evaluateToObject(ProcessContext context) {
-      return expression.evaluate(context, TemplateBoolean.class).not();
-  }
+    @Override
+    public TemplateBoolean evaluateToObject(ProcessContext context) {
+        return expression.evaluate(context, TemplateBoolean.class).not();
+    }
 }

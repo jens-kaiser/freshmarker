@@ -28,6 +28,12 @@ class ExpressionTest {
     }
 
     @Test
+    void constantFragments() throws ParseException {
+        Template template = builder.getTemplate("test", "test: dies ist einfach nur ein text");
+        assertEquals("test: dies ist einfach nur ein text", template.process(Map.of()));
+    }
+
+    @Test
     void stringConcat() throws ParseException {
         Template template = builder.getTemplate("test", "test: ${('abcdefg' + 'hijklmnop' + 'qrstuvwxyz')?upper_case}");
         assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of()));
@@ -269,6 +275,13 @@ class ExpressionTest {
         Template template = builder.getTemplate("test", "${''.value}");
         Map<String, Object> model = Map.of();
         assertThrows(WrongTypeException.class, () -> template.process(model));
+    }
+
+    @Test
+    void invalidEquality() {
+        Template template = builder.getTemplate("test", "${1..2 == 1..2}");
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @ParameterizedTest

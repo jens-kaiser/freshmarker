@@ -29,6 +29,7 @@ class BooleanInterpolationTest {
             "test: ${false},test: no",
             "test: ${!false},test: yes",
             "test: ${!flag},test: no",
+            "test: ${!(!flag)},test: yes",
     })
     void interpolationConstant(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
