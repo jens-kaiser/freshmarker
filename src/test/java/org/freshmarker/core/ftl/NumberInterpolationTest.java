@@ -400,7 +400,8 @@ class NumberInterpolationTest {
     @Test
     void unsupportedBigDecimalExpression() throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${z % 2}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("z", new BigDecimal("42"))));
+        Map<String, Object> model = Map.of("z", new BigDecimal("42"));
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @ParameterizedTest

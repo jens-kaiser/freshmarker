@@ -17,6 +17,6 @@ class BuiltInKeyTest {
         assertEquals(key1.hashCode(), key1.hashCode());
         assertNotEquals(key1, key2);
         assertNotEquals(key1, key3);
-        assertFalse(key1.equals(null));
+        assertNotEquals(null, key1);
     }
 }
