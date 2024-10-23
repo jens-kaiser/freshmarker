@@ -10,7 +10,7 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.util.function.UnaryOperator;
 
-public abstract class AbstractListFragment<T> implements Fragment {
+public abstract class AbstractListFragment implements Fragment {
     protected final TemplateObject list;
     protected final String looperIdentifier;
     protected final Fragment block;

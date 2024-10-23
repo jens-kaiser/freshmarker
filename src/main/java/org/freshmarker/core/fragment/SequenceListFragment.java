@@ -14,7 +14,7 @@ import org.freshmarker.core.model.TemplateSequenceLooper;
 
 import java.util.List;
 
-public class SequenceListFragment extends AbstractListFragment<Object> {
+public class SequenceListFragment extends AbstractListFragment {
 
     private final String identifier;
 

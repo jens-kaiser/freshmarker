@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class HashListFragment extends AbstractListFragment<Entry<String, Object>> {
+public class HashListFragment extends AbstractListFragment {
 
     private final String keyIdentifier;
     private final String valueIdentifier;
