@@ -66,6 +66,7 @@ class ModelSecurityGatewayTest {
         Configuration configuration = new Configuration();
         configuration.getSecurity().addForbiddenPackages("java.nio");
         Template template = configuration.builder().getTemplate("test", "${path}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of()));
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 }
