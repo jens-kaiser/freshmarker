@@ -5,7 +5,7 @@
 === Improvements
 
 - add `AtomicInteger` and `AtomLong` support
-- add unicode multiply `×`and divide `÷` operator
+- add unicode multiply `×` and divide `÷` operator
 - add exclusive right limited range `..<` and length limited range  `..*` operator
 - expand slicing to ranges
 - add ranges built-ins `lower`, `upper`, `size`, `reverse`, `join`
