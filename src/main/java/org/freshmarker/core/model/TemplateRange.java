@@ -9,7 +9,11 @@ public interface TemplateRange extends TemplateSequence {
 
     TemplateObject getLower();
 
-    TemplateObject getUpper();
+    TemplateObject getUpper(ProcessContext context);
+
+    default boolean isEmpty(ProcessContext context) {
+        return false;
+    }
 
     TemplateRange slice(int min, ProcessContext context);
 

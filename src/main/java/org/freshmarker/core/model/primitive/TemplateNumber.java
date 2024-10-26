@@ -7,6 +7,7 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.stream.IntStream;
 
 public class TemplateNumber extends TemplatePrimitive<Number> {
@@ -396,7 +397,7 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             public TemplateNumber div(TemplateNumber first, TemplateNumber second) {
                 BigDecimal firstBig = getBigDecimal(first);
                 BigDecimal secondBig = getBigDecimal(second);
-                return new TemplateNumber(firstBig.divide(secondBig));
+                return new TemplateNumber(firstBig.divide(secondBig, RoundingMode.HALF_UP));
             }
 
             @Override

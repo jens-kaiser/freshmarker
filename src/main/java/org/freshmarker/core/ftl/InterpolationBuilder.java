@@ -38,6 +38,7 @@ import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
+import org.freshmarker.core.model.TemplateLengthLimitedRange;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateMethodCall;
 import org.freshmarker.core.model.TemplateNegative;
@@ -173,17 +174,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             }
             return new TemplateRightUnlimitedRange(left);
         }
-        TemplateObject right = switch (range.getType()) {
-            case DOT_DOT -> expression.get(2).accept(this, null);
-            case DOT_DOT_EXCLUSIVE -> minus1(expression.get(2).accept(this, null));
-            case DOT_DOT_LENGTH -> minus1(new TemplateOperation(TokenType.PLUS, expression.get(2).accept(this, null), left));
+        return switch (range.getType()) {
+            case DOT_DOT  -> new TemplateRightLimitedRange(left, expression.get(2).accept(this, null), false);
+            case DOT_DOT_EXCLUSIVE -> new TemplateRightLimitedRange(left, expression.get(2).accept(this, null), true);
+            case DOT_DOT_LENGTH -> new TemplateLengthLimitedRange(left, expression.get(2).accept(this, null));
             default -> throw new ParsingException("right limited does not support: " + range, expression);
         };
-        return new TemplateRightLimitedRange(left, right);
-    }
-
-    private TemplateObject minus1(TemplateObject left) {
-        return new TemplateOperation(TokenType.MINUS, left, TemplateNumber.of(1));
     }
 
     @Override

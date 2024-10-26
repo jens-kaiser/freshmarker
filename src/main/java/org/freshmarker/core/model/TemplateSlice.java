@@ -31,37 +31,29 @@ public class TemplateSlice implements TemplateObject {
     }
 
     private int getInt(TemplateObject value, ProcessContext context) {
-        return value.evaluate(context, TemplateNumber.class).getValue().intValue();
+        return value.evaluate(context, TemplateNumber.class).asInt();
     }
 
     private TemplateObject handleSequence(ProcessContext context, TemplateRange templateRange, TemplateRange templateRangeValue) {
+        checkRanges(context, templateRange);
         int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
             return templateRangeValue.slice(min, context);
         }
-        int max = getInt(templateRange.getUpper(), context);
-        checkSlice(min, max);
-        if (templateRange.isLengthLimited()) {
+        int max = getInt(templateRange.getUpper(context), context);
+        if (templateRangeValue.isLengthLimited()) {
             return templateRangeValue.slice(min, Math.min(templateRangeValue.size(context), max), context);
         }
         return templateRangeValue.slice(min, max, context);
     }
 
-    private void checkSlice(int min, int max) {
-        if (min > max) {
-            throw new ProcessException("inverted slices not supported: " + min + ".." + max);
-        }
-    }
-
     private TemplateListSequence handleSequence(ProcessContext context, TemplateRange templateRange, TemplateListSequence templateListSequence) {
-        TemplateNumber lower = templateRange.getLower().evaluate(context, TemplateNumber.class);
-        int min = lower.getValue().intValue();
+        checkRanges(context, templateRange);
+        int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
             return templateListSequence.slice(min);
         }
-        TemplateNumber upper = templateRange.getUpper().evaluate(context, TemplateNumber.class);
-        int max = upper.getValue().intValue() + 1;
-        checkSlice(min, max);
+        int max = getInt(templateRange.getUpper(context), context);
         if (templateRange.isLengthLimited()) {
             return templateListSequence.slice(min, Math.min(templateListSequence.size(context), max));
         }
@@ -69,18 +61,21 @@ public class TemplateSlice implements TemplateObject {
     }
 
     private TemplateString handleSequence(ProcessContext context, TemplateRange templateRange, TemplateString templateString) {
-        String value = templateString.getValue();
-        TemplateNumber lower = templateRange.getLower().evaluate(context, TemplateNumber.class);
-        int min = lower.getValue().intValue();
+        checkRanges(context, templateRange);
+        int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
-            return new TemplateString(value.substring(min));
+            return new TemplateString(templateString.getValue().substring(min));
         }
-        TemplateNumber upper = templateRange.getUpper().evaluate(context, TemplateNumber.class);
-        int max = upper.getValue().intValue() + 1;
-        checkSlice(min, max);
+        int max = getInt(templateRange.getUpper(context), context);
         if (templateRange.isLengthLimited()) {
-            return new TemplateString(value.substring(min, Math.min(value.length(), max)));
+            return templateString.substring(min, Math.min(templateString.getValue().length(), max));
         }
-        return new TemplateString(value.substring(min, max));
+        return templateString.substring(min, max);
+    }
+
+    private static void checkRanges(ProcessContext context, TemplateRange templateRange) {
+        if (templateRange.isEmpty(context)) {
+            throw new ProcessException("cannot slice with empty range");
+        }
     }
 }

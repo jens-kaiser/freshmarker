@@ -6,9 +6,10 @@
 
 - add `AtomicInteger` and `AtomLong` support
 - add unicode multiply `×`and divide `÷` operator
-- add exclusive range `..<` and range length limited `..*` operator
+- add exclusive right limited range `..<` and length limited range  `..*` operator
 - expand slicing to ranges
 - add ranges built-ins `lower`, `upper`, `size`, `reverse`, `join`
+- add inverse slicing
 
 === Deprecated
 

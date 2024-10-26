@@ -9,7 +9,6 @@ import java.util.List;
 public class TemplateRightUnlimitedRange implements TemplateRange {
 
     private final TemplateObject lower;
-
     private int lowerNumber;
 
     public TemplateRightUnlimitedRange(TemplateObject lower) {
@@ -37,14 +36,8 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     }
 
     @Override
-    public TemplateNull getUpper() {
+    public TemplateNull getUpper(ProcessContext context) {
         return TemplateNull.NULL;
-    }
-
-    @Override
-    public TemplateNumber get(ProcessContext context, int index) {
-        lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
-        return TemplateNumber.of(lowerNumber + index);
     }
 
     @Override
@@ -66,6 +59,6 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     @Override
     public TemplateRange slice(int min, int max, ProcessContext context) {
         lowerNumber = lowerNumber != 0 ? lowerNumber : lower.evaluate(context, TemplateNumber.class).asInt();
-        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), TemplateNumber.of(lowerNumber + max));
+        return new TemplateRightLimitedRange(TemplateNumber.of(lowerNumber + min), TemplateNumber.of(lowerNumber + max), false);
     }
 }

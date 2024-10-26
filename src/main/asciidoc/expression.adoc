@@ -293,6 +293,8 @@ TBD
 
 === Dynamic Key Operator
 
+==== Slicing
+
 TBD
 
 === Built-In Operator
