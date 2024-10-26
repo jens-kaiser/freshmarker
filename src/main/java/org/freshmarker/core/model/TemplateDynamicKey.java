@@ -24,15 +24,14 @@ public class TemplateDynamicKey implements TemplateExpression {
         TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
         int beginIndex = index.asInt();
         if (templateObject instanceof TemplateString templateString) {
-            String value = templateString.getValue();
-            return new TemplateString(value.substring(beginIndex, beginIndex + 1));
+            return new TemplateString(templateString.getValue().substring(beginIndex, beginIndex + 1));
         }
         if (templateObject instanceof TemplateRange range) {
             TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
             if (range.isRightUnlimited()) {
                 return lower.add(index);
             }
-            TemplateNumber upper = range.getUpper().evaluate(context, TemplateNumber.class);
+            TemplateNumber upper = range.getUpper(context).evaluate(context, TemplateNumber.class);
             if (Math.abs(lower.asInt() - upper.asInt()) <= index.asInt()) {
                 throw new ProcessException("index out of range: " + index);
             }

@@ -46,8 +46,7 @@ class SliceAndRangeInterpolationTest {
     @Test
     void interpolationInvertedSlice() throws ParseException {
         Template template = configuration.builder().getTemplate("test", "test: ${list[4..2]?join}");
-        Map<String, Object> model = Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7));
-        assertThrows(ProcessException.class, () -> template.process(model));
+        assertEquals("test: 5, 4, 3", template.process(Map.of("list", List.of(1, 2, 3, 4, 5, 6, 7))));
     }
 
     @ParameterizedTest
@@ -126,10 +125,110 @@ class SliceAndRangeInterpolationTest {
             "test: ${(1..<count)?size},test: 9",
             "test: ${(1..1+5-1)?size},test: 5",
             "test: ${(1..*5)?size},test: 5",
+            "test: ${(3..*5)?upper},test: 7",
             "test: ${(start..*count)?size},test: 10",
     })
     void interpolationRangeExclusiveAndRangeLimited(String input, String expected) throws ParseException {
         Template template = configuration.builder().getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("count", 10, "start", 1)));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${(0..10)[2..4]?join};test: 2, 3, 4",
+            "test: ${(10..0)[2..4]?join};test: 8, 7, 6",
+            "test: ${(0..10)[4..2]?join};test: 4, 3, 2",
+            "test: ${(10..0)[4..2]?join};test: 6, 7, 8",
+
+            "test: ${(2..4)[0..2]?join};test: 2, 3, 4",
+            "test: ${(2..4)[2..0]?join};test: 4, 3, 2",
+            "test: ${(4..2)[0..2]?join};test: 4, 3, 2",
+            "test: ${(4..2)[2..0]?join};test: 2, 3, 4",
+
+            "test: ${(2..4)[0..]?join};test: 2, 3, 4",
+            "test: ${(4..2)[0..]?join};test: 4, 3, 2",
+
+            "test: ${(-2..-4)[0..2]?join};test: -2, -3, -4",
+            "test: ${(-2..-4)[2..0]?join};test: -4, -3, -2",
+            "test: ${(-4..-2)[0..2]?join};test: -4, -3, -2",
+            "test: ${(-4..-2)[2..0]?join};test: -2, -3, -4",
+
+            "test: ${(-2..-4)[0..]?join};test: -2, -3, -4",
+            "test: ${(-4..-2)[0..]?join};test: -4, -3, -2",
+
+            "test: ${(0..10)[2..2]?join};test: 2",
+            "test: ${(10..0)[2..2]?join};test: 8",
+    }, delimiterString = ";")
+    void interpolationRangeSlices(String input, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("slices", input);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${list1[2..4]?join};test: 2, 3, 4",
+            "test: ${list2[2..4]?join};test: 8, 7, 6",
+            "test: ${list1[4..2]?join};test: 4, 3, 2",
+            "test: ${list2[4..2]?join};test: 6, 7, 8",
+
+            "test: ${list3[0..2]?join};test: 2, 3, 4",
+            "test: ${list3[2..0]?join};test: 4, 3, 2",
+            "test: ${list4[0..2]?join};test: 4, 3, 2",
+            "test: ${list4[2..0]?join};test: 2, 3, 4",
+
+            "test: ${list3[0..]?join};test: 2, 3, 4",
+            "test: ${list4[0..]?join};test: 4, 3, 2",
+
+            "test: ${list1[2..2]?join};test: 2",
+            "test: ${list2[2..2]?join};test: 8",
+    }, delimiterString = ";")
+    void interpolationSequenceSlices(String input, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("slices", input);
+        List<Integer> list = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        assertEquals(expected, template.process(Map.of(
+                "list1", list, "list2", list.reversed(), "list3", List.of(2,3,4), "list4", List.of(4,3,2)
+        )));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${string1[2..4]};test: 234",
+            "test: ${string2[2..4]};test: 876",
+            "test: ${string1[4..2]};test: 432",
+            "test: ${string2[4..2]};test: 678",
+
+            "test: ${string3[0..2]};test: 234",
+            "test: ${string3[2..0]};test: 432",
+            "test: ${string4[0..2]};test: 432",
+            "test: ${string4[2..0]};test: 234",
+
+            "test: ${string3[0..]};test: 234",
+            "test: ${string4[0..]};test: 432",
+
+            "test: ${string1[2..2]};test: 2",
+            "test: ${string2[2..2]};test: 8",
+    }, delimiterString = ";")
+    void interpolationStringSlices(String input, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("slices", input);
+        assertEquals(expected, template.process(Map.of(
+                "string1", "0123456789A", "string2", "A9876543210", "string3", "234", "string4", "432"
+        )));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${(1..<1)?size},test: 0",
+            "test: ${(start..<start)?size},test: 0",
+            "test: ${(1..*0)?size},test: 0",
+            "test: ${(start..*count)?size},test: 0",
+            "test: ${(1..<1)?join},test: ",
+            "test: ${(start..<start)?join},test: ",
+            "test: ${(1..*0)?join},test: ",
+            "test: ${(start..*count)?join},test: ",
+            "test: <#list (start..*count) as i>{$i}</#list>,test: ",
+    }, ignoreLeadingAndTrailingWhitespace = false)
+    void emptyRange(String input, String expected) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("count", 0, "start", 1)));
     }
 }
