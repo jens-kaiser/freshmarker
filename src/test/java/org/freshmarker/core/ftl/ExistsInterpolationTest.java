@@ -23,6 +23,7 @@ class ExistsInterpolationTest {
     @CsvSource({
             "test: ${test??},test: yes",
             "test: ${test2??},test: no",
+            "test: ${(test2.map)??},test: no",
     })
     void exists(String templateSource, String expected) throws ParseException {
         Template template = configuration.builder().getTemplate("test", templateSource);
