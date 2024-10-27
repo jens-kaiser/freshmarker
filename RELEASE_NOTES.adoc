@@ -1,5 +1,11 @@
 = Release Notes
 
+== Release 1.6.5 (2024-10-XX)
+
+=== Bugfixes
+
+- fix chained exists operator
+
 == Release 1.6.4 (2024-10-26)
 
 === Improvements
