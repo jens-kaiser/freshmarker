@@ -104,7 +104,8 @@ _Length-limited ranges_ are always _legal ranges_ whose upper limit is greater t
 .Example length-limited ranges
 [source,java,subs="verbatim,quotes"]
 ----
-1..*10   // lower bound 1 and upper bound 10
+1..*10  // lower bound 1 and upper bound 10
+5..*5   // lower bound 5 and upper bound 9
 a..*b   // lower bound in variable _a_ and an range size in variable _c_
 ----
 
