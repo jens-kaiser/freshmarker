@@ -58,13 +58,59 @@ This must be considered with the enums, because the `toString` method can be ove
 
 ==== Ranges
 
-TBD
+Ranges are data structures that represent an interval with a lower limit and an optional upper limit.
 
-[horizontal]
-`lower..inclusive`:: Right-limited range with inclusive bound
-`lower..<exlusive`:: Right-limited range with exclusive bound
-`lower..*length`:: Length limited range
-`lower..`::  Right-unlimited range
+Ranges without an upper limit are called _right-unlimited ranges_, ranges with an upper limit are called _right-limited ranges_.
+If the size of the interval is specified instead of the upper limit, then this range is called a _length-limited range_.
+
+===== Right-unlimited Range
+
+In principle, a right-unlimited range has no upper limit and can therefore only be used in a few places.
+
+The main area of application is slicing, where a part is cut out of a list, `String` or range.
+
+A right unlimited range has the form `_x_..` where `_x_` can be any numerical expression.
+
+.Example right-unlimited ranges
+[source,java,subs="verbatim,quotes"]
+----
+1..   // lower bound 1
+-10.. // lower bound -10
+a..   // lower bound in the variable _a_ (must be a numeric value)
+----
+
+===== Right-limited Range
+
+A _right-limited range_ has a lower and an upper limit. It also represents a sequence of numbers and can be used in this way in a list directive. A _right-limited range_ has the form `_x_.._y_` or `_x_..<_y_` where `_x_` and `_y_` can be any numeric expression. The second form describes a range with an exclusive upper limit. This form is called a _right-limited exclusive range_.
+
+.Example right-limited ranges
+[source,java,subs="verbatim,quotes"]
+----
+1..10   // lower bound 1 and upper bound 10
+-10..<0 // lower bound -10 and upper bound -1
+a..b    // lower bound in variable _a_ and upper bound in variable _b_
+10..0   // lower bound 1 and upper bound 10
+a..<b   // lower bound in variable _a_ and an exclusive upper bound in variable _b_
+----
+
+As can be seen in the examples, the lower limit may be greater than the upper limit. This means that the representation as a sequence cannot be monotonically increasing, but can be monotonically decreasing. In the case of a monotonically increasing sequence, we speak of a _legal range_, otherwise of an _inverse range_.
+
+===== Length-limited Range (since 1.6.4)
+
+A _length-limited range_ is a _right-limited range_ with a different syntax `_a_..*_c_`. Where 'a' again corresponds to the lower limit of the range and 'c' indicates the size of the interval.
+
+_Length-limited ranges_ are always _legal ranges_ whose upper limit is greater than their lower limit.
+
+.Example length-limited ranges
+[source,java,subs="verbatim,quotes"]
+----
+1..*10   // lower bound 1 and upper bound 10
+a..*b   // lower bound in variable _a_ and an range size in variable _c_
+----
+
+==== Slices
+
+TBD
 
 === Lazy Values
 
