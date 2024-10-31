@@ -7,6 +7,7 @@ import ftl.Node.TerminalNode;
 import ftl.Token;
 import ftl.Token.TokenType;
 import ftl.ast.Assignment;
+import ftl.ast.BrickInstruction;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
@@ -322,5 +323,14 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
         }
+    }
+    
+    @Override
+    public List<Fragment> visit(BrickInstruction ftl, List<Fragment> input) {
+        String name = ftl.get(3).toString();
+        Fragment optimize = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()));
+        template.addBrick(name.substring(1, name.length() - 1), optimize);
+        input.add(optimize);
+        return input;
     }
 }

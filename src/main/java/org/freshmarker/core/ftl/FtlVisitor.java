@@ -4,6 +4,7 @@ import ftl.Node;
 import ftl.Token;
 import ftl.ast.Assignment;
 import ftl.ast.Block;
+import ftl.ast.BrickInstruction;
 import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.ElseBlock;
@@ -110,4 +111,6 @@ public interface FtlVisitor<I, O> {
   default O visit(VarInstruction ftl, I input) { return handleWithException(ftl); }
 
   default O visit(ImportInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(BrickInstruction ftl, I input) { return handleWithException(ftl); }
 }

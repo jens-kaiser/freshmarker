@@ -2,6 +2,7 @@ package org.freshmarker;
 
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.directive.UserDirective;
@@ -29,6 +30,7 @@ public final class Template {
     private final TemplateBuilder builder;
     private final TemplateLoader templateLoader;
     private final Path path;
+    private final Map<String, Fragment> bricks = new HashMap<>();
 
     Template(TemplateBuilder builder, TemplateLoader templateLoader, Path path) {
         this(builder, templateLoader, path, new BlockFragment(new ArrayList<>()));
@@ -41,13 +43,39 @@ public final class Template {
         this.rootFragment = rootFragment;
     }
 
+    public void addBrick(String key, Fragment fragment) {
+        if (bricks.containsKey(key)) {
+            throw new IllegalArgumentException("brick with identical name exists: " + key);
+        }
+        bricks.put(key, fragment);
+    }
+
     public void process(Map<String, Object> dataModel, Writer writer) {
+        process(dataModel, writer, rootFragment);
+    }
+
+    public void process(String brickName, Map<String, Object> dataModel, Writer writer) {
+        Fragment brickFragment = bricks.get(brickName);
+        if (brickFragment == null) {
+            throw new ProcessException("missing brick: " + brickName);
+        }
+        process(dataModel, writer, brickFragment);
+    }
+
+    private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
         ProcessContext context = builder.createContext(dataModel, writer, userDirectives);
         context.setEnvironment(context.getEnvironment());
         try {
-            rootFragment.process(context);
+            brickFragment.process(context);
         } catch (TemplateReturnException e) {
             log.debug("return exception: {}", e.getMessage());
+        }
+    }
+
+    public String process(String brickName, Map<String, Object> dataModel) {
+        try (StringBuilderWriter writer = new StringBuilderWriter()) {
+            process(brickName, dataModel, writer);
+            return writer.toString();
         }
     }
 
