@@ -122,3 +122,34 @@ The keys of a hash can also be sorted in ascending and descending order by addin
 ${key}->${value}
 </#list>
 ----
+
+==== List Directive with a filter
+
+The list directive runs over all elements of a list. An element can be omitted with an if statement.
+If the looper variable is also used, this can lead to jumps. There are two solutions to this problem.
+
+The first solution is to include a filtered list in the model and to use this list in the list directive.
+The second solution is to use a filter expression in the list directive.
+
+The filter expression in the list directive follows directly after the looper part.
+
+.List Directive example with filter expression
+[source]
+----
+<#list 1..10 as s filter s % 2 == 0>
+${s} * ${s} = ${s*s}
+</#list>
+----
+
+==== List Directive with a limit
+
+The number of elements in the list directive can be reduced using a limit expression.
+The limit expression in the list directive follows directly after the filter part.
+
+.List Directive example with filter expression
+[source]
+----
+<#list 1..10 as s limit 4>
+${s} * ${s} = ${s*s}
+</#list>
+----

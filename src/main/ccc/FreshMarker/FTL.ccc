@@ -394,6 +394,8 @@ List #ListInstruction :
       <COMMA> <IDENTIFIER>
     ]
     [ <WITH> <IDENTIFIER> ]
+    [ <FILTER> Expression ]
+    [ <LIMIT> Expression ]
     <CLOSE_TAG>
     Block
     DirectiveEnd("list")

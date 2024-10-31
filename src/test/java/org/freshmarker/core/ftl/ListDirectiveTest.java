@@ -224,4 +224,49 @@ ListDirectiveTest {
                         """,
                 template.process(Map.of("sequence", List.of(new Complex("a", "b"), new Complex("c", "d")))));
     }
+
+    @Test
+    void filter() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..20) as s with l filter s % 2 == 0>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        2, 4, 6, 8, 10, 12, 14, 16, 18, 20
+                        """,
+                template.process(Map.of()));
+    }
+
+
+    @Test
+    void filterWithOuterVariables() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..20) as s with l filter s % 2 == v>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        1, 3, 5, 7, 9, 11, 13, 15, 17, 19
+                        """,
+                template.process(Map.of("v", 1)));
+    }
+
+    @Test
+    void limit() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..20) as s with l limit count>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+                        """,
+                template.process(Map.of("count", 12)));
+    }
+
+    @Test
+    void filterAndLimit() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..20) as s with l filter s % 2 == 0 limit count>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        2, 4, 6, 8, 10, 12
+                        """,
+                template.process(Map.of("count", 12)));
+    }
 }

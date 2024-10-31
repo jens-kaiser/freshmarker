@@ -26,3 +26,4 @@ public class FilterVariableEnvironment extends WrapperEnvironment {
         return Objects.requireNonNullElseGet(dataModel.get(name), () -> wrapped.getValue(name));
     }
 }
+

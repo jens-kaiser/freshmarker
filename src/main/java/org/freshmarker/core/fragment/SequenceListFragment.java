@@ -5,6 +5,7 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.environment.ReducingLoopVariableEnvironment;
 import org.freshmarker.core.environment.ReducingVariableEnvironment;
@@ -14,12 +15,12 @@ import org.freshmarker.core.model.TemplateSequenceLooper;
 
 import java.util.List;
 
-public class SequenceListFragment extends AbstractListFragment {
+public class SequenceListFragment extends AbstractListFragment<Object> {
 
     private final String identifier;
 
-    public SequenceListFragment(TemplateObject list, String identifier, String looperIdentifier, Fragment block, ListInstruction ftl) {
-        super(list, looperIdentifier, block, ftl);
+    public SequenceListFragment(TemplateObject list, String identifier, String looperIdentifier, Fragment block, ListInstruction ftl, TemplateObject filter, TemplateObject limit) {
+        super(list, looperIdentifier, block, ftl, filter, limit);
         this.identifier = identifier;
     }
 
@@ -27,6 +28,8 @@ public class SequenceListFragment extends AbstractListFragment {
     public void process(ProcessContext context) {
         try {
             List<Object> objectList = list.evaluate(context, TemplateSequence.class).getSequence(context);
+            objectList = filterSequence(context, objectList);
+
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
             processLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper));
         } catch (RuntimeException e) {
@@ -35,12 +38,17 @@ public class SequenceListFragment extends AbstractListFragment {
     }
 
     @Override
+    protected void addFilterVariable(FilterVariableEnvironment environment, Object value) {
+        environment.setValue(identifier, value);
+    }
+
+    @Override
     public Fragment reduce(ReduceContext context) {
         Environment environment = context.getEnvironment();
         try {
             context.setEnvironment(new ReducingVariableEnvironment(new ReducingLoopVariableEnvironment(environment, identifier, looperIdentifier)));
             Fragment reduce = block.reduce(context);
-            return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl));
+            return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl, filter, limit));
         } finally {
             context.setEnvironment(environment);
         }

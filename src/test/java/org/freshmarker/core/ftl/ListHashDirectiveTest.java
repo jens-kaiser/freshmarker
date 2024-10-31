@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -157,5 +158,33 @@ class ListHashDirectiveTest {
         Template template = builder.getTemplate("test", "<#list hash as k, v with l>${l?counter} ${k} ${v},</#list>");
         Map<String, String> map = Stream.of("a", "b", "c").collect(Collectors.toMap(Function.identity(), String::toUpperCase, (a, b) -> a, LinkedHashMap::new));
         assertEquals("1 a A,2 b B,3 c C,", template.process(Map.of("hash", map)));
+    }
+
+
+    @Test
+    void filter() {
+        Map<String, Integer> map = IntStream.range(1, 10).boxed().collect(Collectors.toMap(String::valueOf, x -> x));
+        Template template = builder.getTemplate("test", """
+                <#list hash as k, v filter v % 2 == 0>${k}=${v}, </#list>
+                """);
+        assertEquals("2=2, 4=4, 6=6, 8=8, \n", template.process(Map.of("hash", map)));
+    }
+
+    @Test
+    void limit() {
+        Map<String, Integer> map = IntStream.range(1, 10).boxed().collect(Collectors.toMap(String::valueOf, x -> x));
+        Template template = builder.getTemplate("test", """
+                <#list hash as k, v limit count>${k}=${v}, </#list>
+                """);
+        assertEquals("1=1, 2=2, 3=3, 4=4, \n", template.process(Map.of("hash", map, "count", 4)));
+    }
+
+    @Test
+    void filterAndLimit() {
+        Map<String, Integer> map = IntStream.range(1, 10).boxed().collect(Collectors.toMap(String::valueOf, x -> x));
+        Template template = builder.getTemplate("test", """
+                <#list hash as k, v filter k == '2' limit count>${k}=${v}, </#list>
+                """);
+        assertEquals("2=2, \n", template.process(Map.of("hash", map, "count", 4)));
     }
 }
