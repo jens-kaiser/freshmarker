@@ -37,7 +37,7 @@
 === Experimental
 
 - add `+` and `-` operators for `TemplateLocalDate` and `TemplatePeriod`
-- add `<`, `<=`, `>`, `>=`, `≤` and `≥` operators for `TemplateVersion`
+- add `<`, `+<=+`, `>`, `>=`, `≤` and `≥` operators for `TemplateVersion`
 
 == Release 1.6.2 (2024-10-13)
 
