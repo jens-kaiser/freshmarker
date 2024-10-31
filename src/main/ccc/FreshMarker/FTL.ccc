@@ -203,6 +203,8 @@ TOKEN :
     |
     <SETTING : "setting">
     |
+    <BRICK : "brick">
+    |   
     <_INCLUDE : "include">
     |
     <BLANK : "\n" | "\r" | "\t" | " "> : FTL_EXPRESSION
@@ -313,6 +315,16 @@ OutputFormatBlock :
     <CLOSE_TAG>
     Block
     DirectiveEnd("outputformat")
+;
+
+Brick #BrickInstruction :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <BRICK>
+    <BLANK>
+    <STRING_LITERAL>
+    <CLOSE_TAG>
+    Block
+    DirectiveEnd("brick")
 ;
 
 Import #ImportInstruction : 
@@ -489,7 +501,8 @@ TopLevelDirective #void :
      SCAN 2 Break |
      SCAN 2 Return |
      SCAN 2 Nested |
-     SCAN 2 OutputFormatBlock
+     SCAN 2 OutputFormatBlock |
+     SCAN 2 Brick
    )
 ;
 
