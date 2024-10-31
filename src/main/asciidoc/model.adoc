@@ -97,7 +97,8 @@ As can be seen in the examples, the lower limit may be greater than the upper li
 
 ===== Length-limited Range (since 1.6.4)
 
-A _length-limited range_ is a _right-limited range_ with a different syntax `_a_..*_c_`. Where 'a' again corresponds to the lower limit of the range and 'c' indicates the size of the interval.
+A _length-limited range_ is a _right-limited range_ with a different syntax `_a_..*_c_`. 
+Where `a` again corresponds to the lower limit of the range and `c` indicates the size of the range.
 
 _Length-limited ranges_ are always _legal ranges_ whose upper limit is greater than their lower limit.
 
