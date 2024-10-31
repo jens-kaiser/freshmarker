@@ -150,11 +150,21 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             looperIdentifier = ((IDENTIFIER) ftl.get(index + 1)).toString();
             index += 2;
         }
+        TemplateObject filter = null;
+        if (ftl.get(index).getType() == TokenType.FILTER) {
+            filter = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
+            index += 2;
+        }
+        TemplateObject limit = null;
+        if (ftl.get(index).getType() == TokenType.LIMIT) {
+            limit = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
+            index += 2;
+        }
         Fragment block = Fragments.optimize(ftl.get(index + 1).accept(this, new ArrayList<>()));
         if (valueIdentifier != null) {
-            input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator));
+            input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator, filter, limit));
         } else {
-            input.add(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl));
+            input.add(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl, filter, limit));
         }
         return input;
     }
@@ -251,7 +261,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
         throw new ParsingException("missing identifier or string literal", node.get(6));
     }
-
 
     @Override
     public List<Fragment> visit(Assignment ftl, List<Fragment> input) {

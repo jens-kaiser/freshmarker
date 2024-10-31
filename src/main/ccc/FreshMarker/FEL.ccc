@@ -157,6 +157,10 @@ TOKEN :
     |
     <DESCENDING : "desc">
     |
+    <LIMIT : "limit">
+    |
+    <FILTER : "filter">
+    |
     <INTEGER : (["0"-"9"])+>
     |
     <DECIMAL : <INTEGER> "." <INTEGER>>
