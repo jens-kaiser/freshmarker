@@ -4,8 +4,9 @@
 
 === Improvements
 
-- add filter part to the list directive
-- add limit part to the list directive
+- add `filter` part to the list directive
+- add `limit` part to the list directive
+- add brick directive
 
 == Release 1.6.5 (2024-10-29)
 

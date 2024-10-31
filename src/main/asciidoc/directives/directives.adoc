@@ -148,3 +148,32 @@ The file name parameter is the name of the import file and will be loaded by def
 <#import 'macros.fmt' as m/>
 <@m.copyright/>
 ----
+
+=== Brick Directive (since 1.6.6)
+
+It is clearer if related templates are contained in the same document. The document can be evaluated as a template as a whole or the templates it contains can be evaluated individually.
+
+A part that can be evaluated individually is contained within a brickfootnote:[Usually, this is called a template fragment, but the technical _FreshMarker_ template component classes are already called fragments.] directive.
+
+.Example mail template
+[source]
+----
+<#brick 'salutation'>Hello ${customer.first} ${customer.last},</#brick>
+<#brick 'signature'>
+Best regards
+${employee.first} ${employee.last}
+${employee.title}
+</#brick>
+----
+
+A single brick directive is evaluated with the `Template#process(String, Map)` method. The `String` parameter is the name of the directive.
+
+.Example brick rendering
+[source,java]
+----
+Map<String, Object> model = Map.of("customer", customer, "employee", employee);
+Configuration configuration = new Configuration();
+Template template = configuration.getTemplate("mail", mail);
+String salutation = template.process("salutation", model);
+String signature = template.process("signature", model);
+----

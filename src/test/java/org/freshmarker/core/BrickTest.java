@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BrickTest {
 
@@ -17,6 +18,12 @@ class BrickTest {
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
+    }
+
+    @Test
+    void unknownBrick() {
+        Template template = configuration.builder().getTemplate("test", "test");
+        assertThrows(ProcessException.class, () -> template.process("subject", Map.of()));
     }
 
     @Test
