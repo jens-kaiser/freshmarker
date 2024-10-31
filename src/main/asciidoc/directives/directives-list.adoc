@@ -111,7 +111,7 @@ ${l?counter}. ${key}->${value}
 ==== List Directive with a hash and sorted keys
 
 Normally the list iterates over the entries without a preferred order.
-With _Java_ `Map` types this can be influenced by the use of `SequencedMap` implementations. However, this is not possible when using a _Java Beans_.
+With _Java_ `Map` types this can be influenced by the use of `SequencedMap` implementations. However, this is not possible when using a _Java Bean_.
 
 The keys of a hash can also be sorted in ascending and descending order by adding `sorted asc` after the key for ascending sorting and `sorted desc` for descending sorting.
 
