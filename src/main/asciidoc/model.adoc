@@ -100,7 +100,7 @@ As can be seen in the examples, the lower limit may be greater than the upper li
 A _length-limited range_ is a _right-limited range_ with a different syntax `_a_..*_c_`. 
 Where `a` again corresponds to the lower limit of the range and `c` indicates the size of the range.
 
-_Length-limited ranges_ are always _legal ranges_ whose upper limit is greater than their lower limit.
+_Length-limited ranges_ are _legal ranges_ whose upper limit is greater than their lower limit f the size of the range is a positiv number. wiith a negativ size number,
 
 .Example length-limited ranges
 [source,java,subs="verbatim,quotes"]

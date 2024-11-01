@@ -1,7 +1,6 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateLengthLimitedRange extends AbstractLimitedRange {
@@ -18,16 +17,14 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
         if (bounds == null) {
             int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
             int newCount = count.evaluate(context, TemplateNumber.class).asInt();
-            if (newCount < 0) {
-                throw new ProcessException("count not positive: " + newCount);
-            }
             int newUpper;
+            size = Math.abs(newCount);
             if (newCount == 0) {
-                size = 0;
                 newUpper = newLower;
+            } else if (newCount > 0) {
+                newUpper = newLower + size - 1;
             } else {
-                size = newCount;
-                newUpper = newLower + newCount - 1;
+                newUpper = newLower - size + 1;
             }
             bounds = new Bounds(newLower, newUpper);
             evaluatedUpper = TemplateNumber.of(newUpper);
