@@ -57,7 +57,7 @@ m|\|
 m|true \| true
 
 m|∨
-|Logical Or Operator
+|Unicode Logical Or Operator
 |evaluates both operands
 m|true ∨ true
 
@@ -168,9 +168,17 @@ m|*
 |Multiplication Operator
 m|x * 2
 
+m|×
+|Unicode Multiplication Operator
+m|x × 2
+
 m|/
 |Division Operator
 m|x / 3
+
+m|÷
+|Unicode Division Operator
+m|x ÷ 3
 
 m|%
 |Remainder Operator

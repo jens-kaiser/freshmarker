@@ -107,6 +107,7 @@ If the size of the range is positive, then the upper limit is greater than the l
 ----
 1..*10  // lower bound 1 and upper bound 10
 5..*5   // lower bound 5 and upper bound 9
+4..*-5   // lower bound 4 and upper bound 0
 a..*b   // lower bound in variable _a_ and an range size in variable _c_
 ----
 
