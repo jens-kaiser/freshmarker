@@ -74,11 +74,20 @@ class SliceAndRangeInterpolationTest {
         assertEquals("test: 10", template.process(Map.of()));
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "${1..<}",
+            "${1..*}"
+    })
+    void invalidUnlimitedSliceUsages(String input) throws ParseException {
+        assertThrows(ParsingException.class, () -> configuration.builder().getTemplate("test", input));
+    }
+
     @Test
     void invalidSliceUsage() throws ParseException {
         Template template = configuration.builder().getTemplate("test", "test: ${map[1..3]}");
         Map<String, Object> model = Map.of("map", Map.of());
-        assertThrows(ProcessException.class, () -> template.process(model));
+        assertThrows(ParsingException.class, () -> template.process(model));
     }
 
     @ParameterizedTest
