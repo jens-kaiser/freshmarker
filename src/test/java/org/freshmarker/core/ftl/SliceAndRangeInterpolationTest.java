@@ -244,4 +244,16 @@ class SliceAndRangeInterpolationTest {
         Template template = configuration.builder().getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("count", 0, "start", 1)));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+        "${(0..10)[-1..0]}",
+        "${(0..10)[0..-1]}",
+        "${(0..10)[-10..]}"
+    })
+    void invalidSlices(String input) {
+        Template template = configuration.builder().getTemplate("slices", input);
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
 }
