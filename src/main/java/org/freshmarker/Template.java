@@ -54,7 +54,7 @@ public final class Template {
         process(dataModel, writer, rootFragment);
     }
 
-    public void process(String brickName, Map<String, Object> dataModel, Writer writer) {
+    public void processBrick(String brickName, Map<String, Object> dataModel, Writer writer) {
         Fragment brickFragment = bricks.get(brickName);
         if (brickFragment == null) {
             throw new ProcessException("missing brick: " + brickName);
@@ -72,9 +72,9 @@ public final class Template {
         }
     }
 
-    public String process(String brickName, Map<String, Object> dataModel) {
+    public String processBrick(String brickName, Map<String, Object> dataModel) {
         try (StringBuilderWriter writer = new StringBuilderWriter()) {
-            process(brickName, dataModel, writer);
+            processBrick(brickName, dataModel, writer);
             return writer.toString();
         }
     }

@@ -166,7 +166,7 @@ ${employee.title}
 </#brick>
 ----
 
-A single brick directive is evaluated with the `Template#process(String, Map)` method. The `String` parameter is the name of the directive.
+A single brick directive is evaluated with the `Template#processBrick(String, Map)` method. The `String` parameter is the name of the directive.
 
 .Example brick rendering
 [source,java]

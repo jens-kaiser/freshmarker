@@ -23,7 +23,7 @@ class BrickTest {
     @Test
     void unknownBrick() {
         Template template = configuration.builder().getTemplate("test", "test");
-        assertThrows(ProcessException.class, () -> template.process("subject", Map.of()));
+        assertThrows(ProcessException.class, () -> template.processBrick("subject", Map.of()));
     }
 
     @Test
@@ -55,7 +55,7 @@ class BrickTest {
                 Linda Loman
                 """, template.process(model));
 
-        assertEquals("My husband, Willy Loman, has passed away", template.process("subject", model));
+        assertEquals("My husband, Willy Loman, has passed away", template.processBrick("subject", model));
         assertEquals("""
                 Dear Mr. Howard Wagner,
                 
@@ -64,6 +64,6 @@ class BrickTest {
                 
                 Sincerely,
                 Linda Loman
-                """, template.process("body", model));
+                """, template.processBrick("body", model));
     }
 }

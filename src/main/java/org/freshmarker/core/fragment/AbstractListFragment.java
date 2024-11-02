@@ -35,7 +35,6 @@ public abstract class AbstractListFragment<T> implements Fragment {
 
     protected abstract void addFilterVariable(FilterVariableEnvironment environment, T value);
 
-
     protected List<T> filterSequence(ProcessContext context, List<T> sequence) {
         Integer intLimit = limit == null ? null : limit.evaluate(context, TemplateNumber.class).asInt();
         if (filter != null) {
