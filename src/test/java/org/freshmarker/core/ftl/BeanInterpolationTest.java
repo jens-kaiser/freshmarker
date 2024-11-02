@@ -55,8 +55,11 @@ class BeanInterpolationTest {
 
     @Test
     void generateWithBeanList() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "<#list bean as key sorted asc, value>${key} ${value}, </#list>");
-        assertEquals("active yes, description Bean Description, name Bean Name, ", template.process(Map.of("bean", new TestBean("Bean Name", "Bean Description", true))));
+        Template template = templateBuilder.getTemplate("test", "<#list bean as key sorted asc, value>${key} ${value}, </#list>\n" +
+                                                                "<#list bean as key sorted desc, value>${key} ${value}, </#list>");
+        assertEquals("active yes, description Bean Description, name Bean Name, \n" +
+                     "name Bean Name, description Bean Description, active yes, ",
+                template.process(Map.of("bean", new TestBean("Bean Name", "Bean Description", true))));
     }
 
     @Test

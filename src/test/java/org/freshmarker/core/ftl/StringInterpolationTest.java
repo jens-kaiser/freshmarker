@@ -172,4 +172,10 @@ class StringInterpolationTest {
         Template template = templateBuilder.getTemplate("test", "test: ${" + builtIn + "}");
         assertEquals(expected, template.process(Map.of(
                 "languageCountryVariant", "de_DE_BFE", "languageCountry", "de_DE", "language", "de")));
-    }}
+    }
+
+    @Test
+    void unsupportedStringOperation() {
+        assertThrows(ProcessException.class, () -> templateBuilder.getTemplate("test", "test: ${'xxx' - 'yyy'}"));
+    }
+}
