@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +81,8 @@ class SliceAndRangeInterpolationTest {
             "${1..*}"
     })
     void invalidUnlimitedSliceUsages(String input) throws ParseException {
-        assertThrows(ParsingException.class, () -> configuration.builder().getTemplate("test", input));
+        TemplateBuilder builder = configuration.builder();
+        assertThrows(ParsingException.class, () -> builder.getTemplate("test", input));
     }
 
     @Test

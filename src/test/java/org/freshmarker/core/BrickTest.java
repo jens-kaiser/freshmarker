@@ -2,6 +2,7 @@ package org.freshmarker.core;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,8 @@ class BrickTest {
 
     @Test
     void alreadyExisting() {
-        assertThrows(IllegalArgumentException.class, () -> configuration.builder().getTemplate("test", """
+        TemplateBuilder builder = configuration.builder();
+        assertThrows(IllegalArgumentException.class, () -> builder.getTemplate("test", """
                 <#brick 'test'>Test</#brick>
                 <#brick 'test'>Test</#brick>
                 """));
@@ -31,7 +33,8 @@ class BrickTest {
     @Test
     void unknownBrick() {
         Template template = configuration.builder().getTemplate("test", "test");
-        assertThrows(ProcessException.class, () -> template.processBrick("subject", Map.of()));
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.processBrick("subject", model));
     }
 
     @Test
