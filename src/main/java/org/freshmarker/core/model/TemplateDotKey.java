@@ -1,7 +1,6 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrongTypeException;
 
 public class TemplateDotKey implements TemplateExpression {
