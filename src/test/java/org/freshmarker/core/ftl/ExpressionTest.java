@@ -261,6 +261,24 @@ class ExpressionTest {
         assertEquals("3", template.process(Map.of()));
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "${(1..10)[5]}, 6",
+            "${(-1..-10)[5]}, -6"
+    })
+    void dotKeys(String input, String expected) {
+        Template template = builder.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+
+    @Test
+    void invalidDotKey() {
+        Template template = builder.getTemplate("test", "${seq[5]}");
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
     @Test
     void invalidDotKeyUsage() {
         Template template = builder.getTemplate("test", "${''.value}");
