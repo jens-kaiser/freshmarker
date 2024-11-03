@@ -123,7 +123,7 @@ ${key}->${value}
 </#list>
 ----
 
-==== List Directive with a filter
+==== List Directive with a filter (since 1.6.6)
 
 The list directive runs over all elements of a list. An element can be omitted with an if statement.
 If the looper variable is also used, this can lead to jumps. There are two solutions to this problem.
@@ -141,7 +141,7 @@ ${s} * ${s} = ${s*s}
 </#list>
 ----
 
-==== List Directive with a limit
+==== List Directive with a limit (since 1.6.6)
 
 The number of elements in the list directive can be reduced using a limit expression.
 The limit expression in the list directive follows directly after the filter part.
