@@ -18,5 +18,6 @@ class BuiltInKeyTest {
         assertNotEquals(key1, key2);
         assertNotEquals(key1, key3);
         assertNotEquals(null, key1);
+        assertNotEquals(key1, "null");
     }
 }
