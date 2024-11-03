@@ -42,6 +42,11 @@ class MacroTest {
     }
 
     @Test
+    void generateFunction() throws ParseException {
+        assertThrows(ParseException.class, () -> builder.getTemplate("test", "<#function entry count></#function"));
+    }
+
+    @Test
     void generateComplexMacro() throws ParseException {
         Template template = builder.getTemplate("test", "<#macro entry count><#list 1..count as v>${v} <#nested/>\n</#list></#macro><@entry count=3>test</@entry>");
         assertEquals("1 test\n2 test\n3 test\n", template.process(Map.of()));
