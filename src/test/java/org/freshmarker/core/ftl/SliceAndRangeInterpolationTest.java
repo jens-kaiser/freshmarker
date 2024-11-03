@@ -257,7 +257,9 @@ class SliceAndRangeInterpolationTest {
         "${(0..10)[-1..0]}",
         "${(0..10)[0..-1]}",
         "${(0..10)[-10..]}",
-        "${(0..10)[0..<0]}"
+        "${(0..10)[0..<0]}",
+        "${(0..<0)[0..]}",
+        "${(0..<0)[0..1]}"
     })
     void invalidSlices(String input) {
         Template template = configuration.builder().getTemplate("slices", input);

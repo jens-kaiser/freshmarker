@@ -347,6 +347,7 @@ class TemporalInterpolationTest {
             "test: ${temporal * period}",
             "test: ${temporal + 1.0}",
             "test: ${temporal + 1.0?float}",
+            "test: ${temporal + '1'}",
             "test: ${period / period}"
     })
     void invalidOperation(String input) throws ParseException {
