@@ -219,7 +219,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (type != TokenType.MACRO) {
             return input;
         }
-        String name = getName(ftl.get(3));
+        String name = ftl.get(3).toString();
         List<ParameterHolder> parameterList = getParameterHolders(ftl);
         Fragment block = getFragment(ftl);
         logger.debug("macro directive: namespace={}, type={}, name={}, block={}", nameSpace, type, name, block);
@@ -252,24 +252,13 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         return 5;
     }
 
-    private String getName(Node node) {
-        if (node.getType() == TokenType.IDENTIFIER) {
-            return node.toString();
-        }
-        if (node.getType() == TokenType.STRING_LITERAL) {
-            String image = node.getImage();
-            return image.substring(1, image.length() - 1);
-        }
-        throw new ParsingException("missing identifier or string literal", node.get(6));
-    }
-
     @Override
     public List<Fragment> visit(Assignment ftl, List<Fragment> input) {
         TokenType type = (TokenType) ftl.get(1).getType();
         if (type != TokenType.SET) {
             throw new ParsingException("assignment type " + type + " not supported", ftl.get(1));
         }
-        String name = getName(ftl.get(3));
+        String name = ftl.get(3).toString();
         if (name.startsWith(".")) {
             throw new ParsingException("built-in variable name not allowed: " + name, ftl);
         }
@@ -282,7 +271,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(VarInstruction ftl, List<Fragment> input) {
-        String name = getName(ftl.get(3));
+        String name = ftl.get(3).toString();
         if (name.startsWith(".")) {
             throw new ParsingException("built-in variable name not allowed: " + name, ftl);
         }
@@ -324,7 +313,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             throw new ParsingException("cannot read import: " + path, ftl);
         }
     }
-    
+
     @Override
     public List<Fragment> visit(BrickInstruction ftl, List<Fragment> input) {
         String name = ftl.get(3).toString();
