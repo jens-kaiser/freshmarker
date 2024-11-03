@@ -46,10 +46,17 @@ class VariableTest {
         assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
-    @Test
-    void unsupported() {
+    @ParameterizedTest
+    @CsvSource(value = {
+            "<#var test1='eins' test2='zwei'/>",
+            "<#var test1='eins', test2='zwei'/>",
+            "<#assign test1='eins'/>",
+            "<#global test1='eins'/>",
+            "<#local test1='eins'/>",
+    }, delimiterString = ";")
+    void unsupported(String input) {
         TemplateBuilder builder = configuration.builder();
-        assertThrows(ParsingException.class, () -> builder.getTemplate("test", "<#var test1='eins' test2='zwei'/>"));
+        assertThrows(ParsingException.class, () -> builder.getTemplate("test", input));
     }
 
     @Test

@@ -259,9 +259,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             throw new ParsingException("assignment type " + type + " not supported", ftl.get(1));
         }
         String name = ftl.get(3).toString();
-        if (name.startsWith(".")) {
-            throw new ParsingException("built-in variable name not allowed: " + name, ftl);
-        }
         if (ftl.size() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
@@ -272,9 +269,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(VarInstruction ftl, List<Fragment> input) {
         String name = ftl.get(3).toString();
-        if (name.startsWith(".")) {
-            throw new ParsingException("built-in variable name not allowed: " + name, ftl);
-        }
         if (ftl.size() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
