@@ -232,12 +232,6 @@ TOKEN :
     <NOPARSE_END : ("</#noparse" (<BLANK>)* ">") | ("[/#noparse" (<BLANK>)* "]")> : TEMPLATE_TEXT
 ;
 
-IdentifierOrStringLiteral : 
-    <IDENTIFIER>
-    |
-    StringLiteral
-;
-
 Interpolation :
     <INTERPOLATE>Expression<CLOSE_BRACE>
 ;
@@ -254,17 +248,17 @@ Assignment :
        t=<GLOBAL>
     )
     <BLANK>
-    IdentifierOrStringLiteral
+    <IDENTIFIER>
     (
       (
        <EQUALS>Expression
-       ([<COMMA>] IdentifierOrStringLiteral <EQUALS> Expression)*
+       ([<COMMA>] <IDENTIFIER> <EQUALS> Expression)*
        [<IN> Expression]
        LooseTagEnd
       )
       |
       (
-          [<IN> Expression]
+         [<IN> Expression]
          <CLOSE_TAG>
          Block
          DirectiveEnd(t.toString())
@@ -275,8 +269,8 @@ Assignment :
 Var #VarInstruction :
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <VAR><BLANK>
-    IdentifierOrStringLiteral [<EQUALS> Expression]
-    ([<COMMA>]IdentifierOrStringLiteral [<EQUALS> Expression])*
+    <IDENTIFIER> [<EQUALS> Expression]
+    ([<COMMA>] <IDENTIFIER> [<EQUALS> Expression])*
     LooseTagEnd
 ;
 
@@ -284,7 +278,7 @@ Setting #SettingInstruction :
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <SETTING><BLANK>
     <IDENTIFIER> [<EQUALS> Expression]
-    ([<COMMA>]IdentifierOrStringLiteral [<EQUALS> Expression])*
+    ([<COMMA>] <IDENTIFIER> [<EQUALS> Expression])*
     LooseTagEnd
 ;
 
