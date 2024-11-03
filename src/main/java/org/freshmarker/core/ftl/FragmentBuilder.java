@@ -217,7 +217,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
         TokenType type = (TokenType) ftl.get(1).getType();
         if (type != TokenType.MACRO) {
-            return input;
+            throw new ParsingException("function unsupported", ftl);
         }
         String name = ftl.get(3).toString();
         List<ParameterHolder> parameterList = getParameterHolders(ftl);

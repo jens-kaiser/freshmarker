@@ -44,7 +44,7 @@ class MacroTest {
 
     @Test
     void generateFunction() throws ParseException {
-        assertThrows(ParseException.class, () -> builder.getTemplate("test", "<#function entry count></#function"));
+        assertThrows(ParsingException.class, () -> builder.getTemplate("test", "<#function entry count></#function>"));
     }
 
     @Test
