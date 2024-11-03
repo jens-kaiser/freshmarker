@@ -431,7 +431,7 @@ MacroDefinition :
       t=<FUNCTION>
     )
     <BLANK>
-    IdentifierOrStringLiteral
+    <IDENTIFIER>
     [<OPEN_PAREN>]
     [ParameterList]
     [<CLOSE_PAREN>]
