@@ -53,6 +53,8 @@ class VariableTest {
             "<#assign test1='eins'/>",
             "<#global test1='eins'/>",
             "<#local test1='eins'/>",
+            "<#set test1='eins' test2='zwei'/>",
+            "<#set test1='eins', test2='zwei'/>",
     }, delimiterString = ";")
     void unsupported(String input) {
         TemplateBuilder builder = configuration.builder();
