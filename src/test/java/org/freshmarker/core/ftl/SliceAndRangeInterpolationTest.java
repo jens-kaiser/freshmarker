@@ -92,6 +92,13 @@ class SliceAndRangeInterpolationTest {
         assertThrows(ProcessException.class, () -> template.process(model));
     }
 
+    @Test
+    void indexOutOfRangeOnRange() throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "test: ${(0..3)[6]}");
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
     @ParameterizedTest
     @CsvSource({
             "test: <#list (1..) as i>${i}</#list>,right unlimited range not supported at test:1:7 '<#list (1..) as i>${i}</#list>'",
@@ -249,7 +256,8 @@ class SliceAndRangeInterpolationTest {
     @CsvSource(value = {
         "${(0..10)[-1..0]}",
         "${(0..10)[0..-1]}",
-        "${(0..10)[-10..]}"
+        "${(0..10)[-10..]}",
+        "${(0..10)[0..<0]}"
     })
     void invalidSlices(String input) {
         Template template = configuration.builder().getTemplate("slices", input);

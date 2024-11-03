@@ -43,7 +43,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
 
     @Override
     public boolean isEmpty(ProcessContext context) {
-        return isLengthLimited() && size(context) == 0;
+        return size(context) == 0;
     }
 
     @Override
