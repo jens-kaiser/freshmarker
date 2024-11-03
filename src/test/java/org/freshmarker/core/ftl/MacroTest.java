@@ -33,6 +33,7 @@ class MacroTest {
             "<#macro entry label, value >${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
             "<#macro entry(label, value)>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
             "<#macro entry(label value)>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
+            "<#macro entry(label value)>${label}=${value}</#macro><@entry label=text, value='value'/>;tralala=value",
             "<#macro test>ABC<#return/>DEF</#macro><@test/>;ABC",
     }, delimiterString = ";")
     void generateMacro(String templateSource, String expected) throws ParseException {
