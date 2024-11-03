@@ -4,6 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -49,6 +50,12 @@ class MacroTest {
     @Test
     void generateInvalidMacros() throws ParseException {
         assertThrows(ParseException.class, () -> builder.getTemplate("test", "<#macro entry(label value>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value"));
+    }
+
+    @Test
+    void generateUnknownMacros() throws ParseException {
+        Template template = builder.getTemplate("test", "<@gonzo />");
+        assertThrows(ProcessException.class, () -> template.process(Map.of("bean", Map.of(), "text", "tralala")));
     }
 
     @Test
