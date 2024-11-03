@@ -24,14 +24,17 @@ class MacroTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "<#macro empty></#macro><@empty/>,''",
-            "<#macro empty><!-- --></#macro><@empty/>,<!-- -->",
-            "<#macro comment><!-- <#nested/> --></#macro><@comment>Dies ist ein Kommentar</@comment>,<!-- Dies ist ein Kommentar -->",
-            "<#macro comment><#nested/> <#nested/></#macro><@comment>Hurra</@comment>,Hurra Hurra",
-            "<#macro entry label value>${label}=${value}</#macro><@entry label=text value='value'/>,tralala=value",
-            "<#macro test>ABC<#return/>DEF</#macro><@test/>,ABC",
-    })
+    @CsvSource(value = {
+            "<#macro empty></#macro><@empty/>;''",
+            "<#macro empty><!-- --></#macro><@empty/>;<!-- -->",
+            "<#macro comment><!-- <#nested/> --></#macro><@comment>Dies ist ein Kommentar</@comment>;<!-- Dies ist ein Kommentar -->",
+            "<#macro comment><#nested/> <#nested/></#macro><@comment>Hurra</@comment>;Hurra Hurra",
+            "<#macro entry label value>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
+            "<#macro entry label, value >${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
+            "<#macro entry(label, value)>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
+            "<#macro entry(label value)>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value",
+            "<#macro test>ABC<#return/>DEF</#macro><@test/>;ABC",
+    }, delimiterString = ";")
     void generateMacro(String templateSource, String expected) throws ParseException {
         Template template = builder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("bean", Map.of(), "text", "tralala")));
