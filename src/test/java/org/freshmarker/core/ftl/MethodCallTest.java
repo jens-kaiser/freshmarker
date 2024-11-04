@@ -34,7 +34,7 @@ class MethodCallTest {
             "test: ${avg(10, 20)}<#-- -->;test: 15",
             "test: ${avg(10, 20, 30, 40)}<#-- -->;test: 25",
             "test: ${abs(-10)};test: 10",
-            "test: ${nl(};test: ",
+            "test: ${nl()};test: ",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void avg(String templateSource, String expected) throws ParseException {
         Template template = configuration.builder().getTemplate("test", templateSource);
