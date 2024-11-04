@@ -14,10 +14,6 @@ public class FileSystemTemplateLoader implements TemplateLoader {
         this.fileSystem = fileSystem;
     }
 
-    public FileSystemTemplateLoader() {
-        this(FileSystems.getDefault());
-    }
-
     @Override
     public String getImport(Path path, String filename, Charset charset) throws IOException {
         return getContent(filename, charset);

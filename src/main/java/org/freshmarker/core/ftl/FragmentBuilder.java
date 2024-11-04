@@ -301,8 +301,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             List<Fragment> fragments = root.accept(new ImportBuilder(template, configuration, namespace), new ArrayList<>());
             fragments.forEach(template.getRootFragment()::addFragment);
             return input;
-        } catch (FileNotFoundException e) {
-            throw new ParsingException("cannot find import: " + path, ftl);
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
         }
