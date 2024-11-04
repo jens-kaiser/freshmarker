@@ -135,6 +135,7 @@ class ExpressionTest {
             "true || false, true",
             "false || true, true",
             "false || false, false",
+            "first || true, true",
             "true || 1, true",
             "true ∨ true, true",
             "true ∨ false, true",
