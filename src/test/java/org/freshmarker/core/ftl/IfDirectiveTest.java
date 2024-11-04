@@ -17,12 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IfDirectiveTest {
 
-    private Configuration configuration;
     private TemplateBuilder builder;
 
     @BeforeEach
     void setUp() {
-        configuration = new Configuration();
+        Configuration configuration = new Configuration();
         builder = configuration.builder();
     }
 
