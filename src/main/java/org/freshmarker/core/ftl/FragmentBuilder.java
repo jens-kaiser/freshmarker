@@ -229,7 +229,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     }
 
     private Fragment getFragment(MacroDefinition ftl) {
-        if (ftl.getLast().getType() == TokenType.CLOSE_EMPTY_TAG || ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
+        if (ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
         return Fragments.optimize(ftl.get(ftl.size() - 2).accept(this, new ArrayList<>()));
