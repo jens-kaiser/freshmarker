@@ -18,7 +18,6 @@ Some in-depth articles on _Freshmarker_ can be found on https://schegge.de/categ
 |velocity | 1.7
 |thymeleaf | 2.1.4.RELEASE
 |trimou | 1.8.2.Final
-|rocker | 1.3.0
 |freshmarker | 1.6.6
 |===
 
