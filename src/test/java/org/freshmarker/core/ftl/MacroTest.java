@@ -47,9 +47,15 @@ class MacroTest {
         assertThrows(ParsingException.class, () -> builder.getTemplate("test", "<#function entry count></#function>"));
     }
 
-    @Test
-    void generateInvalidMacros() throws ParseException {
-        assertThrows(ParseException.class, () -> builder.getTemplate("test", "<#macro entry(label value>${label}=${value}</#macro><@entry label=text value='value'/>;tralala=value"));
+    @ParameterizedTest
+    @CsvSource({
+            "<#macro entry(>${label}=${value}</#macro>",
+            "<#macro entry(label value>${label}=${value}</#macro>",
+            "<#macro entry label value)>${label}=${value}</#macro>",
+            "<#macro entry )>${label}=${value}</#macro>"
+    })
+    void generateInvalidMacros(String input) throws ParseException {
+        assertThrows(ParseException.class, () -> builder.getTemplate("test", input));
     }
 
     @Test

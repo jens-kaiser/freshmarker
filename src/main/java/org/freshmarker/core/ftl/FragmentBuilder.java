@@ -4,6 +4,7 @@ import ftl.FreshMarkerParser;
 import ftl.Node;
 import ftl.Node.NodeType;
 import ftl.Node.TerminalNode;
+import ftl.ParseException;
 import ftl.Token;
 import ftl.Token.TokenType;
 import ftl.ast.Assignment;
@@ -243,13 +244,19 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     }
 
     private int getParameterListIndex(MacroDefinition ftl) {
-        if (ftl.get(4).getType() != TokenType.OPEN_PAREN) {
+        int closeTag = ftl.indexOf(ftl.firstChildOfType(TokenType.CLOSE_TAG));
+        if (closeTag == 4) {
             return 4;
         }
-        if (ftl.get(6).getType() != TokenType.CLOSE_PAREN) {
-            throw new ProcessException("missing CLOSE_PAREN at " + ftl.get(6).getLocation());
+        Node openParen = ftl.firstChildOfType(TokenType.OPEN_PAREN);
+        Node closeParen = ftl.firstChildOfType(TokenType.CLOSE_PAREN);
+        if (openParen == null && closeParen == null) {
+            return 4;
         }
-        return 5;
+        if (openParen != null && closeParen != null) {
+            return 5;
+        }
+        throw new ParsingException("invalid syntax",  ftl);
     }
 
     @Override
