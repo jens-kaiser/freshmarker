@@ -40,8 +40,8 @@ public class StringPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("camelCase"), (x, y, e) -> camelCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("kebabCase"), (x, y, e) -> kebabCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("kebab_case"), (x, y, e) -> kebabCase((TemplateString) x, e));
-        builtIns.put(BUILDER.of("kebab-case"), (x, y, e) -> kebabCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("snake_case"), (x, y, e) -> snakeCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("snakeCase"), (x, y, e) -> snakeCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("screaming_snake_case"), (x, y, e) -> screamingSnakeCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("trim"), (x, y, e) -> new TemplateString(((TemplateString) x).getValue().trim()));
         builtIns.put(BUILDER.of("contains"), (x, y, e) -> contains((TemplateString) x, (TemplateString) y.getFirst()));
