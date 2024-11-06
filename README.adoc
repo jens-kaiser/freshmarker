@@ -12,8 +12,7 @@ Some in-depth articles on _Freshmarker_ can be found on https://schegge.de/categ
 == Example Benchmarks
 
 |===
-.8+|image:src/main/asciidoc/benchmark.png[float="right"] |pebble | 2.2.1
-|mustache | 0.9.11
+.8+|image:src/main/asciidoc/benchmark.png[float="right"] |mustache | 0.9.11
 |freemarker | 2.3.23
 |velocity | 1.7
 |thymeleaf | 2.1.4.RELEASE
