@@ -15,6 +15,7 @@ import org.freshmarker.core.output.StandardOutputFormats;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,11 @@ public class StringPluginProvider implements PluginProvider {
     private static final Pattern CAPITALIZE = Pattern.compile("\\b(\\p{javaLowerCase})(\\p{IsAlphabetic}*)\\b");
     private static final Pattern UNCAPITALIZE = Pattern.compile("\\b(\\p{javaUpperCase})(\\p{IsAlphabetic}*)\\b");
     public static final Pattern CAMEL_CASE = Pattern.compile("(\\p{javaLowerCase}+)[_-](\\p{javaLowerCase})");
+
+    @Override
+    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
+        mapper.put(String.class, o -> new TemplateString((String) o));
+    }
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {

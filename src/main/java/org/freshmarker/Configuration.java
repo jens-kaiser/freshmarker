@@ -12,16 +12,11 @@ import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.model.primitive.TemplateNumber;
-import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
@@ -38,8 +33,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -54,8 +47,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -151,21 +142,6 @@ public final class Configuration {
         providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, recordTemplateObjectProvider, new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
 
         templateLoader = new DefaultFileSystemTemplateLoader();
-        mappingTemplateObjectProvider.addMapper(String.class, o -> new TemplateString((String) o));
-        mappingTemplateObjectProvider.addMapper(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o, Type.LONG));
-        mappingTemplateObjectProvider.addMapper(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o, Type.INTEGER));
-        mappingTemplateObjectProvider.addMapper(Long.class, o -> new TemplateNumber((Long) o));
-        mappingTemplateObjectProvider.addMapper(Integer.class, o -> TemplateNumber.of((Integer) o));
-        mappingTemplateObjectProvider.addMapper(Short.class, o -> new TemplateNumber((Short) o));
-        mappingTemplateObjectProvider.addMapper(Byte.class, o -> new TemplateNumber((Byte) o));
-        mappingTemplateObjectProvider.addMapper(Double.class, o -> new TemplateNumber((Double) o));
-        mappingTemplateObjectProvider.addMapper(Float.class, o -> new TemplateNumber((Float) o));
-        mappingTemplateObjectProvider.addMapper(BigInteger.class, o -> new TemplateNumber((BigInteger) o));
-        mappingTemplateObjectProvider.addMapper(BigDecimal.class, o -> new TemplateNumber((BigDecimal) o));
-        mappingTemplateObjectProvider.addMapper(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
-
-        formatter.put(TemplateNumber.class, new NumberFormatter());
-        formatter.put(TemplateBoolean.class, new BooleanFormatter("yes", "no"));
 
         outputs.put("HTML", StandardOutputFormats.HTML);
         outputs.put("XHTML", StandardOutputFormats.HTML);

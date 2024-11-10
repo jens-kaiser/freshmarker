@@ -5,6 +5,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public class NumberPluginProvider implements PluginProvider {
@@ -33,6 +35,20 @@ public class NumberPluginProvider implements PluginProvider {
     private static final String[] UTF_THOUSANDS = new String[]{"", "Ⅿ", "ⅯⅯ", "ⅯⅯⅯ"};
 
     private static final BuiltInKeyBuilder<TemplateNumber> BUILDER = new BuiltInKeyBuilder<>(TemplateNumber.class);
+
+    @Override
+    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
+        mapper.put(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o, Type.LONG));
+        mapper.put(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o, Type.INTEGER));
+        mapper.put(Long.class, o -> new TemplateNumber((Long) o));
+        mapper.put(Integer.class, o -> TemplateNumber.of((Integer) o));
+        mapper.put(Short.class, o -> new TemplateNumber((Short) o));
+        mapper.put(Byte.class, o -> new TemplateNumber((Byte) o));
+        mapper.put(Double.class, o -> new TemplateNumber((Double) o));
+        mapper.put(Float.class, o -> new TemplateNumber((Float) o));
+        mapper.put(BigInteger.class, o -> new TemplateNumber((BigInteger) o));
+        mapper.put(BigDecimal.class, o -> new TemplateNumber((BigDecimal) o));
+    }
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -54,6 +70,11 @@ public class NumberPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("h"), (x, y, e) -> human(getNumber(x), e));
         builtIns.put(BUILDER.of("min"), (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
         builtIns.put(BUILDER.of("max"), (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
+    }
+
+    @Override
+    public void registerFormatter(Map<Class<? extends TemplateObject>, org.freshmarker.core.formatter.Formatter> formatter) {
+        formatter.put(TemplateNumber.class, new NumberFormatter());
     }
 
     private Number castBigInteger(Number number) {

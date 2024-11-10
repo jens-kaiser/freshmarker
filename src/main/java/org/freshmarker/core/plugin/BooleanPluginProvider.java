@@ -4,6 +4,8 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.formatter.BooleanFormatter;
+import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -11,9 +13,16 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 public class BooleanPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
+
+    @Override
+    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
+        mapper.put(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
+
+    }
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -21,6 +30,11 @@ public class BooleanPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("then"), BooleanPluginProvider::thenBuildIn);
         builtIns.put(BUILDER.of("string"), BooleanPluginProvider::stringBuiltIn);
         builtIns.put(BUILDER.of("h"), BooleanPluginProvider::humanBuiltIn);
+    }
+
+    @Override
+    public void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {
+        formatter.put(TemplateBoolean.class, new BooleanFormatter("yes", "no"));
     }
 
     private static TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
