@@ -13,6 +13,7 @@ import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.formatter.Formatter;
+import org.freshmarker.core.formatter.FormatterRegistry;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateNull;
@@ -120,18 +121,18 @@ public final class Configuration {
 
         ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
             BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers());
-            return new ProcessContext(context, baseEnvironment, List.of(userDirectives, context.userDirectives()), outputFormat, locale, zoneId, writer);
+            return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer);
         }
     }
 
     private Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-    private Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
     private Map<String, OutputFormat> outputs = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
     private final List<TemplateObjectProvider> providers;
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
+    private FormatterRegistry formatterRegistry = new FormatterRegistry(new HashMap<>());
 
     private TemplateLoader templateLoader;
 
@@ -193,9 +194,9 @@ public final class Configuration {
         Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>(this.builtIns);
         provider.registerBuildIn(registerBuiltIns);
         this.builtIns = registerBuiltIns;
-        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = new HashMap<>(this.formatter);
+        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = formatterRegistry.getFormatter();
         provider.registerFormatter(registerFormatter);
-        this.formatter = registerFormatter;
+        this.formatterRegistry = new FormatterRegistry(registerFormatter);
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
         provider.registerMapper(mapper);
         mapper.forEach(mappingTemplateObjectProvider::addMapper);
@@ -212,6 +213,7 @@ public final class Configuration {
 
     /**
      * Creates a new {@link TemplateBuilder} based on the current  {@code Configuration}.
+     *
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
@@ -227,6 +229,18 @@ public final class Configuration {
     }
 
     public StaticContext getContext() {
-        return new StaticContext(builtIns, formatter, outputs, providers, userDirectives, templateLoader, functions);
+        return new StaticContext(builtIns, formatterRegistry.getFormatter(), outputs, providers, userDirectives, templateLoader, functions);
+    }
+
+    public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {
+        formatterRegistry.registerFormatter(type, formatter);
+    }
+
+    public void registerNumberFormatter(String pattern) {
+        formatterRegistry.registerNumberFormatter(pattern);
+    }
+
+    public void registerFormatter(String type, String pattern) {
+        formatterRegistry.registerFormatter(type, pattern);
     }
 }

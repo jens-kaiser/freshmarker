@@ -1,13 +1,13 @@
 package org.freshmarker.core.formatter;
 
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.formatter.LocaleLocal;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,6 +19,10 @@ public class NumberFormatter implements Formatter {
 
     public NumberFormatter() {
         this.numberFormat = LocaleLocal.withInitial(NumberFormat::getNumberInstance);
+    }
+
+    public NumberFormatter(String pattern) {
+        this.numberFormat = LocaleLocal.withInitial(l -> new DecimalFormat(pattern, DecimalFormatSymbols.getInstance(l)));
     }
 
     @Override

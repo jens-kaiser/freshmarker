@@ -21,5 +21,4 @@ public class LocaleLocal<T> {
   public T get(Locale locale) {
     return map.computeIfAbsent(locale, creator);
   }
-
 }

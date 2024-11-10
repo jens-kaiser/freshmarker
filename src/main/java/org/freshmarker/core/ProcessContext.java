@@ -51,11 +51,11 @@ public class ProcessContext {
         this.outputFormats.addFirst(context.getOutputFormat());
     }
 
-    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, List<Map<NameSpaced, UserDirective>> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
         this.baseEnvironment = baseEnvironment;
         this.environment = new VariableEnvironment(baseEnvironment);
         this.writer = writer;
-        this.userDirectives = userDirectives;
+        this.userDirectives = List.of(userDirectives, context.userDirectives());
         this.builtIns = context.builtIns();
         this.outputs = context.outputs();
         this.functions = context.functions();
