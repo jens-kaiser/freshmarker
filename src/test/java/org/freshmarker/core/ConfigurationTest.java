@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -94,7 +95,7 @@ class ConfigurationTest {
     })
     void registerFormatter(String type, String pattern, String expected) {
         configuration.registerFormatter(type, pattern);
-        Template template = configuration.builder().getTemplate("test", "test: ${zoned} / ${dateTime} / ${date} / ${time}");
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "test: ${zoned} / ${dateTime} / ${date} / ${time}");
         assertNotNull(template);
         String result = template.process(Map.of(
                 "zoned", ZonedDateTime.of(LocalDate.of(1968, Month.AUGUST, 24), LocalTime.of(12, 30), ZoneOffset.UTC),
@@ -108,7 +109,7 @@ class ConfigurationTest {
     @Test
     void registerNumberFormatter() {
         configuration.registerNumberFormatter("###,###.0000");
-        Template template = configuration.builder().getTemplate("test", "test: ${number}");
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "test: ${number}");
         assertNotNull(template);
         String result = template.process(Map.of("number", 128000.5));
         assertEquals("test: 128.000,5000", result);
@@ -117,7 +118,7 @@ class ConfigurationTest {
     @Test
     void registerNumberFormatterByType() {
         configuration.registerFormatter("number", "###,###.000");
-        Template template = configuration.builder().getTemplate("test", "test: ${number}");
+        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "test: ${number}");
         assertNotNull(template);
         String result = template.process(Map.of("number", 128000.5));
         assertEquals("test: 128.000,500", result);
