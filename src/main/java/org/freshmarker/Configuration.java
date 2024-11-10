@@ -194,9 +194,9 @@ public final class Configuration {
         Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>(this.builtIns);
         provider.registerBuildIn(registerBuiltIns);
         this.builtIns = registerBuiltIns;
-        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = formatterRegistry.getFormatter();
+        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = formatterRegistry.formatter();
         provider.registerFormatter(registerFormatter);
-        this.formatterRegistry = new FormatterRegistry(registerFormatter);
+        this.formatterRegistry = new FormatterRegistry(new HashMap<>(registerFormatter));
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
         provider.registerMapper(mapper);
         mapper.forEach(mappingTemplateObjectProvider::addMapper);
