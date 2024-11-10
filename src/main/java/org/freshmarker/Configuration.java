@@ -229,7 +229,7 @@ public final class Configuration {
     }
 
     public StaticContext getContext() {
-        return new StaticContext(builtIns, formatterRegistry.getFormatter(), outputs, providers, userDirectives, templateLoader, functions);
+        return new StaticContext(builtIns, formatterRegistry.formatter(), outputs, providers, userDirectives, templateLoader, functions);
     }
 
     public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {
@@ -237,7 +237,7 @@ public final class Configuration {
     }
 
     public void registerNumberFormatter(String pattern) {
-        formatterRegistry.registerNumberFormatter(pattern);
+        formatterRegistry.registerFormatter("number", pattern);
     }
 
     public void registerFormatter(String type, String pattern) {
