@@ -1,21 +1,20 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.junit.jupiter.api.BeforeEach;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(TemplateBuilderParameterResolver.class)
 class BeanInterpolationTest {
-
-    private TemplateBuilder templateBuilder;
 
     public static class TestBean {
 
@@ -42,19 +41,14 @@ class BeanInterpolationTest {
         }
     }
 
-    @BeforeEach
-    void setUp() {
-        templateBuilder = new Configuration().builder();
-    }
-
     @Test
-    void generateWithBean() throws ParseException {
+    void generateWithBean(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${bean.name} ${bean.active}");
         assertEquals("Bean Name yes", template.process(Map.of("bean", new TestBean("Bean Name", "Bean Description", true))));
     }
 
     @Test
-    void generateWithBeanList() throws ParseException {
+    void generateWithBeanList(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "<#list bean as key sorted asc, value>${key} ${value}, </#list>\n" +
                                                                 "<#list bean as key sorted desc, value>${key} ${value}, </#list>");
         assertEquals("active yes, description Bean Description, name Bean Name, \n" +
@@ -63,7 +57,7 @@ class BeanInterpolationTest {
     }
 
     @Test
-    void generateWithUnknownBeanAttribute() throws ParseException {
+    void generateWithUnknownBeanAttribute(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${bean.value} ${bean.active}");
         Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", "Bean Description", true));
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
@@ -71,7 +65,7 @@ class BeanInterpolationTest {
     }
 
     @Test
-    void invalidBeanAccess() throws ParseException {
+    void invalidBeanAccess(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${bean}");
         Map<String, Object> data = Map.of("bean", new TestBean("Bean Name", "Bean Description", true));
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
@@ -79,7 +73,7 @@ class BeanInterpolationTest {
     }
 
     @Test
-    void illegalBeanAccess() throws ParseException {
+    void illegalBeanAccess(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${bean}");
         Map<String, Object> data = Map.of("bean", Runtime.getRuntime());
         ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
