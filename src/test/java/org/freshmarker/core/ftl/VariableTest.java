@@ -1,12 +1,12 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.junit.jupiter.api.BeforeEach;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -16,13 +16,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(TemplateBuilderParameterResolver.class)
 class VariableTest {
-    private Configuration configuration;
-
-    @BeforeEach
-    void setUp() {
-        configuration = new Configuration();
-    }
 
     @ParameterizedTest
     @CsvSource({
@@ -30,8 +25,8 @@ class VariableTest {
             "test: <#var test='eins'/><#set test='zwei'/>${test}, test: zwei",
             "test: <#var test='eins'/><#set test='zwei'/><#set test='drei'/>${test}, test: drei",
     })
-    void setVariable(String templateSource, String expected) throws ParseException {
-        Template template = configuration.builder().getTemplate("test", templateSource);
+    void setVariable(String templateSource, String expected, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
 
@@ -40,8 +35,8 @@ class VariableTest {
             "test: <#set test='zwei'/>",
             "test: <#var test='eins'/><#var test='eins'/>",
     })
-    void invalid(String templateSource) throws ParseException {
-        Template template = configuration.builder().getTemplate("test", templateSource);
+    void invalid(String templateSource, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", templateSource);
         Map<String, Object> dataModel = Map.of();
         assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
@@ -56,14 +51,13 @@ class VariableTest {
             "<#set test1='eins' test2='zwei'/>",
             "<#set test1='eins', test2='zwei'/>",
     }, delimiterString = ";")
-    void unsupported(String input) {
-        TemplateBuilder builder = configuration.builder();
+    void unsupported(String input, TemplateBuilder builder) {
         assertThrows(ParsingException.class, () -> builder.getTemplate("test", input));
     }
 
     @Test
-    void nested() {
-        Template template = configuration.builder().getTemplate("test", """
+    void nested(TemplateBuilder builder) {
+        Template template = builder.getTemplate("test", """
                 <#var v="test">
                 ${v}
                 <#list sequence as s>
@@ -76,8 +70,8 @@ class VariableTest {
     }
 
     @Test
-    void counter() {
-        Template template = configuration.builder().getTemplate("test", """
+    void counter(TemplateBuilder builder) {
+        Template template = builder.getTemplate("test", """
                 <#var v=0>
                 ${v}
                 <#list sequence as s>

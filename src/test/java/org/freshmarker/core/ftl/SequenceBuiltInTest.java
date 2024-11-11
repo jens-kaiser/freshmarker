@@ -1,46 +1,40 @@
 package org.freshmarker.core.ftl;
 
-import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
-import org.junit.jupiter.api.BeforeEach;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(TemplateBuilderParameterResolver.class)
 class SequenceBuiltInTest {
 
-    private TemplateBuilder builder;
-
-    @BeforeEach
-    void setUp() {
-        builder = new Configuration().builder();
-    }
-
     @Test
-    void size() {
+    void size(TemplateBuilder builder) {
         assertEquals("7", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?size}").process(Map.of()));
     }
 
     @Test
-    void first() {
+    void first(TemplateBuilder builder) {
         assertEquals("1", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?first}").process(Map.of()));
     }
 
     @Test
-    void last() {
+    void last(TemplateBuilder builder) {
         assertEquals("64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?last}").process(Map.of()));
     }
 
     @Test
-    void reverse() {
+    void reverse(TemplateBuilder builder) {
         assertEquals("1", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?reverse?last}").process(Map.of()));
         assertEquals("64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?reverse?first}").process(Map.of()));
     }
 
     @Test
-    void join() {
+    void join(TemplateBuilder builder) {
         assertEquals("1, 2, 4, 8, 16, 32, 64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?join}").process(Map.of()));
         assertEquals("1;2;4;8;16;32;64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?join(';')}").process(Map.of()));
     }

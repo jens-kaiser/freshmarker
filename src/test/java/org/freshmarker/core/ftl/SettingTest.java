@@ -1,12 +1,13 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -16,19 +17,18 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(TemplateBuilderParameterResolver.class)
 class SettingTest {
     private TemplateBuilder templateBuilder;
 
     @BeforeEach
-    void setUp() {
-        Configuration configuration = new Configuration();
-        templateBuilder = configuration.builder().withLocale(Locale.GERMANY).withZoneId(ZoneId.of("Europe/Berlin"));
+    void setUp(TemplateBuilder templateBuilder) {
+        this.templateBuilder = templateBuilder.withZoneId(ZoneId.of("Europe/Berlin"));
     }
 
     @ParameterizedTest

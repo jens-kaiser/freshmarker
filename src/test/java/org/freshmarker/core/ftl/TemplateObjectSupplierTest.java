@@ -1,29 +1,24 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.environment.TemplateObjectSupplier;
-import org.junit.jupiter.api.BeforeEach;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(TemplateBuilderParameterResolver.class)
 class TemplateObjectSupplierTest {
 
-    private Configuration configuration;
-
-    @BeforeEach
-    void setUp() {
-        configuration = new Configuration();
-    }
-
     @Test
-    void test() throws ParseException {
-        Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", "test: ${test}");
+    void test(TemplateBuilder builder) throws ParseException {
+        Template template = builder.withLocale(Locale.GERMANY).getTemplate("test", "test: ${test}");
         assertEquals("test: eins", template.process(Map.of("test", (TemplateObjectSupplier<Object>) () -> "eins")));
         assertEquals("test: eins", template.process(Map.of("test", TemplateObjectSupplier.of(() -> "eins"))));
     }
