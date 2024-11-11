@@ -1,27 +1,20 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
-import org.junit.jupiter.api.BeforeEach;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(TemplateBuilderParameterResolver.class)
 class BooleanInterpolationTest {
-    private TemplateBuilder templateBuilder;
-
-    @BeforeEach
-    void setUp() {
-        Configuration configuration = new Configuration();
-        templateBuilder = configuration.builder().withLocale(Locale.GERMANY);
-    }
 
     @ParameterizedTest
     @CsvSource({
@@ -31,7 +24,7 @@ class BooleanInterpolationTest {
             "test: ${!flag},test: no",
             "test: ${!(!flag)},test: yes",
     })
-    void interpolationConstant(String templateSource, String expected) throws ParseException {
+    void interpolationConstant(String templateSource, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("flag", true)));
     }
@@ -45,7 +38,7 @@ class BooleanInterpolationTest {
             "test: <#setting locale=\"fr\">${true?h},test: vrai",
             "test: <#setting locale=\"fr-FR\">${false?h},test: faux",
     })
-    void interpolationHuman(String templateSource, String expected) throws ParseException {
+    void interpolationHuman(String templateSource, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of()));
     }
@@ -59,13 +52,13 @@ class BooleanInterpolationTest {
             "test: ${var?then(text,'nein')};test: test",
             "test: ${(!var)?then('ja',text)};test: test",
     }, delimiterString = ";")
-    void interpolationBuildIn(String templateSource, String expected) throws ParseException {
+    void interpolationBuildIn(String templateSource, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("var", true, "text", "test")));
     }
 
     @Test
-    void interpolationNumericalThen() throws ParseException {
+    void interpolationNumericalThen(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${100 + (x > y)?then(x, y)}");
         assertEquals("142", template.process(Map.of("var", true, "x", 42, "y", 23)));
     }
