@@ -273,12 +273,14 @@ This built-in returns a string from a resource bundle based on the key in the va
 NOTE: the resource bundle must be added to the template via the `Template#addResourceBundle` method
 
 |===
-|Interpolation | Output
+|Interpolation | Output | Resource Bundle
 
 m|${'key'?i18n}
 m|value
+m|key=value
 
 m|${missingKey?i18n!'-'}
 m|-
+m|
 
 |===
