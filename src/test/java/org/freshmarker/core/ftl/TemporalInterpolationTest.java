@@ -1,12 +1,10 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
