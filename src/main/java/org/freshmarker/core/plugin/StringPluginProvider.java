@@ -5,6 +5,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateStringMarkup;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
@@ -15,6 +16,7 @@ import org.freshmarker.core.output.StandardOutputFormats;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +65,15 @@ public class StringPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("no_escape"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
         builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
         builtIns.put(BUILDER.of("slugify"), (x, y, e) -> slugify((TemplateString) x));
+        builtIns.put(BUILDER.of("i18n"), (x, y, e) -> i18n((TemplateString) x, e));
+    }
+
+    private TemplateObject i18n(TemplateString x, ProcessContext e) {
+        try {
+            return new TemplateString(ResourceBundle.getBundle(e.getResourceBundle(), e.getLocale()).getString(x.getValue()));
+        } catch (RuntimeException ex) {
+            return TemplateNull.NULL;
+        }
     }
 
     private static TemplateString slugify(TemplateString x) {

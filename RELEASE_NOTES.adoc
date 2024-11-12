@@ -6,6 +6,10 @@
 
 - add `Configuration#registerFormatter` to customize temporal and number formatting
 
+=== Experimental
+
+- add `i18n` built-in
+
 === Breaking Changes
 
 - macro and variable names may only be identifiers and no longer string literals

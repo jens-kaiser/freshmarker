@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -186,5 +187,15 @@ class ListHashDirectiveTest {
                 <#list hash as k, v filter k == '2' limit count>${k}=${v}, </#list>
                 """);
         assertEquals("2=2, \n", template.process(Map.of("hash", map, "count", 4)));
+    }
+
+    @Test
+    void properties() {
+        Properties properties = new Properties();
+        properties.put("name", "value");
+        Template template = builder.getTemplate("test", """
+                <#list hash as k, v>${k}=${v}, </#list>
+                """);
+        assertEquals("name=value, \n", template.process(Map.of("hash", properties)));
     }
 }

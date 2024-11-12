@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -170,6 +171,24 @@ class StringInterpolationTest {
 
     @Test
     void unsupportedStringOperation(TemplateBuilder templateBuilder) {
-        assertThrows(ProcessException.class, () -> templateBuilder.getTemplate("test", "test: ${'xxx' - 'yyy'}"));
+        Template template = templateBuilder.getTemplate("test", "test: ${'xxx'?i18n}");
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @Test
+    void i18nWithoutResource(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "test: ${'xxx'?i18n}");
+        template.setResourceBundle("freshmarker");
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @Test
+    void i18n(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "test: ${'period.months'?i18n}");
+        template.setResourceBundle("freshmarker");
+        Map<String, Object> model = Map.of();
+        assertEquals("test: Monate", template.process(model));
     }
 }
