@@ -33,7 +33,7 @@ public final class Template {
     private final TemplateLoader templateLoader;
     private final Path path;
     private final Map<String, Fragment> bricks = new HashMap<>();
-    private ResourceBundle resourceBundle;
+    private String resourceBundleName;
 
     Template(TemplateBuilder builder, TemplateLoader templateLoader, Path path) {
         this(builder, templateLoader, path, new BlockFragment(new ArrayList<>()));
@@ -68,7 +68,7 @@ public final class Template {
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
         ProcessContext context = builder.createContext(dataModel, writer, userDirectives);
         context.setEnvironment(context.getEnvironment());
-        context.setResourceBundle(resourceBundle);
+        context.setResourceBundle(resourceBundleName);
         try {
             brickFragment.process(context);
         } catch (TemplateReturnException e) {
@@ -128,7 +128,7 @@ public final class Template {
         return path;
     }
 
-    public void setResourceBundle(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+    public void setResourceBundle(String resourceBundleName) {
+        this.resourceBundleName = resourceBundleName;
     }
 }

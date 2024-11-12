@@ -179,7 +179,7 @@ class StringInterpolationTest {
     @Test
     void i18nWithoutResource(TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("test", "test: ${'xxx'?i18n}");
-        template.setResourceBundle(ResourceBundle.getBundle("freshmarker"));
+        template.setResourceBundle("freshmarker");
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
     }
@@ -187,7 +187,7 @@ class StringInterpolationTest {
     @Test
     void i18n(TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("test", "test: ${'period.months'?i18n}");
-        template.setResourceBundle(ResourceBundle.getBundle("freshmarker"));
+        template.setResourceBundle("freshmarker");
         Map<String, Object> model = Map.of();
         assertEquals("test: Monate", template.process(model));
     }

@@ -37,7 +37,7 @@ public class ProcessContext {
     protected final List<OutputFormat> outputFormats = new LinkedList<>();
     protected final List<Map<Class<? extends TemplateObject>, Formatter>> formatters = new LinkedList<>();
     protected final List<Map<NameSpaced, UserDirective>> userDirectives;
-    protected ResourceBundle resourceBundle;
+    protected String resourceBundleName;
 
     public ProcessContext(ProcessContext context) {
         this.baseEnvironment = context.baseEnvironment;
@@ -51,7 +51,7 @@ public class ProcessContext {
         this.zoneIds.addFirst(context.getZoneId());
         this.formatters.addFirst(context.formatters.getFirst());
         this.outputFormats.addFirst(context.getOutputFormat());
-        this.resourceBundle = context.resourceBundle;
+        this.resourceBundleName = context.resourceBundleName;
     }
 
     public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
@@ -164,11 +164,11 @@ public class ProcessContext {
         throw new ProcessException("unknown directive: " + name);
     }
 
-    public void setResourceBundle(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+    public void setResourceBundle(String resourceBundleName) {
+        this.resourceBundleName = resourceBundleName;
     }
 
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
+    public String getResourceBundle() {
+        return resourceBundleName;
     }
 }

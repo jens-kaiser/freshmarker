@@ -16,6 +16,7 @@ import org.freshmarker.core.output.StandardOutputFormats;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,7 +70,7 @@ public class StringPluginProvider implements PluginProvider {
 
     private TemplateObject i18n(TemplateString x, ProcessContext e) {
         try {
-            return new TemplateString(e.getResourceBundle().getString(x.getValue()));
+            return new TemplateString(ResourceBundle.getBundle(e.getResourceBundle(), e.getLocale()).getString(x.getValue()));
         } catch (RuntimeException ex) {
             return TemplateNull.NULL;
         }
