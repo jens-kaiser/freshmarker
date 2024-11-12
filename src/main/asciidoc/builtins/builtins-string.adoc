@@ -265,3 +265,20 @@ m|2
 m|number
 
 |===
+
+==== `i18n` Built-In (experimental, since 1.6.7)
+
+This built-in returns a string from a resource bundle based on the key in the value.
+
+NOTE: the resource bundle must be added to the template via the `Template#addResourceBundle` method
+
+|===
+|Interpolation | Output
+
+m|${'key'?i18n}
+m|value
+
+m|${missingKey?i18n!'-'}
+m|-
+
+|===

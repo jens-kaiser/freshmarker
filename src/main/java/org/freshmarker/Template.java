@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public final class Template {
 
@@ -31,6 +33,7 @@ public final class Template {
     private final TemplateLoader templateLoader;
     private final Path path;
     private final Map<String, Fragment> bricks = new HashMap<>();
+    private ResourceBundle resourceBundle;
 
     Template(TemplateBuilder builder, TemplateLoader templateLoader, Path path) {
         this(builder, templateLoader, path, new BlockFragment(new ArrayList<>()));
@@ -65,6 +68,7 @@ public final class Template {
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
         ProcessContext context = builder.createContext(dataModel, writer, userDirectives);
         context.setEnvironment(context.getEnvironment());
+        context.setResourceBundle(resourceBundle);
         try {
             brickFragment.process(context);
         } catch (TemplateReturnException e) {
@@ -122,5 +126,9 @@ public final class Template {
 
     public Path getPath() {
         return path;
+    }
+
+    public void setResourceBundle(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
     }
 }

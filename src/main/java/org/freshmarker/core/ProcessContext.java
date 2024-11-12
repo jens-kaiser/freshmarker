@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class ProcessContext {
     private static final Formatter SIMPLE = (object, locale) -> object.toString();
@@ -36,6 +37,7 @@ public class ProcessContext {
     protected final List<OutputFormat> outputFormats = new LinkedList<>();
     protected final List<Map<Class<? extends TemplateObject>, Formatter>> formatters = new LinkedList<>();
     protected final List<Map<NameSpaced, UserDirective>> userDirectives;
+    protected ResourceBundle resourceBundle;
 
     public ProcessContext(ProcessContext context) {
         this.baseEnvironment = context.baseEnvironment;
@@ -49,6 +51,7 @@ public class ProcessContext {
         this.zoneIds.addFirst(context.getZoneId());
         this.formatters.addFirst(context.formatters.getFirst());
         this.outputFormats.addFirst(context.getOutputFormat());
+        this.resourceBundle = context.resourceBundle;
     }
 
     public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
@@ -159,5 +162,13 @@ public class ProcessContext {
             }
         }
         throw new ProcessException("unknown directive: " + name);
+    }
+
+    public void setResourceBundle(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 }
