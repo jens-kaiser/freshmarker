@@ -12,7 +12,7 @@ import org.freshmarker.core.model.primitive.TemplateVersion;
 import java.util.List;
 import java.util.Map;
 
-public class SystemPluginProvider implements PluginProvider {
+public final class SystemPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateVersion> VERSION = new BuiltInKeyBuilder<>(TemplateVersion.class);
     private static final BuiltInKeyBuilder<TemplateString> STRING = new BuiltInKeyBuilder<>(TemplateString.class);
     private static final BuiltInKeyBuilder<TemplateLocale> LOCALE = new BuiltInKeyBuilder<>(TemplateLocale.class);

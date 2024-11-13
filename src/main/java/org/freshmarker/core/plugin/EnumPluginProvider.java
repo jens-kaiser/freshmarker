@@ -13,7 +13,7 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 import java.util.List;
 import java.util.Map;
 
-public class EnumPluginProvider implements PluginProvider {
+public final class EnumPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<? extends TemplateObject> BUILDER = new BuiltInKeyBuilder<>(TemplateEnum.class);
 
     @Override

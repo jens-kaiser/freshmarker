@@ -12,7 +12,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.util.List;
 import java.util.Map;
 
-public class LooperPluginProvider implements PluginProvider {
+public final class LooperPluginProvider implements PluginProvider {
 
     private static final List<TemplateObject> ITEM_PARITY = List.of(new TemplateString("odd"), new TemplateString("even"));
     private static final List<TemplateObject> ITEM_PARITY_CAP = List.of(new TemplateString("Odd"), new TemplateString("Even"));

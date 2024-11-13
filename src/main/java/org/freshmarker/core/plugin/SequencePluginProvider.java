@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static de.schegge.collector.EnumeratedCollector.enumerated;
 
-public class SequencePluginProvider implements PluginProvider {
+public final class SequencePluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateListSequence> BUILDER = new BuiltInKeyBuilder<>(TemplateListSequence.class);
     private static final BuiltInKeyBuilder<TemplateRightUnlimitedRange> UNLIMITED = new BuiltInKeyBuilder<>(TemplateRightUnlimitedRange.class);
     private static final BuiltInKeyBuilder<TemplateRightLimitedRange> LIMITED = new BuiltInKeyBuilder<>(TemplateRightLimitedRange.class);

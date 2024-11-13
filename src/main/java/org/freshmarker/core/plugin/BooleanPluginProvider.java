@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-public class BooleanPluginProvider implements PluginProvider {
+public final class BooleanPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
 
     @Override

@@ -37,7 +37,7 @@ import java.util.ResourceBundle;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
-public class TemporalPluginProvider implements PluginProvider {
+public final class TemporalPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateInstant> INSTANT_BUILDER = new BuiltInKeyBuilder<>(TemplateInstant.class);
     private static final BuiltInKeyBuilder<TemplateZonedDateTime> ZONED_DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateZonedDateTime.class);
     private static final BuiltInKeyBuilder<TemplateLocalDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateLocalDateTime.class);

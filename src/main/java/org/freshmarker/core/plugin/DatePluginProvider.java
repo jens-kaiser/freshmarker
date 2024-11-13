@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.function.Function;
 
-public class DatePluginProvider implements PluginProvider {
+public final class DatePluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
 
     private static final BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
