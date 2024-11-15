@@ -49,8 +49,11 @@ pages:
     - maven-build
   script:
    - mkdir public
-   - mv target/surefire-reports/* public
-   - mv target/site/jacoco/* public
+   - mkdir public/reports
+   - mv target/generated-docs/* public
+   - cp public/manual.html public/index.html
+   - mv target/surefire-reports/* public/reports
+   - mv target/site/jacoco/* public/reports
   artifacts:
     paths:
       - public

@@ -59,6 +59,8 @@
         <jacoco.version>0.8.11</jacoco.version>
         <mockito.version>5.11.0</mockito.version>
         <sonar.organization>schegge</sonar.organization>
+        <asciidoctor-maven-plugin.version>3.1.0</asciidoctor-maven-plugin.version>
+        <asciidoctor-extensions-spring-boot>0.6.3</asciidoctor-extensions-spring-boot>
     </properties>
 
     <dependencies>
@@ -354,6 +356,44 @@
                     <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                            <goal>zip</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDocumentName>manual.adoc</sourceDocumentName>
+                            <backend>html5</backend>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/asciidoc</directory>
+                                    <excludes>
+                                        <exclude>**/*.adoc</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                            <attributes>
+                                <project-version>${project.version}</project-version>
+                                <source-highlighter>coderay</source-highlighter>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.spring.asciidoctor</groupId>
+                        <artifactId>spring-asciidoctor-extensions-block-switch</artifactId>
+                        <version>${asciidoctor-extensions-spring-boot}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
