@@ -5,7 +5,7 @@ A template engine generates output by creating a representation of a model using
 This complicated sentence can be better explained with a small example.
 
 .Example Template
-[source]
+[source,freshmarker]
 ----
 Hello ${example}!
 ----
@@ -36,7 +36,7 @@ In addition, there is the possibility of hiding fragments in the template or rep
 There are special constructs for this, called directives.
 
 .Example Template with directive
-[source]
+[source,freshmarker]
 ----
 <#if example=='World'>
 Hello ${example}!
@@ -89,7 +89,7 @@ configuration.registerFunction("avg", (context, args) ->
 Each registered _Function_ can be called via a function call with its name as the function name.
 
 .Example Usage of Custom Function
-[source]
+[source,freshmarker]
 ----
 <#-- result 15 -->
 ${avg(10, 20)}
@@ -109,7 +109,7 @@ Without escaping, there is a security risk known as template injection.
 With template injection, dangerous fragments are injected into the output.
 
 .Example Template Injection
-[source]
+[source,freshmarker]
 ----
 <!-- title = "<script>alert("hallo")</script>"; -->
 <h1>${title}</h1>

@@ -1,9 +1,11 @@
 = FreshMarker Manual
 :revnumber: {project-version}
+:source-highlighter: {source-highlighter}
 :icons: font
 :toc: left
 :author: Jens Kaiser
 :email: schegge42@gmail.com
+:favicon: favicon.png
 
 image::freshmarker.png[width=800,align="left"]
 
