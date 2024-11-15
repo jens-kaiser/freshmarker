@@ -4,22 +4,22 @@ Using the template engine is very easy.
 First the configuration has to be generated and then a template instance has to be created with its help.
 Finally, the template is processed with the data from the model. The return value of the process method is the result of template processing.
 
-.Example Engine Call
-[source,java]
-----
-Configuration configuration = new Configuration();
-Template template = configuration.getTemplate("test", "Hello ${example}!");
-System.out.println(template.process(Map.of("example", "World")));
-----
-
 Since version 1.5.0, the `Template` is no longer created directly via the `Configuration`, but via the `TemplateBuilder`.
 
-.Example Engine Call (since 1.5.0)
-[source,java]
+.Example Engine Call
+[source,java,role="primary"]
 ----
 Configuration configuration = new Configuration();
 TemplateBuilder templateBuilder = configuration.builder();
 Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
+System.out.println(template.process(Map.of("example", "World")));
+----
+
+.Example Engine Call (before 1.5.0)
+[source,java,role="secondary"]
+----
+Configuration configuration = new Configuration();
+Template template = configuration.getTemplate("test", "Hello ${example}!");
 System.out.println(template.process(Map.of("example", "World")));
 ----
 

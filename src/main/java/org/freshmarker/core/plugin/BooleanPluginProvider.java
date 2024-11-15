@@ -21,7 +21,6 @@ public final class BooleanPluginProvider implements PluginProvider {
     @Override
     public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
         mapper.put(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
-
     }
 
     @Override
