@@ -15,4 +15,10 @@ public final class BuiltInHelper {
             throw new ProcessException("invalid parameter count:" + parameters.size());
         }
     }
+
+    public static void checkParametersLength(List<TemplateObject> parameters, int first, int second) {
+        if (parameters.size() != first && parameters.size() != second) {
+            throw new ProcessException("invalid parameter count:" + parameters.size());
+        }
+    }
 }

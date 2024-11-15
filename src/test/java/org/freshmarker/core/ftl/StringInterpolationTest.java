@@ -184,9 +184,23 @@ class StringInterpolationTest {
     }
 
     @Test
+    void i18nWithTwoParameters(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "test: ${'xxx'?i18n('first', 'second')}");
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @Test
     void i18n(TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("test", "test: ${'period.months'?i18n}");
         template.setResourceBundle("freshmarker");
+        Map<String, Object> model = Map.of();
+        assertEquals("test: Monate", template.process(model));
+    }
+
+    @Test
+    void i18nWithParameter(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "test: ${'period.months'?i18n('freshmarker')}");
         Map<String, Object> model = Map.of();
         assertEquals("test: Monate", template.process(model));
     }

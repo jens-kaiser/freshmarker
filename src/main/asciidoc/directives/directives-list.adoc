@@ -9,7 +9,7 @@ IMPORTANT: Although _FreeMarker_ and _FreshMaker_ are similar, the list directiv
 A list is a sequence of values of any model type.
 
 .List Directive example with a list
-[source]
+[source,freshmarker]
 ----
 <#list sequence as s>
 ${s} Marx
@@ -22,7 +22,7 @@ If the list contains `Chico`, `Harpo`, `Groucho`, `Gummo` and `Zeppo` then the r
 The next example the interpolation `${s}` is preceded by the interpolation `${l?counter}`.
 
 .List Directive example with a list and a loop variable
-[source]
+[source,freshmarker]
 ----
 <#list sequence as s with l>
 ${l?counter}. ${s} Marx
@@ -46,7 +46,7 @@ A range is defined by a lower and a non-mandatory upper numerical limit.
 Although _FreshMarker_ also masters _right-unlimited ranges_, _List Directives_ are not allowed to use them.
 
 .List Directive example with a range
-[source]
+[source,freshmarker]
 ----
 <#list 1..5 as s>
 ${s} * ${s} = ${s*s}
@@ -68,7 +68,7 @@ The result is a list of square value equations.
 Because the limits of a range do not have to be constants, a List Directive can also be used to mimic a for loop.
 
 .List Directive example with variable range limits
-[source]
+[source,freshmarker]
 ----
 <#list a..b as s>
 ${s} * ${s} = ${s*s}
@@ -91,7 +91,7 @@ A hash is a sequence of key-value pairs. The key is a string and the value is an
 For a hash the item in the List Directive is a key-value pair.
 
 .List Directive example with a hash
-[source]
+[source,freshmarker]
 ----
 <#list map as key, value>
 ${key}->${value}
@@ -101,7 +101,7 @@ ${key}->${value}
 NOTE: In addition to the _Java_ `Map` types, _Java Beans_ and _Records_ are also interpreted as a hash. It is not only possible to iterate over the entries of a `Map`, but also over the attributes of _Java Beans_ and _Records_.
 
 .List Directive example with a hash and a loop variable
-[source]
+[source,freshmarker]
 ----
 <#list map as key, value with l>
 ${l?counter}. ${key}->${value}
@@ -116,7 +116,7 @@ With _Java_ `Map` types this can be influenced by the use of `SequencedMap` impl
 The keys of a hash can also be sorted in ascending and descending order by adding `sorted asc` after the key for ascending sorting and `sorted desc` for descending sorting.
 
 .List Directive example with a hash and a sorted key
-[source]
+[source,freshmarker]
 ----
 <#list map as key sorted asc, value>
 ${key}->${value}
@@ -134,7 +134,7 @@ The second solution is to use a filter expression in the list directive.
 The filter expression in the list directive follows directly after the looper part.
 
 .List Directive example with filter expression
-[source]
+[source,freshmarker]
 ----
 <#list 1..10 as s filter s % 2 == 0>
 ${s} * ${s} = ${s*s}
@@ -147,7 +147,7 @@ The number of elements in the list directive can be reduced using a limit expres
 The limit expression in the list directive follows directly after the filter part.
 
 .List Directive example with filter expression
-[source]
+[source,freshmarker]
 ----
 <#list 1..10 as s limit 4>
 ${s} * ${s} = ${s*s}

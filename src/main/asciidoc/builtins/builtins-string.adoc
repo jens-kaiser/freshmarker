@@ -270,12 +270,16 @@ m|number
 
 This built-in returns a string from a resource bundle based on the key in the value.
 
-NOTE: the resource bundle must be added to the template via the `Template#addResourceBundle` method
+NOTE: the resource bundle name must be added to the template via the `Template#addResourceBundle` method or used as the parameter of the built-in.
 
 |===
 |Interpolation | Output | Resource Bundle
 
 m|${'key'?i18n}
+m|value
+m|key=value
+
+m|${'key'?i18n('name')}
 m|value
 m|key=value
 

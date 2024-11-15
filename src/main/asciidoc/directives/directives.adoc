@@ -7,7 +7,7 @@ is evaluated to a boolean value. If the value is `true` the corresponding block 
 If the expression cannot evaluate to a boolean value an exception is thrown.
 
 .Example with only the `if` part
-[source]
+[source,freshmarker]
 ----
 <#if text??>
 ${text}
@@ -17,7 +17,7 @@ ${text}
 The `elseif` and `else` part are optional and can be dismissed.
 
 .Example with all parts
-[source]
+[source,freshmarker]
 ----
 <#if number >= 100>
 greater equal hundred
@@ -37,7 +37,7 @@ If none of the specified `case` statements match, then the optional `default` st
 
 NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `break` statements are unnecessary and therefor not supported.
 
-[source]
+[source,freshmarker]
 ----
 <#switch color>
 <#case 'RED'>#FF0000
@@ -57,7 +57,7 @@ Unlike the model values, new values can be assigned to variables.
 The first use of a variable is with the _Var Directive_. This defines the variables in the current context. 
 Later, the variable can be assigned new values with the _Set Directive_. A variable only exists within its context. 
 
-[source]
+[source,freshmarker]
 ----
 <#var test='eins'/>
 <#set test='zwei'/>
@@ -68,7 +68,7 @@ A new context is created within the _List Directive_, _Macro Directive_ and the 
 Therefore, variables that are created in a _Macro Directive_ can no longer be accessed outside.
 
 .Example variable context
-[source]
+[source,freshmarker]
 ----
 <#macro copyright>
   <#var test='test'/>
@@ -88,7 +88,7 @@ Variables in an outer context can be hidden by variables with an identical name.
 The output-format directive changes the current output format of the template.
 The new output format remains in place until it is changed by another output-format directive.
 
-[source]
+[source,freshmarker]
 ----
 <#outputformat 'HTML'>
 ${text}
@@ -101,7 +101,7 @@ ${text}
 The _Setting Directive_ changes some standard values in the template.
 The settings remains in place until is is changed by another settings directive.
 
-[source]
+[source,freshmarker]
 ----
 <#setting locale="de-DE">
 ${42.23}
@@ -113,7 +113,7 @@ ${42.23}
 
 The macro directive can be used to create a macro, which can then be used as a user directive in the template.
 
-[source]
+[source,freshmarker]
 ----
 <#macro copyright from>
 /*
@@ -127,7 +127,7 @@ The macro directive can be used to create a macro, which can then be used as a u
 
 === User Directive
 
-[source]
+[source,freshmarker]
 ----
 <@log level='info' message='test'/>
 ----
@@ -136,14 +136,14 @@ The macro directive can be used to create a macro, which can then be used as a u
 
 Macros can be loaded by the `import` directive.
 
-[source]
+[source,freshmarker]
 ----
 <#import 'macros.fmt' as m/>
 ----
 
 The file name parameter is the name of the import file and will be loaded by default relative to the template file.
 
-[source]
+[source,freshmarker]
 ----
 <#import 'macros.fmt' as m/>
 <@m.copyright/>
@@ -156,7 +156,7 @@ It is clearer if related templates are contained in the same document. The docum
 A part that can be evaluated individually is contained within a brickfootnote:[Usually, this is called a template fragment, but the technical _FreshMarker_ template component classes are already called fragments.] directive.
 
 .Example mail template
-[source]
+[source,freshmarker]
 ----
 <#brick 'salutation'>Hello ${customer.first} ${customer.last},</#brick>
 <#brick 'signature'>

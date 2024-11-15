@@ -65,12 +65,14 @@ public final class StringPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("no_escape"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
         builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
         builtIns.put(BUILDER.of("slugify"), (x, y, e) -> slugify((TemplateString) x));
-        builtIns.put(BUILDER.of("i18n"), (x, y, e) -> i18n((TemplateString) x, e));
+        builtIns.put(BUILDER.of("i18n"), (x, y, e) -> i18n((TemplateString) x, e, y));
     }
 
-    private TemplateObject i18n(TemplateString x, ProcessContext e) {
+    private TemplateObject i18n(TemplateString x, ProcessContext e, List<TemplateObject> y) {
+        BuiltInHelper.checkParametersLength(y, 0, 1);
+        String resourceBundle = y.isEmpty() ? e.getResourceBundle() : y.getFirst().evaluate(e, TemplateString.class).getValue();
         try {
-            return new TemplateString(ResourceBundle.getBundle(e.getResourceBundle(), e.getLocale()).getString(x.getValue()));
+            return new TemplateString(ResourceBundle.getBundle(resourceBundle, e.getLocale()).getString(x.getValue()));
         } catch (RuntimeException ex) {
             return TemplateNull.NULL;
         }
