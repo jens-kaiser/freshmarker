@@ -3,7 +3,7 @@
 A simple, small but powerful template engine based loosely on the _FreeMarker_ syntax. _FreshMarker_ is implemented in Java 17 (Java 21 since version 1.0.0) and supports the `java.time` API and Records.
 
 
-You can find a detailed description of all _Freshmarker_ features in the https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/asciidoc/manual.adoc[manual].
+You can find a detailed description of all _Freshmarker_ features in the https://schegge.gitlab.io/freshmarker/[manual].
 
 The https://gitlab.com/schegge/freshmarker/-/blob/develop/RELEASE_NOTES.adoc[release notes] contain changes to the template engine since version 1.4.6.
 
