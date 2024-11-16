@@ -103,7 +103,7 @@ Where `a` again corresponds to the lower limit of the range and `c` indicates th
 If the size of the range is positive, then the upper limit is greater than the lower limit. This results in a _legal right-limited range_. If the size of the range is negative, then the upper limit is smaller than the lower limit. This results in an _inverted right-limited range_.
 
 .Example length-limited ranges
-[source,subs="verbatim, quotes"]
+[source,subs="verbatim,quotes"]
 ----
 1..\*10  // lower bound 1 and upper bound 10
 5..*5   // lower bound 5 and upper bound 9

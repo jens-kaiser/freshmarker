@@ -1,3 +1,35 @@
+== Adding _FreshMarker_
+
+Add _FreshMarker_ as a dependency to your project.
+
+.Maven
+[source,xml,role="primary",subs="attributes+"]
+----
+<dependency>
+    <groupId>de.schegge</groupId>
+    <artifactId>freshmarker</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+.Gradle
+[source,groovy,role="secondary",subs="attributes+"]
+----
+implementation 'de.schegge:freshmarker:{project-version}'
+----
+
+.Gradle Kotlin
+[source,kotlin,role="secondary",subs="attributes+"]
+----
+implementation("de.schegge:freshmarker:{project-version}")
+----
+
+.Mill
+[source,scala,role="secondary",subs="attributes+"]
+----
+ivy"de.schegge:freshmarker:{project-version}"
+----
+
 == Usage
 
 Using the template engine is very easy.
