@@ -200,8 +200,8 @@ class StringInterpolationTest {
 
     @Test
     void i18nWithParameter(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("test", "test: ${'period.months'?i18n('freshmarker')}");
+        Template template = templateBuilder.getTemplate("test", "test: ${'key2'?i18n('test')}");
         Map<String, Object> model = Map.of();
-        assertEquals("test: Monate", template.process(model));
+        assertEquals("test: Wert 2", template.process(model));
     }
 }
