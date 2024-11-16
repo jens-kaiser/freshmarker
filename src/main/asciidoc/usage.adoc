@@ -1,6 +1,6 @@
 == Adding _FreshMarker_
 
-Add _FreshMarker_ as a dependency to your project.
+Add _FreshMarker_ as a dependency from _Maven Central_ to your project.
 
 .Maven
 [source,xml,role="primary",subs="attributes+"]
