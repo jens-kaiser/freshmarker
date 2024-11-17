@@ -31,4 +31,10 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
             bounds = new Bounds(newLower, newUpper);
         }
     }
+
+    @Override
+    public TemplateRange reverse(ProcessContext context) {
+        evaluate(context);
+        return new TemplateRightLimitedRange(TemplateNumber.of(bounds.upper()), TemplateNumber.of(bounds.lower()), false);
+    }
 }

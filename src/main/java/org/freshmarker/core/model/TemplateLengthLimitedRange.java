@@ -36,4 +36,10 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
         evaluate(context);
         return evaluatedUpper;
     }
+
+    @Override
+    public TemplateRange reverse(ProcessContext context) {
+        evaluate(context);
+        return new TemplateLengthLimitedRange(TemplateNumber.of(bounds.upper()), count.evaluate(context, TemplateNumber.class).negate());
+    }
 }

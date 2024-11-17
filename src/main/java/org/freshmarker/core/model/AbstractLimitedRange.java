@@ -93,8 +93,5 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         return new TemplateRightLimitedRange(bounds.intersect(new Bounds(min, max)));
     }
 
-    public TemplateRange reverse(ProcessContext context) {
-        evaluate(context);
-        return new TemplateRightLimitedRange(TemplateNumber.of(bounds.upper()), TemplateNumber.of(bounds.lower()), false);
-    }
+    public abstract TemplateRange reverse(ProcessContext context);
 }
