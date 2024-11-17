@@ -86,9 +86,14 @@ class TemporalInterpolationTest {
         assertEquals("test: 24. August 1968 12:30", result);
     }
 
-    @Test
-    void interpolationLocalDateTimeStringMissingParameter(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal?string}");
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${temporal?string}",
+            "test: ${temporal?at_zone}",
+            "test: ${temporal?at_zone('42')}"
+    })
+    void interpolationLocalDateTimeWithFailure(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
         assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
     }
 
@@ -212,18 +217,6 @@ class TemporalInterpolationTest {
     void interpolationLocalDateTimeAtZone(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin')}");
         assertEquals("test: 1968-08-24 12:30:45 Europe/Berlin", template.process(TEMPORAL));
-    }
-
-    @Test
-    void localDateTimeAtZoneWithoutParameter(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone}");
-        assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
-    }
-
-    @Test
-    void localDateTimeAtZoneWithWrongParameter(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone('42')}");
-        assertThrows(ProcessException.class, () -> template.process(TEMPORAL));
     }
 
     @Test
