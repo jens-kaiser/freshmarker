@@ -55,7 +55,7 @@ public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-    public static class TemplateBuilder {
+    public static class TemplateBuilder implements ContextCreator {
         private final Configuration configuration;
 
         private final Locale locale;
@@ -119,7 +119,7 @@ public final class Configuration {
             return template;
         }
 
-        ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
+        public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
             BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers());
             return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer);
         }
