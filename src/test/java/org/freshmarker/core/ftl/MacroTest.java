@@ -61,7 +61,8 @@ class MacroTest {
     @Test
     void generateUnknownMacros() throws ParseException {
         Template template = builder.getTemplate("test", "<@gonzo />");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("bean", Map.of(), "text", "tralala")));
+        Map<String, Object> dataModel = Map.of("bean", Map.of(), "text", "tralala");
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
     @Test
