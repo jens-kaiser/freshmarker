@@ -40,30 +40,37 @@ public final class StringPluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
+        BuiltIn camelCase = (x, y, e) -> camelCase((TemplateString) x, e);
+        BuiltIn kebabCase = (x, y, e) -> kebabCase((TemplateString) x, e);
+        BuiltIn snakeCase = (x, y, e) -> snakeCase((TemplateString) x, e);
+        BuiltIn escape = (x, y, e) -> esc((TemplateString) x, e, y);
+        BuiltIn noEscape = (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE);
+        BuiltIn startsWith = (x, y, e) -> startsWith((TemplateString) x, (TemplateString) y.getFirst());
+        BuiltIn endsWith = (x, y, e) -> endsWith((TemplateString) x, (TemplateString) y.getFirst());
         builtIns.put(BUILDER.of("upper_case"), (x, y, e) -> upperCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("lower_case"), (x, y, e) -> lowerCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("capitalize"), (x, y, e) -> capitalize((TemplateString) x, e));
         builtIns.put(BUILDER.of("uncapitalize"), (x, y, e) -> uncapitalize((TemplateString) x, e));
-        builtIns.put(BUILDER.of("camel_case"), (x, y, e) -> camelCase((TemplateString) x, e));
-        builtIns.put(BUILDER.of("camelCase"), (x, y, e) -> camelCase((TemplateString) x, e));
-        builtIns.put(BUILDER.of("kebabCase"), (x, y, e) -> kebabCase((TemplateString) x, e));
-        builtIns.put(BUILDER.of("kebab_case"), (x, y, e) -> kebabCase((TemplateString) x, e));
-        builtIns.put(BUILDER.of("snake_case"), (x, y, e) -> snakeCase((TemplateString) x, e));
-        builtIns.put(BUILDER.of("snakeCase"), (x, y, e) -> snakeCase((TemplateString) x, e));
+        builtIns.put(BUILDER.of("camel_case"), camelCase);
+        builtIns.put(BUILDER.of("camelCase"), camelCase);
+        builtIns.put(BUILDER.of("kebabCase"), kebabCase);
+        builtIns.put(BUILDER.of("kebab_case"), kebabCase);
+        builtIns.put(BUILDER.of("snake_case"), snakeCase);
+        builtIns.put(BUILDER.of("snakeCase"), snakeCase);
         builtIns.put(BUILDER.of("screaming_snake_case"), (x, y, e) -> screamingSnakeCase((TemplateString) x, e));
         builtIns.put(BUILDER.of("trim"), (x, y, e) -> new TemplateString(((TemplateString) x).getValue().trim()));
         builtIns.put(BUILDER.of("contains"), (x, y, e) -> contains((TemplateString) x, (TemplateString) y.getFirst()));
-        builtIns.put(BUILDER.of("ends_with"), (x, y, e) -> endsWith((TemplateString) x, (TemplateString) y.getFirst()));
-        builtIns.put(BUILDER.of("endsWith"), (x, y, e) -> endsWith((TemplateString) x, (TemplateString) y.getFirst()));
-        builtIns.put(BUILDER.of("starts_with"), (x, y, e) -> startsWith((TemplateString) x, (TemplateString) y.getFirst()));
-        builtIns.put(BUILDER.of("startsWith"), (x, y, e) -> startsWith((TemplateString) x, (TemplateString) y.getFirst()));
+        builtIns.put(BUILDER.of("ends_with"), endsWith);
+        builtIns.put(BUILDER.of("endsWith"), endsWith);
+        builtIns.put(BUILDER.of("starts_with"), startsWith);
+        builtIns.put(BUILDER.of("startsWith"), startsWith);
         builtIns.put(BUILDER.of("boolean"), (x, y, e) -> toBoolean((TemplateString) x));
         builtIns.put(BUILDER.of("length"), (x, y, e) -> TemplateNumber.of(((TemplateString) x).getValue().length()));
-        builtIns.put(BUILDER.of("esc"), (x, y, e) -> esc((TemplateString) x, e, y));
-        builtIns.put(BUILDER.of("escape"), (x, y, e) -> esc((TemplateString) x, e, y));
-        builtIns.put(BUILDER.of("no_esc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
-        builtIns.put(BUILDER.of("no_escape"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
-        builtIns.put(BUILDER.of("noEsc"), (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE));
+        builtIns.put(BUILDER.of("esc"), escape);
+        builtIns.put(BUILDER.of("escape"), escape);
+        builtIns.put(BUILDER.of("no_esc"), noEscape);
+        builtIns.put(BUILDER.of("no_escape"), noEscape);
+        builtIns.put(BUILDER.of("noEsc"), noEscape);
         builtIns.put(BUILDER.of("slugify"), (x, y, e) -> slugify((TemplateString) x));
         builtIns.put(BUILDER.of("i18n"), (x, y, e) -> i18n((TemplateString) x, e, y));
     }
