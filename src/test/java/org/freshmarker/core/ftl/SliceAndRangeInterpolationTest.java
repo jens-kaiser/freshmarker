@@ -140,7 +140,9 @@ class SliceAndRangeInterpolationTest {
             "test: ${(3..*5)?upper},test: 7",
             "test: ${(start..*count)?size},test: 10",
             "test: ${(0..*5)?join(';')},test: 0;1;2;3;4",
+            "test: ${(0..*5)?reverse?join(';')},test: 4;3;2;1;0",
             "test: ${(4..*-5)?join(';')},test: 4;3;2;1;0",
+            "test: ${(4..*-5)?reverse?join(';')},test: 0;1;2;3;4",
     })
     void interpolationRangeExclusiveAndRangeLimited(String input, String expected, TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("test", input);

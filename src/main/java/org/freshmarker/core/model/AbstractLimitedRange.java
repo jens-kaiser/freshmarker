@@ -2,7 +2,6 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.model.primitive.TemplateNumber;
 
 import java.util.AbstractList;
 import java.util.List;
@@ -75,13 +74,15 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         };
     }
 
+    protected abstract TemplateRange newRange(Bounds bounds);
+
     @Override
     public TemplateRange slice(int min, ProcessContext context) {
         evaluate(context);
         if (size == 0) {
             throw new ProcessException("cannot slice empty range");
         }
-        return new TemplateRightLimitedRange(bounds.intersect(min));
+        return newRange(bounds.intersect(min));
     }
 
     @Override
@@ -90,8 +91,11 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         if (size == 0) {
             throw new ProcessException("cannot slice empty range");
         }
-        return new TemplateRightLimitedRange(bounds.intersect(new Bounds(min, max)));
+        return newRange(bounds.intersect(new Bounds(min, max)));
     }
 
-    public abstract TemplateRange reverse(ProcessContext context);
+    public TemplateRange reverse(ProcessContext context) {
+        evaluate(context);
+        return newRange(new Bounds(bounds.upper(), bounds.lower()));
+    }
 }
