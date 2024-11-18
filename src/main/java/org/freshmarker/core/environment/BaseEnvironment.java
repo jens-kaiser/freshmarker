@@ -6,6 +6,7 @@ import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.providers.TemplateObjectMapper;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class BaseEnvironment implements Environment {
+public class BaseEnvironment implements Environment , TemplateObjectMapper {
 
     private final Map<String, Object> dataModel;
     private final Map<String, TemplateObject> cached;
@@ -28,6 +29,7 @@ public class BaseEnvironment implements Environment {
         cached = HashMap.newHashMap(dataModel.size());
     }
 
+    @Override
     public TemplateObject mapObject(Object object) {
         return wrap(object);
     }
@@ -79,6 +81,7 @@ public class BaseEnvironment implements Environment {
         throw new ProcessException("variable " + name + " not found");
     }
 
+    @Override
     public Set<Class<?>> getChecks() {
         return checks;
     }

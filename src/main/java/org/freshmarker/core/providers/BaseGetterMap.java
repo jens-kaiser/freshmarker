@@ -1,6 +1,5 @@
 package org.freshmarker.core.providers;
 
-import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateMapGetterProvider.Getter;
 
@@ -13,10 +12,10 @@ import java.util.Set;
 class BaseGetterMap extends AbstractMap<String, Object> {
 
     private final Map<String, Getter> getters;
-    private final BaseEnvironment environment;
+    private final TemplateObjectMapper environment;
     private final Object bean;
 
-    public BaseGetterMap(Map<String, Getter> getters, BaseEnvironment environment, Object bean) {
+    public BaseGetterMap(Map<String, Getter> getters, TemplateObjectMapper environment, Object bean) {
         this.getters = getters;
         this.environment = environment;
         this.bean = bean;

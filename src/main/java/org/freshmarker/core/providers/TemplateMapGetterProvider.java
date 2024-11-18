@@ -26,7 +26,7 @@ public class TemplateMapGetterProvider {
 
     private final Map<Class<?>, Map<String, Getter>> methodBeans = new HashMap<>();
 
-    public Map<String, Object> provide(Object bean, BaseEnvironment environment) {
+    public Map<String, Object> provide(Object bean, TemplateObjectMapper environment) {
         final Map<String, Getter> methods = methodBeans.computeIfAbsent(bean.getClass(), b -> collectGetters(bean));
         return new BaseGetterMap(methods, environment, bean);
     }
