@@ -1,7 +1,5 @@
 package org.freshmarker.core.providers;
 
-import org.freshmarker.core.environment.BaseEnvironment;
-
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
