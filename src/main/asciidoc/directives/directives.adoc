@@ -7,25 +7,25 @@ is evaluated to a boolean value. If the value is `true` the corresponding block 
 If the expression cannot evaluate to a boolean value an exception is thrown.
 
 .Example with only the `if` part
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#if text??>
+*<#if text??>*
 ${text}
-</#if>
+*</#if>*
 ----
 
 The `elseif` and `else` part are optional and can be dismissed.
 
 .Example with all parts
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#if number >= 100>
+*<#if number >= 100>*
 greater equal hundred
-<#elseif number > 10>
+*<#elseif number > 10>*
 greater ten
-<#else>
+*<#else>*
 less ten
-</#if>
+*</#if>*
 ----
 
 === Switch/Case/Default Directive
@@ -88,11 +88,11 @@ Variables in an outer context can be hidden by variables with an identical name.
 The output-format directive changes the current output format of the template.
 The new output format remains in place until it is changed by another output-format directive.
 
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#outputformat 'HTML'>
+*<#outputformat 'HTML'>*
 ${text}
-<#outputformat 'plainText'>
+*<#outputformat 'plainText'>*
 ${text}
 ----
 
@@ -101,11 +101,11 @@ ${text}
 The _Setting Directive_ changes some standard values in the template.
 The settings remains in place until is is changed by another settings directive.
 
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#setting locale="de-DE">
+*<#setting locale="de-DE">*
 ${42.23}
-<#setting locale="en-US">
+*<#setting locale="en-US">*
 ${42.23}
 ----
 
@@ -156,14 +156,14 @@ It is clearer if related templates are contained in the same document. The docum
 A part that can be evaluated individually is contained within a brickfootnote:[Usually, this is called a template fragment, but the technical _FreshMarker_ template component classes are already called fragments.] directive.
 
 .Example mail template
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#brick 'salutation'>Hello ${customer.first} ${customer.last},</#brick>
-<#brick 'signature'>
+*<#brick 'salutation'>Hello ${customer.first} ${customer.last},</#brick>*
+*<#brick 'signature'>*
 Best regards
 ${employee.first} ${employee.last}
 ${employee.title}
-</#brick>
+*</#brick>*
 ----
 
 A single brick directive is evaluated with the `Template#processBrick(String, Map)` method. The `String` parameter is the name of the directive.
