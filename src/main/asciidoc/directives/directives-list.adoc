@@ -9,11 +9,11 @@ IMPORTANT: Although _FreeMarker_ and _FreshMaker_ are similar, the list directiv
 A list is a sequence of values of any model type.
 
 .List Directive example with a list
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#list sequence as s>
+*<#list sequence as s>*
 ${s} Marx
-</#list>
+*</#list>*
 ----
 
 In the above example, each element from the list is simply output followed by the word `Marx`.
@@ -22,23 +22,22 @@ If the list contains `Chico`, `Harpo`, `Groucho`, `Gummo` and `Zeppo` then the r
 The next example the interpolation `${s}` is preceded by the interpolation `${l?counter}`.
 
 .List Directive example with a list and a loop variable
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#list sequence as s with l>
+*<#list sequence as s with l>*
 ${l?counter}. ${s} Marx
-</#list>
+*</#list>*
 ----
 
 Because `l` is the name of the loop variable, the first interpolation evaluates to the counter of the current item in the list.
 
-[source]
-----
+....
 1. Chico Marx
 2. Harpo Marx
 3. Groucho Marx
 4. Gummo Marx
 5. Zeppo Marx
-----
+....
 
 ==== List Directive with a range
 
@@ -56,14 +55,13 @@ ${s} * ${s} = ${s*s}
 The current item in the above example is any integer value from 1 to 5 inclusive.
 The result is a list of square value equations.
 
-[source]
-----
+....
 1 * 1 = 1
 2 * 2 = 4
 3 * 3 = 9
 4 * 4 = 16
 5 * 5 = 25
-----
+....
 
 Because the limits of a range do not have to be constants, a List Directive can also be used to mimic a for loop.
 
@@ -78,12 +76,11 @@ ${s} * ${s} = ${s*s}
 This example loops through all values between numeric variable `a` and numeric variable `b`.
 For the value `3` in `a` and `1` in `b` the following result is generated.
 
-[source]
-----
+....
 3 * 3 = 9
 2 * 2 = 4
 1 * 1 = 1
-----
+....
 
 ==== List Directive with a hash
 
