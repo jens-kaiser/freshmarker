@@ -1,6 +1,6 @@
 == Customization
 
-=== `Configuration`
+=== Customization by `Configuration`
 
 ==== Custom Formatter
 
@@ -22,7 +22,7 @@ TemplateBuilder templateBuilderWithNumberAndTemporal = configuration.builder();
 
 TBD
 
-=== `TemplateBuilder`
+=== Customization by `TemplateBuilder`
 
 TBD
 

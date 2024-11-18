@@ -97,18 +97,10 @@ class StringInterpolationTest {
             "test: ${text?camelCase},SCREAMING-KEBAB-CASE, test: screamingKebabCase",
             "test: ${text?camelCase},snake_case,test: snakeCase",
             "test: ${text?camelCase},SCREAMING_SNAKE_CASE, test: screamingSnakeCase",
-    })
-    void camelCase(String templateSource, String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("text", input)));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
             "test: ${text?capitalize},The Quick brown fox jumps Over the lazy Dog,test: The Quick Brown Fox Jumps Over The Lazy Dog",
             "test: ${text?uncapitalize},The Quick BROWN fox jumps Over the lazy Dog,test: the quick bROWN fox jumps over the lazy dog",
     })
-    void capitalizeAndUncapitalize(String templateSource, String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+    void camelCaseCapitalizeAndUncapitalize(String templateSource, String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("text", input)));
     }
