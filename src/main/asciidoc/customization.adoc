@@ -28,10 +28,12 @@ TBD
 
 === Custom String Types
 
-Unknown _Java_ classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered for this purpose.
+Unknown _Java_ classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered via `registerSimpleMapping(Class<?> type)` for this purpose.
 
-.Example with Leitweg-ID as String
-[source,java]
+Alternatively, the method `registerSimpleMapping(Function<Object, String> mapping)` can be used if further adjustments are to be made.
+
+.Example with Leitweg-ID and `toString` method
+[source,java,role="primary"]
 ----
 Configuration configuration = new Configuration();
 configuration.registerSimpleMapping(LeitwegId.class);
@@ -42,15 +44,15 @@ String resullt = template.process(Map.of("id", leitwegId));
 // ID: 04011000-1234512345-06!
 ----
 
-.Example with Leitweg-ID as String
-[source,java]
+.Example with Leitweg-ID and converting `Function`
+[source,java,role="secondary"]
 ----
 Configuration configuration = new Configuration();
 configuration.registerSimpleMapping(LeitwegId.class, lid -> "<<" + lid + ">>");
 TemplateBuilder templateBuilder = configuration.builder();
 Template template = templateBuilder.getTemplate("id", "${id}!");
 LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
-String resullt = template.process(Map.of("id", leitwegId);
+String resullt = template.process(Map.of("id", leitwegId));
 // ID: <<04011000-1234512345-06>>!
 ----
 
