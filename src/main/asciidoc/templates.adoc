@@ -36,13 +36,13 @@ In addition, there is the possibility of hiding fragments in the template or rep
 There are special constructs for this, called directives.
 
 .Example Template with directive
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#if example=='World'>
+*<#if example=='World'>*
 Hello ${example}!
-<#else>
+*<#else>*
 Hallo ${example}!
-</#if>
+*</#if>*
 ----
 
 Directives look like _HTML_ tags with a # before the tag name.
