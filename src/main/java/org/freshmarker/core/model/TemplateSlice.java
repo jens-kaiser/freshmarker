@@ -20,14 +20,12 @@ public class TemplateSlice implements TemplateObject {
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateRange templateRange = range.evaluate(context, TemplateRange.class);
         TemplateObject value = sequence.evaluateToObject(context);
-        if (value instanceof TemplateString templateString) {
-            return handleSequence(context, templateRange, templateString);
-        } else if (value instanceof TemplateListSequence templateListSequence) {
-            return handleSequence(context, templateRange, templateListSequence);
-        } else if (value instanceof TemplateRange templateRangeValue) {
-            return handleSequence(context, templateRange, templateRangeValue);
-        }
-        throw new UnsupportedDataTypeException("slicing not supported on " + value.getClass().getSimpleName());
+        return switch (value) {
+            case  TemplateString templateString -> handleSequence(context, templateRange, templateString);
+            case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
+            case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
+            default -> throw new UnsupportedDataTypeException("slicing not supported on " + value.getClass().getSimpleName());
+        };
     }
 
     private int getInt(TemplateObject value, ProcessContext context) {
