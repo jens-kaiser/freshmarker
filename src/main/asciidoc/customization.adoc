@@ -2,6 +2,8 @@
 
 === Customization by `Configuration`
 
+TBD
+
 ==== Custom Formatter
 
 The default formatting for number and temporal values can be changed with the
@@ -68,6 +70,7 @@ include::../java/org/freshmarker/core/output/OutputFormat.java[lines="6..-1"]
 === Custom primitive Model Types
 
 ==== Evaluate Value
+
 TBD
 
 ==== Type Mapper
