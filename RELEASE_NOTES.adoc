@@ -5,6 +5,7 @@
 === Improvements
 
 - add resource bundle parameter to `i18n` built-in
+- add `registerBuiltInVariableProviders` for custom built-in variables
 
 == Release 1.6.7 (2024-11-15)
 
