@@ -170,4 +170,8 @@ public class ProcessContext {
     public String getResourceBundle() {
         return resourceBundleName;
     }
+
+    public BaseEnvironment getBaseEnvironment() {
+        return baseEnvironment;
+    }
 }
