@@ -20,13 +20,15 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
 
     private final Map<String, Object> dataModel;
     private final Map<String, TemplateObject> cached;
+    private final BuiltInVariableProvider builtInVariableProviders;
     private final List<TemplateObjectProvider> providers;
     private final Set<Class<?>> checks = new HashSet<>();
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers) {
+    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, BuiltInVariableProvider builtInVariableProviders) {
         this.dataModel = dataModel;
         this.providers = providers;
         cached = HashMap.newHashMap(dataModel.size());
+        this.builtInVariableProviders = builtInVariableProviders;
     }
 
     @Override
@@ -84,5 +86,9 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
     @Override
     public Set<Class<?>> getChecks() {
         return checks;
+    }
+
+    public BuiltInVariableProvider getBuiltInVariableProviders() {
+        return builtInVariableProviders;
     }
 }

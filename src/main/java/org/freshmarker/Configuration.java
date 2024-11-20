@@ -3,6 +3,7 @@ package org.freshmarker;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
+import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
@@ -120,7 +121,7 @@ public final class Configuration {
         }
 
         public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers());
+            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.builtInVariableProviders);
             return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer);
         }
     }
@@ -133,6 +134,7 @@ public final class Configuration {
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
     private FormatterRegistry formatterRegistry = new FormatterRegistry(new HashMap<>());
+    private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
 
     private TemplateLoader templateLoader;
 
@@ -209,6 +211,9 @@ public final class Configuration {
         Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
         provider.registerFunction(additionalFunctions);
         functions.putAll(additionalFunctions);
+        Map<String, Function<ProcessContext, TemplateObject>> builtInVariableProviderMap = new HashMap<>();
+        provider.registerBuiltInVariableProviders(builtInVariableProviderMap);
+        builtInVariableProviders.register(builtInVariableProviderMap);
     }
 
     /**

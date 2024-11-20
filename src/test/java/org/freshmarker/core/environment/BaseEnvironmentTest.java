@@ -18,7 +18,7 @@ class BaseEnvironmentTest {
 
     @BeforeEach
     void setUp() {
-        environment = new BaseEnvironment(Map.of(), List.of());
+        environment = new BaseEnvironment(Map.of(), List.of(), new BuiltInVariableProvider());
     }
 
     @Test
