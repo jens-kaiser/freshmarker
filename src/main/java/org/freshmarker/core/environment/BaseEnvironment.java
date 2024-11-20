@@ -1,5 +1,6 @@
 package org.freshmarker.core.environment;
 
+import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedDataTypeException;
