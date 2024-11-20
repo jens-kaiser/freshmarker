@@ -62,15 +62,7 @@ TBD
 
 [source,java]
 ----
-public interface OutputFormat {
-    default TemplateString escape(Environment environment, String value) {
-        return new TemplateString(value);
-    }
-
-    default TemplateString comment(Environment environment, String value) {
-        return TemplateString.EMPTY;
-    }
-}
+include::../java/org/freshmarker/core/output/OutputFormat.java[lines="6..-1"]
 ----
 
 === Custom primitive Model Types
@@ -98,19 +90,7 @@ Plug-ins can be registered with _FreshMarker_ via the `ServiceLoader` mechanism 
 
 [source,java]
 ----
-public interface PluginProvider {
-  default void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {}
-
-  default void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {}
-
-  default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {}
-
-  default void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {}
-
-  default void registerUserDirective(Map<String, UserDirective> directives) {}
-
-  default void registerFunction(Map<String, TemplateFunction> functions) {}
-}
+include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="16..-1"]
 ----
 
 TBD
