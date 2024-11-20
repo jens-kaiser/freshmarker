@@ -64,7 +64,6 @@ public final class Template {
 
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
         ProcessContext context = contextCreator.createContext(dataModel, writer, userDirectives);
-        context.setEnvironment(context.getEnvironment());
         context.setResourceBundle(resourceBundleName);
         try {
             brickFragment.process(context);
