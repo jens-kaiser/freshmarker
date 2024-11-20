@@ -39,7 +39,7 @@ public interface PluginProvider {
 
   }
 
-    default void registerBuiltInVariableProviders(Map<String, Function<ProcessContext, TemplateObject>> providers) {
+  default void registerBuiltInVariableProviders(Map<String, Function<ProcessContext, TemplateObject>> providers) {
 
   }
 }
