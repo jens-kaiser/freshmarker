@@ -23,7 +23,7 @@ public TemplateLengthLimitedRange(TemplateObject lower, TemplateObject upper, Te
         int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
         int newCount = count.evaluate(context, TemplateNumber.class).asInt();
         int newUpper;
-        size = Math.abs(newCount);
+        int size = Math.abs(newCount);
         if (newCount == 0) {
             newUpper = newLower;
         } else if (newCount > 0) {

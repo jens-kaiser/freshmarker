@@ -39,12 +39,12 @@ public final class SequencePluginProvider implements PluginProvider {
         builtIns.put(LIMITED.of(SIZE), (x, y, e) -> TemplateNumber.of(((AbstractLimitedRange) x).size(e)));
         builtIns.put(LIMITED.of(LOWER), (x, y, e) -> ((AbstractLimitedRange) x).getLower());
         builtIns.put(LIMITED.of("upper"), (x, y, e) -> ((AbstractLimitedRange) x).getUpper(e));
-        builtIns.put(LIMITED.of(REVERSE), (x, y, e) -> ((TemplateRightLimitedRange) x).reverse(e));
+        builtIns.put(LIMITED.of(REVERSE), (x, y, e) -> ((TemplateRightLimitedRange) x).reverse());
         builtIns.put(LIMITED.of(JOIN), (x, y, e) -> join(y, e, ((AbstractLimitedRange) x).getSequence(e)));
         builtIns.put(LENGTH.of(SIZE), (x, y, e) -> TemplateNumber.of(((TemplateLengthLimitedRange) x).size(e)));
         builtIns.put(LENGTH.of(LOWER), (x, y, e) -> ((TemplateLengthLimitedRange) x).getLower());
         builtIns.put(LENGTH.of("upper"), (x, y, e) -> ((TemplateLengthLimitedRange) x).getUpper(e));
-        builtIns.put(LENGTH.of(REVERSE), (x, y, e) -> ((TemplateLengthLimitedRange) x).reverse(e));
+        builtIns.put(LENGTH.of(REVERSE), (x, y, e) -> ((TemplateLengthLimitedRange) x).reverse());
         builtIns.put(LENGTH.of(JOIN), (x, y, e) -> join(y, e, ((TemplateLengthLimitedRange) x).getSequence(e)));
         builtIns.put(UNLIMITED.of(LOWER), (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
     }

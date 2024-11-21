@@ -11,8 +11,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     protected final TemplateObject lower;
     protected final TemplateObject upper;
     protected Bounds bounds;
-    protected int size;
-
+    
     protected AbstractLimitedRange(TemplateObject lower, TemplateObject upper) {
         this.lower = lower;
         this.upper = upper;
@@ -22,7 +21,6 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         this.lower = lower;
         this.upper = upper;
         this.bounds = bounds;
-        this.size = bounds.size();
     }
 
     protected abstract Bounds evaluate(ProcessContext context);
@@ -99,7 +97,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         return newRange(bounds.intersect(new Bounds(min, max, Math.abs(max - min) + 1)));
     }
 
-    public TemplateRange reverse(ProcessContext context) {
+    public TemplateRange reverse() {
         return newRange(new Bounds(bounds.upper(), bounds.lower(), bounds.size()));
     }
 }
