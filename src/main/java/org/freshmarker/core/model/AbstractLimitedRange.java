@@ -62,7 +62,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
 
     @Override
     public int size(ProcessContext context) {
-        return size;
+        return bounds.size();
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         if (bounds.size() == 0) {
             throw new ProcessException("cannot slice empty range");
         }
-        return newRange(bounds.intersect(new Bounds(min, max)));
+        return newRange(bounds.intersect(new Bounds(min, max, Math.abs(max - min) + 1)));
     }
 
     public TemplateRange reverse(ProcessContext context) {
