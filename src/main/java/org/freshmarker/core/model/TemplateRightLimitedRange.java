@@ -13,23 +13,23 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
     }
 
     TemplateRightLimitedRange(Bounds bounds) {
-        super(TemplateNumber.of(bounds.lower()), TemplateNumber.of(bounds.upper()));
+        super(TemplateNumber.of(bounds.lower()), TemplateNumber.of(bounds.upper()), bounds);
         this.exclusive = false;
     }
 
     @Override
-    protected void evaluate(ProcessContext context) {
-        if (bounds == null) {
-            int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
-            int newUpper = upper.evaluate(context, TemplateNumber.class).asInt();
-            if (exclusive) {
-                size = Math.abs(newLower - newUpper);
-                newUpper = newLower < newUpper ? newUpper - 1 : newUpper + 1;
-            } else {
-                size = Math.abs(newLower - newUpper) + 1;
-            }
-            bounds = new Bounds(newLower, newUpper);
+    protected Bounds evaluate(ProcessContext context) {
+        if (bounds != null) {
+            return bounds;
         }
+        int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
+        int newUpper = upper.evaluate(context, TemplateNumber.class).asInt();
+        int size = Math.abs(newLower - newUpper) + 1;
+        if (exclusive) {
+            size--;
+            newUpper = newLower < newUpper ? newUpper - 1 : newUpper + 1;
+        }
+        return new Bounds(newLower, newUpper, size);
     }
 
     @Override

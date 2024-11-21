@@ -18,7 +18,14 @@ public abstract class AbstractLimitedRange implements TemplateRange {
         this.upper = upper;
     }
 
-    protected abstract void evaluate(ProcessContext context);
+    protected AbstractLimitedRange(TemplateObject lower, TemplateObject upper, Bounds bounds) {
+        this.lower = lower;
+        this.upper = upper;
+        this.bounds = bounds;
+        this.size = bounds.size();
+    }
+
+    protected abstract Bounds evaluate(ProcessContext context);
 
     @Override
     public boolean isLengthLimited() {
@@ -47,19 +54,19 @@ public abstract class AbstractLimitedRange implements TemplateRange {
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
-        evaluate(context);
+        if (bounds == null) {
+            return newRange(evaluate(context));
+        }
         return this;
     }
 
     @Override
     public int size(ProcessContext context) {
-        evaluate(context);
         return size;
     }
 
     @Override
     public List<Object> getSequence(ProcessContext context) {
-        evaluate(context);
         return new AbstractList<>() {
 
             @Override
@@ -69,7 +76,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
 
             @Override
             public int size() {
-                return size;
+                return bounds.size();
             }
         };
     }
@@ -78,8 +85,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
 
     @Override
     public TemplateRange slice(int min, ProcessContext context) {
-        evaluate(context);
-        if (size == 0) {
+        if (bounds.size() == 0) {
             throw new ProcessException("cannot slice empty range");
         }
         return newRange(bounds.intersect(min));
@@ -87,15 +93,13 @@ public abstract class AbstractLimitedRange implements TemplateRange {
 
     @Override
     public TemplateRange slice(int min, int max, ProcessContext context) {
-        evaluate(context);
-        if (size == 0) {
+        if (bounds.size() == 0) {
             throw new ProcessException("cannot slice empty range");
         }
         return newRange(bounds.intersect(new Bounds(min, max)));
     }
 
     public TemplateRange reverse(ProcessContext context) {
-        evaluate(context);
-        return newRange(new Bounds(bounds.upper(), bounds.lower()));
+        return newRange(new Bounds(bounds.upper(), bounds.lower(), bounds.size()));
     }
 }

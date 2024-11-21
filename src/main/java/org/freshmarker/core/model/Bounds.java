@@ -2,7 +2,11 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessException;
 
-public record Bounds(int lower, int upper) {
+public record Bounds(int lower, int upper, int size) {
+    public Bounds(int lower, int upper) {
+        this(lower, upper, Math.abs(lower - upper) + 1);
+    }
+
     int safeOffset(int index) {
         return lower < upper ? lower + index : lower - index;
     }

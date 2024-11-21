@@ -13,22 +13,25 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
         this.count = count;
     }
 
-    protected void evaluate(ProcessContext context) {
-        if (bounds == null) {
-            int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
-            int newCount = count.evaluate(context, TemplateNumber.class).asInt();
-            int newUpper;
-            size = Math.abs(newCount);
-            if (newCount == 0) {
-                newUpper = newLower;
-            } else if (newCount > 0) {
-                newUpper = newLower + size - 1;
-            } else {
-                newUpper = newLower - size + 1;
-            }
-            bounds = new Bounds(newLower, newUpper);
-            evaluatedUpper = TemplateNumber.of(newUpper);
+public TemplateLengthLimitedRange(TemplateObject lower, TemplateObject upper, TemplateNumber count, Bounds bounds) {
+        super(lower, upper, bounds);
+        this.evaluatedUpper = upper;
+        this.count = count;
+    }
+
+    protected Bounds evaluate(ProcessContext context) {
+        int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
+        int newCount = count.evaluate(context, TemplateNumber.class).asInt();
+        int newUpper;
+        size = Math.abs(newCount);
+        if (newCount == 0) {
+            newUpper = newLower;
+        } else if (newCount > 0) {
+            newUpper = newLower + size - 1;
+        } else {
+            newUpper = newLower - size + 1;
         }
+        return new Bounds(newLower, newUpper, size);
     }
 
     @Override
@@ -41,6 +44,6 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     protected TemplateRange newRange(Bounds bounds) {
         int diff = bounds.upper() - bounds.lower();
         int offset = Integer.compare(bounds.upper(), bounds.lower());
-        return new TemplateLengthLimitedRange(TemplateNumber.of(bounds.lower()), TemplateNumber.of(diff + offset));
+        return new TemplateLengthLimitedRange(TemplateNumber.of(bounds.lower()), TemplateNumber.of(bounds.upper()), TemplateNumber.of(diff + offset), bounds);
     }
 }

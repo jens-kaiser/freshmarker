@@ -21,7 +21,8 @@ public class TemplateSlice implements TemplateObject {
         TemplateRange templateRange = range.evaluate(context, TemplateRange.class);
         TemplateObject value = sequence.evaluateToObject(context);
         return switch (value) {
-            case  TemplateString templateString -> handleSequence(context, templateRange, templateString);
+            case TemplateSlice templateSlice -> templateSlice.evaluateToObject(context);
+            case TemplateString templateString -> handleSequence(context, templateRange, templateString);
             case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
             case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
             default -> throw new UnsupportedDataTypeException("slicing not supported on " + value.getClass().getSimpleName());
