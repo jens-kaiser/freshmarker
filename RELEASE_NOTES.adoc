@@ -2,6 +2,10 @@
 
 == Release 1.6.9 (planned 2024-11-XX)
 
+=== Bugfixes
+
+- remove state from model ranges
+
 == Release 1.6.8 (2024-11-20)
 
 === Improvements

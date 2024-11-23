@@ -1,9 +1,14 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
+import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
+import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +17,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -95,5 +101,19 @@ class BuiltInVariableTest {
         Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before}");
         Map<String, Object> model = Map.of();
         assertThrows(IllegalArgumentException.class, () -> template.process(model));
+    }
+
+    @Test
+    void customBuiltInVariable() throws ParseException {
+        Configuration configuration = new Configuration();
+        configuration.registerPlugin(new PluginProvider() {
+            @Override
+            public void registerBuiltInVariableProviders(Map<String, Function<ProcessContext, TemplateObject>> providers) {
+                providers.put("custom",  c -> new TemplateString("abraxas"));
+            }
+        });
+        Template template = configuration.builder().getTemplate("test", "${.custom}");
+        Map<String, Object> model = Map.of();
+        assertEquals("abraxas", template.process(model));
     }
 }
