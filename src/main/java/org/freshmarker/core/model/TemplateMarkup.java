@@ -14,11 +14,6 @@ public class TemplateMarkup implements TemplateObject {
     }
 
     @Override
-    public boolean isMarkup() {
-        return true;
-    }
-
-    @Override
     public TemplateString evaluateToObject(ProcessContext context) {
         TemplateObject templateObject = content.evaluateToObject(context);
         if (templateObject.isNull()) {
