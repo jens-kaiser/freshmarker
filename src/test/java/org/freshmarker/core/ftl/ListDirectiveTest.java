@@ -34,6 +34,15 @@ ListDirectiveTest {
     }
 
     @Test
+    void loopUnknown() throws ParseException {
+        Template template = builder.getTemplate("test",
+                "test: <#list sequence as s with l>${l?unknown}. ${s}\n</#list>");
+        Map<String, Object> model = Map.of("sequence", List.of("a", "b", "c", "d"));
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+
+    @Test
     void loopIndex() throws ParseException {
         Template template = builder.getTemplate("test",
                 "test: <#list sequence as s with l>${l?index}. ${s}\n</#list>");
