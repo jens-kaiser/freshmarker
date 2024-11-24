@@ -8,6 +8,7 @@ import org.freshmarker.core.model.TemplateObject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class TemplateNumber extends TemplatePrimitive<Number> {
@@ -596,5 +597,21 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             case GTE -> compare(rightValue).sign().asInt() >= 0;
             default -> super.relation(operator, operand, context);
         };
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        return type == ((TemplateNumber) o).type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type);
     }
 }
