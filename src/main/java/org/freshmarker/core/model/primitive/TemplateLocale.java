@@ -24,13 +24,11 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
     }
 
     public TemplateObject getLanguage() {
-        String language = getValue().getLanguage();
-        return language == null ? TemplateNull.NULL : new TemplateString(language);
+        return new TemplateString(getValue().getLanguage());
     }
 
     public TemplateObject getCountry() {
-        String country = getValue().getCountry();
-        return country == null ? TemplateNull.NULL : new TemplateString(country);
+        return new TemplateString(getValue().getCountry());
     }
 
     @Override
