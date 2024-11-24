@@ -10,11 +10,7 @@ public class TemplateMarkup implements TemplateObject {
     private final TemplateObject content;
 
     public TemplateMarkup(TemplateObject content) {
-        if (content.isMarkup()) {
-            this.content = ((TemplateMarkup) content).content;
-        } else {
-            this.content = content;
-        }
+        this.content = content;
     }
 
     @Override

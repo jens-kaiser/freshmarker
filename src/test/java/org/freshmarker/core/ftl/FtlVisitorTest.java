@@ -4,6 +4,7 @@ import ftl.Node;
 import ftl.Token;
 import ftl.ast.Assignment;
 import ftl.ast.Block;
+import ftl.ast.BrickInstruction;
 import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.ElseBlock;
@@ -155,5 +156,10 @@ class FtlVisitorTest {
     @Test
     void visitImportInstruction() {
         assertEquals("", visitor.visit((ImportInstruction) null, ""));
+    }
+
+    @Test
+    void visitBrickInstruction() {
+        assertEquals("", visitor.visit((BrickInstruction) null, ""));
     }
 }
