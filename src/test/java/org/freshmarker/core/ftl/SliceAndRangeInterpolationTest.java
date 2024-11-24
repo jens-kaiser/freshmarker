@@ -262,4 +262,10 @@ class SliceAndRangeInterpolationTest {
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
     }
+
+    @Test
+    void interpolationUnlimitedRanges(TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", "<#var x=10..>test: ${(0..)[x][10]}");
+        assertEquals("test: 20", template.process(Map.of()));
+    }
 }

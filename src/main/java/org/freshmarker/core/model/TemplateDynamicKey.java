@@ -21,7 +21,19 @@ public class TemplateDynamicKey implements TemplateExpression {
         if (templateObject == TemplateNull.NULL) {
             return TemplateNull.NULL;
         }
-        TemplateNumber index = dynamicKey.evaluate(context, TemplateNumber.class);
+        TemplateObject key = dynamicKey.evaluateToObject(context);
+        return switch (key) {
+            case TemplateNumber number -> handleIndex(context, templateObject, number);
+            case TemplateRange range -> handleRange(context, templateObject, range);
+            default -> throw new ProcessException("unsupported type: " + key.getModelType());
+        };
+    }
+
+    private TemplateObject handleRange(ProcessContext context, TemplateObject templateObject, TemplateRange range) {
+        return new TemplateSlice(templateObject, range).evaluateToObject(context);
+    }
+
+    private TemplateObject handleIndex(ProcessContext context, TemplateObject templateObject, TemplateNumber index) {
         int beginIndex = index.asInt();
         if (templateObject instanceof TemplateString templateString) {
             return new TemplateString(templateString.getValue().substring(beginIndex, beginIndex + 1));
