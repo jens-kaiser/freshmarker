@@ -126,43 +126,49 @@ the last two lines indicate how comments can be inserted into the output using t
 |===
 | Name | Meta Characters | Replacements | Comment Prefix | Comment Suffix
 
-| HTML
+m| HTML
 | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
 | `<!--␣`
 | `␣-\->`
 
-| XHTML
+m| XHTML
 | `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
 | `<!--␣`
 | `␣-\->`
 
-| XML  | `<`, `>`, `&`, `"`, `'`
+m| XML
+| `<`, `>`, `&`, `"`, `'`
 | `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `\&apos;`;
 | `<!--␣`
 | `␣-\->`
 
-| ADOC
+m| ADOC
 2+| no escaping
 | `////\n`
 | `\n////\n`
 
-| plainText
+m| plainText
 2+| no escaping
 2+| no comments
 
-| JavaScript
+m| Script
 2+| no escaping
 | `/*␣`
 | `␣*/`
 
-| CSS
+m| JavaScript
 2+| no escaping
-| `/*`
-| `*/`
+| `/*␣`
+| `␣*/`
 
-| JSON
+m| CSS
+2+| no escaping
+| `/*␣`
+| `␣*/`
+
+m| JSON
 2+| no escaping
 2+| no comments
 |===
