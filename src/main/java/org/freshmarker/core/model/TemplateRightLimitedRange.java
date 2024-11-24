@@ -19,9 +19,6 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
 
     @Override
     protected Bounds evaluate(ProcessContext context) {
-        if (bounds != null) {
-            return bounds;
-        }
         int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
         int newUpper = upper.evaluate(context, TemplateNumber.class).asInt();
         int size = Math.abs(newLower - newUpper) + 1;
