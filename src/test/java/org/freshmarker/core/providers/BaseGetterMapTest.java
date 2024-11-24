@@ -1,8 +1,5 @@
 package org.freshmarker.core.providers;
 
-import org.freshmarker.core.ModelSecurityGateway;
-import org.freshmarker.core.model.TemplateBean;
-import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class BaseGetterMapTest {

@@ -1,6 +1,5 @@
 package org.freshmarker.core.model.primitive;
 
-import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Locale;
