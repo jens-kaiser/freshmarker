@@ -2,6 +2,7 @@ package org.freshmarker.core;
 
 import org.freshmarker.Configuration;
 import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,10 +38,11 @@ class TemplateBuilderTest {
 
     @Test
     void withFixedClock() throws InterruptedException {
-        Instant instant = ZonedDateTime.of(1968, 8, 24, 12, 30, 0, 0, ZoneOffset.UTC).toInstant();
-        templateBuilder = templateBuilder.withZoneId(ZoneId.of("Europe/Berlin")).withClock(Clock.fixed(instant, ZoneOffset.UTC));
-        assertEquals("1968-08-24 01:30:00 Europe/Berlin", templateBuilder.getTemplate("test", "${.now}").process(Map.of()));
-        TimeUnit.SECONDS.sleep(2);
-        assertEquals("1968-08-24 01:30:00 Europe/Berlin", templateBuilder.getTemplate("test", "${.now}").process(Map.of()));
+        Instant instant = ZonedDateTime.of(1968, 8, 24, 12, 30, 5, 0, ZoneOffset.UTC).toInstant();
+        templateBuilder = new Configuration().builder().withZoneId(ZoneId.of("Europe/Berlin")).withClock(Clock.fixed(instant, ZoneOffset.UTC));
+        Template template = templateBuilder.getTemplate("test", "${.now}");
+        assertEquals("1968-08-24 01:30:05 Europe/Berlin", template.process(Map.of()));
+        TimeUnit.SECONDS.sleep(5);
+        assertEquals("1968-08-24 01:30:05 Europe/Berlin", template.process(Map.of()));
     }
 }
