@@ -6,7 +6,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -16,7 +16,7 @@ public class BuiltInVariableProvider {
 
     public TemplateObject provide(String name, ProcessContext context) {
         return switch (name) {
-            case "now" -> new TemplateZonedDateTime(LocalDateTime.now().atZone(context.getZoneId()));
+            case "now" -> new TemplateZonedDateTime(ZonedDateTime.now(context.getBaseEnvironment().getClock().withZone(context.getZoneId())));
             case "locale" -> new TemplateLocale(context.getLocale());
             case "country" -> new TemplateString(context.getLocale().getCountry());
             case "lang", "language" -> new TemplateString(context.getLocale().getLanguage());

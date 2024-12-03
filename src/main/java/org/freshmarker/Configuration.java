@@ -40,6 +40,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,21 +64,27 @@ public final class Configuration {
         private final ZoneId zoneId;
         private final OutputFormat outputFormat;
         private final StaticContext context;
+        private final Clock clock;
 
-        TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat) {
+        TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock) {
             this.configuration = configuration;
             this.locale = locale;
             this.zoneId = zoneId;
             this.outputFormat = outputFormat;
             this.context = context;
+            this.clock = clock;
+        }
+
+        public TemplateBuilder withClock(Clock clock) {
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock);
         }
 
         public TemplateBuilder withLocale(Locale locale) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock);
         }
 
         public TemplateBuilder withZoneId(ZoneId zoneId) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock);
         }
 
         public TemplateBuilder withOutputFormat(String outputFormat) {
@@ -85,7 +92,7 @@ public final class Configuration {
         }
 
         public TemplateBuilder withOutputFormat(OutputFormat format) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, format);
+            return new TemplateBuilder(configuration, context, locale, zoneId, format, clock);
         }
 
         public Template getTemplate(Path path) throws ParseException, IOException {
@@ -121,7 +128,7 @@ public final class Configuration {
         }
 
         public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.builtInVariableProviders);
+            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.builtInVariableProviders, clock);
             return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer);
         }
     }
@@ -222,7 +229,7 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE);
+        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {

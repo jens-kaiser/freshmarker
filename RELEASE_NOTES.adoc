@@ -5,6 +5,7 @@
 === Improvements
 
 - support range variables in dynamic key expressions
+- add `TemplateBuilder#withClock`
 
 === Bugfixes
 

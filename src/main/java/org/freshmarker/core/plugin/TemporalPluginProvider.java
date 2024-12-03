@@ -109,18 +109,22 @@ public final class TemporalPluginProvider implements PluginProvider {
         return new TemplateString(value.toString());
     }
 
+    private LocalDate now(ProcessContext e) {
+       return LocalDate.now(e.getBaseEnvironment().getClock().withZone(e.getZoneId()));
+    }
+
     private TemplateObject until(TemplateLocalDate x, List<TemplateObject> y, ProcessContext e) {
-        LocalDate otherDate = y.isEmpty() ? LocalDate.now() : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
+        LocalDate otherDate = y.isEmpty() ? now(e) : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
         return new TemplatePeriod(x.getValue().until(otherDate));
     }
 
     private TemplateObject since(TemplateLocalDate x, List<TemplateObject> y, ProcessContext e) {
-        LocalDate otherDate = y.isEmpty() ? LocalDate.now() : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
+        LocalDate otherDate = y.isEmpty() ? now(e) : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
         return new TemplatePeriod(otherDate.until(x.getValue()));
     }
 
     private TemplateObject formatHuman(List<TemplateObject> y, ProcessContext e, TemplateLocalDate value) {
-        LocalDate now = y.isEmpty() ? LocalDate.now() : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
+        LocalDate now = y.isEmpty() ? now(e) : y.getFirst().evaluate(e, TemplateLocalDate.class).getValue();
         int days = now.until(value.getValue()).getDays();
         if (days < -2 || days > 2) {
             return value;

@@ -10,6 +10,7 @@ import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateObjectMapper;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,12 +25,14 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
     private final BuiltInVariableProvider builtInVariableProviders;
     private final List<TemplateObjectProvider> providers;
     private final Set<Class<?>> checks = new HashSet<>();
+    private final Clock clock;
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, BuiltInVariableProvider builtInVariableProviders) {
+    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, BuiltInVariableProvider builtInVariableProviders, Clock clock) {
         this.dataModel = dataModel;
         this.providers = providers;
         cached = HashMap.newHashMap(dataModel.size());
         this.builtInVariableProviders = builtInVariableProviders;
+        this.clock = clock;
     }
 
     @Override
@@ -87,6 +90,10 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
     @Override
     public Set<Class<?>> getChecks() {
         return checks;
+    }
+
+    public Clock getClock() {
+        return clock;
     }
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {

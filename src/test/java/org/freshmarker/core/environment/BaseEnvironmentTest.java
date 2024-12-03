@@ -6,6 +6,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +20,7 @@ class BaseEnvironmentTest {
 
     @BeforeEach
     void setUp() {
-        environment = new BaseEnvironment(Map.of(), List.of(), new BuiltInVariableProvider());
+        environment = new BaseEnvironment(Map.of(), List.of(), new BuiltInVariableProvider(), Clock.systemDefaultZone());
     }
 
     @Test
