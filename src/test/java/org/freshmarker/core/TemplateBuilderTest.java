@@ -9,6 +9,7 @@ import java.io.StringReader;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -36,8 +37,8 @@ class TemplateBuilderTest {
 
     @Test
     void withFixedClock() throws InterruptedException {
-        Instant instant = ZonedDateTime.of(1968, 8, 24, 12, 30, 0, 0,ZoneOffset.UTC).toInstant();
-        templateBuilder = templateBuilder.withClock(Clock.fixed(instant, ZoneOffset.UTC));
+        Instant instant = ZonedDateTime.of(1968, 8, 24, 12, 30, 0, 0, ZoneOffset.UTC).toInstant();
+        templateBuilder = templateBuilder.withZoneId(ZoneId.of("Europe/Berlin")).withClock(Clock.fixed(instant, ZoneOffset.UTC));
         assertEquals("1968-08-24 01:30:00 Europe/Berlin", templateBuilder.getTemplate("test", "${.now}").process(Map.of()));
         TimeUnit.SECONDS.sleep(2);
         assertEquals("1968-08-24 01:30:00 Europe/Berlin", templateBuilder.getTemplate("test", "${.now}").process(Map.of()));
