@@ -13,6 +13,7 @@ import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 
 import java.io.Writer;
+import java.time.Clock;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -173,5 +174,9 @@ public class ProcessContext {
 
     public BaseEnvironment getBaseEnvironment() {
         return baseEnvironment;
+    }
+
+    public Clock getClock() {
+        return baseEnvironment.getClock().withZone(getZoneId());
     }
 }
