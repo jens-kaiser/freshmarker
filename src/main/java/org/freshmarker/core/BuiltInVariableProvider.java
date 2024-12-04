@@ -16,7 +16,7 @@ public class BuiltInVariableProvider {
 
     public TemplateObject provide(String name, ProcessContext context) {
         return switch (name) {
-            case "now" -> new TemplateZonedDateTime(ZonedDateTime.now(context.getBaseEnvironment().getClock().withZone(context.getZoneId())));
+            case "now" -> new TemplateZonedDateTime(ZonedDateTime.now(context.getClock()));
             case "locale" -> new TemplateLocale(context.getLocale());
             case "country" -> new TemplateString(context.getLocale().getCountry());
             case "lang", "language" -> new TemplateString(context.getLocale().getLanguage());
