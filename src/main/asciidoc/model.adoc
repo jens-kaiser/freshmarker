@@ -68,7 +68,7 @@ If the size of the interval is specified instead of the upper limit, then this r
 In principle, a right-unlimited range has no upper limit and can therefore only be used in a few places.
 
 The main area of application is slicing, where a part is cut out of a list, `String` or range.
-
+3
 A right unlimited range has the form `_x_..` where `_x_` can be any numerical expression.
 
 .Example right-unlimited ranges
@@ -81,7 +81,7 @@ a..   // lower bound in the variable _a_ (must be a numeric value)
 
 ===== Right-limited Range
 
-A _right-limited range_ has a lower and an upper limit. It also represents a sequence of numbers and can be used in this way in a list directive. A _right-limited range_ has the form `_x_.._y_` or `_x_..<_y_` where `_x_` and `_y_` can be any numeric expression. The second form describes a range with an exclusive upper limit. This form is called a _right-limited exclusive range_.
+A _right-limited range_ has a lower and an upper limit. It also represents a sequence of numbers and can be used in this way in a list directive. A _right-limited range_ has the form `_x_.._y_` or  `_x_..+++<+++_y_` where `_x_` and `_y_` can be any numeric expression. The second form describes a range with an exclusive upper limit. This form is called a _right-limited exclusive range_.
 
 .Example right-limited ranges
 [source,subs="verbatim,quotes"]
