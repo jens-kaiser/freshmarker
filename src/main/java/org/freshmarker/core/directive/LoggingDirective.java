@@ -3,7 +3,6 @@ package org.freshmarker.core.directive;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.fragment.ConstantFragment;
@@ -24,8 +23,7 @@ public class LoggingDirective implements UserDirective {
       if ("warn".equals(level)) {
         message = message.toUpperCase();
       }
-      Environment environment = context.getEnvironment();
-      context.getWriter().write(context.getOutputFormat().comment(environment, message).getValue());
+      context.getWriter().write(context.getOutputFormat().comment(new TemplateString(message)).getValue());
     } catch (IOException e) {
       throw new ProcessException(e.getMessage(), e);
     }

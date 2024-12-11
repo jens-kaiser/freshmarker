@@ -29,8 +29,8 @@ public class OutputFormatBuilder {
             return new OutputFormat() {
 
                 @Override
-                public TemplateString comment(Environment environment, String value) {
-                    return new TemplateString(commentPrefix + value + commentSuffix);
+                public TemplateString comment(TemplateString value) {
+                    return new TemplateString(commentPrefix + value.getValue() + commentSuffix);
                 }
             };
         }
@@ -39,9 +39,9 @@ public class OutputFormatBuilder {
 
     private class EscapingOutputFormat implements OutputFormat {
         @Override
-        public TemplateString escape(Environment environment, String value) {
+        public TemplateString escape(TemplateString value) {
             StringBuilder builder = new StringBuilder();
-            for (char c : value.toCharArray()) {
+            for (char c : value.getValue().toCharArray()) {
                 String replacement = escapes.get(c);
                 if (replacement == null) {
                     builder.append(c);
@@ -53,8 +53,8 @@ public class OutputFormatBuilder {
         }
 
         @Override
-        public TemplateString comment(Environment environment, String value) {
-            return new TemplateString(commentPrefix + value + commentSuffix);
+        public TemplateString comment(TemplateString value) {
+            return new TemplateString(commentPrefix + value.getValue() + commentSuffix);
         }
     }
 }

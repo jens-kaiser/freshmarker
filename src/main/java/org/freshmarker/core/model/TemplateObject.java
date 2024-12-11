@@ -11,10 +11,6 @@ public interface TemplateObject {
         return false;
     }
 
-    default boolean isMarkup() {
-        return false;
-    }
-
     default boolean isNull() {
         return false;
     }

@@ -5,21 +5,19 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
 
 public class TemplateStringMarkup implements TemplateObject {
-    private final String content;
-    private final OutputFormat outputFormat;
+    private final TemplateString content;
 
     public TemplateStringMarkup(TemplateString content, OutputFormat outputFormat) {
-        this.content = content.getValue();
-        this.outputFormat = outputFormat;
+        this.content = outputFormat.escape(content);
     }
 
     @Override
-    public boolean isMarkup() {
+    public boolean isPrimitive() {
         return true;
     }
 
     @Override
     public TemplateString evaluateToObject(ProcessContext context) {
-        return outputFormat.escape(context.getEnvironment(), content);
+        return content;
     }
 }

@@ -3,7 +3,6 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.directive.LoggingDirective;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.OutputFormat;
@@ -87,15 +86,16 @@ class OutputFormatTest {
     void csvOutputFormatBlock(String expected, String value1, String value2) throws ParseException {
         configuration.registerOutputFormat("CSV", new OutputFormat() {
             @Override
-            public TemplateString escape(Environment environment, String value) {
-                boolean escaped = value.contains("\"");
+            public TemplateString escape(TemplateString value) {
+                String string = value.getValue();
+                boolean escaped = string.contains("\"");
                 if (escaped) {
-                    value = value.replaceAll("\"", "\"\"");
+                    string = string.replaceAll("\"", "\"\"");
                 }
-                if (escaped || value.contains("\n") || value.contains(",")) {
-                    value = '"' + value + '"';
+                if (escaped || string.contains("\n") || string.contains(",")) {
+                    string = '"' + string + '"';
                 }
-                return new TemplateString(value);
+                return new TemplateString(string);
             }
         });
         Template template = configuration.builder().getTemplate("test", """
@@ -118,8 +118,8 @@ class OutputFormatTest {
         Template template = configuration.builder().withOutputFormat(new OutputFormat() {
 
             @Override
-            public TemplateString escape(Environment environment, String value) {
-                return new TemplateString(Sanitizers.FORMATTING.sanitize(value));
+            public TemplateString escape(TemplateString value) {
+                return new TemplateString(Sanitizers.FORMATTING.sanitize(value.getValue()));
             }
         }).getTemplate("test", "${content}");
         assertEquals(expected, template.process(Map.of("content", content)));
@@ -134,8 +134,8 @@ class OutputFormatTest {
         configuration.registerOutputFormat("OWASP", new OutputFormat() {
 
             @Override
-            public TemplateString escape(Environment environment, String value) {
-                return new TemplateString(Sanitizers.FORMATTING.sanitize(value));
+            public TemplateString escape(TemplateString value) {
+                return new TemplateString(Sanitizers.FORMATTING.sanitize(value.getValue()));
             }
         });
         Template template = configuration.builder().withOutputFormat("HTML").getTemplate("test", "${content}#<#outputformat 'OWASP'>${content}</#outputformat>");
