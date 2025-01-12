@@ -104,3 +104,39 @@ m|${yesterday?until(tomorrow)}
 m|P2D
 |duration
 |===
+
+==== `year` Built-In (since 1.6.10)
+
+This built-in returns the year of the value.footnote:legacyTemporal[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?year}
+m|1968
+|year
+|===
+
+==== `month` Built-In (since 1.6.10)
+
+This built-in returns the month of the value.footnote:legacyTemporal[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|AUGUST
+|month
+|===
+
+==== `day` Built-In (since 1.6.10)
+
+This built-in returns the day of month of the value as a number.footnote:legacyTemporal[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|24
+|number
+|===

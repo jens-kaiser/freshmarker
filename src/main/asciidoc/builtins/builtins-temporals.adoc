@@ -1,0 +1,131 @@
+=== Year Built-Ins
+
+The Built-Ins in the examples operate on the value `2025`.
+
+==== `c` (computer language) Built-In (since 1.6.10)
+
+This built-in returns a year string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|2025
+|string
+|===
+
+==== `year` Built-In (since 1.6.10)
+
+This built-in returns the year of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?year}
+m|2025
+|year
+|===
+
+==== `is_leap` Built-In (since 1.6.10)
+
+This built-in returns true if the year is a leap year.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?is_leap}
+m|false
+|boolean
+|===
+
+=== YearMonth Built-Ins
+
+The Built-Ins in the examples operate on the value `2025-08`.
+
+==== `c` (computer language) Built-In (since 1.6.10)
+
+This built-in returns a year string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|2025-08
+|string
+|===
+
+==== `year` Built-In (since 1.6.10)
+
+This built-in returns the year of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?year}
+m|2025
+|year
+|===
+
+==== `month` Built-In (since 1.6.10)
+
+This built-in returns the month of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|AUGUST
+|month
+|===
+
+==== `is_leap` Built-In (since 1.6.10)
+
+This built-in returns true if the year is a leap year.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?is_leap}
+m|false
+|boolean
+|===
+
+=== MonthDay Built-Ins
+
+The Built-Ins in the examples operate on the value `08-24`.
+
+==== `c` (computer language) Built-In (since 1.6.10)
+
+This built-in returns a year string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|08-24
+|string
+|===
+
+==== `month` Built-In (since 1.6.10)
+
+This built-in returns the month of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|AUGUST
+|month
+|===
+
+==== `day` Built-In (since 1.6.10)
+
+This built-in returns the day of month of the value as a number
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|24
+|number
+|===

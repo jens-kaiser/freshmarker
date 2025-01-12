@@ -35,6 +35,9 @@ Without a package specification, the class names refer to the classes of the sam
 |DateTime|`Instant`, `ZonedDateTime`, `LocalDateTime`, `Date`|yes
 |Date|`LocalDate`, `java.sql.Date`|yes
 |Time|`LocalTime`, `java.sql.Time`|yes
+|Year|`Year`|yes
+|YearMonth|`YearMonth`|yes
+|MonthDay|`MonthDay`|yes
 |Duration|`Duration`|yes
 |File|`File`|yes
 |Path|`Path`|yes

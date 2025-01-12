@@ -1,5 +1,16 @@
 = Release Notes
 
+== Release 1.6.9 (2025-01-XX)
+
+=== Improvements
+
+- support for `java.time.Year`, `java.time.YearMonth` and `java.time.MonthDay`
+- add `is_leap` built-in for `java.time.Year` and `java.time.YearMonth`
+- add `year` built-in for `java.time.Year`, `java.time.YearMonth`, `java.time.LocalDate` and `java.time.LocalDateTime`
+- add `month` built-ins for `java.time.YearMonth`, `java.time.MonthDay`, `java.time.LocalDate` and `java.time.LocalDateTime`
+- add `day` built-in for `java.time.MonthDay`, `java.time.LocalDate` and `java.time.LocalDateTime`
+
+
 == Release 1.6.9 (2024-12-06)
 
 === Improvements
