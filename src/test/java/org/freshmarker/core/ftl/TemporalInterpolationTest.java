@@ -89,7 +89,7 @@ class TemporalInterpolationTest {
             "test: ${temporal?string('short')};test: 24.08.68, 12:30"
     }, delimiterString = ";")
     void interpolationLocalDateTimeString(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", input);
+        Template template = templateBuilder.withLocale(Locale.GERMANY).getTemplate("test", input);
         String result = template.process(TEMPORAL);
         assertEquals(expected, result);
     }
@@ -102,7 +102,7 @@ class TemporalInterpolationTest {
             "short;test: 24.08.68, 12:30"
     }, delimiterString = ";")
     void interpolationZonedDateTimeWithFormatter(String pattern, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.withDateTimeFormat(pattern).getTemplate("test", "test: ${temporal}");
+        Template template = templateBuilder.withLocale(Locale.GERMANY).withDateTimeFormat(pattern).getTemplate("test", "test: ${temporal}");
         String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneOffset.UTC)));
         assertEquals(expected, result);
     }
