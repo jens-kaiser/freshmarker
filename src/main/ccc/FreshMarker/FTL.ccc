@@ -321,6 +321,15 @@ Brick #BrickInstruction :
     DirectiveEnd("brick")
 ;
 
+Include #IncludeInstruction :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <_INCLUDE><BLANK>
+    Expression
+    [<SEMICOLON>]
+    (<IDENTIFIER><EQUALS>Expression)*
+    LooseTagEnd
+;
+
 Import #ImportInstruction : 
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     <IMPORT><BLANK>
@@ -488,6 +497,7 @@ TopLevelDirective #void :
      SCAN 2 If |
      SCAN 2 List |
      SCAN 2 Import |
+     SCAN 2 Include |
      SCAN 2 MacroDefinition |
      Switch |
      SCAN 2 Setting |

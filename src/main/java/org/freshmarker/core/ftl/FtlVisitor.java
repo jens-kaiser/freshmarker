@@ -11,6 +11,7 @@ import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
+import ftl.ast.IncludeInstruction;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
 import ftl.ast.MacroDefinition;
@@ -111,6 +112,8 @@ public interface FtlVisitor<I, O> {
   default O visit(VarInstruction ftl, I input) { return handleWithException(ftl); }
 
   default O visit(ImportInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(IncludeInstruction ftl, I input) { return handleWithException(ftl); }
 
   default O visit(BrickInstruction ftl, I input) { return handleWithException(ftl); }
 }

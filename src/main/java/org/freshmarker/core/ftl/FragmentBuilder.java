@@ -11,6 +11,7 @@ import ftl.ast.BrickInstruction;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
+import ftl.ast.IncludeInstruction;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
 import ftl.ast.MacroDefinition;
@@ -28,6 +29,7 @@ import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.features.FeatureSet;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.Fragments;
@@ -42,6 +44,8 @@ import org.freshmarker.core.fragment.UserDirectiveFragment;
 import org.freshmarker.core.fragment.VariableFragment;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateBoolean;
+import org.freshmarker.core.IncludeDirectiveFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,11 +73,13 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final Template template;
     private final Configuration configuration;
     private final String nameSpace;
+    private final FeatureSet featureSet;
 
-    public FragmentBuilder(Template template, Configuration configuration, String nameSpace) {
+    public FragmentBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet) {
         this.template = template;
         this.configuration = configuration;
         this.nameSpace = nameSpace;
+        this.featureSet = featureSet;
     }
 
     @Override
@@ -302,7 +308,40 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            List<Fragment> fragments = root.accept(new ImportBuilder(template, configuration, namespace), new ArrayList<>());
+            root.accept(new ImportBuilder(template, configuration, namespace, featureSet), new ArrayList<>());
+            return input;
+        } catch (IOException e) {
+            throw new ParsingException("cannot read import: " + path, ftl);
+        }
+    }
+
+    @Override
+    public List<Fragment> visit(IncludeInstruction ftl, List<Fragment> input) {
+        if (featureSet.isDisabled(IncludeDirectiveFeature.ENABLED)) {
+            logger.info("include directive ignored");
+            return List.of();
+        }
+
+        String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
+        int index = ftl.get(4).getType() == TokenType.SEMICOLON ? 5 : 4;
+        Map<String, Object> parameters = new HashMap<>();
+        for (int i = index; i < ftl.size() - 1; i += 3) {
+            parameters.put(ftl.get(i).toString(), ftl.get(i+2).accept(InterpolationBuilder.INSTANCE, null));
+        }
+        try {
+            TemplateBoolean parsedIncludeDefault = TemplateBoolean.from(featureSet.isEnabled(IncludeDirectiveFeature.PARSE));
+            logger.info("include parsed default: {}", parsedIncludeDefault);
+            if (TemplateBoolean.FALSE.equals(parameters.getOrDefault("parse", parsedIncludeDefault))) {
+                input.add(new ConstantFragment(template.getTemplateLoader().getImport(template.getPath(), path)));
+                logger.info("include unparsed fragment");
+                return input;
+            }
+            FreshMarkerParser parser = new FreshMarkerParser(template.getTemplateLoader().getImport(template.getPath(), path));
+            parser.setInputSource(path);
+            parser.Root();
+            Root root = (Root) parser.rootNode();
+            new TokenLineNormalizer().normalize(root);
+            List<Fragment> fragments = root.accept(this, new ArrayList<>());
             fragments.forEach(template.getRootFragment()::addFragment);
             return input;
         } catch (IOException e) {
