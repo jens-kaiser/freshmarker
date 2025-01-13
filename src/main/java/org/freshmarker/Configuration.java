@@ -87,9 +87,6 @@ public final class Configuration {
             this.context = context;
             this.clock = clock;
             this.featureSet = featureSet;
-            if (featureSet.isEnabled(TemporalFeature.USE_LOCALIZED_FORMATTERS)) {
-             withDateTimeFormat("medium", zoneId).withDateFormat("medium").withTimeFormat("medium");
-            }
         }
 
         public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
