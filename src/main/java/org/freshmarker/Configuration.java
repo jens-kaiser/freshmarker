@@ -69,7 +69,7 @@ public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-    public static class TemplateBuilder implements ContextCreator {
+    public static final class TemplateBuilder implements ContextCreator {
         private final Configuration configuration;
 
         private final Locale locale;
@@ -77,14 +77,16 @@ public final class Configuration {
         private final OutputFormat outputFormat;
         private final StaticContext context;
         private final Clock clock;
+        private final SimpleFeatureSet featureSet;
 
-        TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock) {
+        TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
             this.configuration = configuration;
             this.locale = locale;
             this.zoneId = zoneId;
             this.outputFormat = outputFormat;
             this.context = context;
             this.clock = clock;
+            this.featureSet = featureSet;
         }
 
         public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
@@ -111,15 +113,15 @@ public final class Configuration {
         }
 
         public TemplateBuilder withClock(Clock clock) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
         }
 
         public TemplateBuilder withLocale(Locale locale) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
         }
 
         public TemplateBuilder withZoneId(ZoneId zoneId) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock);
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
         }
 
         public TemplateBuilder withOutputFormat(String outputFormat) {
@@ -127,7 +129,23 @@ public final class Configuration {
         }
 
         public TemplateBuilder withOutputFormat(OutputFormat format) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, format, clock);
+            return new TemplateBuilder(configuration, context, locale, zoneId, format, clock, featureSet);
+        }
+
+        public TemplateBuilder with(TemplateFeature templateFeature) {
+            SimpleFeatureSet newFeatureSet = featureSet.with(templateFeature);
+            if (newFeatureSet == featureSet) {
+                return this;
+            }
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
+        }
+
+        public TemplateBuilder without(TemplateFeature templateFeature) {
+            SimpleFeatureSet newFeatureSet = featureSet.without(templateFeature);
+            if (newFeatureSet == featureSet) {
+                return this;
+            }
+            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
         }
 
         public Template getTemplate(Path path) throws ParseException, IOException {
@@ -157,7 +175,7 @@ public final class Configuration {
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
             Template template = new Template(this, context.templateLoader(), importPath);
-            List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null), new ArrayList<>());
+            List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null, featureSet), new ArrayList<>());
             fragments.forEach(template.getRootFragment()::addFragment);
             return template;
         }
@@ -179,6 +197,7 @@ public final class Configuration {
     private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
 
     private TemplateLoader templateLoader;
+    private final TemplateFeatures templateFeatures = new TemplateFeatures();
 
     public Configuration() {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
@@ -197,6 +216,8 @@ public final class Configuration {
         outputs.put("CSS", StandardOutputFormats.CSS);
         outputs.put("ADOC", StandardOutputFormats.ADOC);
 
+        templateFeatures.addSwitches(IncludeDirectiveFeature.ENABLED, false);
+        templateFeatures.addSwitches(IncludeDirectiveFeature.PARSE, true);
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
@@ -264,7 +285,7 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC());
+        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
