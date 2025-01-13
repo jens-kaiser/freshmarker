@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
@@ -79,11 +80,44 @@ class TemporalInterpolationTest {
         assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
-    @Test
-    void interpolationLocalDateTimeString(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal?string('dd. MMMM yyyy hh:mm')}");
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${temporal?string('dd. MMMM yyyy hh:mm')};test: 24. August 1968 12:30",
+            "test: ${temporal?string('long')};test: 24. August 1968, 12:30:45 MEZ",
+            "test: ${temporal?string('full')};test: Samstag, 24. August 1968, 12:30:45 Mitteleuropäische Normalzeit",
+            "test: ${temporal?string('medium')};test: 24.08.1968, 12:30:45",
+            "test: ${temporal?string('short')};test: 24.08.68, 12:30"
+    }, delimiterString = ";")
+    void interpolationLocalDateTimeString(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
         String result = template.process(TEMPORAL);
-        assertEquals("test: 24. August 1968 12:30", result);
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "long;test: 24. August 1968, 12:30:45 Z",
+            "full;test: Samstag, 24. August 1968, 12:30:45 Z",
+            "medium;test: 24.08.1968, 12:30:45",
+            "short;test: 24.08.68, 12:30"
+    }, delimiterString = ";")
+    void interpolationZonedDateTimeWithFormatter(String pattern, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.withDateTimeFormat(pattern).getTemplate("test", "test: ${temporal}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneOffset.UTC)));
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "long;test: 24. August 1968, 12:30:45 Z",
+            "full;test: Samstag, 24. August 1968, 12:30:45 Z",
+            "medium;test: 24.08.1968, 12:30:45",
+            "short;test: 24.08.68, 12:30"
+    }, delimiterString = ";")
+    void interpolationLocalDateTimeWithFormatter(String pattern, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
+        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
+        assertEquals(expected, result);
     }
 
     @ParameterizedTest

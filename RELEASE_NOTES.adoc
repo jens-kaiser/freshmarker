@@ -1,6 +1,6 @@
 = Release Notes
 
-== Release 1.6.9 (2025-01-XX)
+== Release 1.6.9 (2025-01-XX planned)
 
 === Improvements
 
@@ -9,7 +9,7 @@
 - add `year` built-in for `java.time.Year`, `java.time.YearMonth`, `java.time.LocalDate` and `java.time.LocalDateTime`
 - add `month` built-ins for `java.time.YearMonth`, `java.time.MonthDay`, `java.time.LocalDate` and `java.time.LocalDateTime`
 - add `day` built-in for `java.time.MonthDay`, `java.time.LocalDate` and `java.time.LocalDateTime`
-
+- add `long`, `full`, `medium` and `short` formats.
 
 == Release 1.6.9 (2024-12-06)
 

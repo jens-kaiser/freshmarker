@@ -179,7 +179,7 @@ public final class TemporalPluginProvider implements PluginProvider {
     }
 
     private static java.time.format.DateTimeFormatter getDateTimeFormatter(List<TemplateObject> y, ProcessContext e) {
-        return java.time.format.DateTimeFormatter.ofPattern(getFormatString(y, e), e.getLocale());
+        return new DateTimeFormatter(getFormatString(y, e)).getFormatter(e.getLocale());
     }
 
     private static String getFormatString(List<TemplateObject> y, ProcessContext e) {

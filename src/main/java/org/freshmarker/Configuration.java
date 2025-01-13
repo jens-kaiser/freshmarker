@@ -13,13 +13,21 @@ import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.formatter.DateFormatter;
+import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.FormatterRegistry;
+import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.model.temporal.TemplateInstant;
+import org.freshmarker.core.model.temporal.TemplateLocalDate;
+import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
+import org.freshmarker.core.model.temporal.TemplateLocalTime;
+import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 import org.freshmarker.core.plugin.PluginProvider;
@@ -73,6 +81,29 @@ public final class Configuration {
             this.outputFormat = outputFormat;
             this.context = context;
             this.clock = clock;
+        }
+
+        public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
+            context.formatter().put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
+            context.formatter().put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
+            context.formatter().put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
+            return this;
+        }
+
+        public TemplateBuilder withDateTimeFormat(String pattern) {
+            context.formatter().put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
+            context.formatter().put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
+            return this;
+        }
+
+        public TemplateBuilder withDateFormat(String pattern) {
+            context.formatter().put(TemplateLocalDate.class, new DateFormatter(pattern));
+            return this;
+        }
+
+        public TemplateBuilder withTimeFormat(String pattern) {
+            context.formatter().put(TemplateLocalTime.class, new TimeFormatter(pattern));
+            return this;
         }
 
         public TemplateBuilder withClock(Clock clock) {
