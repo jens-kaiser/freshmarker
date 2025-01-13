@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.Month;
 import java.time.YearMonth;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,7 +38,7 @@ class TemporalYearMonthInterpolationTest {
             "test: ${leap_year_month?month},test: APRIL",
     })
     void interpolationYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", input);
+        Template template = templateBuilder.withLocale(Locale.GERMANY).getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("year_month", YearMonth.of(2025, Month.AUGUST), "leap_year_month", YearMonth.of(2004, Month.APRIL))));
     }
 }

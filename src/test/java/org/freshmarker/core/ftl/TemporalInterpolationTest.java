@@ -109,15 +109,16 @@ class TemporalInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "long;test: 24. August 1968, 12:30:45 Z",
-            "full;test: Samstag, 24. August 1968, 12:30:45 Z",
-            "medium;test: 24.08.1968, 12:30:45",
-            "short;test: 24.08.68, 12:30"
+            "long;test: 24. August 1968, 12:30:45 Z;test: August 24, 1968, 12:30:45\u202FPM Z",
+            "full;test: Samstag, 24. August 1968, 12:30:45 Z;test: Samstag, August 24, 1968, 12:30:45\u202FPM Z",
+            "medium;test: 24.08.1968, 12:30:45;test: Aug. 24, 1968, 12:30:45\u202FPM",
+            "short;test: 24.08.68, 12:30;test: 8/24/68, 12:30\u202FPM"
     }, delimiterString = ";")
-    void interpolationLocalDateTimeWithFormatter(String pattern, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
-        String result = template.process(Map.of("temporal", LOCAL_DATE_TIME));
-        assertEquals(expected, result);
+    void interpolationLocalDateTimeWithFormatter(String pattern, String expectedDe, String expectedUs, TemplateBuilder templateBuilder) throws ParseException {
+        Template templateDe = templateBuilder.withLocale(Locale.GERMANY).withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
+        Template templateUs = templateBuilder.withLocale(Locale.US).withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
+        assertEquals(expectedDe, templateDe.process(Map.of("temporal", LOCAL_DATE_TIME)));
+        assertEquals(expectedUs, templateUs.process(Map.of("temporal", LOCAL_DATE_TIME)));
     }
 
     @ParameterizedTest
