@@ -84,7 +84,7 @@ class TemporalInterpolationTest {
     @CsvSource(value = {
             "test: ${temporal?string('dd. MMMM yyyy hh:mm')};test: 24. August 1968 12:30",
             "test: ${temporal?string('long')};test: 24. August 1968, 12:30:45 MEZ",
-            "test: ${temporal?string('full')};test: Samstag, 24. August 1968, 12:30:45 Mitteleuropäische Zeiteit",
+            "test: ${temporal?string('full')};test: Samstag, 24. August 1968, 12:30:45 Mitteleuropäische Zeit",
             "test: ${temporal?string('medium')};test: 24.08.1968, 12:30:45",
             "test: ${temporal?string('short')};test: 24.08.68, 12:30"
     }, delimiterString = ";")
