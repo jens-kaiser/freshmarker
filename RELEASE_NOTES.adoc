@@ -11,6 +11,10 @@
 - add `day` built-in for `java.time.MonthDay`, `java.time.LocalDate` and `java.time.LocalDateTime`
 - add `long`, `full`, `medium` and `short` formats.
 
+=== Experimental
+
+- `include` directive
+
 == Release 1.6.9 (2024-12-06)
 
 === Improvements
@@ -147,7 +151,7 @@
 
 === Breaking Changes
 
-- introduce `TemplateBuilder`
+- introduce `DefaultTemplateBuilder`
 
 == Release 1.4.6 (2024-09-08)
 
