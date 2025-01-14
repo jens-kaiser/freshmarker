@@ -13,9 +13,11 @@ import org.freshmarker.core.features.SimpleFeatureSet;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
+import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.temporal.TemplateInstant;
 import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
@@ -34,6 +36,7 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,6 +51,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     private final StaticContext context;
     private final Clock clock;
     private final SimpleFeatureSet featureSet;
+private final Map<Class<? extends TemplateObject>, Formatter> formatter;
 
     DefaultTemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
         this.configuration = configuration;
@@ -57,33 +61,34 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         this.context = context;
         this.clock = clock;
         this.featureSet = featureSet;
+        this.formatter = new HashMap<>(context.formatter());
     }
 
-    @Override
     public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
-        context.formatter().put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
-        context.formatter().put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
-        context.formatter().put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
-        return this;
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
+        newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
+        newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
+        return newBuilder;
     }
 
-    @Override
     public TemplateBuilder withDateTimeFormat(String pattern) {
-        context.formatter().put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
-        context.formatter().put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
-        return this;
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
+        newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
+        return newBuilder;
     }
 
-    @Override
     public TemplateBuilder withDateFormat(String pattern) {
-        context.formatter().put(TemplateLocalDate.class, new DateFormatter(pattern));
-        return this;
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
+        return newBuilder;
     }
 
-    @Override
     public TemplateBuilder withTimeFormat(String pattern) {
-        context.formatter().put(TemplateLocalTime.class, new TimeFormatter(pattern));
-        return this;
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, zoneId));
+        return newBuilder;
     }
 
     @Override
@@ -169,6 +174,6 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
 
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.getBuiltInVariableProviders(), clock);
-        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer);
+        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, formatter);
     }
 }
