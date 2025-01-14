@@ -21,7 +21,7 @@ public class DateFormatter implements Formatter {
     if (Set.of("full", "long", "medium", "short").contains(pattern)) {
       FormatStyle style = FormatStyle.valueOf(pattern.toUpperCase());
       String localizedDateTimePattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(style, null, IsoChronology.INSTANCE, l);
-      return java.time.format.DateTimeFormatter.ofPattern(localizedDateTimePattern);
+      return java.time.format.DateTimeFormatter.ofPattern(localizedDateTimePattern, l);
     }
     return java.time.format.DateTimeFormatter.ofPattern(pattern, l);
   }

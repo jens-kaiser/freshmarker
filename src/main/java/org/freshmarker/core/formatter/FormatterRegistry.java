@@ -27,7 +27,7 @@ public record FormatterRegistry(Map<Class<? extends TemplateObject>, Formatter> 
             }
             case "date-time" -> formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
             case "date" -> formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
-            case "time" -> formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern));
+            case "time" -> formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, ZoneOffset.UTC));
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
     }
