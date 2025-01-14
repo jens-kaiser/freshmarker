@@ -10,7 +10,7 @@ TBD
 
 ==== With Clock (since 1.6.9)
 
-The `withClock` method can be used to create a `TemplateBuilder` that generates templates with a modified clock. This allows templates to generate an output as it would have looked at a different time. This applies in particular to the built-in variable `.now`.
+The `withClock` method can be used to create a `DefaultTemplateBuilder` that generates templates with a modified clock. This allows templates to generate an output as it would have looked at a different time. This applies in particular to the built-in variable `.now`.
 
 .Example builder with fixed clock in the past
 [source,java]

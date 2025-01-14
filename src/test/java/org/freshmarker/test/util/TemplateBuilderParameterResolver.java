@@ -1,6 +1,8 @@
 package org.freshmarker.test.util;
 
 import org.freshmarker.Configuration;
+import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.DefaultTemplateBuilder;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -12,7 +14,7 @@ import java.util.Locale;
 public class TemplateBuilderParameterResolver implements ParameterResolver {
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return Configuration.TemplateBuilder.class == parameterContext.getParameter().getType();
+        return DefaultTemplateBuilder.class == parameterContext.getParameter().getType() || TemplateBuilder.class == parameterContext.getParameter().getType();
     }
 
     @Override

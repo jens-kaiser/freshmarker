@@ -1,8 +1,6 @@
 package org.freshmarker;
 
-import ftl.FreshMarkerParser;
 import ftl.ParseException;
-import ftl.ast.Root;
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
@@ -11,26 +9,14 @@ import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
-import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.features.SimpleFeatureSet;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.features.TemplateFeatures;
-import org.freshmarker.core.formatter.DateFormatter;
-import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.FormatterRegistry;
-import org.freshmarker.core.formatter.TimeFormatter;
-import org.freshmarker.core.fragment.Fragment;
-import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.freshmarker.core.model.temporal.TemplateInstant;
-import org.freshmarker.core.model.temporal.TemplateLocalDate;
-import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
-import org.freshmarker.core.model.temporal.TemplateLocalTime;
-import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 import org.freshmarker.core.IncludeDirectiveFeature;
@@ -43,14 +29,11 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZoneId;
@@ -63,133 +46,45 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-    public static final class TemplateBuilder implements ContextCreator {
-        private final Configuration configuration;
+    public interface TemplateBuilder {
+        TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId);
 
-        private final Locale locale;
-        private final ZoneId zoneId;
-        private final OutputFormat outputFormat;
-        private final StaticContext context;
-        private final Clock clock;
-        private final SimpleFeatureSet featureSet;
-        private final Map<Class<? extends TemplateObject>, Formatter> formatter;
+        TemplateBuilder withDateTimeFormat(String pattern);
 
-        TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
-            this.configuration = configuration;
-            this.locale = locale;
-            this.zoneId = zoneId;
-            this.outputFormat = outputFormat;
-            this.context = context;
-            this.clock = clock;
-            this.featureSet = featureSet;
-            this.formatter = new HashMap<>(context.formatter());
-        }
+        TemplateBuilder withDateFormat(String pattern);
 
-        public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
-            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-            newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
-            newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
-            newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
-            return newBuilder;
-        }
+        TemplateBuilder withTimeFormat(String pattern);
 
-        public TemplateBuilder withDateTimeFormat(String pattern) {
-            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-            newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
-            newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
-            return newBuilder;
-        }
+        TemplateBuilder withClock(Clock clock);
 
-        public TemplateBuilder withDateFormat(String pattern) {
-            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-            newBuilder.formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
-            return newBuilder;
-        }
+        TemplateBuilder withLocale(Locale locale);
 
-        public TemplateBuilder withTimeFormat(String pattern) {
-            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-            newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, zoneId));
-            return newBuilder;
-        }
+        TemplateBuilder withZoneId(ZoneId zoneId);
 
-        public TemplateBuilder withClock(Clock clock) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-        }
+        TemplateBuilder withOutputFormat(String outputFormat);
 
-        public TemplateBuilder withLocale(Locale locale) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-        }
+        TemplateBuilder withOutputFormat(OutputFormat format);
 
-        public TemplateBuilder withZoneId(ZoneId zoneId) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-        }
+        TemplateBuilder with(TemplateFeature templateFeature);
 
-        public TemplateBuilder withOutputFormat(String outputFormat) {
-            return withOutputFormat(context.outputs().getOrDefault(outputFormat, StandardOutputFormats.NONE));
-        }
+        TemplateBuilder without(TemplateFeature templateFeature);
 
-        public TemplateBuilder withOutputFormat(OutputFormat format) {
-            return new TemplateBuilder(configuration, context, locale, zoneId, format, clock, featureSet);
-        }
+        Template getTemplate(Path path) throws ParseException, IOException;
 
-        public TemplateBuilder with(TemplateFeature templateFeature) {
-            SimpleFeatureSet newFeatureSet = featureSet.with(templateFeature);
-            if (newFeatureSet == featureSet) {
-                return this;
-            }
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
-        }
+        Template getTemplate(Path path, Charset charset) throws ParseException, IOException;
 
-        public TemplateBuilder without(TemplateFeature templateFeature) {
-            SimpleFeatureSet newFeatureSet = featureSet.without(templateFeature);
-            if (newFeatureSet == featureSet) {
-                return this;
-            }
-            return new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
-        }
+        Template getTemplate(String name, Reader reader) throws ParseException;
 
-        public Template getTemplate(Path path) throws ParseException, IOException {
-            return getTemplate(path.getParent(), path.toString(), Files.readString(path));
-        }
+        Template getTemplate(String name, String content) throws ParseException;
 
-        public Template getTemplate(Path path, Charset charset) throws ParseException, IOException {
-            return getTemplate(path.getParent(), path.toString(), Files.readString(path, charset));
-        }
+        Template getTemplate(Path importPath, String name, Reader reader) throws ParseException;
 
-        public Template getTemplate(String name, Reader reader) throws ParseException {
-            return getTemplate(Path.of("."), name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
-        }
-
-        public Template getTemplate(String name, String content) throws ParseException {
-            return getTemplate(Path.of("."), name, content);
-        }
-
-        public Template getTemplate(Path importPath, String name, Reader reader) throws ParseException {
-            return getTemplate(importPath, name, new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
-        }
-
-        public Template getTemplate(Path importPath, String name, String content) throws ParseException {
-            FreshMarkerParser parser = new FreshMarkerParser(content);
-            parser.setInputSource(name);
-            parser.Root();
-            Root root = (Root) parser.rootNode();
-            new TokenLineNormalizer().normalize(root);
-            Template template = new Template(this, context.templateLoader(), importPath);
-            List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null, featureSet), new ArrayList<>());
-            fragments.forEach(template.getRootFragment()::addFragment);
-            return template;
-        }
-
-        public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-            BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.builtInVariableProviders, clock);
-            return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, formatter);
-        }
+        Template getTemplate(Path importPath, String name, String content) throws ParseException;
     }
 
     private Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
@@ -200,6 +95,7 @@ public final class Configuration {
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
     private FormatterRegistry formatterRegistry = new FormatterRegistry(new HashMap<>());
+
     private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
 
     private TemplateLoader templateLoader;
@@ -286,12 +182,12 @@ public final class Configuration {
     }
 
     /**
-     * Creates a new {@link TemplateBuilder} based on the current  {@code Configuration}.
+     * Creates a new {@link TemplateBuilder} based on the current {@code Configuration}.
      *
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        return new TemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
+        return new DefaultTemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
@@ -317,4 +213,9 @@ public final class Configuration {
     public void registerFormatter(String type, String pattern) {
         formatterRegistry.registerFormatter(type, pattern);
     }
+
+    public BuiltInVariableProvider getBuiltInVariableProviders() {
+        return builtInVariableProviders;
+    }
 }
+
