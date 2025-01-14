@@ -114,7 +114,7 @@ public final class Configuration {
 
         public TemplateBuilder withTimeFormat(String pattern) {
             TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
-            newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern));
+            newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, zoneId));
             return newBuilder;
         }
 

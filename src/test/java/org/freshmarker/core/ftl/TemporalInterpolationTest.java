@@ -122,6 +122,34 @@ class TemporalInterpolationTest {
     }
 
     @ParameterizedTest
+    @CsvSource(value = {
+            "long;test: 24. August 1968;test: August 24, 1968",
+            "full;test: Samstag, 24. August 1968;test: Saturday, August 24, 1968",
+            "medium;test: 24.08.1968;test: Aug 24, 1968",
+            "short;test: 24.08.68;test: 8/24/68"
+    }, delimiterString = ";")
+    void interpolationLocalDateWithFormatter(String pattern, String expectedDe, String expectedUs, TemplateBuilder templateBuilder) throws ParseException {
+        Template templateDe = templateBuilder.withLocale(Locale.GERMANY).withDateFormat(pattern).getTemplate("test", "test: ${temporal}");
+        Template templateUs = templateBuilder.withLocale(Locale.US).withDateFormat(pattern).getTemplate("test", "test: ${temporal}");
+        assertEquals(expectedDe, templateDe.process(Map.of("temporal", LOCAL_DATE_TIME.toLocalDate())));
+        assertEquals(expectedUs, templateUs.process(Map.of("temporal", LOCAL_DATE_TIME.toLocalDate())));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "long;test: 12:30:45 MEZ;test: 12:30:45\u202FPM CET",
+            "full;test: 12:30:45 Mitteleuropäische Zeit;test: 12:30:45\u202FPM Central European Time",
+            "medium;test: 12:30:45;test: 12:30:45\u202FPM",
+            "short;test: 12:30;test: 12:30\u202FPM"
+    }, delimiterString = ";")
+    void interpolationLocalTimeWithFormatter(String pattern, String expectedDe, String expectedUs, TemplateBuilder templateBuilder) throws ParseException {
+        Template templateDe = templateBuilder.withLocale(Locale.GERMANY).withTimeFormat(pattern).getTemplate("test", "test: ${temporal}");
+        Template templateUs = templateBuilder.withLocale(Locale.US).withTimeFormat(pattern).getTemplate("test", "test: ${temporal}");
+        assertEquals(expectedDe, templateDe.process(Map.of("temporal", LOCAL_DATE_TIME.toLocalTime())));
+        assertEquals(expectedUs, templateUs.process(Map.of("temporal", LOCAL_DATE_TIME.toLocalTime())));
+    }
+
+    @ParameterizedTest
     @CsvSource({
             "test: ${temporal?string}",
             "test: ${temporal?at_zone}",
