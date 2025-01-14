@@ -86,7 +86,7 @@ class NumberPluginProviderTest {
 
     @Test
     void format(@Mock StaticContext staticContext, @Mock BaseEnvironment baseEnvironment) {
-        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, Locale.GERMANY, null, null);
+        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, Locale.GERMANY, null, null, Map.of());
         BuiltIn builtIn = builtIns.get(builder.of("format"));
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
         context.push(Locale.US);

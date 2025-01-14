@@ -54,7 +54,7 @@ public class ProcessContext {
         this.resourceBundleName = context.resourceBundleName;
     }
 
-    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter) {
         this.baseEnvironment = baseEnvironment;
         this.environment = new VariableEnvironment(baseEnvironment);
         this.writer = writer;
@@ -62,7 +62,7 @@ public class ProcessContext {
         this.builtIns = context.builtIns();
         this.outputs = context.outputs();
         this.functions = context.functions();
-        this.formatters.addFirst(context.formatter());
+        this.formatters.addFirst(formatter);
         this.locals.addFirst(locale);
         this.zoneIds.addFirst(zoneId);
         this.outputFormats.addFirst(outputFormat);

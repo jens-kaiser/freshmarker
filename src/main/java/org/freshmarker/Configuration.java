@@ -78,6 +78,7 @@ public final class Configuration {
         private final StaticContext context;
         private final Clock clock;
         private final SimpleFeatureSet featureSet;
+        private final Map<Class<? extends TemplateObject>, Formatter> formatter;
 
         TemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
             this.configuration = configuration;
@@ -87,29 +88,34 @@ public final class Configuration {
             this.context = context;
             this.clock = clock;
             this.featureSet = featureSet;
+            this.formatter = new HashMap<>(context.formatter());
         }
 
         public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
-            context.formatter().put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
-            context.formatter().put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
-            context.formatter().put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
-            return this;
+            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+            newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
+            newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
+            newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
+            return newBuilder;
         }
 
         public TemplateBuilder withDateTimeFormat(String pattern) {
-            context.formatter().put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
-            context.formatter().put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
-            return this;
+            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+            newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
+            newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
+            return newBuilder;
         }
 
         public TemplateBuilder withDateFormat(String pattern) {
-            context.formatter().put(TemplateLocalDate.class, new DateFormatter(pattern));
-            return this;
+            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+            newBuilder.formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
+            return newBuilder;
         }
 
         public TemplateBuilder withTimeFormat(String pattern) {
-            context.formatter().put(TemplateLocalTime.class, new TimeFormatter(pattern));
-            return this;
+            TemplateBuilder newBuilder =  new TemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+            newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern));
+            return newBuilder;
         }
 
         public TemplateBuilder withClock(Clock clock) {
@@ -182,7 +188,7 @@ public final class Configuration {
 
         public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
             BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.builtInVariableProviders, clock);
-            return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer);
+            return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, formatter);
         }
     }
 
