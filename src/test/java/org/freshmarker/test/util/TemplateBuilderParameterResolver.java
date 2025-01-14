@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import java.time.ZoneId;
 import java.util.Locale;
 
 public class TemplateBuilderParameterResolver implements ParameterResolver {
@@ -20,6 +21,6 @@ public class TemplateBuilderParameterResolver implements ParameterResolver {
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         ExtensionContext.Store store = extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL);
         Configuration configuration = store.getOrComputeIfAbsent(Configuration.class, k -> new Configuration(), Configuration.class);
-        return configuration.builder().withLocale(Locale.GERMANY);
+        return configuration.builder().withLocale(Locale.GERMANY).withZoneId(ZoneId.of("CET"));
     }
 }
