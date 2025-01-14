@@ -239,7 +239,7 @@ public final class TemporalPluginProvider implements PluginProvider {
         formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss VV"));
         formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss"));
         formatter.put(TemplateLocalDate.class, new DateFormatter("yyyy-MM-dd"));
-        formatter.put(TemplateLocalTime.class, new TimeFormatter("hh:mm:ss"));
+        formatter.put(TemplateLocalTime.class, new TimeFormatter("hh:mm:ss", ZoneOffset.UTC));
         formatter.put(TemplateDuration.class, new DurationFormatter());
         formatter.put(TemplatePeriod.class, new DurationFormatter());
         formatter.put(TemplateMonthDay.class, new DateTimeFormatter("MM-dd"));

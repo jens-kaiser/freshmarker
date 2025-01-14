@@ -1,5 +1,6 @@
 package org.freshmarker.core.formatter;
 
+import java.time.ZoneId;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
@@ -13,15 +14,15 @@ public class TimeFormatter implements Formatter {
 
   private final LocaleLocal<java.time.format.DateTimeFormatter> formatter;
 
-  public TimeFormatter(String pattern) {
-    this.formatter = LocaleLocal.withInitial(l -> getDateTimeFormatter(pattern, l));
+  public TimeFormatter(String pattern, ZoneId zoneId) {
+    this.formatter = LocaleLocal.withInitial(l -> getDateTimeFormatter(pattern, l).withZone(zoneId));
   }
 
   private static java.time.format.DateTimeFormatter getDateTimeFormatter(String pattern, Locale l) {
     if (Set.of("full", "long", "medium", "short").contains(pattern)) {
       FormatStyle style = FormatStyle.valueOf(pattern.toUpperCase());
       String localizedDateTimePattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(null, style, IsoChronology.INSTANCE, l);
-      return java.time.format.DateTimeFormatter.ofPattern(localizedDateTimePattern);
+      return java.time.format.DateTimeFormatter.ofPattern(localizedDateTimePattern, l);
     }
 
     return java.time.format.DateTimeFormatter.ofPattern(pattern, l);

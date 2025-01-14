@@ -60,7 +60,7 @@ public class SettingFragment implements Fragment {
     private static void processTimeFormat(ProcessContext context, TemplateObject setting) {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
-                TemplateLocalTime.class, new TimeFormatter(value), TemplateClassicTime.class, new ClassicTimeFormatter(value));
+                TemplateLocalTime.class, new TimeFormatter(value, context.getZoneId()), TemplateClassicTime.class, new ClassicTimeFormatter(value));
         context.pushFormatter(formatter);
     }
 
