@@ -6,7 +6,6 @@ import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.FileSystemTemplateLoader;
 import org.freshmarker.Template;
 import org.freshmarker.core.IncludeDirectiveFeature;
-import org.freshmarker.core.features.TemplateFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

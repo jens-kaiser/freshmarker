@@ -36,7 +36,7 @@ Using the template engine is very easy.
 First the configuration has to be generated and then a template instance has to be created with its help.
 Finally, the template is processed with the data from the model. The return value of the process method is the result of template processing.
 
-Since version 1.5.0, the `Template` is no longer created directly via the `Configuration`, but via the `TemplateBuilder`.
+Since version 1.5.0, the `Template` is no longer created directly via the `Configuration`, but via the `DefaultTemplateBuilder`.
 
 .Example Engine Call
 [source,java,role="primary"]
