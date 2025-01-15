@@ -167,7 +167,7 @@ private final Map<Class<? extends TemplateObject>, Formatter> formatter;
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
         Template template = new Template(this, context.templateLoader(), importPath);
-        List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null, featureSet), new ArrayList<>());
+        List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null, new SimpleFeatureSet(featureSet), 0), new ArrayList<>());
         fragments.forEach(template.getRootFragment()::addFragment);
         return template;
     }

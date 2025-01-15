@@ -17,12 +17,14 @@ public class ImportBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final String nameSpace;
     private final FeatureSet featureSet;
     private FragmentBuilder fragmentBuilder;
+    private final int includeLevel;
 
-    public ImportBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet) {
+    public ImportBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet, int includeLevel) {
         this.template = template;
         this.configuration = configuration;
         this.nameSpace = nameSpace;
         this.featureSet = featureSet;
+        this.includeLevel = includeLevel;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class ImportBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
-        fragmentBuilder = Objects.requireNonNullElseGet(fragmentBuilder, () -> new FragmentBuilder(template, configuration, nameSpace, featureSet));
+        fragmentBuilder = Objects.requireNonNullElseGet(fragmentBuilder, () -> new FragmentBuilder(template, configuration, nameSpace, featureSet, includeLevel + 1));
         return ftl.accept(fragmentBuilder, input);
     }
 }

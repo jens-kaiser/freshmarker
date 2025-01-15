@@ -11,6 +11,10 @@ public class SimpleFeatureSet implements FeatureSet {
         this.templateFeatures = templateFeatures;
     }
 
+    public SimpleFeatureSet(SimpleFeatureSet featureSet) {
+        this((BitSet)featureSet.bitSet.clone(), featureSet.templateFeatures);
+    }
+
     @Override
     public boolean isEnabled(TemplateFeature feature) {
         return bitSet.get(templateFeatures.getFlag(feature));

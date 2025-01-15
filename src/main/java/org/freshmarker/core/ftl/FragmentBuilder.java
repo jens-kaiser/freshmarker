@@ -74,12 +74,14 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final Configuration configuration;
     private final String nameSpace;
     private final FeatureSet featureSet;
+    private final int includeLevel;
 
-    public FragmentBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet) {
+    public FragmentBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet, int includeLevel) {
         this.template = template;
         this.configuration = configuration;
         this.nameSpace = nameSpace;
         this.featureSet = featureSet;
+        this.includeLevel = includeLevel;
     }
 
     @Override
@@ -308,7 +310,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            root.accept(new ImportBuilder(template, configuration, namespace, featureSet), new ArrayList<>());
+            root.accept(new ImportBuilder(template, configuration, namespace, featureSet, includeLevel + 1), new ArrayList<>());
             return input;
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
@@ -319,6 +321,10 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     public List<Fragment> visit(IncludeInstruction ftl, List<Fragment> input) {
         if (featureSet.isDisabled(IncludeDirectiveFeature.ENABLED)) {
             logger.info("include directive ignored");
+            return List.of();
+        }
+        if (includeLevel > 4) {
+            logger.info("include level exceeded");
             return List.of();
         }
 
@@ -341,7 +347,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            List<Fragment> fragments = root.accept(this, new ArrayList<>());
+            List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, nameSpace, featureSet, includeLevel + 1), new ArrayList<>());
             fragments.forEach(template.getRootFragment()::addFragment);
             return input;
         } catch (IOException e) {

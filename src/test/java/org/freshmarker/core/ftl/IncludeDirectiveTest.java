@@ -64,4 +64,11 @@ class IncludeDirectiveTest {
         Template template = builder.with(IncludeDirectiveFeature.ENABLED).without(IncludeDirectiveFeature.PARSE).getTemplate("template", "<#include 'copyright.fmi'>");
         assertEquals("Copyright 2022-${year} ${me}<br>\nAll rights reserved.", template.process(Map.of("me", "Jens Kaiser", "year", Year.now())));
     }
+
+    @Test
+    void recursiveInclude() throws IOException {
+        Files.writeString(fileSystem.getPath("recursive.fmt"), "recursive <#include 'recursive.fmt'>");
+        Template template = builder.with(IncludeDirectiveFeature.ENABLED).getTemplate("template", "<#include 'recursive.fmt'>");
+        assertEquals("recursive recursive recursive recursive recursive ", template.process(Map.of()));
+    }
 }
