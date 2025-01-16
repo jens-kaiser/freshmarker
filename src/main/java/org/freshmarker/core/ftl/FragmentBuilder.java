@@ -323,7 +323,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             logger.info("include directive ignored");
             return List.of();
         }
-        if (includeLevel > 4) {
+        if (handleLimitIncludeLevel(ftl)) {
             logger.info("include level exceeded");
             return List.of();
         }
@@ -353,6 +353,17 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
         }
+    }
+
+    private boolean handleLimitIncludeLevel(IncludeInstruction ftl) {
+        if (featureSet.isDisabled(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL)) {
+            return false;
+        }
+        boolean isLimitExceeded = includeLevel > 4;
+        if (isLimitExceeded && featureSet.isDisabled(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR)) {
+            throw new ParsingException("include level exceeded: " + includeLevel, ftl);
+        }
+        return isLimitExceeded;
     }
 
     @Override

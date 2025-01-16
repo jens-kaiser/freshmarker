@@ -119,6 +119,8 @@ public final class Configuration {
         outputs.put("ADOC", StandardOutputFormats.ADOC);
 
         templateFeatures.addSwitches(IncludeDirectiveFeature.ENABLED, false);
+        templateFeatures.addSwitches(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, true);
+        templateFeatures.addSwitches(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR, false);
         templateFeatures.addSwitches(IncludeDirectiveFeature.PARSE, true);
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
