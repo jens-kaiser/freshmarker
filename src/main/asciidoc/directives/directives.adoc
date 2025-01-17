@@ -149,7 +149,7 @@ The file name parameter is the name of the import file and will be loaded by def
 <@m.copyright/>
 ----
 
-=== Include Directive (experimental, since 1.6.10)
+=== Include Directive (experimental, since 1.7.0)
 
 Sub-templates can be loaded by the `include` directive. This feature must be activated with `templateBuilder.with(IncludeDirectiveFeature.ENABLED)`.
 
@@ -166,6 +166,8 @@ The file name parameter is the name of the include file and will be loaded by de
 ----
 
 If the content of the include does not need to be processed, this can be turned off using the parse attribute. In this case, the content of the include will be included as simple text.
+
+If all includes do not need to be parsed, automatic parsing can be deactivated centrally using the feature `IncludeDirectiveFeature.PARSE_BY_DEFAULT`. In this case, the parse attribute in the directive is no longer required.
 
 === Brick Directive (since 1.6.6)
 
