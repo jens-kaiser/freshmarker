@@ -12,11 +12,27 @@ public enum IncludeDirectiveFeature implements TemplateFeature {
      */
     ENABLED,
     /**
-     * Feature that determines whether the content of include directives is parsed.
+     * Feature that determines whether the level of includes is limited
      *<p>
-     * Default value is 'true', meaning that the content is parsed.
+     * Default value is 'true', meaning that the level of includes is limited to the depth of 5.
      *<p>
      * Feature is enabled by default.
      */
-    PARSE
+    LIMIT_INCLUDE_LEVEL,
+    /**
+     * Feature that determines whether the exceeded level of includes is an error
+     *<p>
+     * Default value is 'true', meaning that the error is ignored.
+     *<p>
+     * Feature is disabled by default.
+     */
+    IGNORE_LIMIT_EXCEEDED_ERROR,
+    /**
+     * Feature that determines whether the content of include directives is parsed by default.
+     *<p>
+     * Default value is 'true', meaning that the content is parsed by default.
+     *<p>
+     * Feature is enabled by default.
+     */
+    PARSE_BY_DEFAULT
 }
