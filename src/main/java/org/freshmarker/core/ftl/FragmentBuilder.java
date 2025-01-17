@@ -329,13 +329,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
 
         String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
-        int index = ftl.get(4).getType() == TokenType.SEMICOLON ? 5 : 4;
-        Map<String, Object> parameters = new HashMap<>();
-        for (int i = index; i < ftl.size() - 1; i += 3) {
-            parameters.put(ftl.get(i).toString(), ftl.get(i+2).accept(InterpolationBuilder.INSTANCE, null));
-        }
         try {
-            TemplateBoolean parsedIncludeDefault = TemplateBoolean.from(featureSet.isEnabled(IncludeDirectiveFeature.PARSE));
+            Map<String, Object> parameters = getParameters(ftl);
+            TemplateBoolean parsedIncludeDefault = TemplateBoolean.from(featureSet.isEnabled(IncludeDirectiveFeature.PARSE_BY_DEFAULT));
             logger.info("include parsed default: {}", parsedIncludeDefault);
             if (TemplateBoolean.FALSE.equals(parameters.getOrDefault("parse", parsedIncludeDefault))) {
                 input.add(new ConstantFragment(template.getTemplateLoader().getImport(template.getPath(), path)));
@@ -353,6 +349,15 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
         }
+    }
+
+    private static Map<String, Object> getParameters(IncludeInstruction ftl) {
+        int index = ftl.get(4).getType() == TokenType.SEMICOLON ? 5 : 4;
+        Map<String, Object> parameters = new HashMap<>();
+        for (int i = index; i < ftl.size() - 1; i += 3) {
+            parameters.put(ftl.get(i).toString(), ftl.get(i + 2).accept(InterpolationBuilder.INSTANCE, null));
+        }
+        return parameters;
     }
 
     private boolean handleLimitIncludeLevel(IncludeInstruction ftl) {

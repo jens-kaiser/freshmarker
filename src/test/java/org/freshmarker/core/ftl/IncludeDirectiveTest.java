@@ -61,7 +61,7 @@ class IncludeDirectiveTest {
     @Test
     void notParsedDefaultedInclude() throws IOException {
         Files.writeString(fileSystem.getPath("copyright.fmi"), "Copyright 2022-${year} ${me}<br>\nAll rights reserved.");
-        Template template = builder.with(IncludeDirectiveFeature.ENABLED).without(IncludeDirectiveFeature.PARSE).getTemplate("template", "<#include 'copyright.fmi'>");
+        Template template = builder.with(IncludeDirectiveFeature.ENABLED).without(IncludeDirectiveFeature.PARSE_BY_DEFAULT).getTemplate("template", "<#include 'copyright.fmi'>");
         assertEquals("Copyright 2022-${year} ${me}<br>\nAll rights reserved.", template.process(Map.of("me", "Jens Kaiser", "year", Year.now())));
     }
 

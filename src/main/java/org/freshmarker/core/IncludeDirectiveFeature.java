@@ -28,11 +28,11 @@ public enum IncludeDirectiveFeature implements TemplateFeature {
      */
     IGNORE_LIMIT_EXCEEDED_ERROR,
     /**
-     * Feature that determines whether the content of include directives is parsed.
+     * Feature that determines whether the content of include directives is parsed by default.
      *<p>
-     * Default value is 'true', meaning that the content is parsed.
+     * Default value is 'true', meaning that the content is parsed by default.
      *<p>
      * Feature is enabled by default.
      */
-    PARSE
+    PARSE_BY_DEFAULT
 }
