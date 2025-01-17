@@ -149,7 +149,7 @@ The file name parameter is the name of the import file and will be loaded by def
 <@m.copyright/>
 ----
 
-=== Include Directive (experimental, since 1.6.10)
+=== Include Directive (experimental, since 1.7.0)
 
 Sub-templates can be loaded by the `include` directive. This feature must be activated with `templateBuilder.with(IncludeDirectiveFeature.ENABLED)`.
 

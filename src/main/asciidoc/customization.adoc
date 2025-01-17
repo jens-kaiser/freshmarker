@@ -8,7 +8,7 @@ TBD
 
 TBD
 
-==== With Features (since 1.6.10)
+==== With Features (since 1.7.0)
 
 The `with` and `without` Methods can be used to modify the behaviour of FreshMarker.
 The value of the methods is a feature constant to activate or deactivate the corresponding feature.

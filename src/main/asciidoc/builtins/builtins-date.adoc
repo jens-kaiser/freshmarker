@@ -105,7 +105,7 @@ m|P2D
 |duration
 |===
 
-==== `year` Built-In (since 1.6.10)
+==== `year` Built-In (since 1.7.0)
 
 This built-in returns the year of the value.footnote:legacyTemporal[]
 
@@ -117,7 +117,7 @@ m|1968
 |year
 |===
 
-==== `month` Built-In (since 1.6.10)
+==== `month` Built-In (since 1.7.0)
 
 This built-in returns the month of the value.footnote:legacyTemporal[]
 
@@ -129,7 +129,7 @@ m|AUGUST
 |month
 |===
 
-==== `day` Built-In (since 1.6.10)
+==== `day` Built-In (since 1.7.0)
 
 This built-in returns the day of month of the value as a number.footnote:legacyTemporal[]
 
