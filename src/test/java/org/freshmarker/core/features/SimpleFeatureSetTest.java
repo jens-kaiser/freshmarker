@@ -1,10 +1,7 @@
 package org.freshmarker.core.features;
 
-import org.freshmarker.core.IncludeDirectiveFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.BitSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,9 +41,21 @@ class SimpleFeatureSetTest {
     }
 
     @Test
+    void notChangingWith() {
+        SimpleFeatureSet derived = simpleFeatureSet.with(DemoFeature.FIRST);
+        assertSame(simpleFeatureSet, derived);
+    }
+
+    @Test
     void without() {
         SimpleFeatureSet derived = simpleFeatureSet.without(DemoFeature.FIRST);
         assertTrue(simpleFeatureSet.isEnabled(DemoFeature.FIRST));
         assertTrue(derived.isDisabled(DemoFeature.FIRST));
+    }
+
+    @Test
+    void notChangingWithout() {
+        SimpleFeatureSet derived = simpleFeatureSet.without(DemoFeature.SECOND);
+        assertSame(simpleFeatureSet, derived);
     }
 }
