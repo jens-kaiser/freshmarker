@@ -10,12 +10,12 @@ TBD
 
 ==== With Features (since 1.7.0)
 
-The `with` and `without` Methods can be used to modify the behaviour of FreshMarker.
+The `with` and `without` methods can be used to modify the behaviour of _FreshMarker_.
 The value of the methods is a feature constant to activate or deactivate the corresponding feature.
 
 ===== Include Directive Features
 
-Diese Features werden durch Konstanten in der Klasse IncludeDirectiveFeature gesteuert.
+These features are controlled by constants in the `IncludeDirectiveFeature` class.
 
 [cols="2,4,1"]
 |===
