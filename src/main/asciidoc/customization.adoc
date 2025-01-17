@@ -8,6 +8,36 @@ TBD
 
 TBD
 
+==== With Features (since 1.6.10)
+
+The `with` and `without` Methods can be used to modify the behaviour of FreshMarker.
+The value of the methods is a feature constant to activate or deactivate the corresponding feature.
+
+===== Include Directive Features
+
+Diese Features werden durch Konstanten in der Klasse IncludeDirectiveFeature gesteuert.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| ENABLED
+| Feature that determines whether include directives are evaluated.
+| `false`
+
+| LIMIT_INCLUDE_LEVEL
+| Feature that determines whether the level of includes is limited.
+| `true`
+
+| IGNORE_LIMIT_EXCEEDED_ERROR
+| Feature that determines whether the exceeded level of includes is an error.
+| `false`
+
+| PARSE_BY_DEFAULT
+| Feature that determines whether the content of include directives is parsed by default.
+| `true`
+|===
+
 ==== With Clock (since 1.6.9)
 
 The `withClock` method can be used to create a `DefaultTemplateBuilder` that generates templates with a modified clock. This allows templates to generate an output as it would have looked at a different time. This applies in particular to the built-in variable `.now`.
@@ -52,7 +82,6 @@ TBD
 Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormats.ADOC);
 ----
-
 
 ==== Custom Formatter
 
