@@ -47,6 +47,8 @@ include::builtins-date.adoc[]
 
 include::builtins-time.adoc[]
 
+include::builtins-temporals.adoc[]
+
 include::builtins-sequence.adoc[]
 
 include::builtins-range.adoc[]
