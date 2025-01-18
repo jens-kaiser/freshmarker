@@ -4,7 +4,7 @@
 ====
 The Random built-ins are included via an additional artefact.
 
-[source,xml]
+[source,xml,subs="attributes+"]
 ----
 <dependency>
   <groupId>de.schegge</groupId>
