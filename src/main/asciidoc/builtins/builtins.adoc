@@ -62,3 +62,5 @@ include::builtins-filepath.adoc[]
 include::builtins-locale.adoc[]
 
 include::builtins-version.adoc[]
+
+include::builtins-random.adoc[]

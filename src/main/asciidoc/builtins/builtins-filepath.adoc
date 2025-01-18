@@ -4,12 +4,12 @@
 ====
 Since _FreshMarker 1.3.2_ the File and Paths BuiltIns are included via an additional artefact.
 
-[source,xml]
+[source,xml,subs="attributes+"]
 ----
 <dependency>
   <groupId>de.schegge</groupId>
   <artifactId>freshmarker-file</artifactId>
-  <version>1.0.1</version>
+  <version>{plugin-file-version}</version>
 </dependency>
 ----
 ====

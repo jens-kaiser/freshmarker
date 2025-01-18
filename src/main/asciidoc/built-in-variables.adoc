@@ -1,0 +1,39 @@
+== Built-In Variables
+
+=== Now Built-In Variable
+
+The `.now` built-in variable of Type `TemplateZoneDateTime`  provides the current timestamp.
+
+=== Locale Built-In Variable
+
+The `.locale` built-in variable of Type `TemplateLocale`  provides the current locale.
+
+=== Country Built-In Variable
+
+The `.country` built-in variable of Type `TemplateString`  provides the current locales country code.
+
+=== Language Built-In Variable
+
+The `.laguage` built-in variable of Type `TemplateString`  provides the current locales language code.
+
+=== Version Built-In Variable
+
+The `.version` built-in variable of Type `TemplateVersion`  provides the current FreshMarker version.
+
+=== Random Built-In Variable
+
+[NOTE]
+====
+The  `.random` built-in variable is included via an additional artefact.
+
+[source,xml]
+----
+<dependency>
+  <groupId>de.schegge</groupId>
+  <artifactId>{plugin-random-version}</artifactId>
+  <version>1.0.1</version>
+</dependency>
+----
+====
+
+The `.random` built-in variable of Type `TemplateRandom` can be used to generate random value via several built-ins.
