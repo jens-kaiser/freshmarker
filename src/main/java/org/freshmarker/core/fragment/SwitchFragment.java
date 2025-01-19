@@ -2,7 +2,9 @@ package org.freshmarker.core.fragment;
 
 import ftl.Node;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.slf4j.Logger;
