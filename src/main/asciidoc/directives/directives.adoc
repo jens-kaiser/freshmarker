@@ -28,24 +28,7 @@ less ten
 *</#if>*
 ----
 
-=== Switch/Case/Default Directive
-
-This directive generates conditional output.
-But unlike the _If Directive_, only one expression in the `switch` statement is evaluated.
-Each `case` statement handles a possible outcome of the evaluation.
-If none of the specified `case` statements match, then the optional `default` statement is used.
-
-NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `break` statements are unnecessary and therefor not supported.
-
-[source,freshmarker]
-----
-<#switch color>
-<#case 'RED'>#FF0000
-<#case 'GREEN'>#00FF00
-<#case 'BLUE'>#0000FF
-<#default>${color}
-</#switch>
-----
+include::directives-switch.adoc[]
 
 include::directives-list.adoc[]
 
@@ -165,7 +148,7 @@ The file name parameter is the name of the include file and will be loaded by de
 <#import 'macros.fmt' parse=false/>
 ----
 
-If the content of the include does not need to be processed, this can be turned off using the parse attribute. In this case, the content of the include will be included as simple text.
+If the included content does not need to be processed, this can be turned off using the parse attribute. In this case, the content of the include will be included as simple text.
 
 If all includes do not need to be parsed, automatic parsing can be deactivated centrally using the feature `IncludeDirectiveFeature.PARSE_BY_DEFAULT`. In this case, the parse attribute in the directive is no longer required.
 

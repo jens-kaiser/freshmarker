@@ -2,6 +2,7 @@ package org.freshmarker.core.fragment;
 
 import ftl.Node;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
@@ -34,7 +35,8 @@ public class SwitchFragment extends AbstractConditionalFragment {
     public void process(ProcessContext context) {
         TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
         for (ConditionalFragment fragment : fragments) {
-            if (switchValue.equals(evaluatePrimitive(fragment.conditional(), context, fragment.node()))) {
+            TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
+            if (isFound(evaluated, switchValue)) {
                 fragment.process(context);
                 return;
             }
@@ -47,7 +49,8 @@ public class SwitchFragment extends AbstractConditionalFragment {
         try {
             TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
             for (ConditionalFragment fragment : fragments) {
-                if (switchValue.equals(evaluatePrimitive(fragment.conditional(), context, fragment.node()))) {
+                TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
+                if (isFound(evaluated, switchValue)) {
                     return fragment.reduce(context);
                 }
             }
@@ -56,5 +59,12 @@ public class SwitchFragment extends AbstractConditionalFragment {
             log.info("cannot reduce: {}", e.getMessage(), e);
         }
         return new SwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
+    }
+
+    private boolean isFound(TemplateObject evaluated, TemplatePrimitive<?> switchValue) {
+        if (evaluated instanceof TemplatePrimitive<?> primitive) {
+            return primitive.equals(switchValue);
+        }
+        throw new ProcessException("invalid value: " + evaluated, node);
     }
 }
