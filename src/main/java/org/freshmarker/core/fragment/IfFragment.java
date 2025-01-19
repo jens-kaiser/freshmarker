@@ -35,7 +35,7 @@ public class IfFragment extends AbstractConditionalFragment {
     }
 
     private boolean filterByConditional(ProcessContext context, ConditionalFragment conditionalFragment) {
-        return TemplateBoolean.TRUE == evaluatePrimitive(conditionalFragment.conditional(), context, conditionalFragment.node());
+        return TemplateBoolean.TRUE == evaluateConditional(conditionalFragment.conditional(), context, conditionalFragment.node());
     }
 
     @Override
