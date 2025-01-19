@@ -379,7 +379,7 @@ Switch #SwitchInstruction :
     Expression
     <CLOSE_TAG>
     [<WHITESPACE>]
-    (Case)*
+    (Case|SwitchOn)*
     [
      SCAN 2 Default
     ]
@@ -392,6 +392,14 @@ Case #CaseInstruction :
     =>||
     <BLANK>
     Expression <CLOSE_TAG> Block
+;
+
+SwitchOn #SwitchOnInstruction :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <ON>
+    =>||
+    <BLANK>
+    Expression (<COMMA> Expression)* <CLOSE_TAG> Block
 ;
 
 Default #DefaultInstruction : 
