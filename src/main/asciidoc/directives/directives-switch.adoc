@@ -30,12 +30,11 @@ NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `br
 </#switch>
 ----
 
-The individual case statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES` feature.
+The `case` statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES`.footnote:switch-flag[feature for switch directives exists since version 1.7.1]
 
-In addition, the case statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES`.
-This feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES` is also activated.
+In addition, the individual `case` statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES` feature. uThis feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES` is also activated.footnote:switch-flag[]
 
-=== Switch/On/Default Directive
+=== Switch/On/Default Directive (since 1.7.1)
 
 This directive generates conditional output.
 Each `on` statement handles a possible outcome of the evaluation.
@@ -54,7 +53,6 @@ The difference between `on` and `cas` statement is that an `on` statement can co
 </#switch>
 ----
 
-The individual case statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS` feature.
+The `on` statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS`.
 
-In addition, the case statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS`.
-This feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS` is also activated.
+In addition, the individual `on` statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_ONS` feature. This feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS` is also activated.
