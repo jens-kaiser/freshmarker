@@ -5,6 +5,7 @@ import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
+import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
@@ -122,6 +123,10 @@ public final class Configuration {
         templateFeatures.addSwitches(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, true);
         templateFeatures.addSwitches(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR, false);
         templateFeatures.addSwitches(IncludeDirectiveFeature.PARSE_BY_DEFAULT, true);
+        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES, false);
+        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS, false);
+        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES, false);
+        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_ONS, false);
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }

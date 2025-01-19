@@ -4,7 +4,6 @@ import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class SwitchFragment extends AbstractConditionalFragment {
         TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
         for (ConditionalFragment fragment : fragments) {
             TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
-            if (isFound(context, evaluated, switchValue)) {
+            if (isFound(evaluated, switchValue)) {
                 fragment.process(context);
                 return;
             }
@@ -51,7 +50,7 @@ public class SwitchFragment extends AbstractConditionalFragment {
             TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
             for (ConditionalFragment fragment : fragments) {
                 TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
-                if (isFound(context, evaluated, switchValue)) {
+                if (isFound(evaluated, switchValue)) {
                     return fragment.reduce(context);
                 }
             }
@@ -62,18 +61,10 @@ public class SwitchFragment extends AbstractConditionalFragment {
         return new SwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
     }
 
-    private boolean isFound(ProcessContext context, TemplateObject evaluated, TemplatePrimitive<?> switchValue) {
-        return switch (evaluated) {
-            case TemplatePrimitive<?> primitive -> primitive.equals(switchValue);
-            case TemplateListSequence listSequence -> {
-                for (int i = 0; i < listSequence.size(context); i++) {
-                    if (listSequence.get(context, i).evaluateToObject(context).equals(switchValue)) {
-                        yield true;
-                    }
-                }
-                yield false;
-            }
-            default -> throw new ProcessException("invalid value: " + evaluated, node);
-        };
+    private boolean isFound(TemplateObject evaluated, TemplatePrimitive<?> switchValue) {
+        if (evaluated instanceof TemplatePrimitive<?> primitive) {
+            return primitive.equals(switchValue);
+        }
+        throw new ProcessException("invalid value: " + evaluated, node);
     }
 }

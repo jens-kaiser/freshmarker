@@ -126,7 +126,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(SwitchInstruction ftl, List<Fragment> input) {
-        input.add(ftl.accept(new SwitchFragmentBuilder(this), null));
+        input.add(ftl.accept(new SwitchFragmentBuilder(this, featureSet), null));
         return input;
     }
 

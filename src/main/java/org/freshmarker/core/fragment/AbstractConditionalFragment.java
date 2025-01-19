@@ -29,19 +29,11 @@ public abstract class AbstractConditionalFragment implements Fragment {
     }
 
     protected TemplatePrimitive<?> evaluatePrimitive(TemplateObject conditional, ProcessContext context, Node node) {
-        try {
-            TemplateObject templateObject = conditional.evaluateToObject(context);
-            if (templateObject instanceof TemplatePrimitive<?> primitive) {
-                return primitive;
-            }
-            throw new WrongTypeException("not a primitive type", node);
-        } catch (UnsupportedBuiltInException e) {
-            throw new UnsupportedBuiltInException(e.getMessage(), node, e);
-        } catch (WrongTypeException e) {
-            throw new WrongTypeException(e.getMessage(), node, e);
-        } catch (ProcessException e) {
-            throw new ProcessException(e.getMessage(), node, e);
+        TemplateObject templateObject = evaluateConditional(conditional, context, node);
+        if (templateObject instanceof TemplatePrimitive<?> primitive) {
+            return primitive;
         }
+        throw new WrongTypeException("not a primitive type", node);
     }
 
     protected TemplateObject evaluateConditional(TemplateObject conditional, ProcessContext context, Node node) {
@@ -59,5 +51,9 @@ public abstract class AbstractConditionalFragment implements Fragment {
     @Override
     public int getSize() {
         return fragments.stream().mapToInt(Fragment::getSize).sum() + endFragment.getSize() + 1;
+    }
+
+    public List<? extends Class<?>> getConditionals() {
+        return fragments.stream().map(ConditionalFragment::conditional).map(TemplateObject::getModelType).toList();
     }
 }
