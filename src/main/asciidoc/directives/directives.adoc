@@ -28,43 +28,7 @@ less ten
 *</#if>*
 ----
 
-=== Switch/Case/Default Directive
-
-This directive generates conditional output.
-Each `case` statement handles a possible outcome of the evaluation.
-With the `switch` directive, the expressions of the `case` statements are compared one after the other with the expression in the `switch` statement. The first `case` statement that matches is used as the output.
-If none of the specified `case` statements match, then the optional `default` statement is used.
-
-NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `break` statements are unnecessary and therefor not supported.
-
-[source,freshmarker]
-----
-<#switch color>
-<#case 'RED'>#FF0000
-<#case 'GREEN'>#00FF00
-<#case 'BLUE'>#0000FF
-<#default>${color}
-</#switch>
-----
-
-=== Switch/On/Default Directive
-
-This directive generates conditional output.
-Each `on` statement handles a possible outcome of the evaluation.
-With the `on` directive, the expressions of the `case` statements are compared one after the other with the expression in the `sitch` statement. The first `on` statement that matches is used as the output.
-If none of the specified `on` statements match, then the optional `default` statement is used.
-
-The difference between `on` and `cas` statement is that an `on` statement can contain several comparison expressions.
-
-[source,freshmarker]
-----
-<#switch color>
-<#on 'RED', 'Crimson', 'DarkRed'>#FF0000
-<#case 'GREEN'>#00FF00
-<#case 'BLUE', 'Navy'>#0000FF
-<#default>${color}
-</#switch>
-----
+include::directives-switch.adoc[]
 
 include::directives-list.adoc[]
 
@@ -184,7 +148,7 @@ The file name parameter is the name of the include file and will be loaded by de
 <#import 'macros.fmt' parse=false/>
 ----
 
-If the content of the include does not need to be processed, this can be turned off using the parse attribute. In this case, the content of the include will be included as simple text.
+If the included content does not need to be processed, this can be turned off using the parse attribute. In this case, the content of the include will be included as simple text.
 
 If all includes do not need to be parsed, automatic parsing can be deactivated centrally using the feature `IncludeDirectiveFeature.PARSE_BY_DEFAULT`. In this case, the parse attribute in the directive is no longer required.
 
