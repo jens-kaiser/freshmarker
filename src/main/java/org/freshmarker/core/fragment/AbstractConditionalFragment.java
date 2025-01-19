@@ -44,6 +44,18 @@ public abstract class AbstractConditionalFragment implements Fragment {
         }
     }
 
+    protected TemplateObject evaluateConditional(TemplateObject conditional, ProcessContext context, Node node) {
+        try {
+            return conditional.evaluateToObject(context);
+        } catch (UnsupportedBuiltInException e) {
+            throw new UnsupportedBuiltInException(e.getMessage(), node, e);
+        } catch (WrongTypeException e) {
+            throw new WrongTypeException(e.getMessage(), node, e);
+        } catch (ProcessException e) {
+            throw new ProcessException(e.getMessage(), node, e);
+        }
+    }
+
     @Override
     public int getSize() {
         return fragments.stream().mapToInt(Fragment::getSize).sum() + endFragment.getSize() + 1;

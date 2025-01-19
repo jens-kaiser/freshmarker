@@ -31,8 +31,8 @@ less ten
 === Switch/Case/Default Directive
 
 This directive generates conditional output.
-But unlike the _If Directive_, only one expression in the `switch` statement is evaluated.
 Each `case` statement handles a possible outcome of the evaluation.
+With the `switch` directive, the expressions of the `case` statements are compared one after the other with the expression in the `switch` statement. The first `case` statement that matches is used as the output.
 If none of the specified `case` statements match, then the optional `default` statement is used.
 
 NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `break` statements are unnecessary and therefor not supported.
@@ -43,6 +43,25 @@ NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `br
 <#case 'RED'>#FF0000
 <#case 'GREEN'>#00FF00
 <#case 'BLUE'>#0000FF
+<#default>${color}
+</#switch>
+----
+
+=== Switch/On/Default Directive
+
+This directive generates conditional output.
+Each `on` statement handles a possible outcome of the evaluation.
+With the `on` directive, the expressions of the `case` statements are compared one after the other with the expression in the `sitch` statement. The first `on` statement that matches is used as the output.
+If none of the specified `on` statements match, then the optional `default` statement is used.
+
+The difference between `on` and `cas` statement is that an `on` statement can contain several comparison expressions.
+
+[source,freshmarker]
+----
+<#switch color>
+<#on 'RED', 'Crimson', 'DarkRed'>#FF0000
+<#case 'GREEN'>#00FF00
+<#case 'BLUE', 'Navy'>#0000FF
 <#default>${color}
 </#switch>
 ----

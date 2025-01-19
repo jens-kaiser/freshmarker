@@ -177,6 +177,8 @@ TOKEN :
     |
     <CASE : "case">
     |
+    <ON : "on">
+    |
     <MACRO : "macro">
     |
     <LOCAL : "local">

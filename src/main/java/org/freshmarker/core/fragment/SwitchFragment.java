@@ -34,7 +34,8 @@ public class SwitchFragment extends AbstractConditionalFragment {
     public void process(ProcessContext context) {
         TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
         for (ConditionalFragment fragment : fragments) {
-            if (switchValue.equals(evaluatePrimitive(fragment.conditional(), context, fragment.node()))) {
+            TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
+            if (isFound(context, evaluated, switchValue)) {
                 fragment.process(context);
                 return;
             }
@@ -47,7 +48,8 @@ public class SwitchFragment extends AbstractConditionalFragment {
         try {
             TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
             for (ConditionalFragment fragment : fragments) {
-                if (switchValue.equals(evaluatePrimitive(fragment.conditional(), context, fragment.node()))) {
+                TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
+                if (isFound(context, evaluated, switchValue)) {
                     return fragment.reduce(context);
                 }
             }
@@ -56,5 +58,20 @@ public class SwitchFragment extends AbstractConditionalFragment {
             log.info("cannot reduce: {}", e.getMessage(), e);
         }
         return new SwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
+    }
+
+    private boolean isFound(ProcessContext context, TemplateObject evaluated, TemplatePrimitive<?> switchValue) {
+        return switch (evaluated) {
+            case TemplatePrimitive<?> primitive -> primitive.equals(switchValue);
+            case TemplateListSequence listSequence -> {
+                for (int i = 0; i < listSequence.size(context); i++) {
+                    if (listSequence.get(context, i).evaluateToObject(context).equals(switchValue)) {
+                        yield true;
+                    }
+                }
+                yield false;
+            }
+            default -> throw new ProcessException("invalid value: " + evaluated, node);
+        };
     }
 }

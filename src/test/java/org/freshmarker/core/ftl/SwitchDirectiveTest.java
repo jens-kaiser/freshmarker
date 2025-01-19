@@ -66,4 +66,37 @@ class SwitchDirectiveTest {
                 "test: <#switch text><#case 'AAA'>AAA1<#default></#switch>"));
         assertEquals("missing block at test:1:38 '<#default>'", exception.getMessage());
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "AAA, test: AAA1",
+            "BBB, test: BBB2",
+            "CCC, 'test: '",
+    })
+    void switchOn(String text, String expected, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test",
+                "test: <#switch text><#on 'AAA'>${text}1<#on 'BBB'>${text}2</#switch>");
+        assertEquals(expected, template.process(Map.of("text", text)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "AAA, test: AAA1",
+            "BBB, test: BBB2",
+            "aaa, test: AAA1",
+            "bbb, test: BBB2",
+            "CCC, 'test: '",
+    })
+    void switchOnMultiple(String text, String expected, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test",
+                "test: <#switch text><#on 'AAA', 'aaa'>${text?upper_case}1<#on 'BBB', 'bbb'>${text?upper_case}2</#switch>");
+        assertEquals(expected, template.process(Map.of("text", text)));
+    }
+
+    @Test
+    void mixedCaseAndOn(TemplateBuilder builder) throws ParseException {
+        ParsingException exception = assertThrows(ParsingException.class, () -> builder.getTemplate("test",
+                "test: <#switch text><#case 'AAA'>AAA1<#on 'AAA'>AAA1</#switch>"));
+        assertEquals("switch directive contains on and case at test:1:7 '<#switch text><#case 'AAA'>AAA1<#on 'AAA'>AAA1</#switch>'", exception.getMessage());
+    }
 }
