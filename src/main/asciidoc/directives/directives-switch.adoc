@@ -41,14 +41,14 @@ Each `on` statement handles a possible outcome of the evaluation.
 With the `on` directive, the expressions of the `case` statements are compared one after the other with the expression in the `sitch` statement. The first `on` statement that matches is used as the output.
 If none of the specified `on` statements match, then the optional `default` statement is used.
 
-The difference between `on` and `cas` statement is that an `on` statement can contain several comparison expressions.
+The difference between `on` and `case` statement is that an `on` statement can contain several comparison expressions.
 
 [source,freshmarker]
 ----
 <#switch color>
 <#on 'RED', 'Crimson', 'DarkRed'>#FF0000
-<#case 'GREEN'>#00FF00
-<#case 'BLUE', 'Navy'>#0000FF
+<#on 'GREEN'>#00FF00
+<#on 'BLUE', 'Navy'>#0000FF
 <#default>${color}
 </#switch>
 ----
