@@ -8,6 +8,7 @@ import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
@@ -127,6 +128,11 @@ public final class Configuration {
         templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS, false);
         templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES, false);
         templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_ONS, false);
+
+        BuiltInKeyBuilder<TemplateNull> builtInKeyBuilder = new BuiltInKeyBuilder<>(TemplateNull.class);
+        builtIns.put(builtInKeyBuilder.of("empty_to_null"), (x, y, e) -> x);
+        builtIns.put(builtInKeyBuilder.of("blank_to_null"), (x, y, e) -> x);
+        builtIns.put(builtInKeyBuilder.of("trim_to_null"), (x, y, e) -> x);
         registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }

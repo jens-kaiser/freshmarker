@@ -5,6 +5,7 @@
 === Improvements
 
 - add switch-on directive
+- add `empty_to_null`, `blank_to_null` and `trim_to_null` built-ins
 
 == Release 1.7.0 (2025-01-17)
 

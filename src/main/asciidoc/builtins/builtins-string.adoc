@@ -7,7 +7,7 @@ This built-in converts a text in its uppercase form.
 |===
 |Input | Output
 
-|The quick brown Fox jumps over the lazy Dog
+|${'The quick brown Fox jumps over the lazy Dog'?upper_case}
 |THE QUICK BROWN FOX JUMPS OVER THE LAYZ DOG
 |===
 
@@ -18,7 +18,7 @@ This built-in converts a text in its lowercase form.
 |===
 |Input | Output
 
-|The quick brown Fox jumps over the lazy Dog
+|${'The quick brown Fox jumps over the lazy Dog'?lower_case}
 |the quick brown fox jumps over the lazy dog
 |===
 
@@ -30,7 +30,7 @@ A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabeti
 |===
 |Input | Output
 
-|The quick brown Fox jumps over the lazy Dog
+|${'The quick brown Fox jumps over the lazy Dog'?capitalize}
 |The Quick Brown Fox Jumps Over The Lazy Dog
 |===
 
@@ -42,7 +42,7 @@ A word with a first uppercase letter means `\b(\p{javaUpperCase})(\p{IsAlphabeti
 |===
 |Input | Output
 
-|The quick BROWN Fox jumps over the lazy Dog
+|${'The quick BROWN Fox jumps over the lazy Dog'?uncapitalize}
 |the quick bROWN fox Jumps over the lazy dog
 |===
 
@@ -54,10 +54,10 @@ The result may look strange is the input is in some other format.
 |===
 |Input | Output
 
-m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
+m|${'The-quick-brown-Fox-jumps-over-the-lazy-Dog'?camelCase}
 m|theQuickBrownFoxJumpsOverTheLazyDog
 
-m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
+m|${'The_quick_brown_Fox_jumps_over_the_lazy_Dog'?camelCase}
 m|theQuickBrownFoxJumpsOverTheLazyDog
 |===
 
@@ -69,7 +69,7 @@ The result may look strange is the input is in some other format.
 |===
 |Input | Output
 
-m|theQuickBrownFoxJumpsOverTheLazyDog
+m|${'theQuickBrownFoxJumpsOverTheLazyDog'?snake_case}
 m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
 |===
 
@@ -81,7 +81,7 @@ The result may look strange is the input is in some other format.
 |===
 |Input | Output
 
-m|theQuickBrownFoxJumpsOverTheLazyDog
+m|${'theQuickBrownFoxJumpsOverTheLazyDog'?screaming_snake_case}
 m|THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG
 |===
 
@@ -93,7 +93,7 @@ The result may look strange is the input is in some other format.
 |===
 |Input | Output
 
-m|theQuickBrownFoxJumpsOverTheLazyDog
+m|${'theQuickBrownFoxJumpsOverTheLazyDog'?kebab_case}
 m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
 |===
 
@@ -104,13 +104,13 @@ This built-in converts a text to a _slug_.
 |===
 |Input | Output
 
-m|the short summer
+m|${'the short summer'?slugify}
 m|the-short-summer
 
-m|Die heiße Wüste
+m|${'Die heiße Wüste'?slugify}
 m|die-heie-wste
 
-m|Die heisse Wueste
+m|${'Die heisse Wueste'?slugify}
 m|die-heisse-wueste
 |===
 
@@ -122,8 +122,75 @@ The examples use `␣` as a replacement for the whitespace.
 |===
 |Input | Output
 
-m|␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim}
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `trim_to_empty` Built-In
+
+This built-in removes leading and trailing whitespaces from the text.
+The examples use `␣` as a replacement for the whitespace.
+If the result is an empty string, `null` is returned.
+If the text is `null`, then `null` is returned instead of throwing an exception.
+
+|===
+|Input | Output | Type
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim_to_empty}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${'␣␣␣␣␣'?trim_to_empty}
+m|null
+m|null
+
+m|${null?trim_to_empty}
+m|null
+m|null
+|===
+
+==== `empty_to_empty` Built-In
+
+This built-in returns `null` if the text is empty.
+The examples use `␣` as a replacement for the whitespace.
+If the text is `null`, then `null` is returned instead of throwing an exception.
+
+|===
+|Input | Output | Type
+
+m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?empty_to_empty}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${''?empty_to_empty}
+m|null
+m|null
+
+m|${null?empty_to_empty}
+m|null
+m|null
+|===
+
+==== `blank_to_null` Built-In
+
+This built-in returns `null` if the text is blank.
+The examples use `␣` as a replacement for the whitespace.
+If the text is `null`, then `null` is returned instead of throwing an exception.
+
+|===
+|Input | Output | Type
+
+m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?blank_to_null}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${''?blank_to_null}
+m|null
+m|null
+
+m|${null?blank_to_null}
+m|null
+m|null
 |===
 
 ==== `contains` Built-In
@@ -133,7 +200,7 @@ This built-in return `true` if the text contains the specified parameter, otherw
 |===
 |Interpolation | Output
 
-m|${'The quick brown Fox jumps over the lazy Dog'?contains('Fox')}
+m|'The quick brown Fox jumps over the lazy Dog'?contains('Fox')
 m|true
 
 m|${'The quick brown Fox jumps over the lazy Dog'?contains('Cat')}

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,10 +50,22 @@ class StringInterpolationTest {
         assertThrows(ProcessException.class, () ->  template.process(model));
     }
 
-    @Test
-    void interpolationTrim(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${text?trim}");
-        assertEquals("test: text", template.process(Map.of("text", "  text  ")));
+    @ParameterizedTest
+    @CsvSource({
+            "test:${text?trim},'  text  ',test:text",
+            "test:${text?trim_to_null!'xxx'},'  text  ',test:text",
+            "test:${text?trim_to_null!'xxx'},'    ',test:xxx",
+            "test:${text?trim_to_null!'xxx'},,test:xxx",
+            "test:${text?empty_to_null!'xxx'},'',test:xxx",
+            "test:${text?empty_to_null!'xxx'},,test:xxx",
+            "test:${text?blank_to_null!'xxx'},'    ',test:xxx",
+            "test:${text?blank_to_null!'xxx'},,test:xxx",
+    })
+    void interpolationTrim(String input, String text, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = new HashMap<>();
+        model.put("text", text);
+        assertEquals(expected, template.process(model));
     }
 
     @Test
