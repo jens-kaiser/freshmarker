@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.Node;
 import ftl.Token.TokenType;
+import ftl.ast.BaseNode;
 import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.SwitchInstruction;
