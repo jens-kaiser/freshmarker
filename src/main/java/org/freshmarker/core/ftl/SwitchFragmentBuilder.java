@@ -50,26 +50,23 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
             throw new ParsingException("switch directive contains on and case", ftl);
         }
         if (!caseParts.isEmpty()) {
-            caseParts.forEach(part -> part.accept(this, switchFragment));
-            if (featureSet.isEnabled(ALLOW_ONLY_CONSTANT_CASES) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_CASES)) {
-                if (Set.copyOf(switchFragment.getConditionals()).size() > 1) {
-                    throw new ParsingException("constants with different types", ftl);
-                }
-            }
+            handle(caseParts, switchFragment, ftl, featureSet.isEnabled(ALLOW_ONLY_CONSTANT_CASES) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_CASES));
         }
         if (!switchOnParts.isEmpty()) {
-            switchOnParts.forEach(part -> part.accept(this, switchFragment));
-            if (featureSet.isEnabled(ALLOW_ONLY_CONSTANT_ONS) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_ONS)) {
-                if (Set.copyOf(switchFragment.getConditionals()).size() > 1) {
-                    throw new ParsingException("constants with different types", ftl);
-                }
-            }
+            handle(switchOnParts, switchFragment, ftl, featureSet.isEnabled(ALLOW_ONLY_CONSTANT_ONS) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_ONS));
         }
         DefaultInstruction defaultPart = ftl.firstChildOfType(DefaultInstruction.class);
         if (defaultPart != null) {
             defaultPart.accept(this, switchFragment);
         }
         return switchFragment;
+    }
+
+    private <T extends BaseNode> void handle(List<T> switchParts, SwitchFragment switchFragment, SwitchInstruction ftl, boolean isOnlyEqualTypes) {
+        switchParts.forEach(part -> part.accept(this, switchFragment));
+        if (isOnlyEqualTypes && Set.copyOf(switchFragment.getConditionals()).size() > 1) {
+            throw new ParsingException("constants with different types", ftl);
+        }
     }
 
     @Override
