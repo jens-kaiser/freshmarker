@@ -131,7 +131,7 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 This built-in removes leading and trailing whitespaces from the text.
 The examples use `␣` as a replacement for the whitespace.
 If the result is an empty string, `null` is returned.
-If the text is `null`, then `null` is returned instead of throwing an exception.
+If the text is `null`, then `null` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
 
 |===
 |Input | Output | Type
@@ -152,8 +152,7 @@ m|null
 ==== `empty_to_null` Built-In (since 1.7.1)
 
 This built-in returns `null` if the text is empty.
-The examples use `␣` as a replacement for the whitespace.
-If the text is `null`, then `null` is returned instead of throwing an exception.
+If the text is `null`, then `null` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
 
 |===
 |Input | Output | Type
@@ -175,7 +174,7 @@ m|null
 
 This built-in returns `null` if the text is blank.
 The examples use `␣` as a replacement for the whitespace.
-If the text is `null`, then `null` is returned instead of throwing an exception.
+If the text is `null`, then `null` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
 
 |===
 |Input | Output | Type
@@ -184,7 +183,7 @@ m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?blank_to_null}
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 m|string
 
-m|${''?blank_to_null}
+m|${'␣␣␣␣'?blank_to_null}
 m|null
 m|null
 
