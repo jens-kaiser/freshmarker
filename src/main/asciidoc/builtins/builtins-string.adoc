@@ -126,7 +126,7 @@ m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 |===
 
-==== `trim_to_empty` Built-In
+==== `trim_to_null` Built-In (since 1.7.1)
 
 This built-in removes leading and trailing whitespaces from the text.
 The examples use `␣` as a replacement for the whitespace.
@@ -136,20 +136,20 @@ If the text is `null`, then `null` is returned instead of throwing an exception.
 |===
 |Input | Output | Type
 
-m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim_to_empty}
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim_to_null}
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 m|string
 
-m|${'␣␣␣␣␣'?trim_to_empty}
+m|${'␣␣␣␣␣'?trim_to_null}
 m|null
 m|null
 
-m|${null?trim_to_empty}
+m|${null?trim_to_null}
 m|null
 m|null
 |===
 
-==== `empty_to_empty` Built-In
+==== `empty_to_null` Built-In (since 1.7.1)
 
 This built-in returns `null` if the text is empty.
 The examples use `␣` as a replacement for the whitespace.
@@ -158,11 +158,11 @@ If the text is `null`, then `null` is returned instead of throwing an exception.
 |===
 |Input | Output | Type
 
-m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?empty_to_empty}
+m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?empty_to_null}
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 m|string
 
-m|${''?empty_to_empty}
+m|${''?empty_to_null}
 m|null
 m|null
 
@@ -171,7 +171,7 @@ m|null
 m|null
 |===
 
-==== `blank_to_null` Built-In
+==== `blank_to_null` Built-In (since 1.7.1)
 
 This built-in returns `null` if the text is blank.
 The examples use `␣` as a replacement for the whitespace.
