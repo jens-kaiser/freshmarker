@@ -2,7 +2,25 @@
 
 === Customization by `Configuration`
 
-TBD
+==== Register Simple Mapping
+
+The `registerSimpleMapping` method assigns a `String` mapping to a class. If no mapping is specified, the `toString` method of the class is used.
+
+.Example simple mapping for `java.util.BitSet`
+[source,java]
+----
+Configuration config = new Configuration();
+configuration.registerSimpleMapping(BitSet.class, x -> {
+  BitSet bitSet = (BitSet)x;
+  StringBuilder builder = new StringBuilder();
+  for (int i = 0, n = bitSet.length(); i < n; i++) {
+    builder.append(bitSet.get(i) ? "●\u2009" : "○\u2009");
+  }
+  return builder.toString();
+});
+----
+
+The example Mapping generates the String `○ ● ○ ● ● ○ ○ ● ● ` for the BitSet `010110011`.
 
 === Customization by `TemplateBuilder`
 
