@@ -12,7 +12,13 @@ public class TemplateFeatures implements FeatureSet {
 
     Map<TemplateFeature, Entry> masks = new HashMap<>();
 
-    public void addSwitches(TemplateFeature feature, boolean enabled) {
+    public void addFeatures(TemplateFeature... features) {
+        for (TemplateFeature feature : features) {
+            addFeature(feature, feature.isEnabledByDefault());
+        }
+    }
+
+    public void addFeature(TemplateFeature feature, boolean enabled) {
         if (masks.containsKey(feature)) {
             return;
         }
