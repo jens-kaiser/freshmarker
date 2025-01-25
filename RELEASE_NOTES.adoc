@@ -1,6 +1,6 @@
 = Release Notes
 
-== Release 1.7.1 (2025-01-XX planned)
+== Release 1.8.0 (2025-01-XX planned)
 
 === Improvements
 
@@ -10,6 +10,10 @@
 === Experimental
 
 - add features for plugins
+
+=== Breaking Changes
+
+- move `org.freshmarker.Configuration.TemplateBuilder` to `org.freshmarker.TemplateBuilder`
 
 == Release 1.7.0 (2025-01-17)
 
