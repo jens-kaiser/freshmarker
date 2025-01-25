@@ -36,6 +36,7 @@ public enum SwitchDirectiveFeature implements TemplateFeature {
      */
     ALLOW_ONLY_EQUAL_TYPE_ONS;
 
+    @Override
     public boolean isEnabledByDefault() {
         return false;
     }

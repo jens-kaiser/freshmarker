@@ -53,7 +53,11 @@ public abstract class AbstractConditionalFragment implements Fragment {
         return fragments.stream().mapToInt(Fragment::getSize).sum() + endFragment.getSize() + 1;
     }
 
-    public List<? extends Class<?>> getConditionals() {
-        return fragments.stream().map(ConditionalFragment::conditional).map(TemplateObject::getModelType).toList();
+    public List<Class<?>> getConditionals() {
+        List<Class<?>> result = new LinkedList<>();
+        for (ConditionalFragment fragment : fragments) {
+            result.add(fragment.conditional().getModelType());
+        }
+        return result;
     }
 }
