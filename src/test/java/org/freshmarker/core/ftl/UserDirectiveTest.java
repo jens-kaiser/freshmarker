@@ -65,4 +65,11 @@ class UserDirectiveTest {
         Template template = configuration.builder().getTemplate("test", templateSource.replace(";", ";\n"));
         assertEquals(expected, template.process(Map.of("values", List.of(1, 2, 3))));
     }
+
+    @Test
+    void demo() throws ParseException {
+        configuration.registerUserDirective("doubles", (a, b, c) -> { c.process(a); c.process(a); });
+        Template template = configuration.builder().getTemplate("test", "<@doubles>Dies ist ein Test. </@doubles>");
+        assertEquals("Dies ist ein Test. Dies ist ein Test. ", template.process(Map.of()));
+    }
 }

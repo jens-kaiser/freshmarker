@@ -59,16 +59,41 @@ In this case the built-in `upper_case` has been added.
 Depending on the type of value, a wide variety of built-ins can be used.
 footnote:[The library https://gitlab.com/schegge/holidays[Holidays] adds Built-Ins for Holidays].
 
+=== User Directive
+
+FreshMarker unterstützt neben den Standard Direktiven auch User Directiven.
+
+.Log User Directive
+[source,freshmarker]
+----
+<@log level='info' message='test'/>
+----
+
+User Direkktiven können über Macro Direktiven definiert werden oder durch Implementierungen des UserDirective Interfaces.
+
+.UserDirective Interface
+[source,java]
+----
+include::../java/org/freshmarker/core/directive/UserDirective.java[lines="8..-1"]
+----
+
+It can be registered to the `Configuration` by the `registeruserDirective` method.
+
+.Example User Directive `doubles`
+[source,java]
+----
+configuration = new Configuration();
+configuration.registerFunction("doubles", (context, args, body) -> { body.process(context); body.process(context); });
+----
+
 === Functions
 
-Additional functionality can be added to the template-engine by custom Functions.
+Additional functionality can be added to the template-engine interpolations by custom Functions.
 
 .Function Interface
 [source,java]
 ----
-public interface TemplateFunction {
-  TemplateObject execute(ProcessContext context, List<TemplateObject> args);
-}
+include::../java/org/freshmarker/core/directive/TemplateFunction.java[lines="7..-1"]
 ----
 
 A _Function_ is a Java class implementing the functional interface `TemplateFunction`.
