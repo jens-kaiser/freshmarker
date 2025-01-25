@@ -9,11 +9,17 @@ import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.features.FeatureSet;
+import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
 public interface PluginProvider {
+
+  default void registerFeature(TemplateFeatures features) {
+
+  }
 
   default void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
 
@@ -23,8 +29,16 @@ public interface PluginProvider {
 
   }
 
+  default void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet) {
+    registerFormatter(formatter);
+  }
+
   default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
 
+  }
+
+  default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns, FeatureSet featureSet) {
+    registerBuildIn(builtIns);
   }
 
   default void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {

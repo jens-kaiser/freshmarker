@@ -379,7 +379,7 @@ Switch #SwitchInstruction :
     Expression
     <CLOSE_TAG>
     [<WHITESPACE>]
-    (Case|SwitchOn)*
+    (Case)*
     [
      SCAN 2 Default
     ]
@@ -388,15 +388,7 @@ Switch #SwitchInstruction :
 
 Case #CaseInstruction : 
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <CASE>
-    =>||
-    <BLANK>
-    Expression <CLOSE_TAG> Block
-;
-
-SwitchOn #SwitchOnInstruction :
-    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
-    <ON>
+    (<CASE>|<ON>)
     =>||
     <BLANK>
     Expression (<COMMA> Expression)* <CLOSE_TAG> Block
@@ -509,7 +501,7 @@ TopLevelDirective #void :
      SCAN 2 Import |
      SCAN 2 Include |
      SCAN 2 MacroDefinition |
-     Switch |
+     SCAN 2 Switch |
      SCAN 2 Setting |
      SCAN 2 Var|
      SCAN 2 Break |

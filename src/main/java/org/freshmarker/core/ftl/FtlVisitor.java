@@ -22,7 +22,6 @@ import ftl.ast.ReturnInstruction;
 import ftl.ast.Root;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
-import ftl.ast.SwitchOnInstruction;
 import ftl.ast.Text;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
@@ -71,10 +70,6 @@ public interface FtlVisitor<I, O> {
   }
 
   default O visit(CaseInstruction ftl, I input) {
-    return handleWithException(ftl);
-  }
-
-  default O visit(SwitchOnInstruction ftl, I input) {
     return handleWithException(ftl);
   }
 

@@ -2,6 +2,8 @@ package org.freshmarker.core;
 
 import org.freshmarker.core.features.TemplateFeature;
 
+import java.util.Set;
+
 public enum IncludeDirectiveFeature implements TemplateFeature {
     /**
      * Feature that determines whether include directives are evaluated.
@@ -34,5 +36,12 @@ public enum IncludeDirectiveFeature implements TemplateFeature {
      *<p>
      * Feature is enabled by default.
      */
-    PARSE_BY_DEFAULT
+    PARSE_BY_DEFAULT;
+
+    private static final Set<IncludeDirectiveFeature> enabled = Set.of(LIMIT_INCLUDE_LEVEL, PARSE_BY_DEFAULT);
+
+    @Override
+    public boolean isEnabledByDefault() {
+        return enabled.contains(this);
+    }
 }

@@ -8,7 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class SimpleFeatureSetTest {
     private enum DemoFeature implements TemplateFeature {
         FIRST,
-        SECOND
+        SECOND;
+
+        @Override
+        public boolean isEnabledByDefault() {
+            return this == FIRST;
+        }
     }
 
     private SimpleFeatureSet simpleFeatureSet;
@@ -16,8 +21,7 @@ class SimpleFeatureSetTest {
     @BeforeEach
     void setUp() {
         TemplateFeatures templateFeatures = new TemplateFeatures();
-        templateFeatures.addSwitches(DemoFeature.FIRST, true);
-        templateFeatures.addSwitches(DemoFeature.SECOND, false);
+        templateFeatures.addFeatures(DemoFeature.values());
         simpleFeatureSet = templateFeatures.create();
     }
 

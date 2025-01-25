@@ -1,13 +1,12 @@
 package org.freshmarker.core.ftl;
 
 import ftl.Node;
+import ftl.Node.NodeType;
 import ftl.Token.TokenType;
 import ftl.ast.BaseNode;
 import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.SwitchInstruction;
-import ftl.ast.SwitchOnInstruction;
-import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.features.FeatureSet;
 import org.freshmarker.core.fragment.ConditionalFragment;
 import org.freshmarker.core.fragment.Fragment;
@@ -20,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES;
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS;
@@ -45,8 +46,9 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         Node expression = ftl.get(3);
         TemplateObject switchExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
         SwitchFragment switchFragment = new SwitchFragment(switchExpression, expression);
-        List<CaseInstruction> caseParts = ftl.childrenOfType(CaseInstruction.class);
-        List<SwitchOnInstruction> switchOnParts = ftl.childrenOfType(SwitchOnInstruction.class);
+        Map<NodeType, List<CaseInstruction>> parts = ftl.childrenOfType(CaseInstruction.class).stream().collect(Collectors.groupingBy(p -> p.get(1).getType()));
+        List<CaseInstruction> caseParts = parts.getOrDefault(TokenType.CASE, List.of());
+        List<CaseInstruction> switchOnParts = parts.getOrDefault(TokenType.ON, List.of());
         if (!caseParts.isEmpty() && !switchOnParts.isEmpty()) {
             throw new ParsingException("switch directive contains on and case", ftl);
         }
@@ -73,28 +75,12 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     @Override
     public SwitchFragment visit(CaseInstruction ftl, SwitchFragment input) {
         logger.debug("{} {}", ftl.size(), ftl.children());
-        Node expression = ftl.get(3);
-        TemplateObject caseExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
-        if (featureSet.isEnabled(ALLOW_ONLY_CONSTANT_CASES) && !caseExpression.isPrimitive()) {
-            throw new ParsingException("only constant expression allowed", expression);
-        }
-        checkMissingBlock(5, ftl);
-        Node block = ftl.get(5);
-        List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
-        Fragment caseBlock = Fragments.optimize(fragments);
-        logger.debug("case {} {}", block, caseBlock);
-        input.addFragment(new ConditionalFragment(caseExpression, caseBlock, ftl));
-        return input;
-    }
-
-    @Override
-    public SwitchFragment visit(SwitchOnInstruction ftl, SwitchFragment input) {
-        logger.debug("{} {}", ftl.size(), ftl.children());
         int blockIndex = ftl.indexOf(ftl.firstChildOfType(TokenType.CLOSE_TAG)) + 1;
         List<TemplateObject> expressions = new LinkedList<>();
+        boolean onlyConstantsAllowed = featureSet.isEnabled(ftl.get(1).getType() == TokenType.ON ? ALLOW_ONLY_CONSTANT_ONS : ALLOW_ONLY_CONSTANT_CASES);
         for (int i = 3; i < blockIndex - 1; i +=2) {
             TemplateObject onExpression = ftl.get(i).accept(InterpolationBuilder.INSTANCE, null);
-            if (featureSet.isEnabled(SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS) && !onExpression.isPrimitive()) {
+            if (onlyConstantsAllowed && !onExpression.isPrimitive()) {
                 throw new ParsingException("only constant expression allowed", ftl.get(i));
             }
             expressions.add(onExpression);
@@ -103,7 +89,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         Node block = ftl.get(blockIndex);
         List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
         Fragment caseBlock = Fragments.optimize(fragments);
-        logger.debug("on: {} {}", block, caseBlock);
+        logger.debug("{}: {} {}", ftl.get(1), block, caseBlock);
         expressions.stream().map(expression -> new ConditionalFragment(expression, caseBlock, ftl)).forEach(input::addFragment);
         return input;
     }
