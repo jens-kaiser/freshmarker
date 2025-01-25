@@ -83,7 +83,9 @@ It can be registered to the `Configuration` by the `registeruserDirective` metho
 [source,java]
 ----
 configuration = new Configuration();
-configuration.registerFunction("doubles", (context, args, body) -> { body.process(context); body.process(context); });
+configuration.registerFunction("doubles",
+    (context, args, body) -> { body.process(context); body.process(context); }
+);
 ----
 
 === Functions
