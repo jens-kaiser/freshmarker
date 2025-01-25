@@ -20,14 +20,6 @@ class TemporalYearInterpolationTest {
     @CsvSource({
             "test: ${year?is_leap},test: no",
             "test: ${leap_year?is_leap},test: yes",
-    })
-    void interpolationLeapYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", input);
-        assertEquals(expected, template.process(Map.of("year", Year.of(2025), "leap_year", Year.of(2004))));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
             "test: ${year},test: 2025",
             "test: ${leap_year},test: 2004",
             "test: ${year?year},test: 2025",
