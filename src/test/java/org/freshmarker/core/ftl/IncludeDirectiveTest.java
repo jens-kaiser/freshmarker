@@ -72,7 +72,8 @@ class IncludeDirectiveTest {
     @Test
     void recursiveInclude() throws IOException {
         Files.writeString(fileSystem.getPath("recursive.fmt"), "recursive <#include 'recursive.fmt'>");
-        ParsingException parsingException = assertThrows(ParsingException.class, () -> builder.with(IncludeDirectiveFeature.ENABLED).getTemplate("template", "<#include 'recursive.fmt'>"));
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED);
+        ParsingException parsingException = assertThrows(ParsingException.class, () -> builderWithInclude.getTemplate("template", "<#include 'recursive.fmt'>"));
         assertEquals("include level exceeded: 5 at recursive.fmt:1:11 '<#include 'recursive.fmt'>'", parsingException.getMessage());
     }
 
