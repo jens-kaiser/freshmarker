@@ -3,7 +3,6 @@ package org.freshmarker;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
-import org.freshmarker.Configuration.TemplateBuilder;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.directive.UserDirective;

@@ -1,6 +1,5 @@
 package org.freshmarker;
 
-import ftl.ParseException;
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
@@ -31,12 +30,8 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -53,42 +48,6 @@ import java.util.stream.Stream;
 public final class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
-
-    public interface TemplateBuilder {
-        TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId);
-
-        TemplateBuilder withDateTimeFormat(String pattern);
-
-        TemplateBuilder withDateFormat(String pattern);
-
-        TemplateBuilder withTimeFormat(String pattern);
-
-        TemplateBuilder withClock(Clock clock);
-
-        TemplateBuilder withLocale(Locale locale);
-
-        TemplateBuilder withZoneId(ZoneId zoneId);
-
-        TemplateBuilder withOutputFormat(String outputFormat);
-
-        TemplateBuilder withOutputFormat(OutputFormat format);
-
-        TemplateBuilder with(TemplateFeature templateFeature);
-
-        TemplateBuilder without(TemplateFeature templateFeature);
-
-        Template getTemplate(Path path) throws ParseException, IOException;
-
-        Template getTemplate(Path path, Charset charset) throws ParseException, IOException;
-
-        Template getTemplate(String name, Reader reader) throws ParseException;
-
-        Template getTemplate(String name, String content) throws ParseException;
-
-        Template getTemplate(Path importPath, String name, Reader reader) throws ParseException;
-
-        Template getTemplate(Path importPath, String name, String content) throws ParseException;
-    }
 
     private Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
     private Map<String, OutputFormat> outputs = new HashMap<>();
@@ -228,4 +187,3 @@ public final class Configuration {
         return builtInVariableProviders;
     }
 }
-

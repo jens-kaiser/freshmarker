@@ -1,7 +1,7 @@
 package org.freshmarker.test.util;
 
 import org.freshmarker.Configuration;
-import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.TemplateBuilder;
 import org.freshmarker.DefaultTemplateBuilder;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;

@@ -1,7 +1,7 @@
 package org.freshmarker.core;
 
 import org.freshmarker.Configuration;
-import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.directive.LoggingDirective;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;

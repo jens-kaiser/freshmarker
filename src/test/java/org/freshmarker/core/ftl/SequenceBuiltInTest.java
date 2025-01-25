@@ -1,6 +1,6 @@
 package org.freshmarker.core.ftl;
 
-import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.TemplateBuilder;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

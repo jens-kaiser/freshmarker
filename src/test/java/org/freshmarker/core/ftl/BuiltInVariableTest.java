@@ -2,7 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
 import org.freshmarker.Configuration;
-import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;

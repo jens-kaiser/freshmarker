@@ -1,7 +1,7 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
-import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;

@@ -2,7 +2,7 @@ package org.freshmarker.core.ftl;
 
 import com.google.common.jimfs.Jimfs;
 import org.freshmarker.Configuration;
-import org.freshmarker.Configuration.TemplateBuilder;
+import org.freshmarker.TemplateBuilder;
 import org.freshmarker.FileSystemTemplateLoader;
 import org.freshmarker.Template;
 import org.freshmarker.core.IncludeDirectiveFeature;
