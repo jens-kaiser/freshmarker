@@ -9,7 +9,6 @@ import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
