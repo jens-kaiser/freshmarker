@@ -82,7 +82,7 @@ ${text}
 === Setting Directive
 
 The _Setting Directive_ changes some standard values in the template.
-The settings remains in place until is is changed by another settings directive.
+The settings remains in place until it is changed by another settings directive.
 
 [source,freshmarker,subs="verbatim,quotes"]
 ----

@@ -61,7 +61,7 @@ footnote:[The library https://gitlab.com/schegge/holidays[Holidays] adds Built-I
 
 === User Directive
 
-FreshMarker unterstützt neben den Standard Direktiven auch User Directiven.
+In addition to the standard directives, _FreshMarker_ also supports _User Directives_.
 
 .Log User Directive
 [source,freshmarker]
@@ -69,7 +69,7 @@ FreshMarker unterstützt neben den Standard Direktiven auch User Directiven.
 <@log level='info' message='test'/>
 ----
 
-User Direkktiven können über Macro Direktiven definiert werden oder durch Implementierungen des UserDirective Interfaces.
+_User directives_ can be defined via _Macro directives_ or by implementing the `UserDirective` Interface.
 
 .UserDirective Interface
 [source,java]
@@ -79,7 +79,7 @@ include::../java/org/freshmarker/core/directive/UserDirective.java[lines="8..-1"
 
 It can be registered to the `Configuration` by the `registeruserDirective` method.
 
-.Example User Directive `doubles`
+.Example _User Directive_ `doubles`
 [source,java]
 ----
 configuration = new Configuration();
@@ -88,7 +88,7 @@ configuration.registerFunction("doubles", (context, args, body) -> { body.proces
 
 === Functions
 
-Additional functionality can be added to the template-engine interpolations by custom Functions.
+Additional functionality can be added to the template-engine interpolations by _Functions_.
 
 .Function Interface
 [source,java]
