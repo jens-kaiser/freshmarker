@@ -39,29 +39,33 @@ class IncludeDirectiveTest {
 
     @Test
     void notFoundInclude() {
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED);
         ParsingException exception = assertThrows(ParsingException.class,
-                () -> builder.with(IncludeDirectiveFeature.ENABLED).getTemplate("template", "<#include 'invalid.fmi'>"));
+                () -> builderWithInclude.getTemplate("template", "<#include 'invalid.fmi'>"));
         assertEquals("cannot read import: invalid.fmi at template:1:1 '<#include 'invalid.fmi'>'", exception.getMessage());
     }
 
     @Test
     void simpleInclude() throws IOException {
         Files.writeString(fileSystem.getPath("copyright.fmi"), "Copyright 2022-${year} ${me}<br>\nAll rights reserved.");
-        Template template = builder.with(IncludeDirectiveFeature.ENABLED).getTemplate("template", "<#include 'copyright.fmi'>");
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED);
+        Template template = builderWithInclude.getTemplate("template", "<#include 'copyright.fmi'>");
         assertEquals("Copyright 2022-2025 Jens Kaiser<br>\nAll rights reserved.", template.process(Map.of("me", "Jens Kaiser", "year", Year.now())));
     }
 
     @Test
     void notParsedInclude() throws IOException {
         Files.writeString(fileSystem.getPath("copyright.fmi"), "Copyright 2022-${year} ${me}<br>\nAll rights reserved.");
-        Template template = builder.with(IncludeDirectiveFeature.ENABLED).getTemplate("template", "<#include 'copyright.fmi' parse=false>");
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED);
+        Template template = builderWithInclude.getTemplate("template", "<#include 'copyright.fmi' parse=false>");
         assertEquals("Copyright 2022-${year} ${me}<br>\nAll rights reserved.", template.process(Map.of("me", "Jens Kaiser", "year", Year.now())));
     }
 
     @Test
     void notParsedDefaultedInclude() throws IOException {
         Files.writeString(fileSystem.getPath("copyright.fmi"), "Copyright 2022-${year} ${me}<br>\nAll rights reserved.");
-        Template template = builder.with(IncludeDirectiveFeature.ENABLED).without(IncludeDirectiveFeature.PARSE_BY_DEFAULT).getTemplate("template", "<#include 'copyright.fmi'>");
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED);
+        Template template = builderWithInclude.without(IncludeDirectiveFeature.PARSE_BY_DEFAULT).getTemplate("template", "<#include 'copyright.fmi'>");
         assertEquals("Copyright 2022-${year} ${me}<br>\nAll rights reserved.", template.process(Map.of("me", "Jens Kaiser", "year", Year.now())));
     }
 
@@ -75,7 +79,8 @@ class IncludeDirectiveTest {
     @Test
     void recursiveIncludeIgnoredError() throws IOException {
         Files.writeString(fileSystem.getPath("recursive.fmt"), "recursive <#include 'recursive.fmt'>");
-        Template template = builder.with(IncludeDirectiveFeature.ENABLED).with(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR).getTemplate("template", "<#include 'recursive.fmt'>");
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED);
+        Template template = builderWithInclude.with(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR).getTemplate("template", "<#include 'recursive.fmt'>");
         assertEquals("recursive recursive recursive recursive recursive ", template.process(Map.of()));
     }
 }
