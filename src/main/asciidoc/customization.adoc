@@ -186,7 +186,19 @@ Plug-ins can be registered with _FreshMarker_ via the `ServiceLoader` mechanism 
 
 [source,java]
 ----
-include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="16..-1"]
+include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="17..-1"]
 ----
 
 TBD
+
+==== Custom Features
+
+Every Custom Plug-in can add its own features to the `Configuration`
+
+[source,java]
+----
+include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="19..21",indent=0]
+----
+
+TBD
+

@@ -48,6 +48,7 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public final class Configuration {
 
@@ -103,7 +104,7 @@ public final class Configuration {
     private TemplateLoader templateLoader;
     private final TemplateFeatures templateFeatures = new TemplateFeatures();
 
-    public Configuration() {
+    public Configuration(TemplateFeature... enabledFeatures) {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
         BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(modelSecurityGateway);
         RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(modelSecurityGateway);
@@ -120,14 +121,9 @@ public final class Configuration {
         outputs.put("CSS", StandardOutputFormats.CSS);
         outputs.put("ADOC", StandardOutputFormats.ADOC);
 
-        templateFeatures.addSwitches(IncludeDirectiveFeature.ENABLED, false);
-        templateFeatures.addSwitches(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, true);
-        templateFeatures.addSwitches(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR, false);
-        templateFeatures.addSwitches(IncludeDirectiveFeature.PARSE_BY_DEFAULT, true);
-        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES, false);
-        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS, false);
-        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES, false);
-        templateFeatures.addSwitches(SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_ONS, false);
+        Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
+        templateFeatures.addFeatures(IncludeDirectiveFeature.values());
+        templateFeatures.addFeatures(SwitchDirectiveFeature.values());
 
         BuiltInKeyBuilder<TemplateNull> builtInKeyBuilder = new BuiltInKeyBuilder<>(TemplateNull.class);
         builtIns.put(builtInKeyBuilder.of("empty_to_null"), (x, y, e) -> x);
@@ -171,11 +167,12 @@ public final class Configuration {
 
     public void registerPlugin(PluginProvider provider) {
         logger.debug("register plugin: {}", provider.getClass().getSimpleName());
+        provider.registerFeature(templateFeatures);
         Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>(this.builtIns);
-        provider.registerBuildIn(registerBuiltIns);
+        provider.registerBuildIn(registerBuiltIns, templateFeatures);
         this.builtIns = registerBuiltIns;
         Map<Class<? extends TemplateObject>, Formatter> registerFormatter = formatterRegistry.formatter();
-        provider.registerFormatter(registerFormatter);
+        provider.registerFormatter(registerFormatter, templateFeatures);
         this.formatterRegistry = new FormatterRegistry(new HashMap<>(registerFormatter));
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
         provider.registerMapper(mapper);
