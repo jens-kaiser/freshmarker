@@ -159,6 +159,8 @@ TOKEN :
     |
     <LIMIT : "limit">
     |
+    <OFFSET : "offset">
+    |
     <FILTER : "filter">
     |
     <INTEGER : (["0"-"9"])+>
