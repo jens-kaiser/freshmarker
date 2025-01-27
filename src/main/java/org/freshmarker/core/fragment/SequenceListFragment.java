@@ -19,8 +19,8 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
 
     private final String identifier;
 
-    public SequenceListFragment(TemplateObject list, String identifier, String looperIdentifier, Fragment block, ListInstruction ftl, TemplateObject filter, TemplateObject limit) {
-        super(list, looperIdentifier, block, ftl, filter, limit);
+    public SequenceListFragment(TemplateObject list, String identifier, String looperIdentifier, Fragment block, ListInstruction ftl, TemplateObject filter, TemplateObject offset, TemplateObject limit) {
+        super(list, looperIdentifier, block, ftl, filter, offset, limit);
         this.identifier = identifier;
     }
 
@@ -48,7 +48,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
         try {
             context.setEnvironment(new ReducingVariableEnvironment(new ReducingLoopVariableEnvironment(environment, identifier, looperIdentifier)));
             Fragment reduce = block.reduce(context);
-            return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl, filter, limit));
+            return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl, filter, offset, limit));
         } finally {
             context.setEnvironment(environment);
         }
