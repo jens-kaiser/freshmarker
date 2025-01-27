@@ -25,8 +25,8 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
     private final String valueIdentifier;
     private final Comparator<String> comparator;
 
-    public HashListFragment(TemplateObject list, String keyIdentifier, String valueIdentifier, String looperIdentifier, Fragment block, ListInstruction ftl, Comparator<String> comparator, TemplateObject filter, TemplateObject limit) {
-        super(list, looperIdentifier, block, ftl, filter, limit);
+    public HashListFragment(TemplateObject list, String keyIdentifier, String valueIdentifier, String looperIdentifier, Fragment block, ListInstruction ftl, Comparator<String> comparator, TemplateObject filter, TemplateObject offset, TemplateObject limit) {
+        super(list, looperIdentifier, block, ftl, filter, offset, limit);
         this.keyIdentifier = keyIdentifier;
         this.valueIdentifier = valueIdentifier;
         this.comparator = comparator;
@@ -63,7 +63,7 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
             Environment reducingVariableEnvironment = new ReducingVariableEnvironment(new ReducingLoopVariableEnvironment(environment, keyIdentifier, valueIdentifier, looperIdentifier));
             context.setEnvironment(reducingVariableEnvironment);
             Fragment reduce = block.reduce(context);
-            return optimize(block, reduce, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator, filter, limit));
+            return optimize(block, reduce, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator, filter, limit, limit));
         } finally {
             context.setEnvironment(environment);
         }

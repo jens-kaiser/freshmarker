@@ -269,12 +269,45 @@ ListDirectiveTest {
     }
 
     @Test
-    void filterAndLimit() {
+    void offset() {
         Template template = builder.getTemplate("test", """
-                <#list (1..20) as s with l filter s % 2 == 0 limit count>${s}<#if l?has_next>, </#if></#list>
+                <#list (1..20) as s with l offset count>${s}<#if l?has_next>, </#if></#list>
                 """);
         assertEquals("""
-                        2, 4, 6, 8, 10, 12
+                        5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+                        """,
+                template.process(Map.of("count", 4)));
+    }
+
+    @Test
+    void offsetAndLimit() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..20) as s with l offset count limit 4>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        5, 6, 7, 8
+                        """,
+                template.process(Map.of("count", 4)));
+    }
+
+    @Test
+    void filterAndOffsetAndLimit() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..40) as s with l filter s % 2 == 0 offset 4 limit count>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32
+                        """,
+                template.process(Map.of("count", 12)));
+    }
+
+    @Test
+    void filterAndLimit() {
+        Template template = builder.getTemplate("test", """
+                <#list (1..40) as s with l filter s % 2 == 0 limit count>${s}<#if l?has_next>, </#if></#list>
+                """);
+        assertEquals("""
+                        2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24
                         """,
                 template.process(Map.of("count", 12)));
     }

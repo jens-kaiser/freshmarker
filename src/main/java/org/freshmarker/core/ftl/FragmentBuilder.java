@@ -162,6 +162,12 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             filter = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
             index += 2;
         }
+        TemplateObject offset = null;
+        if (ftl.get(index).getType() == TokenType.OFFSET) {
+            offset = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
+            logger.info("offset: {} = {}", ftl.get(index + 1), offset);
+            index += 2;
+        }
         TemplateObject limit = null;
         if (ftl.get(index).getType() == TokenType.LIMIT) {
             limit = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
@@ -169,9 +175,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
         Fragment block = Fragments.optimize(ftl.get(index + 1).accept(this, new ArrayList<>()));
         if (valueIdentifier != null) {
-            input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator, filter, limit));
+            input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator, filter, offset, limit));
         } else {
-            input.add(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl, filter, limit));
+            input.add(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl, filter, offset, limit));
         }
         return input;
     }

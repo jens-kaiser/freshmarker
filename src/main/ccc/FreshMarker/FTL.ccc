@@ -412,6 +412,7 @@ List #ListInstruction :
     ]
     [ <WITH> <IDENTIFIER> ]
     [ <FILTER> Expression ]
+    [ <OFFSET> Expression ]
     [ <LIMIT> Expression ]
     <CLOSE_TAG>
     Block

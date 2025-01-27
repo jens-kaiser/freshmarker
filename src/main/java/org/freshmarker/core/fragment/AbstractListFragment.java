@@ -22,44 +22,58 @@ public abstract class AbstractListFragment<T> implements Fragment {
     protected final Fragment block;
     protected final ListInstruction ftl;
     protected final TemplateObject filter;
+    protected final TemplateObject offset;
     protected final TemplateObject limit;
 
-    protected AbstractListFragment(TemplateObject list, String looperIdentifier, Fragment block, ListInstruction ftl, TemplateObject filter, TemplateObject limit) {
+    protected AbstractListFragment(TemplateObject list, String looperIdentifier, Fragment block, ListInstruction ftl, TemplateObject filter, TemplateObject offset, TemplateObject limit) {
         this.list = list;
         this.looperIdentifier = looperIdentifier;
         this.block = block;
         this.ftl = ftl;
         this.filter = filter;
+        this.offset = offset;
         this.limit = limit;
     }
 
     protected abstract void addFilterVariable(FilterVariableEnvironment environment, T value);
 
     protected List<T> filterSequence(ProcessContext context, List<T> sequence) {
+        int intOffset = offset == null ? 0 : offset.evaluate(context, TemplateNumber.class).asInt();
         Integer intLimit = limit == null ? null : limit.evaluate(context, TemplateNumber.class).asInt();
         if (filter != null) {
-            sequence = handleFilter(context, sequence, intLimit);
+            sequence = handleFilter(context, sequence, intOffset, intLimit);
         } else if (intLimit != null) {
-            sequence = sequence.subList(0, intLimit);
+            sequence = subList(sequence, intOffset, intOffset + intLimit);
+        } else if (intOffset > 0) {
+            sequence = subList(sequence, intOffset, sequence.size());
         }
         return sequence;
     }
 
-    protected List<T> handleFilter(ProcessContext context, List<T> objectList, Integer intLimit) {
+    private List<T> subList(List<T> list, int start, int end) {
+        if (start < 0 || start >= end || end > list.size()) {
+            return List.of();
+        }
+        return list.subList(start, end);
+    }
+    protected List<T> handleFilter(ProcessContext context, List<T> objectList, int offset, Integer intLimit) {
         Environment contextEnvironment = context.getEnvironment();
         int counter = Objects.requireNonNullElse(intLimit, objectList.size());
         try {
             FilterVariableEnvironment filterVariableEnvironment = new FilterVariableEnvironment(contextEnvironment, context);
             context.setEnvironment(filterVariableEnvironment);
             List<T> newList = new ArrayList<>();
-            for (int i = 0; i < objectList.size(); i++) {
-                if (i >= counter) {
+            int index = 0;
+            for (T value : objectList) {
+                if (newList.size() >= counter) {
                     break;
                 }
-                T value = objectList.get(i);
                 addFilterVariable(filterVariableEnvironment, value);
                 if (filter.evaluate(context, TemplateBoolean.class) == TemplateBoolean.TRUE) {
-                    newList.add(value);
+                    if (index >= offset) {
+                        newList.add(value);
+                    }
+                    index++;
                 }
             }
             return newList;
