@@ -143,7 +143,7 @@ String resullt = template.process(Map.of("id", leitwegId));
 [source,java,role="secondary"]
 ----
 Configuration config = new Configuration();
-configuration.registerSimpleMapping(LeitwegId.class, lid -> "<<" + lid + ">>");
+config.registerSimpleMapping(LeitwegId.class, lid -> "<<" + lid + ">>");
 TemplateBuilder templateBuilder = config.builder();
 Template template = templateBuilder.getTemplate("id", "${id}!");
 LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
