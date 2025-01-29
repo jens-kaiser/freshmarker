@@ -197,7 +197,7 @@ Every Custom Plug-in can add its own features to the `Configuration`
 
 [source,java]
 ----
-include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="19..21",indent=0]
+include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="19..22",indent=0]
 ----
 
 TBD
