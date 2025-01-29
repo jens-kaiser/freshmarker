@@ -116,7 +116,40 @@ a..*b   // lower bound in variable _a_ and an range size in variable _c_
 
 ==== Slices
 
+`Slices` define slice operators on other data types.
+These operators can be applied to `Range`, `List`, and `String` values.
+The slices are described by range expressions in square brackets.
+The range specifies the lower and upper limits of the `Slice`.
+With _inverted ranges_, the slice operation produces an inverted result.
+
+==== List Slices
+
 TBD
+
+==== Range Slices
+
+TBD
+
+.Example `Range` slices
+[source,subs="verbatim,quotes"]
+----
+${(1..10)[1..4]?join(';')}  // => 2;3;4;5
+${(1..10)[1..]?join(';')}   // => 2;3;4;5;6;7;8;9;10
+${(1..10)[4..1]?join(';')}  // => 5;4;3;2
+${(1..10)[1..<1]?join(';')} // => 2;3;4;5
+----
+
+==== String Slices
+
+TBD
+
+.Example `String` slices
+[source,subs="verbatim,quotes"]
+----
+${'abraxas'[1..4]} // => brax
+${'abraxas'[1..]}  // => braxas
+${'abraxas'[4..1]} // => xarb
+----
 
 === Lazy Values
 
