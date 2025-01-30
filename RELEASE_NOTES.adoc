@@ -5,6 +5,8 @@
 === Improvements
 
 - add `offset` part to the list directive
+- add `+` list concatenation operator
+- add `+`, `-` year operator
 
 == Release 1.7.1 (2025-01-25)
 

@@ -1,7 +1,10 @@
 package org.freshmarker.core.model;
 
+import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TemplateListSequence implements TemplateSequence {
@@ -39,5 +42,16 @@ public class TemplateListSequence implements TemplateSequence {
 
     public List<Object> getSequence(ProcessContext context) {
         return sequence;
+    }
+
+    @Override
+    public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+        TemplateObject value = operand.evaluateToObject(context);
+        if (operator == TokenType.PLUS && value instanceof TemplateListSequence sequence2) {
+            List<Object> newSequence = new ArrayList<>(sequence);
+            newSequence.addAll(sequence2.sequence);
+            return new TemplateListSequence(newSequence);
+        }
+        throw new ProcessException("unsupported operation: " + operator);
     }
 }

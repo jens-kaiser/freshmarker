@@ -314,4 +314,10 @@ class ExpressionTest {
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
     }
+
+    @Test
+    void listOperation() {
+        Template template = builder.getTemplate("test", "${([0,1,2,3,4] + [5,6,7,8,9])?join}");
+        assertEquals("0, 1, 2, 3, 4, 5, 6, 7, 8, 9", template.process(Map.of()));
+    }
 }

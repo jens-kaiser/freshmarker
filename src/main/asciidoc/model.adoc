@@ -126,6 +126,14 @@ With _inverted ranges_, the slice operation produces an inverted result.
 
 TBD
 
+.Example `List` slices
+[source,subs="verbatim,quotes"]
+----
+${['a','b','c','d','e','f','g'][1..4]?join(';')} // => b:c:d:e
+${['a','b','c','d','e','f','g'][1..]?join(';')}  // => b;c;d;e;f;g
+${['a','b','c','d','e','f','g'][4..1]?join(';')} // => e;d;c;b
+----
+
 ==== Range Slices
 
 TBD
@@ -133,9 +141,9 @@ TBD
 .Example `Range` slices
 [source,subs="verbatim,quotes"]
 ----
-${(1..10)[1..4]?join(';')}  // => 2;3;4;5
-${(1..10)[1..]?join(';')}   // => 2;3;4;5;6;7;8;9;10
-${(1..10)[4..1]?join(';')}  // => 5;4;3;2
+${(1..10)[1..4]?join(';')} // => 2;3;4;5
+${(1..10)[1..]?join(';')}  // => 2;3;4;5;6;7;8;9;10
+${(1..10)[4..1]?join(';')} // => 5;4;3;2
 ----
 
 ==== String Slices
