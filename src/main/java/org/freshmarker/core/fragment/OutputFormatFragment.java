@@ -35,6 +35,6 @@ public class OutputFormatFragment implements Fragment {
 
     @Override
     public void accept(TemplateVisitor visitor) {
-        visitor.visit(this);
+        visitor.visit(this, format, content);
     }
 }

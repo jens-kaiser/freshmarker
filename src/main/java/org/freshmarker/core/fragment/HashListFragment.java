@@ -71,6 +71,6 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
 
     @Override
     public void accept(TemplateVisitor visitor) {
-        visitor.visit(this);
+        visitor.visit(this, keyIdentifier, valueIdentifier, comparator, list, looperIdentifier, block, filter, offset, limit);
     }
 }

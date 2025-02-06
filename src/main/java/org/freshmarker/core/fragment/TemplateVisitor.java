@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
 
+import java.util.Comparator;
 import java.util.List;
 
 public interface TemplateVisitor {
@@ -34,7 +35,7 @@ public interface TemplateVisitor {
 
     }
 
-    default void visit(OutputFormatFragment fragment) {
+    default void visit(OutputFormatFragment fragment, String format, Fragment content) {
 
     }
 
@@ -59,6 +60,10 @@ public interface TemplateVisitor {
     }
 
     default void visit(VariableFragment fragment) {
+
+    }
+
+    default void visit(HashListFragment hashListFragment, String keyIdentifier, String valueIdentifier, Comparator<String> comparator, TemplateObject list, String looperIdentifier, Fragment block, TemplateObject filter, TemplateObject offset, TemplateObject limit) {
 
     }
 }
