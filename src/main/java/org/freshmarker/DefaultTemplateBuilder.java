@@ -50,7 +50,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     private final StaticContext context;
     private final Clock clock;
     private final SimpleFeatureSet featureSet;
-private final Map<Class<? extends TemplateObject>, Formatter> formatter;
+    private final Map<Class<? extends TemplateObject>, Formatter> formatter;
 
     DefaultTemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
         this.configuration = configuration;

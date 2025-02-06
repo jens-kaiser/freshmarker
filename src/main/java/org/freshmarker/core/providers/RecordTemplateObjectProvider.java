@@ -13,8 +13,7 @@ public class RecordTemplateObjectProvider implements TemplateObjectProvider {
 
     public RecordTemplateObjectProvider(ModelSecurityGateway modelSecurityGateway) {
         this.modelSecurityGateway = modelSecurityGateway;
-        RecordMethodProvider methodSupplier = new RecordMethodProvider();
-        getterProvider = new TemplateMapGetterProvider(methodSupplier);
+        getterProvider = new TemplateMapGetterProvider(new RecordMethodProvider());
     }
 
     @Override

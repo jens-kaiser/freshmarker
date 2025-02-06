@@ -2,13 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 
-public class TemplateSign implements TemplateExpression {
-
-  private final TemplateObject expression;
-
-  public TemplateSign(TemplateObject expression) {
-    this.expression = expression;
-  }
+public record TemplateSign(TemplateObject expression) implements TemplateExpression {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {

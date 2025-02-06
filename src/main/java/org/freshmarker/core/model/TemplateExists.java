@@ -3,13 +3,7 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateExists implements TemplateBooleanExpression {
-
-  private final TemplateObject expression;
-
-  public TemplateExists(TemplateObject expression) {
-    this.expression = expression;
-  }
+public record TemplateExists(TemplateObject expression) implements TemplateBooleanExpression {
 
   @Override
   public TemplateBoolean evaluateToObject(ProcessContext context) {

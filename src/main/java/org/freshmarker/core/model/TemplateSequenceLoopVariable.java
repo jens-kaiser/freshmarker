@@ -2,13 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 
-public class TemplateSequenceLoopVariable implements TemplateLoopVariable {
-
-  private final TemplateLooper looper;
-
-  public TemplateSequenceLoopVariable(TemplateLooper looper) {
-    this.looper = looper;
-  }
+public record TemplateSequenceLoopVariable(TemplateLooper looper) implements TemplateLoopVariable {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
