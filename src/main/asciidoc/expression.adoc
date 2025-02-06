@@ -62,9 +62,19 @@ m|∨
 m|true ∨ true
 
 m|\|\|
-|Conditional Or
+|Conditional Or Operator
 |evaluates only the first operand, if it evaluates to true
 m|false \|\| true
+
+m|^
+|Logical XOR Operator
+|evaluates both operands
+m|false ^ true
+
+m|⊻
+|Unicode Logical XOR Operator
+|evaluates both operands
+m|false ⊻ true
 |===
 
 === Range Operator

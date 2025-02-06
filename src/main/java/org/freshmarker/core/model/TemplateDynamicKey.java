@@ -52,4 +52,8 @@ public class TemplateDynamicKey implements TemplateExpression {
         TemplateListSequence list = (TemplateListSequence) templateObject;
         return list.get(context, beginIndex);
     }
+
+    public void accept(TemplateObjectVisitor visitor) {
+        visitor.visit(this, sequence, dynamicKey);
+    }
 }

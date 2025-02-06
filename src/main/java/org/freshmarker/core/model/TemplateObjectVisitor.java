@@ -7,10 +7,6 @@ public interface TemplateObjectVisitor {
 
     }
 
-    default void visit(TemplateBean bean) {
-
-    }
-
     default void visit(TemplateBuiltIn builtIn) {
 
     }
@@ -44,6 +40,26 @@ public interface TemplateObjectVisitor {
     }
 
     default void visit(TemplateExists templateExists) {
+
+    }
+
+    default void visit(TemplateDynamicKey templateDynamicKey, TemplateObject sequence, TemplateObject dynamicKey) {
+
+    }
+
+    default void visit(TemplateJunction templateJunction) {
+
+    }
+
+    default void visit(TemplateMethodCall templateMethodCall) {
+
+    }
+
+    default void visit(TemplateOperation templateOperation) {
+
+    }
+
+    default void visit(TemplateRelational templateRelational) {
 
     }
 }
