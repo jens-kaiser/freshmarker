@@ -61,4 +61,9 @@ public class VariableFragment implements Fragment {
             return this;
         }
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this);
+    }
 }

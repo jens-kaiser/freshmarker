@@ -2,6 +2,7 @@ package org.freshmarker.core.model.primitive;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateObjectVisitor;
 
 import java.util.Objects;
 
@@ -48,5 +49,10 @@ public class TemplatePrimitive<P> implements TemplateObject {
     @Override
     public Class<?> getModelType() {
         return value.getClass();
+    }
+
+    @Override
+    public void accept(TemplateObjectVisitor visitor) {
+        visitor.visit(this, this.toString());
     }
 }

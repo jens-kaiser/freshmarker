@@ -8,4 +8,9 @@ public class NestedInstructionFragment implements Fragment {
   public void process(ProcessContext context) {
     context.getEnvironment().getNestedContent().ifPresent(n -> n.process(context));
   }
+
+  @Override
+  public void accept(TemplateVisitor visitor) {
+    visitor.visit(this);
+  }
 }

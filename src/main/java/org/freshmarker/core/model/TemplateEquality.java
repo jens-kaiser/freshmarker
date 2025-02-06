@@ -28,4 +28,9 @@ public record TemplateEquality(TemplateObject left, TemplateObject right) implem
         }
         throw new ProcessException("invalid type " + result.getModelType());
     }
+
+    @Override
+    public void accept(TemplateObjectVisitor visitor) {
+        visitor.visit(this, left, right);
+    }
 }

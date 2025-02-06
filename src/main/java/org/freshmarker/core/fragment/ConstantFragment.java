@@ -26,4 +26,9 @@ public class ConstantFragment implements Fragment {
       throw new ProcessException(e.getMessage(), e);
     }
   }
+
+  @Override
+  public void accept(TemplateVisitor visitor) {
+    visitor.visit(this, value);
+  }
 }

@@ -68,4 +68,9 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
             context.setEnvironment(environment);
         }
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this);
+    }
 }

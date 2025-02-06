@@ -32,4 +32,9 @@ public class OutputFormatFragment implements Fragment {
     public int getSize() {
         return content.getSize() + 1;
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this);
+    }
 }

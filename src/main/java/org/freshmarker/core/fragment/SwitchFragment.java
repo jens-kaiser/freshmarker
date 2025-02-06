@@ -67,4 +67,9 @@ public class SwitchFragment extends AbstractConditionalFragment {
         }
         throw new ProcessException("invalid value: " + evaluated, node);
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this);
+    }
 }

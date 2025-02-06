@@ -70,4 +70,9 @@ public class SettingFragment implements Fragment {
                 TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
         context.pushFormatter(formatter);
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this);
+    }
 }

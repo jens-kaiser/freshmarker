@@ -35,4 +35,9 @@ public class UserDirectiveFragment implements Fragment {
     public int getSize() {
         return body.getSize() + 1;
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this);
+    }
 }

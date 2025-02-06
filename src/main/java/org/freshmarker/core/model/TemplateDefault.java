@@ -9,4 +9,9 @@ public record TemplateDefault(TemplateObject base, TemplateObject fallback) impl
         TemplateObject templateObject = base.evaluateToObject(context);
         return context.reductionCheck(templateObject) ? templateObject : fallback.evaluateToObject(context);
     }
+
+    @Override
+    public void accept(TemplateObjectVisitor visitor) {
+        visitor.visit(this);
+    }
 }

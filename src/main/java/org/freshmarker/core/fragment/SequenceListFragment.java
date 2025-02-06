@@ -53,4 +53,9 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
             context.setEnvironment(environment);
         }
     }
+
+    @Override
+    public void accept(TemplateVisitor visitor) {
+        visitor.visit(this, identifier, list, looperIdentifier, block, filter, offset, limit);
+    }
 }

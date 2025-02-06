@@ -14,4 +14,6 @@ public interface Fragment {
     default int getSize() {
         return 1;
     }
+
+    void accept(TemplateVisitor visitor);
 }

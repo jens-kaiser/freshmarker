@@ -30,4 +30,9 @@ public class TemplateMarkup implements TemplateObject {
             }
         };
     }
+
+    @Override
+    public void accept(TemplateObjectVisitor visitor) {
+        visitor.visit(this, content);
+    }
 }
