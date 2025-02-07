@@ -21,7 +21,7 @@ public record TemplateBuiltIn(String name, TemplateObject expression, List<Templ
   }
 
   @Override
-  public void accept(TemplateObjectVisitor visitor) {
-    visitor.visit(this);
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this);
   }
 }

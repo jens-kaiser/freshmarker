@@ -2,64 +2,64 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
-public interface TemplateObjectVisitor {
-    default void visit(TemplatePrimitive<?> primitive, String string) {
-
+public interface TemplateObjectVisitor<R> {
+    default R visit(TemplatePrimitive<?> primitive, String string) {
+        return null;
     }
 
-    default void visit(TemplateBuiltIn builtIn) {
-
+    default R visit(TemplateBuiltIn builtIn) {
+        return null;
     }
 
-    default void visit(TemplateBuiltInVariable builtInVariable) {
-
+    default R visit(TemplateBuiltInVariable builtInVariable) {
+        return null;
     }
 
-    default void visit(TemplateDefault fallback) {
-
+    default R visit(TemplateDefault fallback) {
+        return null;
     }
 
-    default void visit(TemplateMarkup markup, TemplateObject content) {
-
+    default R visit(TemplateMarkup markup, TemplateObject content) {
+        return null;
     }
 
-    default void visit(TemplateVariable variable, String name) {
-
+    default R visit(TemplateVariable variable, String name) {
+        return null;
     }
 
-    default void visit(TemplateEquality templateEquality, TemplateObject left, TemplateObject right) {
-
+    default R visit(TemplateEquality templateEquality, TemplateObject left, TemplateObject right) {
+        return null;
     }
 
-    default void visit(TemplateNegative templateNegative, TemplateObject expression) {
-
+    default R visit(TemplateNegative templateNegative, TemplateObject expression) {
+        return null;
     }
 
-    default void visit(TemplateDotKey templateDotKey, TemplateObject map, String dotKey) {
-
+    default R visit(TemplateDotKey templateDotKey, TemplateObject map, String dotKey) {
+        return null;
     }
 
-    default void visit(TemplateExists templateExists) {
-
+    default R visit(TemplateExists templateExists) {
+        return null;
     }
 
-    default void visit(TemplateDynamicKey templateDynamicKey, TemplateObject sequence, TemplateObject dynamicKey) {
-
+    default R visit(TemplateDynamicKey templateDynamicKey, TemplateObject sequence, TemplateObject dynamicKey) {
+        return null;
     }
 
-    default void visit(TemplateJunction templateJunction) {
-
+    default R visit(TemplateJunction templateJunction) {
+        return null;
     }
 
-    default void visit(TemplateMethodCall templateMethodCall) {
-
+    default R visit(TemplateMethodCall templateMethodCall) {
+        return null;
     }
 
-    default void visit(TemplateOperation templateOperation) {
-
+    default R visit(TemplateOperation templateOperation) {
+        return null;
     }
 
-    default void visit(TemplateRelational templateRelational) {
-
+    default R visit(TemplateRelational templateRelational) {
+        return null;
     }
 }

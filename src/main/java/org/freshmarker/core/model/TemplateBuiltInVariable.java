@@ -10,8 +10,8 @@ public record TemplateBuiltInVariable(String name) implements TemplateExpression
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }
 

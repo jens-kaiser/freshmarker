@@ -14,7 +14,7 @@ public record TemplateVariable(String name) implements TemplateExpression {
   }
 
   @Override
-  public void accept(TemplateObjectVisitor visitor) {
-    visitor.visit(this, name);
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this, name);
   }
 }

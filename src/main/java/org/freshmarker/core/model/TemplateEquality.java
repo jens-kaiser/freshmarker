@@ -30,7 +30,7 @@ public record TemplateEquality(TemplateObject left, TemplateObject right) implem
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this, left, right);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, left, right);
     }
 }

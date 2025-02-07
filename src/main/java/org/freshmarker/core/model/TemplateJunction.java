@@ -32,7 +32,7 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
         };
     }
 
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }

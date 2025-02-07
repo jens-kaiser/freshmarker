@@ -11,7 +11,7 @@ public record TemplateDefault(TemplateObject base, TemplateObject fallback) impl
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }

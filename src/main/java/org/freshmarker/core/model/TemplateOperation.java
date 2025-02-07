@@ -13,7 +13,7 @@ public record TemplateOperation(TokenType op, TemplateObject left, TemplateObjec
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }

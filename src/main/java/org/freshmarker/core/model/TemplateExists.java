@@ -17,7 +17,7 @@ public record TemplateExists(TemplateObject expression) implements TemplateBoole
   }
 
   @Override
-  public void accept(TemplateObjectVisitor visitor) {
-    visitor.visit(this);
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this);
   }
 }

@@ -11,7 +11,7 @@ public record TemplateMethodCall(String name, List<TemplateObject> parameter) im
   }
 
   @Override
-  public void accept(TemplateObjectVisitor visitor) {
-      visitor.visit(this);
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this);
   }
 }

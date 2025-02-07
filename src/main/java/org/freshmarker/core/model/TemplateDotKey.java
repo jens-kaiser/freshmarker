@@ -24,7 +24,7 @@ public class TemplateDotKey implements TemplateExpression {
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this, map, dotKey);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, map, dotKey);
     }
 }

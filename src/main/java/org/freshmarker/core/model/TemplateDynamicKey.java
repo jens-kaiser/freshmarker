@@ -53,7 +53,7 @@ public class TemplateDynamicKey implements TemplateExpression {
         return list.get(context, beginIndex);
     }
 
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this, sequence, dynamicKey);
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, sequence, dynamicKey);
     }
 }
