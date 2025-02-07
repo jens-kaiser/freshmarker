@@ -51,7 +51,7 @@ public interface TemplateVisitor {
 
     }
 
-    default void visit(SwitchFragment fragment) {
+    default void visit(SwitchFragment fragment, TemplateObject switchExpression, List<ConditionalFragment> fragments, Fragment endFragment) {
 
     }
 

@@ -70,6 +70,6 @@ public class SwitchFragment extends AbstractConditionalFragment {
 
     @Override
     public void accept(TemplateVisitor visitor) {
-        visitor.visit(this);
+        visitor.visit(this, switchExpression, fragments, endFragment);
     }
 }
