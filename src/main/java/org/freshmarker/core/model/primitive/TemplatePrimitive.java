@@ -52,7 +52,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this, this.toString());
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, this.toString());
     }
 }

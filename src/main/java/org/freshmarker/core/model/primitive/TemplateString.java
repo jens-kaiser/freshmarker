@@ -38,8 +38,8 @@ public class TemplateString extends TemplatePrimitive<String> {
     }
 
     @Override
-    public void accept(TemplateObjectVisitor visitor) {
-        visitor.visit(this, "'" + this + "'");
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, "'" + this + "'");
     }
 
 }
