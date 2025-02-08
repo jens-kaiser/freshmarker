@@ -10,7 +10,7 @@ public class ReturnInstructionFragment implements Fragment {
   }
 
   @Override
-  public void accept(TemplateVisitor visitor) {
-    visitor.visit(this);
+  public <R> R accept(TemplateVisitor<R> visitor) {
+    return visitor.visit(this);
   }
 }

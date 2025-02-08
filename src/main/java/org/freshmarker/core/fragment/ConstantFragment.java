@@ -28,7 +28,7 @@ public class ConstantFragment implements Fragment {
   }
 
   @Override
-  public void accept(TemplateVisitor visitor) {
-    visitor.visit(this, value);
+  public <R> R accept(TemplateVisitor<R> visitor) {
+    return visitor.visit(this, value);
   }
 }

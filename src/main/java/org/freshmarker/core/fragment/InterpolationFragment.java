@@ -48,7 +48,7 @@ public class InterpolationFragment implements Fragment {
     }
 
     @Override
-    public void accept(TemplateVisitor visitor) {
-        visitor.visit(this, expression);
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, expression);
     }
 }

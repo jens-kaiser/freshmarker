@@ -34,7 +34,7 @@ public class OutputFormatFragment implements Fragment {
     }
 
     @Override
-    public void accept(TemplateVisitor visitor) {
-        visitor.visit(this, format, content);
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, format, content);
     }
 }

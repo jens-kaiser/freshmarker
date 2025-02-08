@@ -60,7 +60,7 @@ public record SettingFragment(String name, TemplateObject expression, SettingIns
     }
 
     @Override
-    public void accept(TemplateVisitor visitor) {
-        visitor.visit(this);
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }

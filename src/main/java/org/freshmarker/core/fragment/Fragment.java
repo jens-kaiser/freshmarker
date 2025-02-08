@@ -15,5 +15,5 @@ public interface Fragment {
         return 1;
     }
 
-    void accept(TemplateVisitor visitor);
+    <R> R accept(TemplateVisitor<R> visitor);
 }

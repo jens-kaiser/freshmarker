@@ -35,7 +35,7 @@ public class BlockFragment implements Fragment {
     }
 
     @Override
-    public void accept(TemplateVisitor visitor) {
-        visitor.visit(this, fragments);
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, fragments);
     }
 }

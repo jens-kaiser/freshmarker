@@ -53,7 +53,7 @@ public record ConditionalFragment(TemplateObject conditional, Fragment content, 
     }
 
     @Override
-    public void accept(TemplateVisitor visitor) {
-        visitor.visit(this, conditional, content);
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, conditional, content);
     }
 }

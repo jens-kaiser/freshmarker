@@ -70,7 +70,7 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
     }
 
     @Override
-    public void accept(TemplateVisitor visitor) {
-        visitor.visit(this, keyIdentifier, valueIdentifier, comparator, list, looperIdentifier, block, filter, offset, limit);
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, keyIdentifier, valueIdentifier, comparator, list, looperIdentifier, block, filter, offset, limit);
     }
 }
