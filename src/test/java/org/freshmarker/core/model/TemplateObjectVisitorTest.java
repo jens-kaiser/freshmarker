@@ -1,6 +1,6 @@
 package org.freshmarker.core.model;
 
-import org.freshmarker.core.model.primitive.TemplatePrimitive;
+import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,24 +12,24 @@ class TemplateObjectVisitorTest {
         TemplateObjectVisitor<Integer> visitor = new TemplateObjectVisitor<>() {
         };
 
-        assertNull(visitor.visit((TemplatePrimitive<?>) null, null));
-        assertNull(visitor.visit((TemplateBuiltIn) null));
-        assertNull(visitor.visit((TemplateBuiltInVariable) null));
-        assertNull(visitor.visit((TemplateDefault) null));
-        assertNull(visitor.visit((TemplateMarkup) null, null));
-        assertNull(visitor.visit((TemplateVariable) null, null));
-        assertNull(visitor.visit((TemplateEquality) null, null, null));
-        assertNull(visitor.visit((TemplateNegative) null, null));
-        assertNull(visitor.visit((TemplateDotKey) null, null, null));
-        assertNull(visitor.visit((TemplateExists) null));
-        assertNull(visitor.visit((TemplateDynamicKey) null, null, null));
-        assertNull(visitor.visit((TemplateJunction) null));
-        assertNull(visitor.visit((TemplateMethodCall) null));
-        assertNull(visitor.visit((TemplateOperation) null));
-        assertNull(visitor.visit((TemplateRelational) null));
-        assertNull(visitor.visit((TemplateSlice) null, null, null));
-        assertNull(visitor.visit(null, null, null, false));
-        assertNull(visitor.visit((TemplateRightUnlimitedRange) null, null));
-        assertNull(visitor.visit(null, null, null, null));
+        assertNull(TemplateString.EMPTY.accept(visitor));
+        assertNull(new TemplateBuiltIn(null, null, null).accept(visitor));
+        assertNull(new TemplateBuiltInVariable(null).accept(visitor));
+        assertNull(new TemplateDefault(null, null).accept(visitor));
+        assertNull(new TemplateMarkup(null).accept(visitor));
+        assertNull(new TemplateVariable(null).accept(visitor));
+        assertNull(new TemplateEquality(null, null).accept(visitor));
+        assertNull(new TemplateNegative(null).accept(visitor));
+        assertNull(new TemplateDotKey(null, null).accept(visitor));
+        assertNull(new TemplateExists(null).accept(visitor));
+        assertNull(new TemplateDynamicKey(null, null).accept(visitor));
+        assertNull(new TemplateJunction(null, null, null).accept(visitor));
+        assertNull(new TemplateMethodCall(null, null).accept(visitor));
+        assertNull(new TemplateOperation(null, null, null).accept(visitor));
+        assertNull(new TemplateRelational(null, null, null).accept(visitor));
+        assertNull(new TemplateSlice(null, null).accept(visitor));
+        assertNull(new TemplateRightLimitedRange(null, null, false).accept(visitor));
+        assertNull(new TemplateRightUnlimitedRange(null).accept(visitor));
+        assertNull(new TemplateLengthLimitedRange(null, null).accept(visitor));
     }
 }
