@@ -77,4 +77,9 @@ public class TemplateSlice implements TemplateObject {
             throw new ProcessException("cannot slice with empty range");
         }
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, sequence, range);
+    }
 }

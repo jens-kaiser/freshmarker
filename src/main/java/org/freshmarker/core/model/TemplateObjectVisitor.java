@@ -62,4 +62,20 @@ public interface TemplateObjectVisitor<R> {
     default R visit(TemplateRelational templateRelational) {
         return null;
     }
+
+    default R visit(TemplateSlice templateSlice, TemplateObject sequence, TemplateObject range) {
+        return null;
+    }
+
+    default R visit(TemplateRightLimitedRange templateRightLimitedRange, TemplateObject lower, TemplateObject upper, boolean exclusive) {
+        return null;
+    }
+
+    default R visit(TemplateRightUnlimitedRange templateRightUnlimitedRange, TemplateObject lower) {
+        return null;
+    }
+
+    default R visit(TemplateLengthLimitedRange templateLengthLimitedRange, TemplateObject lower, TemplateObject upper, TemplateObject count) {
+        return null;
+    }
 }
