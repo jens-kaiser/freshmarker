@@ -46,4 +46,9 @@ public class InterpolationFragment implements Fragment {
             return this;
         }
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, expression);
+    }
 }

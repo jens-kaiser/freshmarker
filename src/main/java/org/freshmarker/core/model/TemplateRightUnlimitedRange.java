@@ -67,4 +67,9 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     public TemplateRange slice(int min, int max, ProcessContext context) {
         return new TemplateRightLimitedRange(new Bounds(lowerNumber + min, lowerNumber + max));
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, lower);
+    }
 }

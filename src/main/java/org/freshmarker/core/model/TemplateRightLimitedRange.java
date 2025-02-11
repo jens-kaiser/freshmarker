@@ -33,4 +33,9 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
     protected TemplateRange newRange(Bounds bounds) {
         return new TemplateRightLimitedRange(bounds);
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, lower, upper, exclusive);
+    }
 }

@@ -26,4 +26,9 @@ public class ConstantFragment implements Fragment {
       throw new ProcessException(e.getMessage(), e);
     }
   }
+
+  @Override
+  public <R> R accept(TemplateVisitor<R> visitor) {
+    return visitor.visit(this, value);
+  }
 }

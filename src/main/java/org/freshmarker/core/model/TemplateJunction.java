@@ -4,16 +4,7 @@ import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateJunction implements TemplateBooleanExpression {
-    private final TokenType type;
-    private final TemplateObject left;
-    private final TemplateObject right;
-
-    public TemplateJunction(TokenType type, TemplateObject left, TemplateObject right) {
-        this.type = type;
-        this.left = left;
-        this.right = right;
-    }
+public record TemplateJunction(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
 
     @Override
     public TemplateBoolean evaluateToObject(ProcessContext context) {
@@ -39,5 +30,9 @@ public class TemplateJunction implements TemplateBooleanExpression {
             case XOR -> new TemplateNegative(this);
             default -> throw new IllegalArgumentException("unsupported junction: " + type);
         };
+    }
+
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }
