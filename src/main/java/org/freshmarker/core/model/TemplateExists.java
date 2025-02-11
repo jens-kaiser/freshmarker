@@ -15,4 +15,9 @@ public record TemplateExists(TemplateObject expression) implements TemplateBoole
   public TemplateNegative not() {
     return new TemplateNegative(this);
   }
+
+  @Override
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this);
+  }
 }

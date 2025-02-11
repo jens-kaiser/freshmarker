@@ -30,4 +30,9 @@ public class TemplateMarkup implements TemplateObject {
             }
         };
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, content);
+    }
 }

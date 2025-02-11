@@ -12,4 +12,9 @@ public record TemplateVariable(String name) implements TemplateExpression {
     }
     return value;
   }
+
+  @Override
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this, name);
+  }
 }

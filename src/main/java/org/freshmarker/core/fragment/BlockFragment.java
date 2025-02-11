@@ -33,4 +33,9 @@ public class BlockFragment implements Fragment {
     public int getSize() {
         return fragments.stream().mapToInt(Fragment::getSize).sum() + 1;
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, fragments);
+    }
 }

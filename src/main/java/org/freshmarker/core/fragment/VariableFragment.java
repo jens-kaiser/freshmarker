@@ -7,21 +7,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
 
-public class VariableFragment implements Fragment {
-
-    private final String name;
-    private final TemplateObject expression;
-
-    private final boolean exists;
-
-    private final Node node;
-
-    public VariableFragment(String name, TemplateObject expression, boolean exists, Node node) {
-        this.name = name;
-        this.expression = expression;
-        this.exists = exists;
-        this.node = node;
-    }
+public record VariableFragment(String name, TemplateObject expression, boolean exists, Node node) implements Fragment {
 
     @Override
     public void process(ProcessContext context) {
@@ -60,5 +46,10 @@ public class VariableFragment implements Fragment {
         } catch (RuntimeException e) {
             return this;
         }
+    }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }

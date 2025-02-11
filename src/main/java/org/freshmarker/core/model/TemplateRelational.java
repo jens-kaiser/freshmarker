@@ -4,16 +4,7 @@ import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateRelational implements TemplateBooleanExpression {
-  private final TokenType type;
-    private final TemplateObject left;
-    private final TemplateObject right;
-
-    public TemplateRelational(TokenType type, TemplateObject left, TemplateObject right) {
-        this.type = type;
-        this.left = left;
-        this.right = right;
-    }
+public record TemplateRelational(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
 
     @Override
     public TemplateBoolean evaluateToObject(ProcessContext context) {
@@ -29,6 +20,11 @@ public class TemplateRelational implements TemplateBooleanExpression {
             case GTE -> new TemplateRelational(TokenType.LT, left, right);
             default -> throw new IllegalArgumentException("unsupported relation: " + type);
         };
+    }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }
 

@@ -20,4 +20,9 @@ public class TemplateNegative implements TemplateBooleanExpression {
     public TemplateBoolean evaluateToObject(ProcessContext context) {
         return expression.evaluate(context, TemplateBoolean.class).not();
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, expression);
+    }
 }

@@ -51,4 +51,9 @@ public record ConditionalFragment(TemplateObject conditional, Fragment content, 
     public int getSize() {
         return content.getSize() + 1;
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, conditional, content);
+    }
 }

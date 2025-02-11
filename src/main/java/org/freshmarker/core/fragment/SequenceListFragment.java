@@ -53,4 +53,9 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
             context.setEnvironment(environment);
         }
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, identifier, list, looperIdentifier, block, filter, offset, limit);
+    }
 }

@@ -22,4 +22,9 @@ public class TemplateDotKey implements TemplateExpression {
             case null, default -> throw new WrongTypeException("wrong map type: " + dotKey + " " + templateObject);
         };
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, map, dotKey);
+    }
 }

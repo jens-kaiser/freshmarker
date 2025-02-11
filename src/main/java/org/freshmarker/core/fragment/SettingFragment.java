@@ -1,6 +1,5 @@
 package org.freshmarker.core.fragment;
 
-import ftl.Node;
 import ftl.ast.SettingInstruction;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
@@ -24,18 +23,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Map;
 
-public class SettingFragment implements Fragment {
-
-    private final String name;
-    private final TemplateObject expression;
-
-    private final Node ftl;
-
-    public SettingFragment(String name, TemplateObject expression, SettingInstruction ftl) {
-        this.name = name;
-        this.expression = expression;
-        this.ftl = ftl;
-    }
+public record SettingFragment(String name, TemplateObject expression, SettingInstruction ftl) implements Fragment {
 
     @Override
     public void process(ProcessContext context) {
@@ -69,5 +57,10 @@ public class SettingFragment implements Fragment {
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateLocalDate.class, new DateFormatter(value), TemplateClassicDate.class, new ClassicDateFormatter(value));
         context.pushFormatter(formatter);
+    }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 }

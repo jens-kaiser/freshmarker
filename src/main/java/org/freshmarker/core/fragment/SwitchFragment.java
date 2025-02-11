@@ -67,4 +67,9 @@ public class SwitchFragment extends AbstractConditionalFragment {
         }
         throw new ProcessException("invalid value: " + evaluated, node);
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, switchExpression, fragments, endFragment);
+    }
 }

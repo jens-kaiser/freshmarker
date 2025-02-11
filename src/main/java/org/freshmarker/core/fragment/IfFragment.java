@@ -52,4 +52,9 @@ public class IfFragment extends AbstractConditionalFragment {
         }
         return new IfFragment(fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, fragments, endFragment);
+    }
 }

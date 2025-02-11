@@ -46,4 +46,9 @@ public TemplateLengthLimitedRange(TemplateObject lower, TemplateObject upper, Te
         int offset = Integer.compare(bounds.upper(), bounds.lower());
         return new TemplateLengthLimitedRange(TemplateNumber.of(bounds.lower()), TemplateNumber.of(bounds.upper()), TemplateNumber.of(diff + offset), bounds);
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, lower, upper, count);
+    }
 }

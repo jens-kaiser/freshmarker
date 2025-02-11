@@ -68,4 +68,9 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
             context.setEnvironment(environment);
         }
     }
+
+    @Override
+    public <R> R accept(TemplateVisitor<R> visitor) {
+        return visitor.visit(this, keyIdentifier, valueIdentifier, comparator, list, looperIdentifier, block, filter, offset, limit);
+    }
 }

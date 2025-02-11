@@ -3,6 +3,7 @@ package org.freshmarker.core.model.primitive;
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateObjectVisitor;
 
 public class TemplateString extends TemplatePrimitive<String> {
     public static final TemplateString EMPTY = new TemplateString("");
@@ -35,4 +36,10 @@ public class TemplateString extends TemplatePrimitive<String> {
         }
         return new TemplateString(new StringBuilder(getValue().substring(max, min + 1)).reverse().toString());
     }
+
+    @Override
+    public <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return visitor.visit(this, "'" + this + "'");
+    }
+
 }

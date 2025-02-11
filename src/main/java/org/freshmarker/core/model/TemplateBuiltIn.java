@@ -19,4 +19,9 @@ public record TemplateBuiltIn(String name, TemplateObject expression, List<Templ
       return context.getBuiltIn(result.getClass(), name).apply(result, parameter, context);
     }
   }
+
+  @Override
+  public <R> R accept(TemplateObjectVisitor<R> visitor) {
+    return visitor.visit(this);
+  }
 }

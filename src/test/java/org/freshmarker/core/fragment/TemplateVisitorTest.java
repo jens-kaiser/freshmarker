@@ -1,0 +1,31 @@
+package org.freshmarker.core.fragment;
+
+import org.freshmarker.core.model.primitive.TemplateString;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TemplateVisitorTest {
+
+    @Test
+    void visit() {
+        TemplateVisitor<Integer> visitor = new TemplateVisitor<>() {
+        };
+
+        assertNull(new BlockFragment(null).accept(visitor));
+        assertNull(new ConditionalFragment(TemplateString.EMPTY, new ConstantFragment(null), null).accept(visitor));
+        assertNull(new ConstantFragment(null).accept(visitor));
+        assertNull(new HashListFragment(null, null, null, null, null, null, null, null, null, null).accept(visitor));
+        assertNull(new IfFragment(null, null).accept(visitor));
+        assertNull(new InterpolationFragment(null, null).accept(visitor));
+        assertNull(new NestedInstructionFragment().accept(visitor));
+        assertNull(new OutputFormatFragment(null, null).accept(visitor));
+        assertNull(new ReturnInstructionFragment().accept(visitor));
+        assertNull(new SequenceListFragment(null, null, null, null, null, null, null, null).accept(visitor));
+        assertNull(new SettingFragment(null, null, null).accept(visitor));
+        assertNull(new SwitchFragment(null, null).accept(visitor));
+        assertNull(new UserDirectiveFragment(null, null, null, null).accept(visitor));
+        assertNull(new VariableFragment(null, null, false, null).accept(visitor));
+        assertNull(new HashListFragment(null, null, null, null, null, null, null, null, null, null).accept(visitor));
+    }
+}

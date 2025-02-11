@@ -40,4 +40,8 @@ public interface TemplateObject {
     default TemplateObject negate() {
         throw new ProcessException("unsupported operation: negate");
     }
+
+    default <R> R accept(TemplateObjectVisitor<R> visitor) {
+        return null;
+    }
 }
