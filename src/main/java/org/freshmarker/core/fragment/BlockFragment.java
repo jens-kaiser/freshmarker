@@ -4,6 +4,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
 
 import java.util.List;
+import java.util.Objects;
 
 public class BlockFragment implements Fragment {
 
@@ -37,5 +38,18 @@ public class BlockFragment implements Fragment {
     @Override
     public <R> R accept(TemplateVisitor<R> visitor) {
         return visitor.visit(this, fragments);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BlockFragment that)) {
+            return false;
+        }
+        return Objects.equals(fragments, that.fragments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(fragments);
     }
 }

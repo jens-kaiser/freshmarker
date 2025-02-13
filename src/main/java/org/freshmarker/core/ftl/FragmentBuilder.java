@@ -67,6 +67,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private static final NamedArgsBuilder NAMED_ARGS_BUILDER = new NamedArgsBuilder();
     private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder();
 
+    private static final NestedInstructionFragment NESTED_INSTRUCTION_FRAGMENT = new NestedInstructionFragment();
+    private static final ReturnInstructionFragment RETURN_INSTRUCTION_FRAGMENT = new ReturnInstructionFragment();
+
     private static final Map<NodeType, Comparator<String>> COMPARATORS = Map.of(
             TokenType.ASCENDING, Comparator.naturalOrder(), TokenType.DESCENDING, Comparator.reverseOrder());
 
@@ -296,13 +299,13 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(NestedInstruction ftl, List<Fragment> input) {
-        input.add(new NestedInstructionFragment());
+        input.add(NESTED_INSTRUCTION_FRAGMENT);
         return input;
     }
 
     @Override
     public List<Fragment> visit(ReturnInstruction ftl, List<Fragment> input) {
-        input.add(new ReturnInstructionFragment());
+        input.add(RETURN_INSTRUCTION_FRAGMENT);
         return input;
     }
 
