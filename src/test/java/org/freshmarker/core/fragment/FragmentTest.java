@@ -15,6 +15,7 @@ class FragmentTest {
         ConstantFragment constantFragment3 = new ConstantFragment("tset");
         assertEquals(constantFragment1, constantFragment2);
         assertNotEquals(constantFragment1, constantFragment3);
+        assertEquals(constantFragment1.hashCode(), constantFragment2.hashCode());
     }
 
     @Test
@@ -24,5 +25,6 @@ class FragmentTest {
         BlockFragment blockFragment3 = new BlockFragment(List.of(new ConstantFragment("tset")));
         assertEquals(blockFragment1, blockFragment2);
         assertNotEquals(blockFragment1, blockFragment3);
+        assertEquals(blockFragment1.hashCode(), blockFragment2.hashCode());
     }
 }
