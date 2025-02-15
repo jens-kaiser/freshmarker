@@ -135,6 +135,8 @@ m|≥
 m|x ≥ 9
 |===
 
+WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by  parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
+
 ==== Version Comparison Operators
 
 NOTE: These operators are in experimental stage.

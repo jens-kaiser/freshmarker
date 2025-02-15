@@ -45,7 +45,7 @@ public class TemplateVersion extends TemplatePrimitive<Version> {
             case LT -> getValue().compareTo(rightValue.getValue()) < 0;
             case GT -> getValue().compareTo(rightValue.getValue()) > 0;
             case LTE -> getValue().compareTo(rightValue.getValue()) <= 0;
-            case GTE -> getValue().compareTo(rightValue.getValue()) >= 0;
+            case GTE, UNICODE_GTE -> getValue().compareTo(rightValue.getValue()) >= 0;
             default -> super.relation(operator, operand, context);
         };
     }

@@ -594,7 +594,7 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
             case LT -> compare(rightValue).sign().asInt() < 0;
             case GT -> compare(rightValue).sign().asInt() > 0;
             case LTE -> compare(rightValue).sign().asInt() <= 0;
-            case GTE -> compare(rightValue).sign().asInt() >= 0;
+            case GTE, UNICODE_GTE -> compare(rightValue).sign().asInt() >= 0;
             default -> super.relation(operator, operand, context);
         };
     }
