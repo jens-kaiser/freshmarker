@@ -123,7 +123,9 @@ TOKEN :
     |
     <LTE : "≤" | "<=">
     |
-    <GTE : "≥" | ">=">
+    <GTE : ">=">
+    |
+    <UNICODE_GTE : "≥">
     |
     <OR2 : "||">
     |
@@ -217,7 +219,7 @@ EqualityExpression :
 RelationalExpression :
     RangeExpression
     [
-        (<GT>|<GTE>|<LT>|<LTE>)
+        (<GT>|<GTE>|<UNICODE_GTE>|<LT>|<LTE>)
         RangeExpression
     ]
 ;

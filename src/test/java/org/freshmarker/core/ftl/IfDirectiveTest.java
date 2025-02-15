@@ -104,4 +104,20 @@ class IfDirectiveTest {
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "<#if 7 < 13><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit",
+            "<#if 7 ≤ 13><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit",
+            "<#if (13 > 7)><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit",
+            "<#if (13 ≥ 7)><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit",
+            "[#if 13 > 7][#var name='Gonzo'/]${name}[/#if] ${name!'Kermit'},Gonzo Kermit",
+            "[#if 13 ≥ 7][#var name='Gonzo'/]${name}[/#if] ${name!'Kermit'},Gonzo Kermit",
+            "<#if 13 ≥ 7><#var name='Gonzo'/>${name}</#if> ${name!'Kermit'},Gonzo Kermit"
+    })
+    void unicodeRelation(String input, String expected) throws ParseException {
+        Template template = builder.getTemplate("test", input);
+        Map<String, Object> model = Map.of();
+        assertEquals(expected, template.process(model));
+    }
 }

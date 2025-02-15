@@ -17,7 +17,7 @@ public record TemplateRelational(TokenType type, TemplateObject left, TemplateOb
             case LT -> new TemplateRelational(TokenType.GTE, left, right);
             case GT -> new TemplateRelational(TokenType.LTE, left, right);
             case LTE -> new TemplateRelational(TokenType.GT, left, right);
-            case GTE -> new TemplateRelational(TokenType.LT, left, right);
+            case GTE, UNICODE_GTE -> new TemplateRelational(TokenType.LT, left, right);
             default -> throw new IllegalArgumentException("unsupported relation: " + type);
         };
     }
