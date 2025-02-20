@@ -4,7 +4,8 @@
 
 === Bugfixes
 
-- The greater `>` and the greater equals `>=` operator must be surrounded by  parenthesis in directive expression to distinguish it from the directive closing symbol `>`. Accidentally the `≥` operator too.
+- the greater `>` and the greater equals `>=` operator must be surrounded by  parenthesis in directive expression to distinguish it from the directive closing symbol `>`. Accidentally the `≥` operator too.
+- fix template reduction for conditional directives
 
 == Release 1.7.2 (2025-02-11)
 

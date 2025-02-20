@@ -2,6 +2,7 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,9 @@ public class IfFragment extends AbstractConditionalFragment {
     }
 
     private boolean filterByConditional(ProcessContext context, ConditionalFragment conditionalFragment) {
-        return TemplateBoolean.TRUE == evaluateConditional(conditionalFragment.conditional(), context, conditionalFragment.node());
+        TemplateObject conditional = evaluateConditional(conditionalFragment.conditional(), context, conditionalFragment.node());
+        context.reductionCheck(conditional);
+        return TemplateBoolean.TRUE == conditional;
     }
 
     @Override
