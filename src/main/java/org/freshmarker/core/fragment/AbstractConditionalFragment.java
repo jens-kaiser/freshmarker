@@ -38,7 +38,9 @@ public abstract class AbstractConditionalFragment implements Fragment {
 
     protected TemplateObject evaluateConditional(TemplateObject conditional, ProcessContext context, Node node) {
         try {
-            return conditional.evaluateToObject(context);
+            TemplateObject templateObject = conditional.evaluateToObject(context);
+            context.reductionCheck(templateObject);
+            return templateObject;
         } catch (UnsupportedBuiltInException e) {
             throw new UnsupportedBuiltInException(e.getMessage(), node, e);
         } catch (WrongTypeException e) {
