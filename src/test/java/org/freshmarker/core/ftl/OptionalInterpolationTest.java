@@ -21,4 +21,16 @@ class OptionalInterpolationTest {
     void interpolatePresent(TemplateBuilder builder) {
         assertEquals("42", builder.getTemplate("optional", "${optional}").process(Map.of("optional", Optional.of(42))));
     }
+
+    @Test
+    void interpolateExists(TemplateBuilder builder) {
+        Map<String, Object> emptyMap = Map.of("optional", Optional.empty());
+        Map<String, Object> presentMap = Map.of("optional", Optional.of(42));
+        assertEquals("no", builder.getTemplate("optional", "${optional??}").process(emptyMap));
+        assertEquals("yes", builder.getTemplate("optional", "${optional == null}").process(emptyMap));
+        assertEquals("no", builder.getTemplate("optional", "${optional != null}").process(emptyMap));
+        assertEquals("yes", builder.getTemplate("optional", "${optional??}").process(presentMap));
+        assertEquals("no", builder.getTemplate("optional", "${optional == null}").process(presentMap));
+        assertEquals("yes", builder.getTemplate("optional", "${optional != null}").process(presentMap));
+    }
 }

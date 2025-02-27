@@ -1,5 +1,11 @@
 = Release Notes
 
+== Release 1.7.4 (2025-03-XX)
+
+=== Improvements
+
+- add `java.util.Optional` support
+
 == Release 1.7.3 (2025-02-20)
 
 === Bugfixes
