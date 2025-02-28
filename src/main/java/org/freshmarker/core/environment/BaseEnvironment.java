@@ -57,7 +57,17 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
         if (o instanceof TemplateObject templateObject) {
             return templateObject;
         }
-        Object current = o instanceof TemplateObjectSupplier<?> templateObject ? templateObject.get() : o;
+        Object current;
+        if (o instanceof Optional<?> optional) {
+            if (optional.isEmpty()) {
+                return TemplateNull.NULL;
+            }
+            current = optional.get();
+        } else if (o instanceof TemplateObjectSupplier<?> templateObjectSupplier) {
+            current = templateObjectSupplier.get();
+        } else {
+            current = o;
+        }
         for (TemplateObjectProvider provider : providers) {
             TemplateObject object = provider.provide(this, current);
             if (object != null) {
