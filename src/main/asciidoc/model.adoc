@@ -158,6 +158,26 @@ ${'abraxas'[1..]}  // => braxas
 ${'abraxas'[4..1]} // => xarb
 ----
 
+=== Optional Values
+
+Optional values of type `java.util.Optional` are also supported in the model.
+Empty optionals are interpreted as `null` and all other values are interpreted as instances of the generic type.
+
+An optional can therefore be checked with the existence operator and the default operator can be used to determine a replacement value for empty optionals.
+
+|===
+| Java | FreshMarker
+
+|`optional.isPresent()`
+|${optional??}
+
+|`optional.isEmpty()`
+|${optional == null}
+
+|`optional.orElseGet(42)`
+|${optional!42}
+|===
+
 === Lazy Values
 
 Normally the values are written directly into the model.
