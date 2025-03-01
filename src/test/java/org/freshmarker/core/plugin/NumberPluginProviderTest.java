@@ -34,7 +34,7 @@ class NumberPluginProviderTest {
     private BuiltInKeyBuilder<TemplateNumber> builder;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         builder = new BuiltInKeyBuilder<>(TemplateNumber.class);
         builtIns = new HashMap<>();
         new NumberPluginProvider().registerBuildIn(builtIns);

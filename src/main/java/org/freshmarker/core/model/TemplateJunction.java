@@ -32,6 +32,7 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
         };
     }
 
+    @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this);
     }

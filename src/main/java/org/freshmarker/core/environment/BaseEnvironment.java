@@ -51,22 +51,22 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
     }
 
     private TemplateObject wrap(Object o) {
-        if (o == null) {
-            return TemplateNull.NULL;
-        }
-        if (o instanceof TemplateObject templateObject) {
-            return templateObject;
-        }
         Object current;
-        if (o instanceof Optional<?> optional) {
-            if (optional.isEmpty()) {
+        switch (o) {
+            case null -> {
                 return TemplateNull.NULL;
             }
-            current = optional.get();
-        } else if (o instanceof TemplateObjectSupplier<?> templateObjectSupplier) {
-            current = templateObjectSupplier.get();
-        } else {
-            current = o;
+            case TemplateObject templateObject -> {
+                return templateObject;
+            }
+            case Optional<?> optional -> {
+                if (optional.isEmpty()) {
+                    return TemplateNull.NULL;
+                }
+                current = optional.get();
+            }
+            case TemplateObjectSupplier<?> templateObjectSupplier -> current = templateObjectSupplier.get();
+            default -> current = o;
         }
         for (TemplateObjectProvider provider : providers) {
             TemplateObject object = provider.provide(this, current);
