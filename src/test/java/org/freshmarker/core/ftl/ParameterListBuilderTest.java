@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParameterListBuilderTest {
 
-    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder(null);
+    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder(new InterpolationBuilder(null));
 
     @Test
     void emptyParameterList() {
