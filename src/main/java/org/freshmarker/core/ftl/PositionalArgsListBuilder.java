@@ -6,10 +6,16 @@ import org.freshmarker.core.model.TemplateObject;
 import java.util.List;
 
 public class PositionalArgsListBuilder implements ExpressionVisitor<List<TemplateObject>, List<TemplateObject>> {
+    private final InterpolationBuilder interpolationBuilder;
+
+    public PositionalArgsListBuilder(InterpolationBuilder interpolationBuilder) {
+        this.interpolationBuilder = interpolationBuilder;
+    }
+
     @Override
     public List<TemplateObject> visit(PositionalArgsList expression, List<TemplateObject> input) {
         for (int i = 0; i < expression.size(); i += 2) {
-            input.add(expression.get(i).accept(InterpolationBuilder.INSTANCE, null));
+            input.add(expression.get(i).accept(interpolationBuilder, null));
         }
         return input;
     }

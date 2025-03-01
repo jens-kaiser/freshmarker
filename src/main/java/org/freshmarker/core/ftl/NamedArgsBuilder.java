@@ -10,6 +10,12 @@ import java.util.Map;
 
 public class NamedArgsBuilder implements FtlVisitor<Map<String, TemplateObject>, Void> {
 
+    private final InterpolationBuilder interpolationBuilder;
+
+    public NamedArgsBuilder(InterpolationBuilder interpolationBuilder) {
+        this.interpolationBuilder = interpolationBuilder;
+    }
+
     @Override
     public Void visit(Token ftl, Map<String, TemplateObject> input) {
         return null;
@@ -23,7 +29,7 @@ public class NamedArgsBuilder implements FtlVisitor<Map<String, TemplateObject>,
                 i++;
             }
             IDENTIFIER key = (IDENTIFIER) ftl.get(i);
-            TemplateObject value = ftl.get(i + 2).accept(InterpolationBuilder.INSTANCE, null);
+            TemplateObject value = ftl.get(i + 2).accept(interpolationBuilder, null);
             input.put(key.toString(), value);
             i += 3;
         }

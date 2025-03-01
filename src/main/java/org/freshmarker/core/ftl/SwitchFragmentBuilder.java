@@ -33,10 +33,12 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     private static final Logger logger = LoggerFactory.getLogger(SwitchFragmentBuilder.class);
 
     private final FragmentBuilder fragmentBuilder;
+    private final InterpolationBuilder interpolationBuilder;
     private final FeatureSet featureSet;
 
-    public SwitchFragmentBuilder(FragmentBuilder fragmentBuilder, FeatureSet featureSet) {
+    public SwitchFragmentBuilder(FragmentBuilder fragmentBuilder, InterpolationBuilder interpolationBuilder, FeatureSet featureSet) {
     this.fragmentBuilder = fragmentBuilder;
+        this.interpolationBuilder = interpolationBuilder;
         this.featureSet = featureSet;
     }
 
@@ -44,7 +46,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     public SwitchFragment visit(SwitchInstruction ftl, SwitchFragment input) {
         logger.debug("children: {}", ftl.children());
         Node expression = ftl.get(3);
-        TemplateObject switchExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject switchExpression = expression.accept(interpolationBuilder, null);
         SwitchFragment switchFragment = new SwitchFragment(switchExpression, expression);
         Map<NodeType, List<CaseInstruction>> parts = ftl.childrenOfType(CaseInstruction.class).stream().collect(Collectors.groupingBy(p -> p.get(1).getType()));
         List<CaseInstruction> caseParts = parts.getOrDefault(TokenType.CASE, List.of());
@@ -79,7 +81,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         List<TemplateObject> expressions = new LinkedList<>();
         boolean onlyConstantsAllowed = featureSet.isEnabled(ftl.get(1).getType() == TokenType.ON ? ALLOW_ONLY_CONSTANT_ONS : ALLOW_ONLY_CONSTANT_CASES);
         for (int i = 3; i < blockIndex - 1; i +=2) {
-            TemplateObject onExpression = ftl.get(i).accept(InterpolationBuilder.INSTANCE, null);
+            TemplateObject onExpression = ftl.get(i).accept(interpolationBuilder, null);
             if (onlyConstantsAllowed && !onExpression.isPrimitive()) {
                 throw new ParsingException("only constant expression allowed", ftl.get(i));
             }

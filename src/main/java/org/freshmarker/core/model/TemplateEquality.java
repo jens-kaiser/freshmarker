@@ -14,11 +14,15 @@ public record TemplateEquality(TemplateObject left, TemplateObject right) implem
     public TemplateBoolean evaluateToObject(ProcessContext context) {
         TemplateObject leftObject = evaluate(left, context);
         TemplateObject rightObject = evaluate(right, context);
-        if (leftObject == TemplateNull.NULL && rightObject != TemplateNull.NULL_LITERAL ||
-                leftObject != TemplateNull.NULL_LITERAL && rightObject == TemplateNull.NULL) {
+        if (isNonLiteralNull(leftObject) && rightObject != TemplateNull.NULL_LITERAL ||
+            leftObject != TemplateNull.NULL_LITERAL && isNonLiteralNull(rightObject)) {
             throw new ProcessException("null compare only allowed with null literal");
         }
         return TemplateBoolean.from(leftObject.equals(rightObject));
+    }
+
+    private static boolean isNonLiteralNull(TemplateObject object) {
+        return object == TemplateNull.NULL || object == TemplateNull.NULL_OPTIONAL;
     }
 
     private TemplateObject evaluate(TemplateObject object, ProcessContext context) {

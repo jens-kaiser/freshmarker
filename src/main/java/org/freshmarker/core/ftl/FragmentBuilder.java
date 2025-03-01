@@ -64,9 +64,6 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentBuilder.class);
 
-    private static final NamedArgsBuilder NAMED_ARGS_BUILDER = new NamedArgsBuilder();
-    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder();
-
     private static final NestedInstructionFragment NESTED_INSTRUCTION_FRAGMENT = new NestedInstructionFragment();
     private static final ReturnInstructionFragment RETURN_INSTRUCTION_FRAGMENT = new ReturnInstructionFragment();
 
@@ -78,6 +75,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final String nameSpace;
     private final FeatureSet featureSet;
     private final int includeLevel;
+    private final InterpolationBuilder interpolationBuilder;
+    private final NamedArgsBuilder namedArgsBuilder;
+    private final ParameterListBuilder parameterListBuilder;
 
     public FragmentBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet, int includeLevel) {
         this.template = template;
@@ -85,6 +85,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         this.nameSpace = nameSpace;
         this.featureSet = featureSet;
         this.includeLevel = includeLevel;
+        interpolationBuilder = new InterpolationBuilder(featureSet);
+        namedArgsBuilder = new NamedArgsBuilder(interpolationBuilder);
+        parameterListBuilder = new ParameterListBuilder(interpolationBuilder);
     }
 
     @Override
@@ -123,26 +126,26 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(IfStatement ftl, List<Fragment> input) {
-        input.add(ftl.accept(new IfFragmentBuilder(this), null));
+        input.add(ftl.accept(new IfFragmentBuilder(this, interpolationBuilder), null));
         return input;
     }
 
     @Override
     public List<Fragment> visit(SwitchInstruction ftl, List<Fragment> input) {
-        input.add(ftl.accept(new SwitchFragmentBuilder(this, featureSet), null));
+        input.add(ftl.accept(new SwitchFragmentBuilder(this, interpolationBuilder, featureSet), null));
         return input;
     }
 
     @Override
     public List<Fragment> visit(Interpolation ftl, List<Fragment> input) {
-        TemplateObject interpolation = ftl.get(1).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject interpolation = ftl.get(1).accept(interpolationBuilder, null);
         input.add(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
         return input;
     }
 
     @Override
     public List<Fragment> visit(ListInstruction ftl, List<Fragment> input) {
-        TemplateObject list = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject list = ftl.get(3).accept(interpolationBuilder, null);
         String identifier = ftl.get(5).toString();
         int index = 6;
         Comparator<String> comparator = null;
@@ -162,18 +165,18 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
         TemplateObject filter = null;
         if (ftl.get(index).getType() == TokenType.FILTER) {
-            filter = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
+            filter = ftl.get(index + 1).accept(interpolationBuilder, null);
             index += 2;
         }
         TemplateObject offset = null;
         if (ftl.get(index).getType() == TokenType.OFFSET) {
-            offset = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
+            offset = ftl.get(index + 1).accept(interpolationBuilder, null);
             logger.info("offset: {} = {}", ftl.get(index + 1), offset);
             index += 2;
         }
         TemplateObject limit = null;
         if (ftl.get(index).getType() == TokenType.LIMIT) {
-            limit = ftl.get(index + 1).accept(InterpolationBuilder.INSTANCE, null);
+            limit = ftl.get(index + 1).accept(interpolationBuilder, null);
             index += 2;
         }
         Fragment block = Fragments.optimize(ftl.get(index + 1).accept(this, new ArrayList<>()));
@@ -188,7 +191,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(SettingInstruction ftl, List<Fragment> input) {
         IDENTIFIER identifier = (IDENTIFIER) ftl.get(3);
-        TemplateObject expression = ftl.get(5).accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject expression = ftl.get(5).accept(interpolationBuilder, null);
         input.add(new SettingFragment(identifier.toString(), expression, ftl));
         return input;
     }
@@ -214,7 +217,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
         String name = ftl.get(nameIndex).toString();
         HashMap<String, TemplateObject> namedArgs = new HashMap<>();
-        ftl.get(nameIndex + 1).accept(NAMED_ARGS_BUILDER, namedArgs);
+        ftl.get(nameIndex + 1).accept(namedArgsBuilder, namedArgs);
         logger.debug("user directive: {}.{} {}", currentNameSpace, name, namedArgs);
         Node node = ftl.children().stream().skip(nameIndex + 1L)
                 .dropWhile(n -> n.getType() == null || !Set.<NodeType>of(TokenType.GT, TokenType.CLOSE_TAG).contains(n.getType()))
@@ -254,7 +257,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (ftl.get(parameterListIndex).getType() == TokenType.CLOSE_TAG) {
             return Collections.emptyList();
         }
-        return ftl.get(parameterListIndex).accept(PARAMETER_LIST_BUILDER, new ArrayList<>());
+        return ftl.get(parameterListIndex).accept(parameterListBuilder, new ArrayList<>());
     }
 
     private int getParameterListIndex(MacroDefinition ftl) {
@@ -283,7 +286,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (ftl.size() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.add(new VariableFragment(name, ftl.get(5).accept(InterpolationBuilder.INSTANCE, null), true, ftl.get(5)));
+        input.add(new VariableFragment(name, ftl.get(5).accept(interpolationBuilder, null), true, ftl.get(5)));
         return input;
     }
 
@@ -293,7 +296,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (ftl.size() != 7) {
             throw new ParsingException("only one assignment supported", ftl);
         }
-        input.add(new VariableFragment(name, ftl.get(5).accept(InterpolationBuilder.INSTANCE, null), false, ftl.get(5)));
+        input.add(new VariableFragment(name, ftl.get(5).accept(interpolationBuilder, null), false, ftl.get(5)));
         return input;
     }
 
@@ -311,7 +314,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(ImportInstruction ftl, List<Fragment> input) {
-        String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
+        String path = ftl.get(3).accept(interpolationBuilder, null).toString();
         String namespace = ftl.get(5).toString();
         try {
             FreshMarkerParser parser = new FreshMarkerParser(template.getTemplateLoader().getImport(template.getPath(), path));
@@ -337,7 +340,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             return List.of();
         }
 
-        String path = ftl.get(3).accept(InterpolationBuilder.INSTANCE, null).toString();
+        String path = ftl.get(3).accept(interpolationBuilder, null).toString();
         try {
             Map<String, Object> parameters = getParameters(ftl);
             TemplateBoolean parsedIncludeDefault = TemplateBoolean.from(featureSet.isEnabled(IncludeDirectiveFeature.PARSE_BY_DEFAULT));
@@ -360,11 +363,11 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         }
     }
 
-    private static Map<String, Object> getParameters(IncludeInstruction ftl) {
+    private Map<String, Object> getParameters(IncludeInstruction ftl) {
         int index = ftl.get(4).getType() == TokenType.SEMICOLON ? 5 : 4;
         Map<String, Object> parameters = new HashMap<>();
         for (int i = index; i < ftl.size() - 1; i += 3) {
-            parameters.put(ftl.get(i).toString(), ftl.get(i + 2).accept(InterpolationBuilder.INSTANCE, null));
+            parameters.put(ftl.get(i).toString(), ftl.get(i + 2).accept(interpolationBuilder, null));
         }
         return parameters;
     }

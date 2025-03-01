@@ -17,15 +17,17 @@ import java.util.List;
 class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
 
     private final FragmentBuilder fragmentBuilder;
+    private final InterpolationBuilder interpolationBuilder;
 
-    IfFragmentBuilder(FragmentBuilder fragmentBuilder) {
+    IfFragmentBuilder(FragmentBuilder fragmentBuilder, InterpolationBuilder interpolationBuilder) {
         this.fragmentBuilder = fragmentBuilder;
+        this.interpolationBuilder = interpolationBuilder;
     }
 
     @Override
     public IfFragment visit(IfStatement ftl, IfFragment input) {
         Node expression = ftl.get(3);
-        TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject ifExpression = expression.accept(interpolationBuilder, null);
         Fragment ifBlock;
         if (indexAfterIfBlock(ftl) == 5) {
             ifBlock = ConstantFragment.EMPTY;
@@ -50,7 +52,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
     @Override
     public IfFragment visit(ElseIfBlock ftl, IfFragment input) {
         Node expression = ftl.get(3);
-        TemplateObject ifExpression = expression.accept(InterpolationBuilder.INSTANCE, null);
+        TemplateObject ifExpression = expression.accept(interpolationBuilder, null);
         Fragment ifBlock;
         if (ftl.size() == 5) {
             ifBlock = ConstantFragment.EMPTY;

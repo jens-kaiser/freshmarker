@@ -6,6 +6,7 @@ public final class TemplateNull implements TemplateObject {
 
     public static final TemplateNull NULL = new TemplateNull();
     public static final TemplateNull NULL_LITERAL = new TemplateNull();
+    public static final TemplateNull NULL_OPTIONAL = new TemplateNull();
 
     private TemplateNull() {
         super();

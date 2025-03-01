@@ -35,6 +35,10 @@ In the example above the `upper_case` built-in is called on the current value `W
 The second built-in `lower_case` is called on the current value `WORLD`, which is the result of `upper_case`.
 the result of the interpolation is the result `world` of the second built-in.
 
+NOTE: Since _FreshMarker_ 1.7.4, the processing of built-ins can be modified.
+Normally, the processing of built-ins ends if no suitable built-in is found. In the case of `null` values and empty optionals, this behavior can now be changed using the flags
+`BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY` and `BuiltinHandlingFeature.IGNORE_NULL` flags. In both cases, the actual built-in is ignored and the input value is returned.
+
 include::builtins-string.adoc[]
 
 include::builtins-boolean.adoc[]

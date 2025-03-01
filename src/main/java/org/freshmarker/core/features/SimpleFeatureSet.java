@@ -17,7 +17,8 @@ public class SimpleFeatureSet implements FeatureSet {
 
     @Override
     public boolean isEnabled(TemplateFeature feature) {
-        return bitSet.get(templateFeatures.getFlag(feature));
+        int flag = templateFeatures.getFlag(feature);
+        return flag != -1 && bitSet.get(flag);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class SimpleFeatureSet implements FeatureSet {
 
     public SimpleFeatureSet with(TemplateFeature feature) {
         int flag = templateFeatures.getFlag(feature);
-        if (bitSet.get(flag)) {
+        if (flag == -1 || bitSet.get(flag)) {
             return this;
         }
         BitSet newBitSet = (BitSet)bitSet.clone();
@@ -37,7 +38,7 @@ public class SimpleFeatureSet implements FeatureSet {
 
     public SimpleFeatureSet without(TemplateFeature feature) {
         int flag = templateFeatures.getFlag(feature);
-        if (!bitSet.get(flag)) {
+        if (flag == -1 || !bitSet.get(flag)) {
             return this;
         }
         BitSet newBitSet = (BitSet)bitSet.clone();

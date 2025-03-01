@@ -61,7 +61,7 @@ public class BaseEnvironment implements Environment , TemplateObjectMapper {
             }
             case Optional<?> optional -> {
                 if (optional.isEmpty()) {
-                    return TemplateNull.NULL;
+                    return TemplateNull.NULL_OPTIONAL;
                 }
                 current = optional.get();
             }

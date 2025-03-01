@@ -16,6 +16,10 @@ class SimpleFeatureSetTest {
         }
     }
 
+    private enum UnknownFeature implements TemplateFeature{
+        UNKNOWN_FEATURE;
+    }
+
     private SimpleFeatureSet simpleFeatureSet;
 
     @BeforeEach
@@ -45,6 +49,13 @@ class SimpleFeatureSetTest {
     }
 
     @Test
+    void withWithUnknownFeature() {
+        SimpleFeatureSet derived = simpleFeatureSet.with(UnknownFeature.UNKNOWN_FEATURE);
+        assertFalse(derived.isEnabled(UnknownFeature.UNKNOWN_FEATURE));
+        assertTrue(derived.isDisabled(UnknownFeature.UNKNOWN_FEATURE));
+    }
+
+    @Test
     void notChangingWith() {
         SimpleFeatureSet derived = simpleFeatureSet.with(DemoFeature.FIRST);
         assertSame(simpleFeatureSet, derived);
@@ -55,6 +66,13 @@ class SimpleFeatureSetTest {
         SimpleFeatureSet derived = simpleFeatureSet.without(DemoFeature.FIRST);
         assertTrue(simpleFeatureSet.isEnabled(DemoFeature.FIRST));
         assertTrue(derived.isDisabled(DemoFeature.FIRST));
+    }
+
+    @Test
+    void withoutWithUnknownFeature() {
+        SimpleFeatureSet derived = simpleFeatureSet.without(UnknownFeature.UNKNOWN_FEATURE);
+        assertFalse(derived.isEnabled(UnknownFeature.UNKNOWN_FEATURE));
+        assertTrue(derived.isDisabled(UnknownFeature.UNKNOWN_FEATURE));
     }
 
     @Test

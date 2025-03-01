@@ -28,6 +28,8 @@ import ftl.ast.PrimaryExpression;
 import ftl.ast.RangeExpression;
 import ftl.ast.RelationalExpression;
 import ftl.ast.UnaryPlusMinusExpression;
+import org.freshmarker.core.BuiltinHandlingFeature;
+import org.freshmarker.core.features.FeatureSet;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
@@ -66,12 +68,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     private static final Logger logger = LoggerFactory.getLogger(InterpolationBuilder.class);
 
-    public static final InterpolationBuilder INSTANCE = new InterpolationBuilder();
+    private final PositionalArgsListBuilder argsListBuilder;
 
-    private static final PositionalArgsListBuilder BUILDER = new PositionalArgsListBuilder();
+    private final FeatureSet featureSet;
 
-    private InterpolationBuilder() {
-        super();
+    public InterpolationBuilder(FeatureSet featureSet) {
+        this.featureSet = featureSet;
+        argsListBuilder = new PositionalArgsListBuilder(this);
     }
 
     @Override
@@ -130,18 +133,20 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateBuiltIn visit(BuiltIn expression, Object input) {
+        boolean ignoreOptionalEmpty = featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY);
+        boolean ignoreNull = featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_NULL);
         Token buildInName = (Token) expression.get(1);
         if (expression.size() < 3) {
-            return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of());
+            return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of(), ignoreOptionalEmpty, ignoreNull);
         }
         List<TemplateObject> parameter = new ArrayList<>();
         Node child = expression.get(3);
         if (child instanceof PositionalArgsList) {
-            child.accept(BUILDER, parameter);
+            child.accept(argsListBuilder, parameter);
         } else {
             parameter.add(child.accept(this, null));
         }
-        return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, parameter);
+        return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, parameter, ignoreOptionalEmpty, ignoreNull);
     }
 
     @Override
@@ -357,7 +362,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         Node child = expression.get(1);
         logger.debug("child: {}", child.getClass());
         if (child instanceof PositionalArgsList) {
-            child.accept(BUILDER, parameter);
+            child.accept(argsListBuilder, parameter);
         } else {
             parameter.add(child.accept(this, null));
         }

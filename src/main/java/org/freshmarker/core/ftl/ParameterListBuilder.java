@@ -14,6 +14,12 @@ import java.util.Set;
 public class ParameterListBuilder implements
         ExpressionVisitor<List<ParameterHolder>, List<ParameterHolder>> {
 
+    private final InterpolationBuilder interpolationBuilder;
+
+    public ParameterListBuilder(InterpolationBuilder interpolationBuilder) {
+        this.interpolationBuilder = interpolationBuilder;
+    }
+
     @Override
     public List<ParameterHolder> visit(Token expression, List<ParameterHolder> input) {
         input.add(new ParameterHolder(expression.toString(), null));
@@ -40,7 +46,7 @@ public class ParameterListBuilder implements
             }
             if (children.get(index).getType() == TokenType.EQUALS) {
                 index++;
-                TemplateObject defaultValue = children.get(index).accept(InterpolationBuilder.INSTANCE, null);
+                TemplateObject defaultValue = children.get(index).accept(interpolationBuilder, null);
                 input.add(new ParameterHolder(name, defaultValue));
                 index++;
             } else if (children.get(index).getType() == TokenType.ELLIPSIS) {

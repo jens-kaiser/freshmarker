@@ -56,6 +56,58 @@ These features are controlled by constants in the `IncludeDirectiveFeature` clas
 | `true`
 |===
 
+===== Switch Directive Features
+
+These features are controlled by constants in the `SwitchDirectiveFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| ALLOW_ONLY_CONSTANT_CASES
+| Feature that determines whether case expressions must be constants.
+| `false`
+
+| ALLOW_ONLY_CONSTANT_ONS
+| Feature that determines whether on expressions must be constants.
+| `false`
+
+| ALLOW_ONLY_EQUAL_TYPE_CASES
+| Feature that determines whether all case expressions must contain constants from the same type.
+| `false`
+
+| ALLOW_ONLY_EQUAL_TYPE_ONS
+| Feature that determines whether all on expressions must contain constants from the same type.
+| `false`
+|===
+
+===== Builtin Handling Features (since 1.7.4)
+
+These features are controlled by constants in the `BuiltinHandlingFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+public enum BuiltinHandlingFeature implements TemplateFeature {
+/**
+* Feature that ignores errors due empty optionals on built-ins.
+*<p>
+* Default value is 'false', meaning that empty optional causes errors on built-ins.
+*<p>
+* Feature is disabled by default.
+*/
+IGNORE_OPTIONAL_EMPTY,
+
+    /**
+     * Feature that ignores errors due null values on built-ins.
+     *<p>
+     * Default value is 'false', meaning that null values causes errors on built-ins.
+     *<p>
+     * Feature is disabled by default.
+     */
+    IGNORE_NULL;
+
 ==== With Clock (since 1.6.9)
 
 The `withClock` method can be used to create a `DefaultTemplateBuilder` that generates templates with a modified clock. This allows templates to generate an output as it would have looked at a different time. This applies in particular to the built-in variable `.now`.

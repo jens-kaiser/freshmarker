@@ -178,6 +178,7 @@ An optional can therefore be checked with the existence operator and the default
 |${optional!42}
 |===
 
+
 === Lazy Values
 
 Normally the values are written directly into the model.

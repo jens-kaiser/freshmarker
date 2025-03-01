@@ -2,6 +2,7 @@ package org.freshmarker;
 
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
+import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.SwitchDirectiveFeature;
@@ -83,6 +84,7 @@ public final class Configuration {
         Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
         templateFeatures.addFeatures(IncludeDirectiveFeature.values());
         templateFeatures.addFeatures(SwitchDirectiveFeature.values());
+        templateFeatures.addFeatures(BuiltinHandlingFeature.values());
 
         BuiltInKeyBuilder<TemplateNull> builtInKeyBuilder = new BuiltInKeyBuilder<>(TemplateNull.class);
         builtIns.put(builtInKeyBuilder.of("empty_to_null"), (x, y, e) -> x);
