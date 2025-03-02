@@ -133,8 +133,9 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateBuiltIn visit(BuiltIn expression, Object input) {
-        boolean ignoreOptionalEmpty = featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY);
-        boolean ignoreNull = featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_NULL);
+        boolean pipe = expression.getFirst().getType() == TokenType.BUILT_IN2;
+        boolean ignoreOptionalEmpty = pipe || featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY);
+        boolean ignoreNull = pipe || featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_NULL);
         Token buildInName = (Token) expression.get(1);
         if (expression.size() < 3) {
             return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of(), ignoreOptionalEmpty, ignoreNull);

@@ -35,9 +35,26 @@ In the example above the `upper_case` built-in is called on the current value `W
 The second built-in `lower_case` is called on the current value `WORLD`, which is the result of `upper_case`.
 the result of the interpolation is the result `world` of the second built-in.
 
-NOTE: Since _FreshMarker_ 1.7.4, the processing of built-ins can be modified.
+=== Null Aware Built-In Handling (since 1.7.4)
+
+Since _FreshMarker_ 1.7.4, the processing of built-ins can be modified.
 Normally, the processing of built-ins ends if no suitable built-in is found. In the case of `null` values and empty optionals, this behavior can now be changed using the flags
 `BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY` and `BuiltinHandlingFeature.IGNORE_NULL` flags. In both cases, the actual built-in is ignored and the input value is returned.
+
+.Example with null aware built-in handling
+[source,java]
+----
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder().with(BuiltinHandlingFeature.IGNORE_NULL);
+Template template = configuration.getTemplate("test", "Hello ${example?upper_case?lower_case!'World'}!");
+assertEquals("Hello World", template.process(Map.of()));
+----
+
+The example does not generate an exception if `example` contains the value `null`,
+because both build-ins pass on the value instead of throwing an exception.
+A _default operator_ must be added at the end so that the interpolation as a whole does not throw an exception.
+
+NOTE: Instead of setting both features, an _experimental_ alternative built-in operator can also be used (`!!`, `\->`, `→`).
 
 include::builtins-string.adoc[]
 

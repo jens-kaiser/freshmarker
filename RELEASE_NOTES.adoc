@@ -7,6 +7,10 @@
 - add `java.util.Optional` support
 - `BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY` and `BuiltinHandlingFeature.IGNORE_NULL` feature
 
+=== Experimental
+
+- add alternative null-safe built-in operators `!!`, `\->`, `→`
+
 == Release 1.7.3 (2025-02-20)
 
 === Bugfixes

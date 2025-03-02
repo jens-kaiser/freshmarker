@@ -115,6 +115,8 @@ TOKEN :
     |
     <BUILT_IN : "?">
     |
+    <BUILT_IN2 : "!!" | "->" | "→">
+    |
     <DOUBLE_EQUALS : "==">
     |
     <NOT_EQUALS : "≠" | "!=">
@@ -340,7 +342,7 @@ MethodInvoke  :
 ;
 
 BuiltIn :
-    <BUILT_IN><IDENTIFIER>[<OPEN_PAREN>[ArgsList]<CLOSE_PAREN>]
+    (<BUILT_IN> | <BUILT_IN2>) <IDENTIFIER>[<OPEN_PAREN>[ArgsList]<CLOSE_PAREN>]
 ;
 
 Exists :
