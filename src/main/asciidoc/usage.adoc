@@ -51,7 +51,7 @@ System.out.println(template.process(Map.of("example", "World")));
 [source,java,role="secondary"]
 ----
 Configuration configuration = new Configuration();
-Template template = configuration.getTemplate("test", "Hello ${example}!");
+Template template = configuration..getTemplate("test", "Hello ${example}!");
 System.out.println(template.process(Map.of("example", "World")));
 ----
 

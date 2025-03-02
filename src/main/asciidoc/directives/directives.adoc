@@ -175,8 +175,7 @@ A single brick directive is evaluated with the `Template#processBrick(String, Ma
 [source,java]
 ----
 Map<String, Object> model = Map.of("customer", customer, "employee", employee);
-Configuration configuration = new Configuration();
-Template template = configuration.getTemplate("mail", mail);
+Template template = new Configuration().buider().getTemplate("mail", mail);
 String salutation = template.processBrick("salutation", model);
 String signature = template.processBrick("signature", model);
 ----

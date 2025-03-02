@@ -5,9 +5,8 @@ Built-Ins are interpolation operations which are called on the current value of 
 .Example with `upper_case` built-in
 [source,java]
 ----
-Configuration configuration = new Configuration();
-TemplateBuilder templateBuilder = configuration.builder();
-Template template = templateBuilder.getTemplate("test", "HELLO ${example?upper_case}!");
+TemplateBuilder builder = new Configuration().builder();
+Template template = builder.getTemplate("test", "HELLO ${example?upper_case}!");
 System.out.println(template.process(Map.of("example", "world")));
 ----
 
@@ -25,9 +24,8 @@ This means a built-in is called on the result of a previous built-in or the init
 .Example with two built-ins
 [source,java]
 ----
-Configuration configuration = new Configuration();
-TemplateBuilder templateBuilder = configuration.builder();
-Template template = configuration.getTemplate("test", "HELLO ${example?upper_case?lower_case}!");
+TemplateBuilder builder = new Configuration().builder();
+Template template = builder.getTemplate("test", "HELLO ${example?upper_case?lower_case}!");
 System.out.println(template.process(Map.of("example", "WorlD")));
 ----
 
@@ -45,8 +43,8 @@ In both cases, the actual built-in is ignored and the input value is returned.
 [source,java]
 ----
 Configuration configuration = new Configuration();
-TemplateBuilder templateBuilder = configuration.builder().with(BuiltinHandlingFeature.IGNORE_NULL);
-Template template = configuration.getTemplate("test", "Hello ${example?upper_case?lower_case!'World'}!");
+TemplateBuilder builder = configuration.builder().with(BuiltinHandlingFeature.IGNORE_NULL);
+Template template = builder.getTemplate("test", "Hello ${example?upper_case?lower_case!'World'}!");
 assertEquals("Hello World", template.process(Map.of()));
 ----
 
@@ -54,7 +52,18 @@ The example does not generate an exception if `example` contains the value `null
 because both build-ins pass on the value instead of throwing an exception.
 A _default operator_ must be added at the end so that the interpolation as a whole does not throw an exception.
 
-NOTE: Instead of setting both features, an _experimental_ alternative built-in operator can also be used (`!!`, `\->`, `→`).
+[NOTE]
+====
+Instead of setting both features, an _experimental_ alternative built-in operator can also be used (`!!`, `\->`, `→`).
+
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder();
+Template template = builder.getTemplate("test", "Hello ${example->upper_case->lower_case->!'World'}!");
+assertEquals("Hello World", template.process(Map.of()));
+----
+====
+
 
 include::builtins-string.adoc[]
 
