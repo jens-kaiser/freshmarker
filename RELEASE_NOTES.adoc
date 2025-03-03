@@ -1,6 +1,6 @@
 = Release Notes
 
-== Release 1.7.4 (2025-03-XX)
+== Release 1.7.4 (2025-03-03)
 
 === Improvements
 
