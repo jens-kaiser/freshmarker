@@ -29,7 +29,7 @@ TBD
 ==== With Features (since 1.7.0)
 
 The `with` and `without` methods can be used to modify the behaviour of _FreshMarker_.
-The value of the methods is a feature constant to activate or deactivate the corresponding feature.
+The parameter of the methods is a feature constant to activate or deactivate the corresponding feature.
 
 ===== Include Directive Features
 
