@@ -4,8 +4,8 @@
 
 === Improvements
 
-- add `java.util.Locale` support
-
+- add full `java.util.Locale` support
+- add `country_name` and `language_name` built-ins for `java.util.Locale`
 == Release 1.7.4 (2025-03-03)
 
 === Improvements

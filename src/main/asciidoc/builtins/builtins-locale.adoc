@@ -18,7 +18,7 @@ m|de
 m|string
 |===
 
-==== `language_name` Built-In
+==== `language_name` Built-In (since 1.7.5)
 
 This built-in returns the language name of the locale value.
 
@@ -42,7 +42,7 @@ m|DE
 m|string
 |===
 
-==== `country_name` Built-In
+==== `country_name` Built-In (since 1.7.5)
 
 This built-in returns the country name of the locale value.
 
