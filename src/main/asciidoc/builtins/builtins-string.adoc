@@ -43,7 +43,7 @@ A word with a first uppercase letter means `\b(\p{javaUpperCase})(\p{IsAlphabeti
 |Input | Output
 
 |${'The quick BROWN Fox jumps over the lazy Dog'?uncapitalize}
-|the quick bROWN fox Jumps over the lazy dog
+|the quick bROWN fox jumps over the lazy dog
 |===
 
 ==== `camelCase` Built-In

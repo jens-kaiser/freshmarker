@@ -32,7 +32,7 @@ NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `br
 
 The `case` statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES`.footnote:switch-flag[feature for switch directives exists since version 1.7.1]
 
-In addition, the individual `case` statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES` feature. uThis feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES` is also activated.footnote:switch-flag[]
+In addition, the individual `case` statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES` feature. This feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES` is also activated.footnote:switch-flag[]
 
 === Switch/On/Default Directive (since 1.7.1)
 
