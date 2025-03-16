@@ -1,7 +1,5 @@
 package org.freshmarker.core.model.primitive;
 
-import org.freshmarker.core.model.TemplateObject;
-
 import java.util.Locale;
 
 public class TemplateLocale extends TemplatePrimitive<Locale> {
@@ -22,12 +20,21 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
         };
     }
 
-    public TemplateObject getLanguage() {
+    public TemplateString getLanguage() {
+        System.out.println(getValue().getLanguage());
         return new TemplateString(getValue().getLanguage());
     }
 
-    public TemplateObject getCountry() {
+    public TemplateString getDisplayLanguage(Locale locale) {
+        return new TemplateString(getValue().getDisplayLanguage(locale));
+    }
+
+    public TemplateString getCountry() {
         return new TemplateString(getValue().getCountry());
+    }
+
+    public TemplateString getDisplayCountry(Locale locale) {
+        return new TemplateString(getValue().getDisplayCountry(locale));
     }
 
     @Override

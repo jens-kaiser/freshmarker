@@ -1,5 +1,11 @@
 = Release Notes
 
+== Release 1.7.5 (2025-03-XX)
+
+=== Improvements
+
+- add `java.util.Locale` support
+
 == Release 1.7.4 (2025-03-03)
 
 === Improvements
