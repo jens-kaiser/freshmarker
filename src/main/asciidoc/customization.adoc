@@ -89,24 +89,15 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 |===
 |Feature | Description | Initial enabled
 
-public enum BuiltinHandlingFeature implements TemplateFeature {
-/**
-* Feature that ignores errors due empty optionals on built-ins.
-*<p>
-* Default value is 'false', meaning that empty optional causes errors on built-ins.
-*<p>
-* Feature is disabled by default.
-*/
-IGNORE_OPTIONAL_EMPTY,
+| IGNORE_OPTIONAL_EMPTY
+| Feature that ignores errors due empty optionals on built-ins.
+| `false`
 
-    /**
-     * Feature that ignores errors due null values on built-ins.
-     *<p>
-     * Default value is 'false', meaning that null values causes errors on built-ins.
-     *<p>
-     * Feature is disabled by default.
-     */
-    IGNORE_NULL;
+| IGNORE_NULL
+| Feature that ignores errors due null values on built-ins.
+| `false`
+|
+|===
 
 ==== With Clock (since 1.6.9)
 
