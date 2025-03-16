@@ -14,7 +14,7 @@ configuration.registerSimpleMapping(BitSet.class, x -> {
   BitSet bitSet = (BitSet)x;
   StringBuilder builder = new StringBuilder();
   for (int i = 0, n = bitSet.length(); i < n; i++) {
-    builder.append(bitSet.get(i) ? "●\u2009" : "○\u2009");
+    builder.append(bitSet.get(i) ? "●" : "○").append("\u2009");
   }
   return builder.toString();
 });
