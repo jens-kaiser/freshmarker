@@ -144,7 +144,7 @@ Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormats.ADOC);
 ----
 
-==== Custom Formatter
+=== Custom Formatter
 
 The default formatting for number and temporal values can be changed with the
 `Configuration#registerFormatter(String, String)` method.
