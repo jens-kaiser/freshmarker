@@ -1,12 +1,13 @@
 = Release Notes
 
-== Release 1.7.5 (2025-03-XX)
+== Release 1.7.5 (2025-03-20)
 
 === Improvements
 
 - add full `java.util.Locale` support
 - add `country_name` and `language_name` built-ins for `java.util.Locale`
 - add `compress` user directive
+- add `compress` and `oneliner` as standard user directives
 
 == Release 1.7.4 (2025-03-03)
 

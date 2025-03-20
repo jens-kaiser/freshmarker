@@ -140,10 +140,14 @@ Whitespace prefixes and suffixes not containing newlines will be removed.
 [source,role="secondary",text,subs="verbatim,quotes"]
 ----
 
+
 Hello World
 
-</@compress>
 ----
+
+==== `oneliner` User Directive
+
+TBD
 
 === Import Directive (since 1.0.0)
 
