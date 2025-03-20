@@ -21,7 +21,6 @@ public class CompressDirective implements UserDirective {
 
         @Override
         public void write(String str) throws IOException {
-            System.out.println(str.replaceAll("\n" , "\\\\n").replaceAll("\r" , "\\\\r").replaceAll(" ", "\\\\s"));
             if (prefix) {
                 str = str.replaceAll("^ +", "");
                 prefix = false;
