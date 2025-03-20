@@ -62,7 +62,6 @@ class UserDirectiveTest {
             "test <@oneliner><#list values as v with l>${v}<#if l?has_next>;</#if></#list></@oneliner>:test 1; 2; 3",
     }, ignoreLeadingAndTrailingWhitespace = false, delimiterString = ":")
     void oneLiner(String templateSource, String expected) throws ParseException {
-        configuration.registerUserDirective("oneliner", new OneLinerDirective());
         Template template = configuration.builder().getTemplate("test", templateSource.replace(";", ";\n"));
         assertEquals(expected, template.process(Map.of("values", List.of(1, 2, 3))));
     }
@@ -73,10 +72,21 @@ class UserDirectiveTest {
         Template template = configuration.builder().getTemplate("test", "<@doubles>Dies ist ein Test. </@doubles>");
         assertEquals("Dies ist ein Test. Dies ist ein Test. ", template.process(Map.of()));
     }
-    
+
+    @Test
+    void oneliner() throws ParseException {
+        Template template = configuration.builder().getTemplate("test", """
+                <@oneliner>
+                \s\s\s\s
+                  Dies ist ein Test\s\s
+                \s\s\s
+                </@oneliner>
+                """);
+        assertEquals("       Dies ist ein Test       ", template.process(Map.of()));
+    }
+
     @Test
     void compress() throws ParseException {
-        configuration.registerUserDirective("compress", new CompressDirective());
         Template template = configuration.builder().getTemplate("test", """
                 <@compress>
                 \s\s\s\s

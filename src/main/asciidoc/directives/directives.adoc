@@ -110,10 +110,14 @@ The macro directive can be used to create a macro, which can then be used as a u
 
 === User Directive
 
+The user directive insert the output of _Macro directives_ or `UserDirective` implementions in the generated content.
+
 [source,freshmarker]
 ----
 <@log level='info' message='test'/>
 ----
+
+Some _User Directives_ are available as standard. These are currently the `compress` and `oneliner` _User Directives_.
 
 ==== `compress` User Directive
 
