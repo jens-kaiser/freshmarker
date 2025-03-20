@@ -115,6 +115,32 @@ The macro directive can be used to create a macro, which can then be used as a u
 <@log level='info' message='test'/>
 ----
 
+==== `compress` User Directive
+
+The `compress` _User Directive_ reduces whitespaces (`` ``, `\n`, `\r`) in the output.
+Whitespace sequences containing newlines will be replaced by a single newline.
+Whitespace sequences not containing newlines will be replaced by a single space.
+Whitespace prefixes and suffixes not containing newlines will be removed.
+
+.Template
+[source,role="primary",freshmarker,subs="verbatim,quotes"]
+----
+<@compress>
+
+  Hello   World
+
+</@compress>
+----
+
+.Output
+[source,role="secondary",text,subs="verbatim,quotes"]
+----
+
+Hello World
+
+</@compress>
+----
+
 === Import Directive (since 1.0.0)
 
 Macros can be loaded by the `import` directive.
