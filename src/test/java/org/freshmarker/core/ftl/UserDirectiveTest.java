@@ -4,6 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.directive.CompressDirective;
 import org.freshmarker.core.directive.LoggingDirective;
 import org.freshmarker.core.directive.OneLinerDirective;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,5 +72,18 @@ class UserDirectiveTest {
         configuration.registerUserDirective("doubles", (a, b, c) -> { c.process(a); c.process(a); });
         Template template = configuration.builder().getTemplate("test", "<@doubles>Dies ist ein Test. </@doubles>");
         assertEquals("Dies ist ein Test. Dies ist ein Test. ", template.process(Map.of()));
+    }
+    
+    @Test
+    void compress() throws ParseException {
+        configuration.registerUserDirective("compress", new CompressDirective());
+        Template template = configuration.builder().getTemplate("test", """
+                <@compress>
+                \s\s\s\s
+                  Dies ist ein Test\s\s
+                \s\s\s
+                </@compress>
+                """);
+        assertEquals("\nDies ist ein Test\n", template.process(Map.of()));
     }
 }
