@@ -21,7 +21,6 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
     }
 
     public TemplateString getLanguage() {
-        System.out.println(getValue().getLanguage());
         return new TemplateString(getValue().getLanguage());
     }
 
