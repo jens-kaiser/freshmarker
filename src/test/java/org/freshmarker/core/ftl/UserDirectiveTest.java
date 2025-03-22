@@ -94,4 +94,11 @@ class UserDirectiveTest {
                 """);
         assertEquals("\nDies ist ein Test\n", template.process(Map.of()));
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = { " Dies ist ein Test ", "   Dies ist   ein   Test", "Dies ist ein  Test    " })
+    void compress(String input) throws ParseException {
+        Template template = configuration.builder().getTemplate("test", "<@compress>" + input + "</@compress>");
+        assertEquals("Dies ist ein Test", template.process(Map.of()));
+    }
 }

@@ -21,47 +21,56 @@ public class CompressDirective implements UserDirective {
 
         @Override
         public void write(String str) throws IOException {
+            if (str.indexOf(' ') == -1 && str.indexOf('\n') == -1 && str.indexOf('\t') == -1) {
+                if (replacement != 0) {
+                    out.write(replacement);
+                    replacement = 0;
+                }
+                out.write(str);
+                prefix = false;
+                return;
+            }
             if (prefix) {
                 str = str.replaceAll("^ +", "");
                 prefix = false;
             }
-            if (str.indexOf(' ') != -1 || str.indexOf('\n') != -1 || str.indexOf('\t') != -1) {
-                StringBuilder builder = new StringBuilder();
-                replacement = 0;
-                for (int i = 0; i < str.length(); i++) {
-                    char c = str.charAt(i);
-                    switch (c) {
-                        case ' ' ->  replacement = replacement == 0 ? ' ' : replacement;
-                        case '\n', '\r' -> replacement = '\n';
-                        default -> {
-                            if (replacement != 0) {
-                                builder.append(replacement);
-                                replacement = 0;
-                            }
-                            builder.append(c);
+            out.write(handleWhitespaces(str));
+        }
+
+        private String handleWhitespaces(String str) {
+            StringBuilder builder = new StringBuilder();
+            replacement = 0;
+            for (int i = 0; i < str.length(); i++) {
+                char c = str.charAt(i);
+                switch (c) {
+                    case ' ' ->  replacement = replacement == 0 ? ' ' : replacement;
+                    case '\n', '\r' -> replacement = '\n';
+                    default -> {
+                        if (replacement != 0) {
+                            builder.append(replacement);
+                            replacement = 0;
                         }
+                        builder.append(c);
                     }
                 }
-                out.write(builder.toString());
-            } else {
-                out.write(str);
             }
+            return builder.toString();
         }
 
         @Override
         public void close() throws IOException {
-            if (replacement != 0) {
+            if (replacement == '\n') {
                 out.write(replacement);
                 replacement = 0;
             }
+            out.close();
         }
     }
-
 
     @Override
     public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
         Writer oldWriter = context.getWriter();
-        try (CompressWriter writer = new CompressWriter(context.getWriter())) {
+        try (CompressDirective.CompressWriter writer = new CompressWriter(context.getWriter())) {
             context.setWriter(writer);
             body.process(context);
         } catch (IOException e) {

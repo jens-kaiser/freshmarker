@@ -130,19 +130,18 @@ Whitespace prefixes and suffixes not containing newlines will be removed.
 [source,role="primary",freshmarker,subs="verbatim,quotes"]
 ----
 <@compress>
-
-  Hello   World
-
+␣␣⏎
+␣␣Hello␣␣␣World␣␣⏎
+␣␣␣␣⏎
 </@compress>
 ----
 
 .Output
 [source,role="secondary",text,subs="verbatim,quotes"]
 ----
-
-
-Hello World
-
+⏎
+Hello World⏎
+⏎
 ----
 
 ==== `oneliner` User Directive
