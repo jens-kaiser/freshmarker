@@ -99,6 +99,7 @@ class UserDirectiveTest {
     @ParameterizedTest
     @CsvSource({
             "' Dies ist ein Test ',Dies ist ein Test",
+            "Dies ist ${'ein'} Test,Dies ist ein Test",
             "'   Dies ist   ein   Test',Dies ist ein Test",
             "'Dies ist ein  Test    ',Dies ist ein Test",
             "supercalifragilisticexpialidocious,supercalifragilisticexpialidocious" })
