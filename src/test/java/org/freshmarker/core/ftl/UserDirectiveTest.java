@@ -97,9 +97,13 @@ class UserDirectiveTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { " Dies ist ein Test ", "   Dies ist   ein   Test", "Dies ist ein  Test    " })
-    void compress(String input) throws ParseException {
+    @CsvSource({
+            "' Dies ist ein Test ',Dies ist ein Test",
+            "'   Dies ist   ein   Test',Dies ist ein Test",
+            "'Dies ist ein  Test    ',Dies ist ein Test",
+            "supercalifragilisticexpialidocious,supercalifragilisticexpialidocious" })
+    void compress(String input, String expected) throws ParseException {
         Template template = configuration.builder().getTemplate("test", "<@compress>" + input + "</@compress>");
-        assertEquals("Dies ist ein Test", template.process(Map.of()));
+        assertEquals(expected, template.process(Map.of()));
     }
 }
