@@ -4,7 +4,21 @@
 
 ==== Register Simple Mapping
 
-The `registerSimpleMapping` method assigns a `String` mapping to a class. If no mapping is specified, the `toString` method of the class is used.
+Unknown _Java_ classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered via `registerSimpleMapping(Class<?> type)` for this purpose.
+
+.Example with Leitweg-ID and `toString` method
+[source,java,role="primary"]
+----
+Configuration config = new Configuration();
+config.registerSimpleMapping(LeitwegId.class);
+TemplateBuilder templateBuilder = config.builder();
+Template template = templateBuilder.getTemplate("id", "ID: ${id}!");
+LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
+String resullt = template.process(Map.of("id", leitwegId));
+// ID: 04011000-1234512345-06!
+----
+
+Alternatively, the method `registerSimpleMapping(Function<Object, String> mapping)` can be used if further adjustments are to be made.
 
 .Example simple mapping for `java.util.BitSet`
 [source,java]
@@ -19,8 +33,6 @@ configuration.registerSimpleMapping(BitSet.class, x -> {
   return builder.toString();
 });
 ----
-
-The example Mapping generates the String `○ ● ○ ● ● ○ ○ ● ● ` for the BitSet `010110011`.
 
 === Customization by `TemplateBuilder`
 
@@ -133,7 +145,7 @@ Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withZoneId(ZoneId.of("Europe/Berlin"));
 ----
 
-=== With Output-Format
+==== With Output-Format
 
 TBD
 
@@ -163,36 +175,6 @@ TemplateBuilder templateBuilderWithNumberAndTemporal = config.builder();
 ----
 
 TBD
-
-=== Custom String Types
-
-Unknown _Java_ classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered via `registerSimpleMapping(Class<?> type)` for this purpose.
-
-Alternatively, the method `registerSimpleMapping(Function<Object, String> mapping)` can be used if further adjustments are to be made.
-
-.Example with Leitweg-ID and `toString` method
-[source,java,role="primary"]
-----
-Configuration config = new Configuration();
-config.registerSimpleMapping(LeitwegId.class);
-TemplateBuilder templateBuilder = config.builder();
-Template template = templateBuilder.getTemplate("id", "ID: ${id}!");
-LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
-String resullt = template.process(Map.of("id", leitwegId));
-// ID: 04011000-1234512345-06!
-----
-
-.Example with Leitweg-ID and converting `Function`
-[source,java,role="secondary"]
-----
-Configuration config = new Configuration();
-config.registerSimpleMapping(LeitwegId.class, lid -> "<<" + lid + ">>");
-TemplateBuilder templateBuilder = config.builder();
-Template template = templateBuilder.getTemplate("id", "${id}!");
-LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
-String resullt = template.process(Map.of("id", leitwegId));
-// ID: <<04011000-1234512345-06>>!
-----
 
 === Custom `OutputFormat`
 
