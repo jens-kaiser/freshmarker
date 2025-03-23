@@ -59,7 +59,7 @@ Instead of setting both features, an _experimental_ alternative built-in operato
 [source,java]
 ----
 TemplateBuilder builder = new Configuration().builder();
-Template template = builder.getTemplate("test", "Hello ${example->upper_case->lower_case->!'World'}!");
+Template template = builder.getTemplate("test", "Hello ${example->upper_case->lower_case!'World'}!");
 assertEquals("Hello World", template.process(Map.of()));
 ----
 ====
