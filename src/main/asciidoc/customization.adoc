@@ -34,6 +34,8 @@ configuration.registerSimpleMapping(BitSet.class, x -> {
 });
 ----
 
+The example Mapping generates the String `○ ● ○ ● ● ○ ○ ● ● ` for the BitSet `010110011`.
+
 === Customization by `TemplateBuilder`
 
 TBD
