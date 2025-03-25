@@ -15,13 +15,18 @@ TemplateBuilder templateBuilder = config.builder();
 Template template = templateBuilder.getTemplate("id", "ID: ${id}!");
 LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
 String resullt = template.process(Map.of("id", leitwegId));
-// ID: 04011000-1234512345-06!
+----
+
+.Result
+[source,plain,role="secondary"]
+----
+ID: 04011000-1234512345-06!
 ----
 
 Alternatively, the method `registerSimpleMapping(Function<Object, String> mapping)` can be used if further adjustments are to be made.
 
-.Example simple mapping for `java.util.BitSet`
-[source,java]
+.Example with `java.util.BitSet`
+[source,java,role="primary"]
 ----
 Configuration config = new Configuration();
 configuration.registerSimpleMapping(BitSet.class, x -> {
@@ -34,7 +39,11 @@ configuration.registerSimpleMapping(BitSet.class, x -> {
 });
 ----
 
-The example Mapping generates the String `○ ● ○ ● ● ○ ○ ● ● ` for the BitSet `010110011`.
+.Result for the BitSet `010110011`
+[source,plain,role="secondary"]
+----
+○ ● ○ ● ● ○ ○ ● ●
+----
 
 === Customization by `TemplateBuilder`
 
