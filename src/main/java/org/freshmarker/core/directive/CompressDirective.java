@@ -21,7 +21,7 @@ public class CompressDirective implements UserDirective {
 
         @Override
         public void write(String str) throws IOException {
-            if (str.indexOf(' ') == -1 && str.indexOf('\n') == -1 && str.indexOf('\t') == -1) {
+            if (str.indexOf(' ') == -1 && str.indexOf('\n') == -1 && str.indexOf('\n') == -1) {
                 if (replacement != 0) {
                     out.write(replacement);
                     replacement = 0;
