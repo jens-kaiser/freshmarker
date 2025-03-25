@@ -16,8 +16,12 @@ class SimpleFeatureSetTest {
         }
     }
 
-    private enum UnknownFeature implements TemplateFeature{
-        UNKNOWN_FEATURE;
+    private enum SecondDemoFeature implements TemplateFeature {
+        FIRST
+    }
+
+    private enum UnknownFeature implements TemplateFeature {
+        UNKNOWN_FEATURE
     }
 
     private SimpleFeatureSet simpleFeatureSet;
@@ -26,6 +30,7 @@ class SimpleFeatureSetTest {
     void setUp() {
         TemplateFeatures templateFeatures = new TemplateFeatures();
         templateFeatures.addFeatures(DemoFeature.values());
+        templateFeatures.addFeatures(SecondDemoFeature.values());
         simpleFeatureSet = templateFeatures.create();
     }
 
@@ -33,12 +38,14 @@ class SimpleFeatureSetTest {
     void isEnabled() {
         assertTrue(simpleFeatureSet.isEnabled(DemoFeature.FIRST));
         assertFalse(simpleFeatureSet.isEnabled(DemoFeature.SECOND));
+        assertTrue(simpleFeatureSet.isEnabled(SecondDemoFeature.FIRST));
     }
 
     @Test
     void isDisabled() {
         assertFalse(simpleFeatureSet.isDisabled(DemoFeature.FIRST));
         assertTrue(simpleFeatureSet.isDisabled(DemoFeature.SECOND));
+        assertFalse(simpleFeatureSet.isDisabled(SecondDemoFeature.FIRST));
     }
 
     @Test
