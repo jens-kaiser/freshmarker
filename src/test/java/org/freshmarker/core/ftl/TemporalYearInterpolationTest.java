@@ -31,20 +31,12 @@ class TemporalYearInterpolationTest {
             "test: ${leap_year},test: 2004",
             "test: ${year?year},test: 2025",
             "test: ${leap_year?year},test: 2004",
-    })
-    void interpolationYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", input);
-        assertEquals(expected, template.process(Map.of("year", YEAR_2025, "leap_year", YEAR_2004)));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "test: ${year + 1},test: 2026",
+              "test: ${year + 1},test: 2026",
             "test: ${leap_year + 1},test: 2005",
             "test: ${year - 1},test: 2024",
             "test: ${leap_year - 1},test: 2003",
     })
-    void addNumber(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+    void interpolationYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("year", YEAR_2025, "leap_year", YEAR_2004)));
     }
@@ -65,6 +57,7 @@ class TemporalYearInterpolationTest {
     @Test
     void unsupportedOperation(TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("test", "test: ${year * 2}");
-        assertThrows(ProcessException.class, () -> template.process(Map.of("year", YEAR_2025)));
+        Map<String, Object> model = Map.of("year", YEAR_2025);
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 }
