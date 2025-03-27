@@ -73,16 +73,13 @@ public final class StringPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("noEsc"), noEscape);
         builtIns.put(BUILDER.of("slugify"), (x, y, e) -> slugify((TemplateString) x));
         builtIns.put(BUILDER.of("i18n"), (x, y, e) -> i18n((TemplateString) x, e, y));
-        builtIns.put(BUILDER.of("blank_to_null"), (x, y, e) -> x.isNull() || ((TemplateString) x).getValue().isBlank() ? TemplateNull.NULL : x);
-        builtIns.put(BUILDER.of("empty_to_null"), (x, y, e) -> x.isNull() || ((TemplateString) x).getValue().isEmpty() ? TemplateNull.NULL : x);
-        builtIns.put(BUILDER.of("trim_to_null"), (x, y, e) -> trim2null(x));
+        builtIns.put(BUILDER.of("blank_to_null"), (x, y, e) -> ((TemplateString) x).getValue().isBlank() ? TemplateNull.NULL : x);
+        builtIns.put(BUILDER.of("empty_to_null"), (x, y, e) -> ((TemplateString) x).getValue().isEmpty() ? TemplateNull.NULL : x);
+        builtIns.put(BUILDER.of("trim_to_null"), (x, y, e) -> trim2null((TemplateString) x));
     }
 
-    private static TemplateObject trim2null(TemplateObject x) {
-        if (x.isNull()) {
-            return TemplateNull.NULL;
-        }
-        String value = ((TemplateString) x).getValue().trim();
+    private static TemplateObject trim2null(TemplateString x) {
+        String value = x.getValue().trim();
         return value.isEmpty() ? TemplateNull.NULL : new TemplateString(value);
     }
 
