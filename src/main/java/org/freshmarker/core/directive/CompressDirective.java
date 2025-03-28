@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+/**
+ * This {@link UserDirective} replaces consecutive spaces and line breaks with a single space or newline.
+ * Spaces at the beginning or end are truncated.
+ */
 public class CompressDirective implements UserDirective {
 
     private static class CompressWriter extends FilterWriter {

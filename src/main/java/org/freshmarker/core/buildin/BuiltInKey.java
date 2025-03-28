@@ -4,6 +4,9 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Objects;
 
+/**
+ * Key used for the internal management of built-ins.
+ */
 public final class BuiltInKey {
     private final Class<? extends TemplateObject> type;
     private final String name;

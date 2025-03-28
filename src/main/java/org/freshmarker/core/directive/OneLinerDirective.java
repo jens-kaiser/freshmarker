@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+/**
+ * This {@link UserDirective} replaces all newlines by spaces.
+ */
 public class OneLinerDirective implements UserDirective {
 
     private static class FlattenFilterWriter extends FilterWriter {
