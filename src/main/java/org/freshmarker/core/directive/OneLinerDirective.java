@@ -1,6 +1,5 @@
 package org.freshmarker.core.directive;
 
-import org.freshmarker.api.NamedUserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
@@ -13,12 +12,7 @@ import java.util.Map;
 /**
  * This {@link UserDirective} replaces all newlines by spaces.
  */
-public class OneLinerDirective implements NamedUserDirective {
-
-    @Override
-    public String name() {
-        return "oneliner";
-    }
+public class OneLinerDirective implements UserDirective {
 
     private static class FlattenFilterWriter extends FilterWriter {
 

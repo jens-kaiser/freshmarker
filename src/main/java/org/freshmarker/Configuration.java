@@ -1,12 +1,14 @@
 package org.freshmarker;
 
+import org.freshmarker.api.Extension;
+import org.freshmarker.api.FunctionProvider;
+import org.freshmarker.api.UserDirectiveProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
-import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.features.TemplateFeatures;
@@ -24,7 +26,6 @@ import java.net.URL;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -82,11 +83,11 @@ public final class Configuration {
     }
 
     public void registerUserDirective(String name, UserDirective directive) {
-        extensionRegistry.register(new UserDirectiveAdapter(name, directive));
+        extensionRegistry.register((UserDirectiveProvider) () -> Map.of(name, directive));
     }
 
     public void registerFunction(String name, TemplateFunction function) {
-        extensionRegistry.register(new FunctionAdapter(name, function));
+        extensionRegistry.register((FunctionProvider) () -> Map.of(name, function));
     }
 
     public void registerPlugin(PluginProvider provider) {

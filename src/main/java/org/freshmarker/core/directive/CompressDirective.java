@@ -1,6 +1,5 @@
 package org.freshmarker.core.directive;
 
-import org.freshmarker.api.NamedUserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.fragment.Fragment;
@@ -15,12 +14,7 @@ import java.util.Map;
  * This {@link UserDirective} replaces consecutive spaces and line breaks with a single space or newline.
  * Spaces at the beginning or end are truncated.
  */
-public class CompressDirective implements NamedUserDirective {
-
-    @Override
-    public String name() {
-        return "compress";
-    }
+public class CompressDirective implements UserDirective {
 
     private static class CompressWriter extends FilterWriter {
         private boolean prefix = true;

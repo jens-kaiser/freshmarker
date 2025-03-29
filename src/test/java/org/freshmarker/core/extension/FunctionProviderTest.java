@@ -3,50 +3,27 @@ package org.freshmarker.core.extension;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
-import org.freshmarker.api.NamedFunction;
-import org.freshmarker.core.ProcessContext;
+import org.freshmarker.api.FunctionProvider;
 import org.freshmarker.core.model.TemplateNull;
-import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class NamedFunctionTest {
+class FunctionProviderTest {
 
     private Configuration configuration;
 
     @BeforeEach
     void setUp() {
         configuration = new Configuration();
-        configuration.register(new NamedFunction() {
-            @Override
-            public String name() {
-                return "abs";
-            }
-
-            @Override
-            public TemplateObject execute(ProcessContext context, List<TemplateObject> args) {
-                return args.getFirst() instanceof  TemplateNumber number ? number.abs() : TemplateNull.NULL;
-            }
-        });
-        configuration.register(new NamedFunction() {
-            @Override
-            public String name() {
-                return "avg";
-            }
-
-            @Override
-            public TemplateObject execute(ProcessContext context, List<TemplateObject> args) {
-                return args.stream().map(o -> o.evaluate(context, TemplateNumber.class))
-                        .reduce(TemplateNumber::add).orElseThrow().divide(new TemplateNumber(args.size()));
-            }
-        });
+        configuration.register((FunctionProvider) () -> Map.of("abs", (context, args) -> args.getFirst() instanceof  TemplateNumber number ? number.abs() : TemplateNull.NULL,
+                "avg", ((context, args) -> args.stream().map(o -> o.evaluate(context, TemplateNumber.class))
+                        .reduce(TemplateNumber::add).orElseThrow().divide(new TemplateNumber(args.size())))));
     }
 
     @ParameterizedTest
