@@ -82,15 +82,19 @@ public final class Configuration {
     }
 
     public void registerUserDirective(String name, UserDirective directive) {
-        extensionRegistry.registerUserDirective(new NameSpaced(null, name), directive);
+        extensionRegistry.register(new UserDirectiveAdapter(name, directive));
     }
 
     public void registerFunction(String name, TemplateFunction function) {
-        extensionRegistry.registerFunction(name, function);
+        extensionRegistry.register(new FunctionAdapter(name, function));
     }
 
     public void registerPlugin(PluginProvider provider) {
         extensionRegistry.registerPlugin(provider);
+    }
+
+    public void register(Extension extension) {
+        extensionRegistry.register(extension);
     }
 
     /**
@@ -99,9 +103,7 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        StaticContext context = new StaticContext(Map.copyOf(extensionRegistry.getBuiltIns()), extensionRegistry.getFormatterRegistry().formatter(), Map.copyOf(outputs),
-                List.copyOf(extensionRegistry.getProviders(modelSecurityGateway)), Map.copyOf(extensionRegistry.getUserDirectives()), templateLoader, Map.copyOf(extensionRegistry.getFunctions()),
-                extensionRegistry.getBuiltInVariableProviders().copy());
+        StaticContext context = new StaticContext(extensionRegistry, Map.copyOf(outputs),modelSecurityGateway, templateLoader);
         return new DefaultTemplateBuilder(context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
     }
 

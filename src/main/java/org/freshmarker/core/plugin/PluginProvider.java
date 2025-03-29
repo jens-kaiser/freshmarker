@@ -45,10 +45,20 @@ public interface PluginProvider {
 
   }
 
+  /**
+   * @param directives the user directives to register
+   * @deprecated use {@link org.freshmarker.api.NamedUserDirective} extension instead
+   */
+  @Deprecated(since = "2.0.0", forRemoval = true)
   default void registerUserDirective(Map<String, UserDirective> directives) {
 
   }
 
+  /**
+   * @param functions the functions to register
+   * @deprecated use {@link org.freshmarker.api.NamedFunction} extension instead
+   */
+  @Deprecated(since = "2.0.0", forRemoval = true)
   default void registerFunction(Map<String, TemplateFunction> functions) {
 
   }

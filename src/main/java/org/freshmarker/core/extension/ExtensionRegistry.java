@@ -1,7 +1,8 @@
 package org.freshmarker.core.extension;
 
-import org.freshmarker.BuiltInVariableAdapter;
 import org.freshmarker.api.Extension;
+import org.freshmarker.api.NamedFunction;
+import org.freshmarker.api.NamedUserDirective;
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
@@ -82,12 +83,8 @@ public class ExtensionRegistry {
         builtInVariableProviders.register(builtInVariableProviderMap.entrySet().stream().collect(toMap(Entry::getKey, e -> new BuiltInVariableAdapter(e.getValue()))));
     }
 
-    public void registerUserDirective(NameSpaced name, UserDirective directive) {
-        userDirectives.put(name, directive);
-    }
-
-    public void registerFunction(String name, TemplateFunction function) {
-        functions.put(name, function);
+    public <E extends Extension> Stream<E> stream(Class<E> type) {
+        return extensions.stream().filter(type::isInstance).map(type::cast).peek(e -> e.init(templateFeatures));
     }
 
     public TemplateFeatures getTemplateFeatures() {
@@ -115,11 +112,15 @@ public class ExtensionRegistry {
     }
 
     public Map<NameSpaced, UserDirective> getUserDirectives() {
-        return userDirectives;
+        Map<NameSpaced, UserDirective> map = new HashMap<>(userDirectives);
+        stream(NamedUserDirective.class).forEach(n -> map.put(new NameSpaced(n.name()), n));
+        return map;
     }
 
     public Map<String, TemplateFunction> getFunctions() {
-        return functions;
+        Map<String, TemplateFunction> map = new HashMap<>(functions);
+        stream(NamedFunction.class).forEach(namedFunction -> map.put(namedFunction.name(), namedFunction));
+        return map;
     }
 
     public FormatterRegistry getFormatterRegistry() {
@@ -128,5 +129,9 @@ public class ExtensionRegistry {
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {
         return builtInVariableProviders;
+    }
+
+    public void register(Extension extension) {
+        extensions.add(extension);
     }
 }

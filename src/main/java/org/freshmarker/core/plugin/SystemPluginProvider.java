@@ -4,9 +4,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.directive.CompressDirective;
-import org.freshmarker.core.directive.OneLinerDirective;
-import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateLocale;
@@ -47,12 +44,6 @@ public final class SystemPluginProvider implements PluginProvider {
     @Override
     public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
         mapper.put(Locale.class, o -> new TemplateLocale((Locale) o));
-    }
-
-    @Override
-    public void registerUserDirective(Map<String, UserDirective> directives) {
-        directives.put("oneliner", new OneLinerDirective());
-        directives.put("compress", new CompressDirective());
     }
 
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {
