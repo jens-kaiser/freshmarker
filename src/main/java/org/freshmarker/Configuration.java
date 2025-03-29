@@ -153,7 +153,8 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        return new DefaultTemplateBuilder(this, getContext(), Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
+        StaticContext context = new StaticContext(builtIns, formatterRegistry.formatter(), outputs, providers, userDirectives, templateLoader, functions);
+        return new DefaultTemplateBuilder(this, context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
@@ -162,10 +163,6 @@ public final class Configuration {
 
     public ModelSecurityGateway getSecurity() {
         return modelSecurityGateway;
-    }
-
-    public StaticContext getContext() {
-        return new StaticContext(builtIns, formatterRegistry.formatter(), outputs, providers, userDirectives, templateLoader, functions);
     }
 
     public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {
