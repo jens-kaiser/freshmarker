@@ -60,8 +60,6 @@ public final class Configuration {
         templateFeatures.addFeatures(IncludeDirectiveFeature.values());
         templateFeatures.addFeatures(SwitchDirectiveFeature.values());
         templateFeatures.addFeatures(BuiltinHandlingFeature.values());
-
-        registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
 
     public void registerOutputFormat(String name, OutputFormat format) {

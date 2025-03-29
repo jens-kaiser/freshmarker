@@ -10,8 +10,11 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -31,7 +34,12 @@ public class DefaultTypeMapperProvider implements TypeMapperProvider {
                 Map.entry(Float.class, o -> new TemplateNumber((Float) o)),
                 Map.entry(BigInteger.class, o -> new TemplateNumber((BigInteger) o)),
                 Map.entry(BigDecimal.class, o -> new TemplateNumber((BigDecimal) o)),
-                Map.entry(Locale.class, o -> new TemplateLocale((Locale) o))
+                Map.entry(Locale.class, o -> new TemplateLocale((Locale) o)),
+                Map.entry(StringBuilder.class, o -> new TemplateString(o.toString())),
+                Map.entry(StringBuffer.class, o -> new TemplateString(o.toString())),
+                Map.entry(URI.class, o -> new TemplateString(o.toString())),
+                Map.entry(URL.class, o -> new TemplateString(o.toString())),
+                Map.entry(UUID.class, o -> new TemplateString(o.toString()))
         );
     }
 }
