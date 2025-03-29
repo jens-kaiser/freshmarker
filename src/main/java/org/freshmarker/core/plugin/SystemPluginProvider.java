@@ -11,9 +11,7 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.function.Function;
 
 public final class SystemPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateVersion> VERSION = new BuiltInKeyBuilder<>(TemplateVersion.class);
@@ -39,11 +37,6 @@ public final class SystemPluginProvider implements PluginProvider {
         builtIns.put(NULL.of("empty_to_null"), BuiltIn.identity());
         builtIns.put(NULL.of("blank_to_null"), BuiltIn.identity());
         builtIns.put(NULL.of("trim_to_null"), BuiltIn.identity());
-    }
-
-    @Override
-    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
-        mapper.put(Locale.class, o -> new TemplateLocale((Locale) o));
     }
 
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {

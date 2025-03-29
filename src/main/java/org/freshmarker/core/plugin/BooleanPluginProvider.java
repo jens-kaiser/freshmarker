@@ -13,15 +13,9 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 
 public final class BooleanPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
-
-    @Override
-    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
-        mapper.put(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE);
-    }
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {

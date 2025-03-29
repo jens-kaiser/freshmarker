@@ -38,6 +38,8 @@ import java.util.stream.Stream;
 public class ExtensionRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
+    private static final List<Extension> DEFAULT_EXTENSIONS = List.of(new DefaultUserDirectiveProvider(), new DefaultTypeMapperProvider());
+
     private final TemplateFeatures templateFeatures = new TemplateFeatures();
     private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
@@ -51,7 +53,7 @@ public class ExtensionRegistry {
     private final List<Extension> extensions = new ArrayList<>();
 
     public ExtensionRegistry(TemplateFeature[] enabledFeatures) {
-        extensions.add(new DefaultUserDirectiveProvider());
+        extensions.addAll(DEFAULT_EXTENSIONS);
         Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
         ServiceLoader.load(PluginProvider.class).forEach(this::registerPlugin);
         ServiceLoader.load(Extension.class).forEach(extensions::add);

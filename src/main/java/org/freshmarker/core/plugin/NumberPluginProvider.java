@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public final class NumberPluginProvider implements PluginProvider {
@@ -35,20 +34,6 @@ public final class NumberPluginProvider implements PluginProvider {
     private static final String[] UTF_THOUSANDS = new String[]{"", "Ⅿ", "ⅯⅯ", "ⅯⅯⅯ"};
 
     private static final BuiltInKeyBuilder<TemplateNumber> BUILDER = new BuiltInKeyBuilder<>(TemplateNumber.class);
-
-    @Override
-    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
-        mapper.put(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o, Type.LONG));
-        mapper.put(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o, Type.INTEGER));
-        mapper.put(Long.class, o -> new TemplateNumber((Long) o));
-        mapper.put(Integer.class, o -> TemplateNumber.of((Integer) o));
-        mapper.put(Short.class, o -> new TemplateNumber((Short) o));
-        mapper.put(Byte.class, o -> new TemplateNumber((Byte) o));
-        mapper.put(Double.class, o -> new TemplateNumber((Double) o));
-        mapper.put(Float.class, o -> new TemplateNumber((Float) o));
-        mapper.put(BigInteger.class, o -> new TemplateNumber((BigInteger) o));
-        mapper.put(BigDecimal.class, o -> new TemplateNumber((BigDecimal) o));
-    }
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
