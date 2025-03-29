@@ -7,6 +7,7 @@ import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.directive.CompressDirective;
 import org.freshmarker.core.directive.OneLinerDirective;
 import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -21,6 +22,7 @@ public final class SystemPluginProvider implements PluginProvider {
     private static final BuiltInKeyBuilder<TemplateVersion> VERSION = new BuiltInKeyBuilder<>(TemplateVersion.class);
     private static final BuiltInKeyBuilder<TemplateString> STRING = new BuiltInKeyBuilder<>(TemplateString.class);
     private static final BuiltInKeyBuilder<TemplateLocale> LOCALE = new BuiltInKeyBuilder<>(TemplateLocale.class);
+    private static final BuiltInKeyBuilder<TemplateNull> NULL = new BuiltInKeyBuilder<>(TemplateNull.class);
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -37,6 +39,9 @@ public final class SystemPluginProvider implements PluginProvider {
         builtIns.put(LOCALE.of("country"), (x, y, e) -> locale(x, e).getCountry());
         builtIns.put(LOCALE.of("country_name"), (x, y, e) -> locale(x, e).getDisplayCountry(e.getLocale()));
         builtIns.put(STRING.of("locale"), (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString()));
+        builtIns.put(NULL.of("empty_to_null"), BuiltIn.identity());
+        builtIns.put(NULL.of("blank_to_null"), BuiltIn.identity());
+        builtIns.put(NULL.of("trim_to_null"), BuiltIn.identity());
     }
 
     @Override
