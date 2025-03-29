@@ -68,14 +68,14 @@ public final class TemporalPluginProvider implements PluginProvider {
         builtIns.put(INSTANT_BUILDER.of("date_time"), (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalDateTime()));
         builtIns.put(INSTANT_BUILDER.of("date"), (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalDate()));
         builtIns.put(INSTANT_BUILDER.of("time"), (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalTime()));
-        builtIns.put(INSTANT_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(INSTANT_BUILDER.of(C), BuiltIn.string());
         builtIns.put(INSTANT_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateInstant) x).getValue()));
         builtIns.put(INSTANT_BUILDER.of(AT_ZONE), (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(getZoneId(y, e))));
 
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date_time"), (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDateTime()));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("date"), (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDate()));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("time"), (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalTime()));
-        builtIns.put(ZONED_DATE_TIME_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(ZONED_DATE_TIME_BUILDER.of(C), BuiltIn.string());
         builtIns.put(ZONED_DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateZonedDateTime) x).getValue()));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().withZoneSameInstant(getZoneId(y, e))));
         builtIns.put(ZONED_DATE_TIME_BUILDER.of("zone"), (x, y, e) -> toString(((TemplateZonedDateTime) x).getValue().getZone()));
@@ -83,15 +83,15 @@ public final class TemporalPluginProvider implements PluginProvider {
 
         builtIns.put(DATE_TIME_BUILDER.of("date"), (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().toLocalDate()));
         builtIns.put(DATE_TIME_BUILDER.of("time"), (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().toLocalTime()));
-        builtIns.put(DATE_TIME_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(DATE_TIME_BUILDER.of(C), BuiltIn.string());
         builtIns.put(DATE_TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDateTime) x).getValue()));
         builtIns.put(DATE_TIME_BUILDER.of(AT_ZONE), (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().atZone(getZoneId(y, e))));
         builtIns.put(DATE_TIME_BUILDER.of(YEAR), (x, y, e) -> new TemplateYear(Year.of(((TemplateLocalDateTime) x).getValue().getYear())));
         builtIns.put(DATE_TIME_BUILDER.of(MONTH), (x, y, e) -> new TemplateEnum<>(((TemplateLocalDateTime) x).getValue().getMonth()));
         builtIns.put(DATE_TIME_BUILDER.of(DAY), (x, y, e) -> TemplateNumber.of(((TemplateLocalDateTime) x).getValue().getDayOfMonth()));
 
-        builtIns.put(DATE_BUILDER.of("date"), (x, y, e) -> x);
-        builtIns.put(DATE_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(DATE_BUILDER.of("date"), BuiltIn.identity());
+        builtIns.put(DATE_BUILDER.of(C), BuiltIn.string());
         builtIns.put(DATE_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalDate) x).getValue()));
         builtIns.put(DATE_BUILDER.of("h"), (x, y, e) -> formatHuman(y, e, (TemplateLocalDate) x));
         builtIns.put(DATE_BUILDER.of("until"), (x, y, e) -> until((TemplateLocalDate) x, y, e));
@@ -99,26 +99,26 @@ public final class TemporalPluginProvider implements PluginProvider {
         builtIns.put(DATE_BUILDER.of(YEAR), (x, y, e) -> new TemplateYear(Year.of(((TemplateLocalDateTime) x).getValue().getYear())));
         builtIns.put(DATE_BUILDER.of(MONTH), (x, y, e) -> new TemplateEnum<>(((TemplateLocalDateTime) x).getValue().getMonth()));
 
-        builtIns.put(TIME_BUILDER.of("time"), (x, y, e) -> x);
-        builtIns.put(TIME_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(TIME_BUILDER.of("time"), BuiltIn.identity());
+        builtIns.put(TIME_BUILDER.of(C), BuiltIn.string());
         builtIns.put(TIME_BUILDER.of(STRING), (x, y, e) -> formatTemporal(y, e, ((TemplateLocalTime) x).getValue()));
 
         builtIns.put(PERIOD_BUILDER.of("h"), (x, y, e) -> getPeriod((TemplatePeriod) x, e));
-        builtIns.put(PERIOD_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(PERIOD_BUILDER.of(C), BuiltIn.string());
         builtIns.put(PERIOD_BUILDER.of("years"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getYears()));
         builtIns.put(PERIOD_BUILDER.of("months"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getMonths()));
         builtIns.put(PERIOD_BUILDER.of("days"), (x, y, e) -> new TemplateNumber(((TemplatePeriod) x).getValue().getDays()));
 
-        builtIns.put(YEAR_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(YEAR_BUILDER.of(C), BuiltIn.string());
         builtIns.put(YEAR_BUILDER.of("is_leap"), (x, y, e) -> TemplateBoolean.from(((TemplateYear) x).getValue().isLeap()));
-        builtIns.put(YEAR_BUILDER.of(YEAR), (x, y, e) -> x);
+        builtIns.put(YEAR_BUILDER.of(YEAR), BuiltIn.identity());
 
-        builtIns.put(YEAR_MONTH_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(YEAR_MONTH_BUILDER.of(C), BuiltIn.string());
         builtIns.put(YEAR_MONTH_BUILDER.of("is_leap"), (x, y, e) -> TemplateBoolean.from(new TemplateYear(((TemplateYearMonth) x).getValue().getYear()).isLeap()));
         builtIns.put(YEAR_MONTH_BUILDER.of(YEAR), (x, y, e) -> new TemplateYear(((TemplateYearMonth) x).getValue().getYear()));
         builtIns.put(YEAR_MONTH_BUILDER.of(MONTH), (x, y, e) -> new TemplateEnum<>(((TemplateYearMonth) x).getValue().getMonth()));
 
-        builtIns.put(MONTH_DAY_BUILDER.of(C), (x, y, e) -> toString(x));
+        builtIns.put(MONTH_DAY_BUILDER.of(C), BuiltIn.string());
         builtIns.put(MONTH_DAY_BUILDER.of(MONTH), (x, y, e) -> new TemplateEnum<>(((TemplateMonthDay) x).getValue().getMonth()));
         builtIns.put(MONTH_DAY_BUILDER.of(DAY), (x, y, e) -> TemplateNumber.of(((TemplateMonthDay) x).getValue().getDayOfMonth()));
     }

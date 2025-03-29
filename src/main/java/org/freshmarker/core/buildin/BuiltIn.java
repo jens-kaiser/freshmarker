@@ -2,6 +2,7 @@ package org.freshmarker.core.buildin;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.util.List;
 
@@ -18,4 +19,12 @@ public interface BuiltIn {
      * @return the possibly changed object
      */
     TemplateObject apply(TemplateObject value, List<TemplateObject> parameters, ProcessContext context);
+
+    static BuiltIn identity() {
+        return (x, y, e) -> x;
+    }
+
+    static BuiltIn string() {
+        return (x, y, e) -> new TemplateString(x.toString());
+    }
 }

@@ -52,7 +52,7 @@ public final class NumberPluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(BUILDER.of("c"), BuiltIn.string());
         builtIns.put(BUILDER.of("abs"), (x, y, e) -> getNumber(x).abs());
         builtIns.put(BUILDER.of("sign"), (x, y, e) -> getNumber(x).sign());
         builtIns.put(BUILDER.of("format"), NumberPluginProvider::format);

@@ -25,7 +25,7 @@ public final class BooleanPluginProvider implements PluginProvider {
 
     @Override
     public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(BUILDER.of("c"), (x, y, e) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(BUILDER.of("c"), BuiltIn.string());
         builtIns.put(BUILDER.of("then"), BooleanPluginProvider::thenBuildIn);
         builtIns.put(BUILDER.of("string"), BooleanPluginProvider::stringBuiltIn);
         builtIns.put(BUILDER.of("h"), BooleanPluginProvider::humanBuiltIn);
