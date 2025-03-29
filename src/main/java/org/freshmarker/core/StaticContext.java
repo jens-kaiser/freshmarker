@@ -16,5 +16,5 @@ import java.util.Map;
 
 public record StaticContext(Map<BuiltInKey, BuiltIn> builtIns, Map<Class<? extends TemplateObject>, Formatter> formatter, Map<String, OutputFormat> outputs,
                             List<TemplateObjectProvider> providers, Map<NameSpaced, UserDirective> userDirectives,
-                            TemplateLoader templateLoader, Map<String, TemplateFunction> functions) {
+                            TemplateLoader templateLoader, Map<String, TemplateFunction> functions, BuiltInVariableProvider builtInVariableProviders) {
 }

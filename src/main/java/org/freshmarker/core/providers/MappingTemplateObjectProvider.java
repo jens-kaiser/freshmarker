@@ -22,4 +22,10 @@ public class MappingTemplateObjectProvider implements TemplateObjectProvider {
   public void addMapper(Class<?> type, Function<Object, TemplateObject> mapping) {
     mapper.put(type, Objects.requireNonNull(mapping));
   }
+
+  public MappingTemplateObjectProvider copy() {
+    MappingTemplateObjectProvider copy = new MappingTemplateObjectProvider();
+    copy.mapper.putAll(mapper);
+    return copy;
+  }
 }

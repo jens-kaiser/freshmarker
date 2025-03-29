@@ -1,20 +1,16 @@
 package org.freshmarker;
 
-import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.BuiltinHandlingFeature;
-import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.SwitchDirectiveFeature;
-import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.formatter.FormatterRegistry;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -22,55 +18,34 @@ import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.plugin.PluginProvider;
-import org.freshmarker.core.providers.BeanTemplateObjectProvider;
-import org.freshmarker.core.providers.CompoundTemplateObjectProvider;
-import org.freshmarker.core.providers.MappingTemplateObjectProvider;
-import org.freshmarker.core.providers.RecordTemplateObjectProvider;
-import org.freshmarker.core.providers.TemplateObjectProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URL;
 import java.time.Clock;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public final class Configuration {
-
-    private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
-
-    private Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-    private Map<String, OutputFormat> outputs = new HashMap<>();
-    private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
+    private final Map<String, OutputFormat> outputs;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
-    private final List<TemplateObjectProvider> providers;
-    private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
-    private final Map<String, TemplateFunction> functions = new HashMap<>();
-    private FormatterRegistry formatterRegistry = new FormatterRegistry(new HashMap<>());
-
-    private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
 
     private TemplateLoader templateLoader;
-    private final TemplateFeatures templateFeatures = new TemplateFeatures();
+    private final TemplateFeatures templateFeatures;
+
+    private final ExtensionRegistry extensionRegistry;
 
     public Configuration(TemplateFeature... enabledFeatures) {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
-        BeanTemplateObjectProvider beanTemplateObjectProvider = new BeanTemplateObjectProvider(modelSecurityGateway);
-        RecordTemplateObjectProvider recordTemplateObjectProvider = new RecordTemplateObjectProvider(modelSecurityGateway);
-        providers = new ArrayList<>(List.of(mappingTemplateObjectProvider, recordTemplateObjectProvider, new CompoundTemplateObjectProvider(), beanTemplateObjectProvider));
-
         templateLoader = new DefaultFileSystemTemplateLoader();
+        extensionRegistry = new ExtensionRegistry(enabledFeatures);
 
+        outputs = new HashMap<>();
         outputs.put("HTML", StandardOutputFormats.HTML);
         outputs.put("XHTML", StandardOutputFormats.HTML);
         outputs.put("XML", StandardOutputFormats.XML);
@@ -80,71 +55,42 @@ public final class Configuration {
         outputs.put("CSS", StandardOutputFormats.CSS);
         outputs.put("ADOC", StandardOutputFormats.ADOC);
 
-        Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
+        templateFeatures = extensionRegistry.getTemplateFeatures();
         templateFeatures.addFeatures(IncludeDirectiveFeature.values());
         templateFeatures.addFeatures(SwitchDirectiveFeature.values());
         templateFeatures.addFeatures(BuiltinHandlingFeature.values());
 
-        registerPlugins();
         registerSimpleMapping(StringBuilder.class, StringBuffer.class, URI.class, URL.class, UUID.class);
     }
 
     public void registerOutputFormat(String name, OutputFormat format) {
-        Map<String, OutputFormat> newOutputs = new HashMap<>(outputs);
-        newOutputs.put(Objects.requireNonNull(name), Objects.requireNonNull(format));
-        outputs = newOutputs;
+        outputs.put(Objects.requireNonNull(name), Objects.requireNonNull(format));
     }
 
     public void registerSimpleMapping(Class<?>... types) {
         for (Class<?> type : types) {
-            mappingTemplateObjectProvider.addMapper(type, o -> new TemplateString(o.toString()));
+            extensionRegistry.getMappingTemplateObjectProvider().addMapper(type, o -> new TemplateString(o.toString()));
         }
     }
 
     public void registerSimpleMapping(Class<?> type, Function<Object, String> mapping) {
         Objects.requireNonNull(mapping);
-        mappingTemplateObjectProvider.addMapper(type, x -> {
+        extensionRegistry.getMappingTemplateObjectProvider().addMapper(type, x -> {
             String apply = mapping.apply(x);
             return apply == null ? TemplateNull.NULL : new TemplateString(apply);
         });
     }
 
     public void registerUserDirective(String name, UserDirective directive) {
-        userDirectives.put(new NameSpaced(null, name), directive);
+        extensionRegistry.registerUserDirective(new NameSpaced(null, name), directive);
     }
 
     public void registerFunction(String name, TemplateFunction function) {
-        functions.put(name, function);
-    }
-
-    private void registerPlugins() {
-        ServiceLoader.load(PluginProvider.class).forEach(this::registerPlugin);
+        extensionRegistry.registerFunction(name, function);
     }
 
     public void registerPlugin(PluginProvider provider) {
-        logger.debug("register plugin: {}", provider.getClass().getSimpleName());
-        provider.registerFeature(templateFeatures);
-        Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>(this.builtIns);
-        provider.registerBuildIn(registerBuiltIns, templateFeatures);
-        this.builtIns = registerBuiltIns;
-        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = formatterRegistry.formatter();
-        provider.registerFormatter(registerFormatter, templateFeatures);
-        this.formatterRegistry = new FormatterRegistry(new HashMap<>(registerFormatter));
-        Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
-        provider.registerMapper(mapper);
-        mapper.forEach(mappingTemplateObjectProvider::addMapper);
-        List<TemplateObjectProvider> list = new ArrayList<>();
-        provider.registerTemplateObjectProvider(list);
-        providers.addAll(providers.size() - 2, list);
-        Map<String, UserDirective> additionalDirectives = new HashMap<>();
-        provider.registerUserDirective(additionalDirectives);
-        additionalDirectives.forEach((k, v) -> userDirectives.put(new NameSpaced(null, k), v));
-        Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
-        provider.registerFunction(additionalFunctions);
-        functions.putAll(additionalFunctions);
-        Map<String, Function<ProcessContext, TemplateObject>> builtInVariableProviderMap = new HashMap<>();
-        provider.registerBuiltInVariableProviders(builtInVariableProviderMap);
-        builtInVariableProviders.register(builtInVariableProviderMap);
+        extensionRegistry.registerPlugin(provider);
     }
 
     /**
@@ -153,8 +99,10 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        StaticContext context = new StaticContext(builtIns, formatterRegistry.formatter(), outputs, providers, userDirectives, templateLoader, functions);
-        return new DefaultTemplateBuilder(this, context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
+        StaticContext context = new StaticContext(Map.copyOf(extensionRegistry.getBuiltIns()), extensionRegistry.getFormatterRegistry().formatter(), Map.copyOf(outputs),
+                List.copyOf(extensionRegistry.getProviders(modelSecurityGateway)), Map.copyOf(extensionRegistry.getUserDirectives()), templateLoader, Map.copyOf(extensionRegistry.getFunctions()),
+                extensionRegistry.getBuiltInVariableProviders().copy());
+        return new DefaultTemplateBuilder(context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
@@ -166,18 +114,14 @@ public final class Configuration {
     }
 
     public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {
-        formatterRegistry.registerFormatter(type, formatter);
+        extensionRegistry.getFormatterRegistry().registerFormatter(type, formatter);
     }
 
     public void registerNumberFormatter(String pattern) {
-        formatterRegistry.registerFormatter("number", pattern);
+        extensionRegistry.getFormatterRegistry().registerFormatter("number", pattern);
     }
 
     public void registerFormatter(String type, String pattern) {
-        formatterRegistry.registerFormatter(type, pattern);
-    }
-
-    public BuiltInVariableProvider getBuiltInVariableProviders() {
-        return builtInVariableProviders;
+        extensionRegistry.getFormatterRegistry().registerFormatter(type, pattern);
     }
 }

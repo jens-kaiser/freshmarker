@@ -42,8 +42,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class DefaultTemplateBuilder implements ContextCreator, TemplateBuilder {
-    private final Configuration configuration;
-
     private final Locale locale;
     private final ZoneId zoneId;
     private final OutputFormat outputFormat;
@@ -52,8 +50,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     private final SimpleFeatureSet featureSet;
     private final Map<Class<? extends TemplateObject>, Formatter> formatter;
 
-    DefaultTemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
-        this.configuration = configuration;
+    DefaultTemplateBuilder(StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
         this.locale = locale;
         this.zoneId = zoneId;
         this.outputFormat = outputFormat;
@@ -64,7 +61,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     }
 
     public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
@@ -72,37 +69,37 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     }
 
     public TemplateBuilder withDateTimeFormat(String pattern) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
         return newBuilder;
     }
 
     public TemplateBuilder withDateFormat(String pattern) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
         return newBuilder;
     }
 
     public TemplateBuilder withTimeFormat(String pattern) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, zoneId));
         return newBuilder;
     }
 
     @Override
     public TemplateBuilder withClock(Clock clock) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        return new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
     }
 
     @Override
     public TemplateBuilder withLocale(Locale locale) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        return new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
     }
 
     @Override
     public TemplateBuilder withZoneId(ZoneId zoneId) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        return new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, featureSet);
     }
 
     @Override
@@ -112,7 +109,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
 
     @Override
     public TemplateBuilder withOutputFormat(OutputFormat format) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, format, clock, featureSet);
+        return new DefaultTemplateBuilder(context, locale, zoneId, format, clock, featureSet);
     }
 
     @Override
@@ -121,7 +118,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         if (newFeatureSet == featureSet) {
             return this;
         }
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
+        return new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, newFeatureSet);
     }
 
     @Override
@@ -130,7 +127,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         if (newFeatureSet == featureSet) {
             return this;
         }
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
+        return new DefaultTemplateBuilder(context, locale, zoneId, outputFormat, clock, newFeatureSet);
     }
 
     @Override
@@ -166,13 +163,13 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
         Template template = new Template(this, context.templateLoader(), importPath);
-        List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null, new SimpleFeatureSet(featureSet), 0), new ArrayList<>());
+        List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, new SimpleFeatureSet(featureSet), 0), new ArrayList<>());
         fragments.forEach(template.getRootFragment()::addFragment);
         return template;
     }
 
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.getBuiltInVariableProviders(), clock);
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), context.builtInVariableProviders(), clock);
         return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, formatter);
     }
 }
