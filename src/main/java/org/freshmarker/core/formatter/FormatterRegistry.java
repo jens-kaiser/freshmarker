@@ -14,6 +14,10 @@ import java.util.Map;
 
 public record FormatterRegistry(Map<Class<? extends TemplateObject>, Formatter> formatter) {
 
+    public void registerFormatters(Map<Class<? extends TemplateObject>, Formatter> formatters) {
+        this.formatter.putAll(formatters);
+    }
+
     public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {
         this.formatter.put(type, formatter);
     }

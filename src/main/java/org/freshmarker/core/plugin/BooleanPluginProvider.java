@@ -4,8 +4,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.formatter.BooleanFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -23,11 +21,6 @@ public final class BooleanPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("then"), BooleanPluginProvider::thenBuildIn);
         builtIns.put(BUILDER.of("string"), BooleanPluginProvider::stringBuiltIn);
         builtIns.put(BUILDER.of("h"), BooleanPluginProvider::humanBuiltIn);
-    }
-
-    @Override
-    public void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {
-        formatter.put(TemplateBoolean.class, new BooleanFormatter("yes", "no"));
     }
 
     private static TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {

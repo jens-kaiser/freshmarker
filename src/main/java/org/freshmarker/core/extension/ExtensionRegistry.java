@@ -1,6 +1,7 @@
 package org.freshmarker.core.extension;
 
 import org.freshmarker.api.Extension;
+import org.freshmarker.api.FormatterProvider;
 import org.freshmarker.api.FunctionProvider;
 import org.freshmarker.api.TypeMapperProvider;
 import org.freshmarker.api.UserDirectiveProvider;
@@ -38,7 +39,8 @@ import java.util.stream.Stream;
 public class ExtensionRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
-    private static final List<Extension> DEFAULT_EXTENSIONS = List.of(new DefaultUserDirectiveProvider(), new DefaultTypeMapperProvider());
+    private static final List<Extension> DEFAULT_EXTENSIONS = List.of(new DefaultUserDirectiveProvider(), new DefaultTypeMapperProvider(),
+            new DefaultFormatterProvider());
 
     private final TemplateFeatures templateFeatures = new TemplateFeatures();
     private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
@@ -129,7 +131,9 @@ public class ExtensionRegistry {
     }
 
     public FormatterRegistry getFormatterRegistry() {
-        return formatterRegistry;
+        FormatterRegistry copy = new FormatterRegistry(formatterRegistry.formatter());
+        stream(FormatterProvider.class).map(FormatterProvider::providerFormatter).forEach(formatterRegistry::registerFormatters);
+        return copy;
     }
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {

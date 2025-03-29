@@ -5,7 +5,6 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
-import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
@@ -46,11 +45,6 @@ public final class NumberPluginProvider implements PluginProvider {
         builtIns.put(BUILDER.of("h"), (x, y, e) -> human(getNumber(x), e));
         builtIns.put(BUILDER.of("min"), (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
         builtIns.put(BUILDER.of("max"), (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
-    }
-
-    @Override
-    public void registerFormatter(Map<Class<? extends TemplateObject>, org.freshmarker.core.formatter.Formatter> formatter) {
-        formatter.put(TemplateNumber.class, new NumberFormatter());
     }
 
     private Number castBigInteger(Number number) {
