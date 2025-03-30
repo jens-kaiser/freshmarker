@@ -20,12 +20,7 @@ import java.util.Map;
 
 import static de.schegge.collector.EnumeratedCollector.enumerated;
 
-public final class SequencePluginProvider implements BuiltInProvider {
-    private static final BuiltInKeyBuilder<TemplateListSequence> BUILDER = new BuiltInKeyBuilder<>(TemplateListSequence.class);
-    private static final BuiltInKeyBuilder<TemplateRightUnlimitedRange> UNLIMITED = new BuiltInKeyBuilder<>(TemplateRightUnlimitedRange.class);
-    private static final BuiltInKeyBuilder<TemplateRightLimitedRange> LIMITED = new BuiltInKeyBuilder<>(TemplateRightLimitedRange.class);
-    private static final BuiltInKeyBuilder<TemplateLengthLimitedRange> LENGTH = new BuiltInKeyBuilder<>(TemplateLengthLimitedRange.class);
-
+public final class SequenceBuildInProvider implements BuiltInProvider {
     private static final String REVERSE = "reverse";
     private static final String JOIN = "join";
     private static final String LOWER = "lower";

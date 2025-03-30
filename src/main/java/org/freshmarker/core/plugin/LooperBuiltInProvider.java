@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class LooperPluginProvider implements BuiltInProvider {
+public final class LooperBuiltInProvider implements BuiltInProvider {
 
     private static final List<TemplateObject> ITEM_PARITY = List.of(new TemplateString("odd"), new TemplateString("even"));
     private static final List<TemplateObject> ITEM_PARITY_CAP = List.of(new TemplateString("Odd"), new TemplateString("Even"));

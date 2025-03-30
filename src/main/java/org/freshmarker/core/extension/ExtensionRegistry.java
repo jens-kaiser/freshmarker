@@ -4,6 +4,7 @@ import org.freshmarker.api.BuiltInProvider;
 import org.freshmarker.api.Extension;
 import org.freshmarker.api.FormatterProvider;
 import org.freshmarker.api.FunctionProvider;
+import org.freshmarker.api.TemplateFeatureProvider;
 import org.freshmarker.api.TemplateObjectProviders;
 import org.freshmarker.api.TypeMapperProvider;
 import org.freshmarker.api.UserDirectiveProvider;
@@ -41,7 +42,7 @@ import java.util.stream.Stream;
 public class ExtensionRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
-    private static final List<Extension> DEFAULT_EXTENSIONS = List.of(new DefaultUserDirectiveProvider(), new DefaultTypeMapperProvider(),
+    private static final List<Extension> DEFAULT_EXTENSIONS = List.of(new DefaultFeatureProvider(), new DefaultUserDirectiveProvider(), new DefaultTypeMapperProvider(),
             new DefaultFormatterProvider());
 
     private final TemplateFeatures templateFeatures = new TemplateFeatures();
@@ -61,6 +62,7 @@ public class ExtensionRegistry {
         Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
         ServiceLoader.load(PluginProvider.class).forEach(this::registerPlugin);
         ServiceLoader.load(Extension.class).forEach(extensions::add);
+        stream(TemplateFeatureProvider.class).map(TemplateFeatureProvider::provideFeatures).flatMap(List::stream).forEach(templateFeatures::addFeatures);
     }
 
     public void registerPlugin(PluginProvider provider) {

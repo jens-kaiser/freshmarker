@@ -5,14 +5,11 @@ import org.freshmarker.api.FormatterProvider;
 import org.freshmarker.api.FunctionProvider;
 import org.freshmarker.api.UserDirectiveProvider;
 import org.freshmarker.core.ModelSecurityGateway;
-import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.TemplateFeature;
-import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -29,7 +26,6 @@ import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
-import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.plugin.PluginProvider;
 
 import java.time.Clock;
@@ -45,7 +41,6 @@ public final class Configuration {
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
 
     private TemplateLoader templateLoader;
-    private final TemplateFeatures templateFeatures;
 
     private final ExtensionRegistry extensionRegistry;
 
@@ -63,11 +58,6 @@ public final class Configuration {
         outputs.put("JSON", StandardOutputFormats.NONE);
         outputs.put("CSS", StandardOutputFormats.CSS);
         outputs.put("ADOC", StandardOutputFormats.ADOC);
-
-        templateFeatures = extensionRegistry.getTemplateFeatures();
-        templateFeatures.addFeatures(IncludeDirectiveFeature.values());
-        templateFeatures.addFeatures(SwitchDirectiveFeature.values());
-        templateFeatures.addFeatures(BuiltinHandlingFeature.values());
     }
 
     public void registerOutputFormat(String name, OutputFormat format) {
@@ -111,7 +101,7 @@ public final class Configuration {
      */
     public TemplateBuilder builder() {
         StaticContext context = new StaticContext(extensionRegistry, Map.copyOf(outputs),modelSecurityGateway, templateLoader);
-        return new DefaultTemplateBuilder(context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), templateFeatures.create());
+        return new DefaultTemplateBuilder(context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), extensionRegistry.getTemplateFeatures().create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public final class SystemPluginProvider implements BuiltInProvider {
+public final class SystemBuiltInProvider implements BuiltInProvider {
 
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {
         return x.evaluate(e, TemplateVersion.class);
@@ -80,9 +80,9 @@ public final class SystemPluginProvider implements BuiltInProvider {
                 nullBuilder.entry("blank_to_null", BuiltIn.identity()),
                 nullBuilder.entry("trim_to_null", BuiltIn.identity()),
                 booleanBuilder.entry("c", BuiltIn.string()),
-                booleanBuilder.entry("then", SystemPluginProvider::thenBuildIn),
-                booleanBuilder.entry("string", SystemPluginProvider::stringBuiltIn),
-                booleanBuilder.entry("h", SystemPluginProvider::humanBuiltIn),
+                booleanBuilder.entry("then", SystemBuiltInProvider::thenBuildIn),
+                booleanBuilder.entry("string", SystemBuiltInProvider::stringBuiltIn),
+                booleanBuilder.entry("h", SystemBuiltInProvider::humanBuiltIn),
                 enumBuilder.entry("c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name())),
                 enumBuilder.entry("ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()))
         );

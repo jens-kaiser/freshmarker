@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.UnaryOperator;
 
-public final class NumberPluginProvider implements BuiltInProvider {
+public final class NumberBuiltInProvider implements BuiltInProvider {
 
     private Number castBigInteger(Number number) {
         return switch (number) {
@@ -94,7 +94,7 @@ public final class NumberPluginProvider implements BuiltInProvider {
                 builder.entry("c", BuiltIn.string()),
                 builder.entry("abs", (x, y, e) -> getNumber(x).abs()),
                 builder.entry("sign", (x, y, e) -> getNumber(x).sign()),
-                builder.entry("format", NumberPluginProvider::format),
+                builder.entry("format", NumberBuiltInProvider::format),
                 builder.entry("int", (x, y, e) -> cast(x, Type.INTEGER, Number::intValue)),
                 builder.entry("long", (x, y, e) -> cast(x, Type.LONG, Number::longValue)),
                 builder.entry("short", (x, y, e) -> cast(x, Type.SHORT, Number::shortValue)),

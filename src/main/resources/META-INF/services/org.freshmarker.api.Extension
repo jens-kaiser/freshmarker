@@ -1,6 +1,7 @@
 org.freshmarker.core.plugin.DatePluginProvider
-org.freshmarker.core.plugin.SystemPluginProvider
-org.freshmarker.core.plugin.LooperPluginProvider
-org.freshmarker.core.plugin.NumberPluginProvider
-org.freshmarker.core.plugin.StringPluginProvider
-org.freshmarker.core.plugin.SequencePluginProvider
+org.freshmarker.core.plugin.SystemBuiltInProvider
+org.freshmarker.core.plugin.LooperBuiltInProvider
+org.freshmarker.core.plugin.NumberBuiltInProvider
+org.freshmarker.core.plugin.StringBuiltInProvider
+org.freshmarker.core.plugin.SequenceBuildInProvider
+org.freshmarker.core.plugin.TemporalPluginProvider
