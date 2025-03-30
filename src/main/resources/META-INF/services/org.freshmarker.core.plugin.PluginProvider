@@ -4,4 +4,3 @@ org.freshmarker.core.plugin.TemporalPluginProvider
 org.freshmarker.core.plugin.LooperPluginProvider
 org.freshmarker.core.plugin.EnumPluginProvider
 org.freshmarker.core.plugin.SequencePluginProvider
-org.freshmarker.core.plugin.SystemPluginProvider

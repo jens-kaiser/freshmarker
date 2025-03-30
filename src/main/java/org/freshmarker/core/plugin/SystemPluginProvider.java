@@ -1,43 +1,21 @@
 package org.freshmarker.core.plugin;
 
+import org.freshmarker.api.BuiltInProvider;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public final class SystemPluginProvider implements PluginProvider {
-    private static final BuiltInKeyBuilder<TemplateVersion> VERSION = new BuiltInKeyBuilder<>(TemplateVersion.class);
-    private static final BuiltInKeyBuilder<TemplateString> STRING = new BuiltInKeyBuilder<>(TemplateString.class);
-    private static final BuiltInKeyBuilder<TemplateLocale> LOCALE = new BuiltInKeyBuilder<>(TemplateLocale.class);
-    private static final BuiltInKeyBuilder<TemplateNull> NULL = new BuiltInKeyBuilder<>(TemplateNull.class);
-
-    @Override
-    public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(VERSION.of("is_before"), (x, y, e) -> version(x, e).isBefore(parameter(y, e)));
-        builtIns.put(VERSION.of("is_after"), (x, y, e) -> version(x, e).isAfter(parameter(y, e)));
-        builtIns.put(VERSION.of("is_equal"), (x, y, e) -> version(x, e).isEqual(parameter(y, e)));
-        builtIns.put(VERSION.of("major"), (x, y, e) -> version(x, e).major());
-        builtIns.put(VERSION.of("minor"), (x, y, e) -> version(x, e).minor());
-        builtIns.put(VERSION.of("patch"), (x, y, e) -> version(x, e).patch());
-        builtIns.put(STRING.of("version"), (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString()));
-        builtIns.put(LOCALE.of("lang"), (x, y, e) -> locale(x, e).getLanguage());
-        builtIns.put(LOCALE.of("language"), (x, y, e) -> locale(x, e).getLanguage());
-        builtIns.put(LOCALE.of("language_name"), (x, y, e) -> locale(x, e).getDisplayLanguage(e.getLocale()));
-        builtIns.put(LOCALE.of("country"), (x, y, e) -> locale(x, e).getCountry());
-        builtIns.put(LOCALE.of("country_name"), (x, y, e) -> locale(x, e).getDisplayCountry(e.getLocale()));
-        builtIns.put(STRING.of("locale"), (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString()));
-        builtIns.put(NULL.of("empty_to_null"), BuiltIn.identity());
-        builtIns.put(NULL.of("blank_to_null"), BuiltIn.identity());
-        builtIns.put(NULL.of("trim_to_null"), BuiltIn.identity());
-    }
+public final class SystemPluginProvider implements BuiltInProvider {
 
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {
         return x.evaluate(e, TemplateVersion.class);
@@ -57,5 +35,50 @@ public final class SystemPluginProvider implements PluginProvider {
             case TemplateString string -> new TemplateVersion(string.toString());
             default -> throw new IllegalStateException("invalid type: " + value.getModelType());
         };
+    }
+
+    private static TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(parameters, 2);
+        return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluateToObject(context) : parameters.get(1).evaluateToObject(context);
+    }
+
+    private static TemplateString stringBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(parameters, 2);
+        return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluate(context, TemplateString.class) : parameters.get(1).evaluate(context, TemplateString.class);
+    }
+
+    private static TemplateString humanBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        return new TemplateString(ResourceBundle.getBundle("freshmarker", context.getLocale()).getString("boolean." + value));
+    }
+
+    @Override
+    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
+        MapEntryBuilder<TemplateVersion> version = new MapEntryBuilder<>(TemplateVersion.class);
+        MapEntryBuilder<TemplateString> string = new MapEntryBuilder<>(TemplateString.class);
+        MapEntryBuilder<TemplateLocale> locale = new MapEntryBuilder<>(TemplateLocale.class);
+        MapEntryBuilder<TemplateNull> nullBuilder = new MapEntryBuilder<>(TemplateNull.class);
+        MapEntryBuilder<TemplateBoolean> booleanBuilder = new MapEntryBuilder<>(TemplateBoolean.class);
+        return Map.ofEntries(
+                version.entry("is_before", (x, y, e) -> version(x, e).isBefore(parameter(y, e))),
+                version.entry("is_after", (x, y, e) -> version(x, e).isAfter(parameter(y, e))),
+                version.entry("is_equal", (x, y, e) -> version(x, e).isEqual(parameter(y, e))),
+                version.entry("major", (x, y, e) -> version(x, e).major()),
+                version.entry("minor", (x, y, e) -> version(x, e).minor()),
+                version.entry("patch", (x, y, e) -> version(x, e).patch()),
+                string.entry("version", (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString())),
+                string.entry("locale", (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString())),
+                locale.entry("lang", (x, y, e) -> locale(x, e).getLanguage()),
+                locale.entry("language", (x, y, e) -> locale(x, e).getLanguage()),
+                locale.entry("language_name", (x, y, e) -> locale(x, e).getDisplayLanguage(e.getLocale())),
+                locale.entry("country", (x, y, e) -> locale(x, e).getCountry()),
+                locale.entry("country_name", (x, y, e) -> locale(x, e).getDisplayCountry(e.getLocale())),
+                nullBuilder.entry("empty_to_null", BuiltIn.identity()),
+                nullBuilder.entry("blank_to_null", BuiltIn.identity()),
+                nullBuilder.entry("trim_to_null", BuiltIn.identity()),
+                booleanBuilder.entry("c", BuiltIn.string()),
+                booleanBuilder.entry("then", SystemPluginProvider::thenBuildIn),
+                booleanBuilder.entry("string", SystemPluginProvider::stringBuiltIn),
+                booleanBuilder.entry("h", SystemPluginProvider::humanBuiltIn)
+        );
     }
 }
