@@ -4,10 +4,13 @@ import org.freshmarker.api.BuiltInProvider;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.buildin.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
+import org.freshmarker.core.model.primitive.TemplateEnum;
 import org.freshmarker.core.model.primitive.TemplateLocale;
+import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 
@@ -58,6 +61,8 @@ public final class SystemPluginProvider implements BuiltInProvider {
         MapEntryBuilder<TemplateLocale> locale = new MapEntryBuilder<>(TemplateLocale.class);
         MapEntryBuilder<TemplateNull> nullBuilder = new MapEntryBuilder<>(TemplateNull.class);
         MapEntryBuilder<TemplateBoolean> booleanBuilder = new MapEntryBuilder<>(TemplateBoolean.class);
+        MapEntryBuilder<? extends TemplateObject> enumBuilder = new MapEntryBuilder<>(TemplateEnum.class);
+
         return Map.ofEntries(
                 version.entry("is_before", (x, y, e) -> version(x, e).isBefore(parameter(y, e))),
                 version.entry("is_after", (x, y, e) -> version(x, e).isAfter(parameter(y, e))),
@@ -78,7 +83,9 @@ public final class SystemPluginProvider implements BuiltInProvider {
                 booleanBuilder.entry("c", BuiltIn.string()),
                 booleanBuilder.entry("then", SystemPluginProvider::thenBuildIn),
                 booleanBuilder.entry("string", SystemPluginProvider::stringBuiltIn),
-                booleanBuilder.entry("h", SystemPluginProvider::humanBuiltIn)
+                booleanBuilder.entry("h", SystemPluginProvider::humanBuiltIn),
+                enumBuilder.entry("c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name())),
+                enumBuilder.entry("ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()))
         );
     }
 }
