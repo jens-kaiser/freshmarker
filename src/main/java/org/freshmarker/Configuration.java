@@ -1,6 +1,7 @@
 package org.freshmarker;
 
 import org.freshmarker.api.Extension;
+import org.freshmarker.api.FormatterProvider;
 import org.freshmarker.api.FunctionProvider;
 import org.freshmarker.api.UserDirectiveProvider;
 import org.freshmarker.core.ModelSecurityGateway;
@@ -12,24 +13,31 @@ import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.features.TemplateFeatures;
+import org.freshmarker.core.formatter.DateFormatter;
+import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.Formatter;
+import org.freshmarker.core.formatter.NumberFormatter;
+import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.freshmarker.core.model.temporal.TemplateInstant;
+import org.freshmarker.core.model.temporal.TemplateLocalDate;
+import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
+import org.freshmarker.core.model.temporal.TemplateLocalTime;
+import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.plugin.PluginProvider;
 
-import java.net.URI;
-import java.net.URL;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.function.Function;
 
 public final class Configuration {
@@ -115,14 +123,24 @@ public final class Configuration {
     }
 
     public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {
-        extensionRegistry.getFormatterRegistry().registerFormatter(type, formatter);
+        extensionRegistry.register((FormatterProvider) () -> Map.of(type, formatter));
     }
 
     public void registerNumberFormatter(String pattern) {
-        extensionRegistry.getFormatterRegistry().registerFormatter("number", pattern);
+        extensionRegistry.register((FormatterProvider) () -> Map.of(TemplateNumber.class, new NumberFormatter(pattern)));
     }
 
     public void registerFormatter(String type, String pattern) {
-        extensionRegistry.getFormatterRegistry().registerFormatter(type, pattern);
+        extensionRegistry.register((FormatterProvider) () ->
+        switch (type) {
+            case "number" -> Map.of(TemplateNumber.class, new NumberFormatter(pattern));
+            case "zoned-date-time" ->  Map.of(
+                    TemplateZonedDateTime.class, new DateTimeFormatter(pattern),
+                    TemplateInstant.class, new DateTimeFormatter(pattern, ZoneId.systemDefault()));
+            case "date-time" ->  Map.of(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
+            case "date" ->  Map.of(TemplateLocalDate.class, new DateFormatter(pattern));
+            case "time" ->  Map.of(TemplateLocalTime.class, new TimeFormatter(pattern, ZoneId.systemDefault()));
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        });
     }
 }

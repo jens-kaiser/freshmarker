@@ -3,7 +3,7 @@ package org.freshmarker.core.plugin;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.core.extension.TypedBuiltInProvider;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -12,15 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public final class BooleanPluginProvider implements PluginProvider {
-    private static final BuiltInKeyBuilder<TemplateBoolean> BUILDER = new BuiltInKeyBuilder<>(TemplateBoolean.class);
+public final class BooleanPluginProvider extends TypedBuiltInProvider<TemplateBoolean> {
+
+    public BooleanPluginProvider() {
+        super(TemplateBoolean.class);
+    }
 
     @Override
-    public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
-        builtIns.put(BUILDER.of("c"), BuiltIn.string());
-        builtIns.put(BUILDER.of("then"), BooleanPluginProvider::thenBuildIn);
-        builtIns.put(BUILDER.of("string"), BooleanPluginProvider::stringBuiltIn);
-        builtIns.put(BUILDER.of("h"), BooleanPluginProvider::humanBuiltIn);
+    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
+        return Map.ofEntries(
+                entry("c", BuiltIn.string()),
+                entry("then", BooleanPluginProvider::thenBuildIn),
+                entry("string", BooleanPluginProvider::stringBuiltIn),
+                entry("h", BooleanPluginProvider::humanBuiltIn));
     }
 
     private static TemplateObject thenBuildIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {

@@ -1,5 +1,6 @@
 package org.freshmarker.core.extension;
 
+import org.freshmarker.api.BuiltInProvider;
 import org.freshmarker.api.Extension;
 import org.freshmarker.api.FormatterProvider;
 import org.freshmarker.api.FunctionProvider;
@@ -16,7 +17,6 @@ import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.formatter.Formatter;
-import org.freshmarker.core.formatter.FormatterRegistry;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.core.providers.BeanTemplateObjectProvider;
@@ -48,7 +48,7 @@ public class ExtensionRegistry {
     private final List<TemplateObjectProvider> providers = new ArrayList<>();
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
-    private FormatterRegistry formatterRegistry = new FormatterRegistry(new HashMap<>());
+    private final Map<Class<? extends TemplateObject>, Formatter> formatterRegistry = new HashMap<>();
 
     private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
 
@@ -67,9 +67,9 @@ public class ExtensionRegistry {
         Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>();
         provider.registerBuildIn(registerBuiltIns, templateFeatures);
         this.builtIns.putAll(registerBuiltIns);
-        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = formatterRegistry.formatter();
+        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = new HashMap<>();
         provider.registerFormatter(registerFormatter, templateFeatures);
-        this.formatterRegistry = new FormatterRegistry(new HashMap<>(registerFormatter));
+        this.formatterRegistry.putAll(registerFormatter);
         Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
         provider.registerMapper(mapper);
         mapper.forEach(mappingTemplateObjectProvider::addMapper);
@@ -96,7 +96,9 @@ public class ExtensionRegistry {
     }
 
     public Map<BuiltInKey, BuiltIn> getBuiltIns() {
-        return builtIns;
+        Map<BuiltInKey, BuiltIn> map = new HashMap<>(builtIns);
+        stream(BuiltInProvider.class).map(BuiltInProvider::provideBuiltIns).forEach(map::putAll);
+        return map;
     }
 
     public MappingTemplateObjectProvider getMappingTemplateObjectProvider() {
@@ -130,10 +132,10 @@ public class ExtensionRegistry {
         return map;
     }
 
-    public FormatterRegistry getFormatterRegistry() {
-        FormatterRegistry copy = new FormatterRegistry(formatterRegistry.formatter());
-        stream(FormatterProvider.class).map(FormatterProvider::providerFormatter).forEach(formatterRegistry::registerFormatters);
-        return copy;
+    public Map<Class<? extends TemplateObject>, Formatter> getFormatterRegistry() {
+        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>(formatterRegistry);
+        stream(FormatterProvider.class).map(FormatterProvider::providerFormatter).forEach(formatter::putAll);
+        return formatter;
     }
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {
