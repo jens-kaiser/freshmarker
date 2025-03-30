@@ -47,19 +47,17 @@ public final class DatePluginProvider implements BuiltInProvider, TypeMapperProv
 
     @Override
     public Map<Class<?>, TypeMapper> providerTypeMapper() {
-        Map<Class<?>, TypeMapper> mapper = new HashMap<>();
-        mapper.put(java.util.Date.class, o -> new TemplateClassicDateTime((java.util.Date) o));
-        mapper.put(Date.class, o -> new TemplateClassicDate((Date) o));
-        mapper.put(Time.class, o -> new TemplateClassicTime((Time) o));
-        return mapper;
+        return Map.of(
+            java.util.Date.class, o -> new TemplateClassicDateTime((java.util.Date) o),
+            Date.class, o -> new TemplateClassicDate((Date) o),
+            Time.class, o -> new TemplateClassicTime((Time) o));
     }
 
     @Override
     public Map<Class<? extends TemplateObject>, Formatter> providerFormatter() {
-        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
-        formatter.put(TemplateClassicDateTime.class, new ClassicDateTimeFormatter("yyyy-MM-dd hh:mm:ss"));
-        formatter.put(TemplateClassicDate.class, new ClassicDateFormatter("yyyy-MM-dd"));
-        formatter.put(TemplateClassicTime.class, new ClassicTimeFormatter("hh:mm:ss"));
-        return formatter;
+        return Map.of(
+            TemplateClassicDateTime.class, new ClassicDateTimeFormatter("yyyy-MM-dd hh:mm:ss"),
+            TemplateClassicDate.class, new ClassicDateFormatter("yyyy-MM-dd"),
+            TemplateClassicTime.class, new ClassicTimeFormatter("hh:mm:ss"));
     }
 }
