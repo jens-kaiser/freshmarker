@@ -1,5 +1,9 @@
 package org.freshmarker.core.plugin;
 
+import org.freshmarker.api.BuiltInProvider;
+import org.freshmarker.api.FormatterProvider;
+import org.freshmarker.api.TypeMapperProvider;
+import org.freshmarker.core.TypeMapper;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.buildin.BuiltInKeyBuilder;
@@ -16,18 +20,18 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
-public final class DatePluginProvider implements PluginProvider {
-    private static final BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
-
-    private static final BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
-
-    private static final BuiltInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicTime.class);
+public final class DatePluginProvider implements BuiltInProvider, TypeMapperProvider, FormatterProvider {
 
     @Override
-    public void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
+    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
+        BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
+        BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
+        BuiltInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicTime.class);
+
+        Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
         builtIns.put(DATE_TIME_BUILDER.of("date"),
                 (x, y, c) -> new TemplateClassicDate(new Date(((TemplateClassicDateTime) x).getValue().getTime())));
         builtIns.put(DATE_TIME_BUILDER.of("time"),
@@ -38,19 +42,24 @@ public final class DatePluginProvider implements PluginProvider {
         builtIns.put(DATE_BUILDER.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
         builtIns.put(TIME_BUILDER.of("time"), BuiltIn.identity());
         builtIns.put(TIME_BUILDER.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
+        return builtIns;
     }
 
     @Override
-    public void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
+    public Map<Class<?>, TypeMapper> providerTypeMapper() {
+        Map<Class<?>, TypeMapper> mapper = new HashMap<>();
         mapper.put(java.util.Date.class, o -> new TemplateClassicDateTime((java.util.Date) o));
         mapper.put(Date.class, o -> new TemplateClassicDate((Date) o));
         mapper.put(Time.class, o -> new TemplateClassicTime((Time) o));
+        return mapper;
     }
 
     @Override
-    public void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {
+    public Map<Class<? extends TemplateObject>, Formatter> providerFormatter() {
+        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
         formatter.put(TemplateClassicDateTime.class, new ClassicDateTimeFormatter("yyyy-MM-dd hh:mm:ss"));
         formatter.put(TemplateClassicDate.class, new ClassicDateFormatter("yyyy-MM-dd"));
         formatter.put(TemplateClassicTime.class, new ClassicTimeFormatter("hh:mm:ss"));
+        return formatter;
     }
 }
