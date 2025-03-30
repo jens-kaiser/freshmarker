@@ -1,0 +1,53 @@
+== Extension Mechanism (since 1.8.0)
+
+=== Overview
+
+TBD
+
+=== Registering Extensions
+
+TBD
+
+==== Programmatic Extension Registration
+
+TBD
+
+==== Automatic Extension Registration
+
+TBD
+
+==== Extension Inheritance
+
+TBD
+
+==== Feature Handling
+
+TBD
+
+==== Additional Built-In
+
+TBD
+
+==== Additional Built-In Variables
+
+TBD
+
+==== Additional User Directives
+
+TBD
+
+==== Additional Function
+
+TBD
+
+==== Additional Formatter
+
+TBD
+
+==== Additional Type Mapper
+
+TBD
+
+==== Additional Template-Object Provider
+
+TBD
