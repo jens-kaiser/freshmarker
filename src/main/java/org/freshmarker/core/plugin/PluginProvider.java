@@ -21,10 +21,20 @@ public interface PluginProvider {
 
   }
 
+  /**
+   * @param mapper the type mapper to register
+   * @deprecated use {@link org.freshmarker.api.TypeMapperProvider} extension instead
+   */
+  @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
 
   }
 
+  /**
+   * @param formatter the formatterss to register
+   * @deprecated use {@link org.freshmarker.api.FormatterProvider} extension instead
+   */
+  @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {
 
   }
@@ -38,10 +48,20 @@ public interface PluginProvider {
     registerFormatter(formatter);
   }
 
+  /**
+   * @param builtIns the built-ins to register
+   * @deprecated use {@link org.freshmarker.api.BuiltInProvider} extension instead
+   */
+  @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
 
   }
 
+  /**
+   * @param builtIns the built-ins to register
+   * @deprecated use {@link org.freshmarker.api.BuiltInProvider} extension instead
+   */
+  @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns, FeatureSet featureSet) {
     registerBuildIn(builtIns);
   }
