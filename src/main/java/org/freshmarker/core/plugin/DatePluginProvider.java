@@ -27,21 +27,21 @@ public final class DatePluginProvider implements BuiltInProvider, TypeMapperProv
 
     @Override
     public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
-        BuiltInKeyBuilder<TemplateClassicDateTime> DATE_TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
-        BuiltInKeyBuilder<TemplateClassicDate> DATE_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
-        BuiltInKeyBuilder<TemplateClassicTime> TIME_BUILDER = new BuiltInKeyBuilder<>(TemplateClassicTime.class);
+        BuiltInKeyBuilder<TemplateClassicDateTime> dateTimeBuilder = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
+        BuiltInKeyBuilder<TemplateClassicDate> dateBuilder = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
+        BuiltInKeyBuilder<TemplateClassicTime> timeBuilder = new BuiltInKeyBuilder<>(TemplateClassicTime.class);
 
         Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-        builtIns.put(DATE_TIME_BUILDER.of("date"),
+        builtIns.put(dateTimeBuilder.of("date"),
                 (x, y, c) -> new TemplateClassicDate(new Date(((TemplateClassicDateTime) x).getValue().getTime())));
-        builtIns.put(DATE_TIME_BUILDER.of("time"),
+        builtIns.put(dateTimeBuilder.of("time"),
                 (x, y, c) -> new TemplateClassicTime(new Time(((TemplateClassicDateTime) x).getValue().getTime())));
-        builtIns.put(DATE_TIME_BUILDER.of("c"),
+        builtIns.put(dateTimeBuilder.of("c"),
                 (x, y, c) -> new TemplateString(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").format(((TemplateClassicDateTime) x).getValue())));
-        builtIns.put(DATE_BUILDER.of("date"), BuiltIn.identity());
-        builtIns.put(DATE_BUILDER.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
-        builtIns.put(TIME_BUILDER.of("time"), BuiltIn.identity());
-        builtIns.put(TIME_BUILDER.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(dateBuilder.of("date"), BuiltIn.identity());
+        builtIns.put(dateBuilder.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
+        builtIns.put(timeBuilder.of("time"), BuiltIn.identity());
+        builtIns.put(timeBuilder.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
         return builtIns;
     }
 

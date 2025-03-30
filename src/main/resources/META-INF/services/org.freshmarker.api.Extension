@@ -1,2 +1,2 @@
-org.freshmarker.core.plugin.BooleanPluginProvider
 org.freshmarker.core.plugin.DatePluginProvider
+org.freshmarker.core.plugin.SystemPluginProvider
