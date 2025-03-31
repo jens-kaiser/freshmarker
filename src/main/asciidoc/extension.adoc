@@ -2,52 +2,134 @@
 
 === Overview
 
-TBD
+The `Extension` mechanism replaces the previous `PlugInProvider` mechanism.
 
 === Registering Extensions
 
-TBD
-
-==== Programmatic Extension Registration
-
-TBD
+`Extensions` can be registered _automatically_ via the Java `ServiceLoader` mechanism or _programmatically_.
 
 ==== Automatic Extension Registration
 
-TBD
+`Extensions` can be registered _automatically_ via the
+Java `ServiceLoader` mechanism. This allows third-party `Extensions` to be automatically recognized and registered, depending on what is available in the classpath.
 
-==== Extension Inheritance
+Specifically, a custom `Extension` can be registered by specifying its fully qualified class name in a file named `org.freshmarker.api.extension.Extension` in the `/META-INF/services` folder in the associated JAR file.
 
-TBD
+==== Programmatic Extension Registration
+
+Developers can register `Extension` programmatically by calling the `Configuration#register(Extension)` method.
+
+When an `Extension` is registered automatically, it can only be configured via template features. In contrast, when an `Extension` is registered programmatically, it can be modified via constructor arguments or setter methods.
+
+==== Extension Order
+
+The `Extension` are registered in a deterministic order. The default `Extension` are registered first, followed by the _automatic_ `Extension` and then the _programmatic_ `Extension`.
 
 ==== Feature Handling
+`TemplateFeatureProvider` defines the API for `Extensions` that wish to add new Freshmarker template features.
 
-TBD
+Template features are used to modify the behavior of _FreshMarker_ or third-party `Extensions`.
+
+.Example TemplateFeatureProvider
+[source,java,,role="primary"]
+----
+public class ExampleFeatureProvider implements TemplateFeatureProvider {
+    @Override
+    public Set<TemplateFeature> provideFeatures() {
+        return EnumSet.allOf(ExampleFeature.class);
+    }
+}
+----
+
+After registration, the features are available for all `Extension`.
+In order for an `Extension` to react to a feature, it must implement the `Extension#init(FeatureSet)` method.
+
+WARNING: Features are only registered if the `TemplateFeatureProvider` is loaded automatically.
 
 ==== Additional Built-In
 
-TBD
+`BuiltInProvider` defines the API for `Extensions` that wish to add new built-ins.
+
+Each Built-In must implement the `BuiltIn` interface.
+
+.Example BuiltIn
+[source,java,,role="primary"]
+----
+public class ExampleBuiltIn implements BuiltIn {
+    public TemplateObject apply(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        new TemplateString("EXAMPLE: " + string);
+    }
+}
+----
+
+.Example BuiltIn as Lambda
+[source,java,role="secondary"]
+----
+(value, parameters, context) -> new TemplateString("EXAMPLE: " + string);
+----
+
+Since a `BuiltIn` is assigned to a model type and has a name, the `BuiltInProvider` returns the built-ins as `Map<BuiltInKey,BuiltIn>`.
+
+Two helper classes are available to easily create a `BuiltInKey`.
+
+The `BuiltInKeyBuilder` creates `BuiltInKey` instances for the specified type and can be used in a custom `BuiltInProvider`.
+
+.Usage of BuildInKeyBuilder
+[source,java,role="secondary"]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    public Map<BuiltInKey> provideBuiltIns() {
+        BuiltInKeyBuilder<TemplateString> builder = new BuiltInKeyBuilder(TemplateString.class);
+        Map.of(builder.of("example"), new ExampleBuiltIn());
+    }
+}
+----
+
+The `MapEntryBuilder` creates `Entry<BuiltInKey,BuiltIn>` instances for the specified type and can be used in a custom `BuiltInProvider`.
+
+.Usage of MapEntryBuilder
+[source,java,role="secondary"]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    public Map<BuiltInKey> provideBuiltIns() {
+        MapEntryBuilder<TemplateString> builder = new MapEntryBuilder(TemplateString.class);
+        Map.ofEntries(builder.entry("example", (value, parameters, context) -> new TemplateString("EXAMPLE: " + string)));
+    }
+}
+----
 
 ==== Additional Built-In Variables
+
+The `BuiltInVariableProvider` defines the API for `Extensions` that wish to add new built-in variables.
 
 TBD
 
 ==== Additional User Directives
 
+The `UserDirectiveProvider` defines the API for `Extensions` that wish to add new user directives.
+
 TBD
 
 ==== Additional Function
+
+The `FunctionProvider` defines the API for `Extensions` that wish to add new template functions.
 
 TBD
 
 ==== Additional Formatter
 
+The `FormatterProvider` defines the API for `Extensions` that wish to add new formatter.
+
 TBD
 
 ==== Additional Type Mapper
 
+The `TypeMapperProvider` defines the API for `Extensions` that wish to add new type mapper.
+
 TBD
 
 ==== Additional Template-Object Provider
+
+The `TemplateObjectProviders` defines the API for `Extensions` that wish to add new template-object providers.
 
 TBD
