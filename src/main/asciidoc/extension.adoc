@@ -103,9 +103,9 @@ public final class ExampleBuiltInProvider implements BuilInProvider {
 
 The `BuiltInVariableProvider` defines the API for `Extensions` that wish to add new built-in variables.
 
-Each custom built-in variable must implement the `BuiltInVariable` interface.
+Each custom built-in variable has to implement the `BuiltInVariable` interface.
 
-.Example BuiltIn Variable
+.Example BuiltInVariable
 [source,java,,role="primary"]
 ----
 public class ExampleBuiltInVariable implements BuiltInVariable {
@@ -115,8 +115,8 @@ public class ExampleBuiltInVariable implements BuiltInVariable {
 }
 ----
 
-.Example BuiltIn Variable as Lambda
-[source,java,,role="secodary"]
+.Example BuiltInVariable as Lambda
+[source,java,role="secodary"]
 ----
 (context) -> new TemplateString("EXAMPLE");
 ----
@@ -133,11 +133,40 @@ public final class ExampleBuiltInProvider implements BuilInProvider {
 }
 ----
 
-TBD
-
 ==== Additional User Directives
 
 The `UserDirectiveProvider` defines the API for `Extensions` that wish to add new user directives.
+
+Each custom user directive hast to implement the `UserDirective` interface.
+
+.Example UserDirective
+[source,java,role="primary"]
+----
+public class ExampleUserDirective implements UserDirective {
+    public execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
+        body.process(context);
+        body.process(context);
+    }
+}
+----
+
+.Example UserDirective as Lambda
+[source,java,role="secondary"]
+----
+(context, args, body) -> { body.process(context); body.process(context); };
+----
+
+Since each `UserDirective` has a name, the `UserDirectiveProvider` returns the user directives as `Map<String,UserDirective>`.
+
+.Example UserDirectiveProvider
+[source,java]
+----
+public final class ExampleUserDirectiveProvider implements UserDirectiveProvider {
+    public Map<String,UserDirective> provideUserDirectives() {
+        Map.of("example", new ExampleUserDirective());
+    }
+}
+----
 
 TBD
 
@@ -145,7 +174,36 @@ TBD
 
 The `FunctionProvider` defines the API for `Extensions` that wish to add new template functions.
 
-TBD
+Each custom template function hast to implement the `TemplateFunction` interface.
+
+.Example TemplateFunction
+[source,java,role="primary"]
+----
+public class ExampleFunction implements TemplateFunction {
+    public TemplateObject execute(ProcessContext context, List<TemplateObject> args) {
+        return TemplateNumber.of(args.size());
+    }
+}
+----
+
+.Example UserDirective as Lambda
+[source,java,role="second"]
+----
+(context, args) -> TemplateNumber.of(args.size());
+----
+
+Since each `TemplateFunction` has a name, the `FunctionProvider` returns the user directives as `Map<String,TemplateFunction>`.
+
+.Example FunctionProvider
+[source,java]
+----
+public final class ExampleFunctionProvider implements UserDirectiveProvider {
+    public Map<String,TemplateFunction> provideFunctions() {
+        Map.of("example", (context, args) -> TemplateNumber.of(args.size()));
+    }
+}
+----
+
 
 ==== Additional Formatter
 
