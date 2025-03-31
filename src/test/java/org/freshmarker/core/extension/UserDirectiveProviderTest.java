@@ -1,7 +1,7 @@
 package org.freshmarker.core.extension;
 
 import org.freshmarker.Configuration;
-import org.freshmarker.api.UserDirectiveProvider;
+import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

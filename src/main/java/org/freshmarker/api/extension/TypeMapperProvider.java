@@ -1,4 +1,4 @@
-package org.freshmarker.api;
+package org.freshmarker.api.extension;
 
 import org.freshmarker.core.TypeMapper;
 

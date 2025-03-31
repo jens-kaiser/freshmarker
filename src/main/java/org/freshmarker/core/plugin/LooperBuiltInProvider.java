@@ -1,9 +1,9 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.api.BuiltInProvider;
+import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.api.extension.BuiltInKeyBuilder;
 import org.freshmarker.core.model.TemplateHashLooper;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;

@@ -1,16 +1,16 @@
-package org.freshmarker.api;
+package org.freshmarker.api.extension;
 
 import org.freshmarker.core.features.TemplateFeature;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * An {@link Extension} to add new template feature.
  */
 public interface TemplateFeatureProvider extends Extension {
     /**
-     * Returns a list of template features
-     * @return a list of template features
+     * Returns a set of template features
+     * @return a set of template features
      */
-    List<TemplateFeature> provideFeatures();
+    Set<TemplateFeature> provideFeatures();
 }

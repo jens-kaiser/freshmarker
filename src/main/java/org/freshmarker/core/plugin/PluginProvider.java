@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.freshmarker.api.extension.BuiltInProvider;
+import org.freshmarker.api.extension.BuiltInVariableProvider;
+import org.freshmarker.api.extension.FormatterProvider;
+import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.TypeMapperProvider;
+import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
@@ -23,7 +29,7 @@ public interface PluginProvider {
 
   /**
    * @param mapper the type mapper to register
-   * @deprecated use {@link org.freshmarker.api.TypeMapperProvider} extension instead
+   * @deprecated use {@link TypeMapperProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerMapper(Map<Class<?>, Function<Object, TemplateObject>> mapper) {
@@ -32,7 +38,7 @@ public interface PluginProvider {
 
   /**
    * @param formatter the formatterss to register
-   * @deprecated use {@link org.freshmarker.api.FormatterProvider} extension instead
+   * @deprecated use {@link FormatterProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter) {
@@ -41,7 +47,7 @@ public interface PluginProvider {
 
   /**
    * @param formatter the formatters to register
-   * @deprecated use {@link org.freshmarker.api.FormatterProvider} extension instead
+   * @deprecated use {@link FormatterProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerFormatter(Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet) {
@@ -50,7 +56,7 @@ public interface PluginProvider {
 
   /**
    * @param builtIns the built-ins to register
-   * @deprecated use {@link org.freshmarker.api.BuiltInProvider} extension instead
+   * @deprecated use {@link BuiltInProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns) {
@@ -59,7 +65,7 @@ public interface PluginProvider {
 
   /**
    * @param builtIns the built-ins to register
-   * @deprecated use {@link org.freshmarker.api.BuiltInProvider} extension instead
+   * @deprecated use {@link BuiltInProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerBuildIn(Map<BuiltInKey, BuiltIn> builtIns, FeatureSet featureSet) {
@@ -72,7 +78,7 @@ public interface PluginProvider {
 
   /**
    * @param directives the user directives to register
-   * @deprecated use {@link org.freshmarker.api.UserDirectiveProvider} extension instead
+   * @deprecated use {@link UserDirectiveProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerUserDirective(Map<String, UserDirective> directives) {
@@ -81,7 +87,7 @@ public interface PluginProvider {
 
   /**
    * @param functions the functions to register
-   * @deprecated use {@link org.freshmarker.api.FunctionProvider} extension instead
+   * @deprecated use {@link FunctionProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerFunction(Map<String, TemplateFunction> functions) {
@@ -90,7 +96,7 @@ public interface PluginProvider {
 
   /**
    * @param providers the built-in variable providers to register
-   * @deprecated use {@link org.freshmarker.api.BuiltInVariableProvider} extension instead
+   * @deprecated use {@link BuiltInVariableProvider} extension instead
    */
   @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerBuiltInVariableProviders(Map<String, Function<ProcessContext, TemplateObject>> providers) {

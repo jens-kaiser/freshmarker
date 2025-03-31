@@ -1,9 +1,9 @@
 package org.freshmarker;
 
-import org.freshmarker.api.Extension;
-import org.freshmarker.api.FormatterProvider;
-import org.freshmarker.api.FunctionProvider;
-import org.freshmarker.api.UserDirectiveProvider;
+import org.freshmarker.api.extension.Extension;
+import org.freshmarker.api.extension.FormatterProvider;
+import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.directive.TemplateFunction;

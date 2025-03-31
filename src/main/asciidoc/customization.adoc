@@ -212,6 +212,8 @@ TBD
 
 === Custom Plug-Ins
 
+WARNING: Since _FreshMarker 1.8.0_ the _Plug-in_ mechanism is deprecated in favor of the _Extension API_.
+
 The _Plug-in_ mechanism is the core of _FreshMarker_'s modular extension concept. _Plug-ins_ can be used to add new types, formatters, functions, user directives, built-ins and mappers.
 
 It is possible to create completely new template types or to add further features to existing ones.

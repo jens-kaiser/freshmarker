@@ -1,13 +1,13 @@
 package org.freshmarker.core.extension;
 
-import org.freshmarker.api.BuiltInProvider;
-import org.freshmarker.api.Extension;
-import org.freshmarker.api.FormatterProvider;
-import org.freshmarker.api.FunctionProvider;
-import org.freshmarker.api.TemplateFeatureProvider;
-import org.freshmarker.api.TemplateObjectProviders;
-import org.freshmarker.api.TypeMapperProvider;
-import org.freshmarker.api.UserDirectiveProvider;
+import org.freshmarker.api.extension.BuiltInProvider;
+import org.freshmarker.api.extension.Extension;
+import org.freshmarker.api.extension.FormatterProvider;
+import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.TemplateFeatureProvider;
+import org.freshmarker.api.extension.TemplateObjectProviders;
+import org.freshmarker.api.extension.TypeMapperProvider;
+import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
@@ -145,7 +145,7 @@ public class ExtensionRegistry {
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {
         BuiltInVariableProvider copy = builtInVariableProviders.copy();
-        stream(org.freshmarker.api.BuiltInVariableProvider.class).map(org.freshmarker.api.BuiltInVariableProvider::provideBuiltInVariables).forEach(copy::register);
+        stream(org.freshmarker.api.extension.BuiltInVariableProvider.class).map(org.freshmarker.api.extension.BuiltInVariableProvider::provideBuiltInVariables).forEach(copy::register);
         return copy;
     }
 

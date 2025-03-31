@@ -1,6 +1,6 @@
 package org.freshmarker.core.extension;
 
-import org.freshmarker.api.FormatterProvider;
+import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.core.formatter.BooleanFormatter;
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;

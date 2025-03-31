@@ -1,4 +1,4 @@
-package org.freshmarker.api;
+package org.freshmarker.api.extension;
 
 import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;

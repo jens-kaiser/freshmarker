@@ -1,14 +1,14 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.api.BuiltInProvider;
-import org.freshmarker.api.FormatterProvider;
-import org.freshmarker.api.TypeMapperProvider;
+import org.freshmarker.api.extension.BuiltInProvider;
+import org.freshmarker.api.extension.FormatterProvider;
+import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.TypeMapper;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.buildin.BuiltInKeyBuilder;
+import org.freshmarker.api.extension.BuiltInKeyBuilder;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.DurationFormatter;

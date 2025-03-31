@@ -1,6 +1,6 @@
 package org.freshmarker.core.extension;
 
-import org.freshmarker.api.TypeMapperProvider;
+import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.core.TypeMapper;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateLocale;

@@ -1,4 +1,4 @@
-== Extension Mechanism (since 1.8.0)
+== Extension API (since 1.8.0)
 
 === Overview
 
@@ -26,6 +26,7 @@ When an `Extension` is registered automatically, it can only be configured via t
 The `Extension` are registered in a deterministic order. The default `Extension` are registered first, followed by the _automatic_ `Extension` and then the _programmatic_ `Extension`.
 
 ==== Feature Handling
+
 `TemplateFeatureProvider` defines the API for `Extensions` that wish to add new Freshmarker template features.
 
 Template features are used to modify the behavior of _FreshMarker_ or third-party `Extensions`.
@@ -50,7 +51,7 @@ WARNING: Features are only registered if the `TemplateFeatureProvider` is loaded
 
 `BuiltInProvider` defines the API for `Extensions` that wish to add new built-ins.
 
-Each Built-In must implement the `BuiltIn` interface.
+Each built-in must implement the `BuiltIn` interface.
 
 .Example BuiltIn
 [source,java,,role="primary"]
@@ -65,10 +66,10 @@ public class ExampleBuiltIn implements BuiltIn {
 .Example BuiltIn as Lambda
 [source,java,role="secondary"]
 ----
-(value, parameters, context) -> new TemplateString("EXAMPLE: " + string);
+(value, parameters, context) -> new TemplateString("EXAMPLE: " + value);
 ----
 
-Since a `BuiltIn` is assigned to a model type and has a name, the `BuiltInProvider` returns the built-ins as `Map<BuiltInKey,BuiltIn>`.
+Since each `BuiltIn` is assigned to a model type and has a name, the `BuiltInProvider` returns the built-ins as `Map<BuiltInKey,BuiltIn>`.
 
 Two helper classes are available to easily create a `BuiltInKey`.
 
@@ -91,7 +92,7 @@ The `MapEntryBuilder` creates `Entry<BuiltInKey,BuiltIn>` instances for the spec
 [source,java,role="secondary"]
 ----
 public final class ExampleBuiltInProvider implements BuilInProvider {
-    public Map<BuiltInKey> provideBuiltIns() {
+    public Map<BuiltInKey,BuiltIn> provideBuiltIns() {
         MapEntryBuilder<TemplateString> builder = new MapEntryBuilder(TemplateString.class);
         Map.ofEntries(builder.entry("example", (value, parameters, context) -> new TemplateString("EXAMPLE: " + string)));
     }
@@ -101,6 +102,36 @@ public final class ExampleBuiltInProvider implements BuilInProvider {
 ==== Additional Built-In Variables
 
 The `BuiltInVariableProvider` defines the API for `Extensions` that wish to add new built-in variables.
+
+Each custom built-in variable must implement the `BuiltInVariable` interface.
+
+.Example BuiltIn Variable
+[source,java,,role="primary"]
+----
+public class ExampleBuiltInVariable implements BuiltInVariable {
+    public TemplateObject apply(ProcessContext context) {
+        new TemplateString("EXAMPLE");
+    }
+}
+----
+
+.Example BuiltIn Variable as Lambda
+[source,java,,role="secodary"]
+----
+(context) -> new TemplateString("EXAMPLE");
+----
+
+Since each `BuiltInVariable` has a name, the `BuiltInVariableProvider` returns the built-in variables as `Map<String,BuiltInVariable>`.
+
+.Example BuiltInVariableProvider
+[source,java,role="secondary"]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    public Map<String,BuiltInVariable> provideBuiltIns() {
+        Map.of("example", (context) -> new TemplateString("EXAMPLE"));
+    }
+}
+----
 
 TBD
 

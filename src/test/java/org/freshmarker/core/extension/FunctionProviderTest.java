@@ -3,7 +3,7 @@ package org.freshmarker.core.extension;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
-import org.freshmarker.api.FunctionProvider;
+import org.freshmarker.api.extension.FunctionProvider;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.junit.jupiter.api.BeforeEach;
