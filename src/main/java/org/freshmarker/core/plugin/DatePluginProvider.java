@@ -6,7 +6,7 @@ import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.core.TypeMapper;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.api.extension.BuiltInKeyBuilder;
+import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;

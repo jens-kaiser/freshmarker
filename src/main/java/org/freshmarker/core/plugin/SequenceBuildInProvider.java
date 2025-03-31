@@ -4,7 +4,7 @@ import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.api.extension.BuiltInKeyBuilder;
+import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.model.AbstractLimitedRange;
 import org.freshmarker.core.model.TemplateLengthLimitedRange;
 import org.freshmarker.core.model.TemplateListSequence;

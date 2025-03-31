@@ -1,7 +1,7 @@
 package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.extension.BuiltInProvider;
-import org.freshmarker.api.extension.MapEntryBuilder;
+import org.freshmarker.api.extension.support.MapEntryBuilder;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;

@@ -1,4 +1,4 @@
-package org.freshmarker.api.extension;
+package org.freshmarker.api.extension.support;
 
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.model.TemplateObject;

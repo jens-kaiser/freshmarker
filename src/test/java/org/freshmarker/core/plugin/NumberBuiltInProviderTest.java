@@ -4,7 +4,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.buildin.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.api.extension.BuiltInKeyBuilder;
+import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
