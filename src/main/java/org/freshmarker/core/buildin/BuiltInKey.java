@@ -2,8 +2,6 @@ package org.freshmarker.core.buildin;
 
 import org.freshmarker.core.model.TemplateObject;
 
-import java.util.Objects;
-
 /**
  * Key used for the internal management of built-ins.
  */

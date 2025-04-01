@@ -1,3 +1,4 @@
+package org.freshmarker.core.buildin;
 
 import org.freshmarker.core.model.TemplateObject;
 

@@ -1,5 +1,6 @@
 package org.freshmarker;
 
+import org.freshmarker.api.TemplateLoader;
 import org.freshmarker.api.extension.UserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
