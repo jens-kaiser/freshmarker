@@ -49,7 +49,7 @@ public class ExtensionRegistry {
     private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
     private final List<TemplateObjectProvider> providers = new ArrayList<>();
-    private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
+    private final Map<NameSpaced, org.freshmarker.api.extension.UserDirective> userDirectives = new HashMap<>();
     private final Map<String, TemplateFunction> functions = new HashMap<>();
     private final Map<Class<? extends TemplateObject>, Formatter> formatterRegistry = new HashMap<>();
 
@@ -62,7 +62,7 @@ public class ExtensionRegistry {
         Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
         ServiceLoader.load(PluginProvider.class).forEach(this::registerPlugin);
         ServiceLoader.load(Extension.class).forEach(extensions::add);
-        stream(TemplateFeatureProvider.class).map(TemplateFeatureProvider::provideFeatures).flatMap(List::stream).forEach(templateFeatures::addFeatures);
+        stream(TemplateFeatureProvider.class).map(TemplateFeatureProvider::provideFeatures).flatMap(Set::stream).forEach(templateFeatures::addFeatures);
     }
 
     public void registerPlugin(PluginProvider provider) {
@@ -99,8 +99,8 @@ public class ExtensionRegistry {
         return templateFeatures;
     }
 
-    public Map<BuiltInKey, BuiltIn> getBuiltIns() {
-        Map<BuiltInKey, BuiltIn> map = new HashMap<>(builtIns);
+    public Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> getBuiltIns() {
+        Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> map = new HashMap<>(builtIns);
         stream(BuiltInProvider.class).map(BuiltInProvider::provideBuiltIns).forEach(map::putAll);
         return map;
     }
@@ -124,21 +124,21 @@ public class ExtensionRegistry {
         return copy;
     }
 
-    public Map<NameSpaced, UserDirective> getUserDirectives() {
-        Map<NameSpaced, UserDirective> map = new HashMap<>(userDirectives);
+    public Map<NameSpaced, org.freshmarker.api.extension.UserDirective> getUserDirectives() {
+        Map<NameSpaced, org.freshmarker.api.extension.UserDirective> map = new HashMap<>(userDirectives);
         stream(UserDirectiveProvider.class).map(UserDirectiveProvider::provideUserDirectives).map(Map::entrySet)
                 .flatMap(Set::stream).forEach(e -> map.put(new NameSpaced(e.getKey()), e.getValue()));
         return map;
     }
 
-    public Map<String, TemplateFunction> getFunctions() {
-        Map<String, TemplateFunction> map = new HashMap<>(functions);
+    public Map<String, org.freshmarker.api.extension.TemplateFunction> getFunctions() {
+        Map<String, org.freshmarker.api.extension.TemplateFunction> map = new HashMap<>(functions);
         stream(FunctionProvider.class).map(FunctionProvider::provideFunctions).forEach(map::putAll);
         return map;
     }
 
-    public Map<Class<? extends TemplateObject>, Formatter> getFormatterRegistry() {
-        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>(formatterRegistry);
+    public Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> getFormatterRegistry() {
+        Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> formatter = new HashMap<>(formatterRegistry);
         stream(FormatterProvider.class).map(FormatterProvider::providerFormatter).forEach(formatter::putAll);
         return formatter;
     }

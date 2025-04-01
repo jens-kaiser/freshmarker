@@ -1,6 +1,6 @@
 package org.freshmarker.api.extension.support;
 
-import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.core.model.TemplateObject;
 
 /**

@@ -4,6 +4,8 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.freshmarker.api.extension.TemplateFeature;
+
 public class TemplateFeatures implements FeatureSet {
 
     record Entry(int flag, boolean enabled) {

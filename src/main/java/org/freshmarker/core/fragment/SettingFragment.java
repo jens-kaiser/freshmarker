@@ -1,6 +1,7 @@
 package org.freshmarker.core.fragment;
 
 import ftl.ast.SettingInstruction;
+import org.freshmarker.api.extension.Formatter;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
@@ -8,7 +9,6 @@ import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.date.TemplateClassicDate;

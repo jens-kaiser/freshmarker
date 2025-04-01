@@ -1,8 +1,8 @@
 package org.freshmarker.core.extension;
 
+import org.freshmarker.api.extension.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.core.formatter.BooleanFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;

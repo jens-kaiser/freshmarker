@@ -1,11 +1,6 @@
 package org.freshmarker.core.directive;
 
-import java.util.Map;
-import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.fragment.Fragment;
-import org.freshmarker.core.model.TemplateObject;
+@Deprecated(since = "1.8.0", forRemoval = true)
+public interface UserDirective extends org.freshmarker.api.extension.UserDirective {
 
-public interface UserDirective {
-
-  void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body);
 }

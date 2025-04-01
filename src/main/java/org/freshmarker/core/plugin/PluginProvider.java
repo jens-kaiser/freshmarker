@@ -23,6 +23,11 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 
 public interface PluginProvider {
 
+  /**
+   * @param features the features to register
+   * @deprecated use {@link org.freshmarker.api.extension.TemplateFeatureProvider} extension instead
+   */
+  @Deprecated(since = "1.8.0", forRemoval = true)  
   default void registerFeature(TemplateFeatures features) {
 
   }
@@ -72,6 +77,11 @@ public interface PluginProvider {
     registerBuildIn(builtIns);
   }
 
+   /**
+   * @param providers the providers to register
+   * @deprecated use {@link org.freshmarker.api.extension.TemplateObjectProviders} extension instead
+   */
+  @Deprecated(since = "1.8.0", forRemoval = true)
   default void registerTemplateObjectProvider(List<TemplateObjectProvider> providers) {
 
   }

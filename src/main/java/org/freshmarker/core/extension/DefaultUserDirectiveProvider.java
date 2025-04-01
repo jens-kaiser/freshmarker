@@ -1,9 +1,9 @@
 package org.freshmarker.core.extension;
 
+import org.freshmarker.api.extension.UserDirective;
 import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.directive.CompressDirective;
 import org.freshmarker.core.directive.OneLinerDirective;
-import org.freshmarker.core.directive.UserDirective;
 
 import java.util.Map;
 

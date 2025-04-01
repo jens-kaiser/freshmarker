@@ -1,11 +1,6 @@
 package org.freshmarker.core.directive;
 
-import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.model.TemplateObject;
+@Deprecated(since = "1.8.0", forRemoval = true)
+public interface TemplateFunction extends org.freshmarker.api.extension.TemplateFunction {
 
-import java.util.List;
-
-public interface TemplateFunction {
-
-    TemplateObject execute(ProcessContext context, List<TemplateObject> args);
 }

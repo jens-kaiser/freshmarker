@@ -3,16 +3,16 @@ package org.freshmarker;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
+import org.freshmarker.api.extension.Formatter;
+import org.freshmarker.api.extension.UserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.features.SimpleFeatureSet;
 import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
@@ -168,6 +168,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         return template;
     }
 
+    @Override
     public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), context.builtInVariableProviders(), clock);
         return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, formatter);

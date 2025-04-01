@@ -1,7 +1,7 @@
 package org.freshmarker;
 
+import org.freshmarker.api.extension.UserDirective;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
 
 import java.io.Writer;

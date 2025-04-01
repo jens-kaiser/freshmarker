@@ -1,5 +1,6 @@
 package org.freshmarker.core.buildin;
 
+import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;

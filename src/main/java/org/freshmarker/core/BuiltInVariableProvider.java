@@ -1,5 +1,6 @@
 package org.freshmarker.core;
 
+import org.freshmarker.api.extension.BuiltInVariable;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;

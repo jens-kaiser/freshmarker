@@ -1,13 +1,13 @@
 package org.freshmarker.core;
 
-import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.directive.TemplateFunction;
-import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.api.extension.BuiltIn;
+import org.freshmarker.api.extension.BuiltInKey;
+import org.freshmarker.api.extension.Formatter;
+import org.freshmarker.api.extension.TemplateFunction;
+import org.freshmarker.api.extension.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.VariableEnvironment;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.output.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;

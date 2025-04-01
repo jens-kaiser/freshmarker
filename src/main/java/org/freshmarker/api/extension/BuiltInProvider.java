@@ -1,8 +1,5 @@
 package org.freshmarker.api.extension;
 
-import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInKey;
-
 import java.util.Map;
 
 /**

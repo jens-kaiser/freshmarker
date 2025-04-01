@@ -1,10 +1,10 @@
 package org.freshmarker.core.extension;
 
+import org.freshmarker.api.extension.TemplateFeature;
 import org.freshmarker.api.extension.TemplateFeatureProvider;
 import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.SwitchDirectiveFeature;
-import org.freshmarker.core.features.TemplateFeature;
 
 import java.util.EnumSet;
 import java.util.HashSet;

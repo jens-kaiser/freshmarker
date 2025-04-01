@@ -1,7 +1,5 @@
 package org.freshmarker.api.extension;
 
-import org.freshmarker.core.directive.UserDirective;
-
 import java.util.Map;
 
 /**

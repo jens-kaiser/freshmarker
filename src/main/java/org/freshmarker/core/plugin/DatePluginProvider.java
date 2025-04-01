@@ -1,16 +1,16 @@
 package org.freshmarker.core.plugin;
 
+import org.freshmarker.api.extension.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
+import org.freshmarker.api.extension.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.core.TypeMapper;
-import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.date.TemplateClassicDate;
 import org.freshmarker.core.model.date.TemplateClassicDateTime;
