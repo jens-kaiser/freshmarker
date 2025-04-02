@@ -4,21 +4,15 @@ import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Extension;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.TemplateFeature;
 import org.freshmarker.api.extension.TemplateFeatureProvider;
 import org.freshmarker.api.extension.TemplateObjectProviders;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.ModelSecurityGateway;
-import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.buildin.BuiltIn;
-import org.freshmarker.core.buildin.BuiltInKey;
-import org.freshmarker.core.directive.TemplateFunction;
-import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.features.TemplateFeatures;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.core.providers.BeanTemplateObjectProvider;
@@ -36,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ExtensionRegistry {
@@ -46,14 +39,8 @@ public class ExtensionRegistry {
             new DefaultFormatterProvider());
 
     private final TemplateFeatures templateFeatures = new TemplateFeatures();
-    private final Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-    private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
-    private final List<TemplateObjectProvider> providers = new ArrayList<>();
-    private final Map<NameSpaced, org.freshmarker.api.extension.UserDirective> userDirectives = new HashMap<>();
-    private final Map<String, TemplateFunction> functions = new HashMap<>();
-    private final Map<Class<? extends TemplateObject>, Formatter> formatterRegistry = new HashMap<>();
 
-    private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
+    private final PluginProviderRegistry pluginProviderRegistry = new PluginProviderRegistry();
 
     private final List<Extension> extensions = new ArrayList<>();
 
@@ -66,29 +53,7 @@ public class ExtensionRegistry {
     }
 
     public void registerPlugin(PluginProvider provider) {
-        logger.debug("register plugin: {}", provider.getClass().getSimpleName());
-        provider.registerFeature(templateFeatures);
-        Map<BuiltInKey, BuiltIn> registerBuiltIns = new HashMap<>();
-        provider.registerBuildIn(registerBuiltIns, templateFeatures);
-        this.builtIns.putAll(registerBuiltIns);
-        Map<Class<? extends TemplateObject>, Formatter> registerFormatter = new HashMap<>();
-        provider.registerFormatter(registerFormatter, templateFeatures);
-        this.formatterRegistry.putAll(registerFormatter);
-        Map<Class<?>, Function<Object, TemplateObject>> mapper = new HashMap<>();
-        provider.registerMapper(mapper);
-        mapper.forEach(mappingTemplateObjectProvider::addMapper);
-        List<TemplateObjectProvider> list = new ArrayList<>();
-        provider.registerTemplateObjectProvider(list);
-        providers.addAll(list);
-        Map<String, UserDirective> additionalDirectives = new HashMap<>();
-        provider.registerUserDirective(additionalDirectives);
-        additionalDirectives.forEach((k, v) -> userDirectives.put(new NameSpaced(null, k), v));
-        Map<String, TemplateFunction> additionalFunctions = new HashMap<>();
-        provider.registerFunction(additionalFunctions);
-        functions.putAll(additionalFunctions);
-        Map<String, Function<ProcessContext, TemplateObject>> builtInVariableProviderMap = new HashMap<>();
-        provider.registerBuiltInVariableProviders(builtInVariableProviderMap);
-        builtInVariableProviders.registerOld(builtInVariableProviderMap);
+        pluginProviderRegistry.registerPlugin(provider, templateFeatures);
     }
 
     public <E extends Extension> Stream<E> stream(Class<E> type) {
@@ -100,19 +65,19 @@ public class ExtensionRegistry {
     }
 
     public Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> getBuiltIns() {
-        Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> map = new HashMap<>(builtIns);
+        Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> map = new HashMap<>(pluginProviderRegistry.getBuiltIns());
         stream(BuiltInProvider.class).map(BuiltInProvider::provideBuiltIns).forEach(map::putAll);
         return map;
     }
 
     public MappingTemplateObjectProvider getMappingTemplateObjectProvider() {
-        return mappingTemplateObjectProvider;
+        return pluginProviderRegistry.getMappingTemplateObjectProvider();
     }
 
     public List<TemplateObjectProvider> getProviders(ModelSecurityGateway modelSecurityGateway) {
-        List<TemplateObjectProvider> templateObjectProviders = new ArrayList<>(providers);
+        List<TemplateObjectProvider> templateObjectProviders = new ArrayList<>(pluginProviderRegistry.getProviders());
         stream(TemplateObjectProviders.class).map(TemplateObjectProviders::provideProviders).forEach(templateObjectProviders::addAll);
-        MappingTemplateObjectProvider newMappingTemplateObjectProvider = mappingTemplateObjectProvider.copy();
+        MappingTemplateObjectProvider newMappingTemplateObjectProvider = pluginProviderRegistry.getMappingTemplateObjectProvider().copy();
         stream(TypeMapperProvider.class).map(TypeMapperProvider::providerTypeMapper).forEach(newMappingTemplateObjectProvider::register);
         List<TemplateObjectProvider> copy = new ArrayList<>();
         copy.add(newMappingTemplateObjectProvider);
@@ -125,26 +90,26 @@ public class ExtensionRegistry {
     }
 
     public Map<NameSpaced, org.freshmarker.api.extension.UserDirective> getUserDirectives() {
-        Map<NameSpaced, org.freshmarker.api.extension.UserDirective> map = new HashMap<>(userDirectives);
+        Map<NameSpaced, org.freshmarker.api.extension.UserDirective> map = new HashMap<>(pluginProviderRegistry.getUserDirectives());
         stream(UserDirectiveProvider.class).map(UserDirectiveProvider::provideUserDirectives).map(Map::entrySet)
                 .flatMap(Set::stream).forEach(e -> map.put(new NameSpaced(e.getKey()), e.getValue()));
         return map;
     }
 
     public Map<String, org.freshmarker.api.extension.TemplateFunction> getFunctions() {
-        Map<String, org.freshmarker.api.extension.TemplateFunction> map = new HashMap<>(functions);
+        Map<String, org.freshmarker.api.extension.TemplateFunction> map = new HashMap<>(pluginProviderRegistry.getFunctions());
         stream(FunctionProvider.class).map(FunctionProvider::provideFunctions).forEach(map::putAll);
         return map;
     }
 
     public Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> getFormatterRegistry() {
-        Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> formatter = new HashMap<>(formatterRegistry);
+        Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> formatter = new HashMap<>(pluginProviderRegistry.getFormatterRegistry());
         stream(FormatterProvider.class).map(FormatterProvider::providerFormatter).forEach(formatter::putAll);
         return formatter;
     }
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {
-        BuiltInVariableProvider copy = builtInVariableProviders.copy();
+        BuiltInVariableProvider copy = pluginProviderRegistry.getBuiltInVariableProviders().copy();
         stream(org.freshmarker.api.extension.BuiltInVariableProvider.class).map(org.freshmarker.api.extension.BuiltInVariableProvider::provideBuiltInVariables).forEach(copy::register);
         return copy;
     }

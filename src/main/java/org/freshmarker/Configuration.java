@@ -3,13 +3,14 @@ package org.freshmarker;
 import org.freshmarker.api.extension.Extension;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.TemplateFeature;
+import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.directive.TemplateFunction;
 import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.extension.ExtensionRegistry;
-import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.Formatter;
@@ -40,7 +41,7 @@ public final class Configuration {
     private final Map<String, OutputFormat> outputs;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
 
-    private TemplateLoader templateLoader;
+    private org.freshmarker.api.TemplateLoader templateLoader;
 
     private final ExtensionRegistry extensionRegistry;
 
@@ -66,7 +67,7 @@ public final class Configuration {
 
     public void registerSimpleMapping(Class<?>... types) {
         for (Class<?> type : types) {
-            extensionRegistry.getMappingTemplateObjectProvider().addMapper(type, o -> new TemplateString(o.toString()));
+            extensionRegistry.register((TypeMapperProvider) () -> Map.of(type, o -> new TemplateString(o.toString())));
         }
     }
 
