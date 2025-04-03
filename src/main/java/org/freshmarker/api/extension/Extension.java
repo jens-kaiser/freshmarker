@@ -1,6 +1,6 @@
 package org.freshmarker.api.extension;
 
-import org.freshmarker.core.features.FeatureSet;
+import org.freshmarker.api.FeatureSet;
 
 /**
  * Marker interface for all FreshMarker extensions
