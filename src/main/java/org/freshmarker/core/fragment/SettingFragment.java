@@ -1,7 +1,7 @@
 package org.freshmarker.core.fragment;
 
 import ftl.ast.SettingInstruction;
-import org.freshmarker.api.extension.Formatter;
+import org.freshmarker.api.Formatter;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.formatter.ClassicDateFormatter;

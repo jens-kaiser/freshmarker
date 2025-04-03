@@ -1,10 +1,10 @@
 package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.extension.BuiltInProvider;
-import org.freshmarker.api.extension.support.MapEntryBuilder;
+import org.freshmarker.api.extension.Register;
+import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.api.extension.BuiltIn;
-import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
@@ -15,7 +15,6 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public final class SystemBuiltInProvider implements BuiltInProvider {
@@ -55,37 +54,30 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
     }
 
     @Override
-    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
-        MapEntryBuilder<TemplateVersion> version = new MapEntryBuilder<>(TemplateVersion.class);
-        MapEntryBuilder<TemplateString> string = new MapEntryBuilder<>(TemplateString.class);
-        MapEntryBuilder<TemplateLocale> locale = new MapEntryBuilder<>(TemplateLocale.class);
-        MapEntryBuilder<TemplateNull> nullBuilder = new MapEntryBuilder<>(TemplateNull.class);
-        MapEntryBuilder<TemplateBoolean> booleanBuilder = new MapEntryBuilder<>(TemplateBoolean.class);
-        MapEntryBuilder<? extends TemplateObject> enumBuilder = new MapEntryBuilder<>(TemplateEnum.class);
-
-        return Map.ofEntries(
-                version.entry("is_before", (x, y, e) -> version(x, e).isBefore(parameter(y, e))),
-                version.entry("is_after", (x, y, e) -> version(x, e).isAfter(parameter(y, e))),
-                version.entry("is_equal", (x, y, e) -> version(x, e).isEqual(parameter(y, e))),
-                version.entry("major", (x, y, e) -> version(x, e).major()),
-                version.entry("minor", (x, y, e) -> version(x, e).minor()),
-                version.entry("patch", (x, y, e) -> version(x, e).patch()),
-                string.entry("version", (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString())),
-                string.entry("locale", (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString())),
-                locale.entry("lang", (x, y, e) -> locale(x, e).getLanguage()),
-                locale.entry("language", (x, y, e) -> locale(x, e).getLanguage()),
-                locale.entry("language_name", (x, y, e) -> locale(x, e).getDisplayLanguage(e.getLocale())),
-                locale.entry("country", (x, y, e) -> locale(x, e).getCountry()),
-                locale.entry("country_name", (x, y, e) -> locale(x, e).getDisplayCountry(e.getLocale())),
-                nullBuilder.entry("empty_to_null", BuiltIn.identity()),
-                nullBuilder.entry("blank_to_null", BuiltIn.identity()),
-                nullBuilder.entry("trim_to_null", BuiltIn.identity()),
-                booleanBuilder.entry("c", BuiltIn.string()),
-                booleanBuilder.entry("then", SystemBuiltInProvider::thenBuildIn),
-                booleanBuilder.entry("string", SystemBuiltInProvider::stringBuiltIn),
-                booleanBuilder.entry("h", SystemBuiltInProvider::humanBuiltIn),
-                enumBuilder.entry("c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name())),
-                enumBuilder.entry("ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()))
-        );
+    public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
+        BuiltInRegister register = new BuiltInRegister();
+        register.add(TemplateVersion.class, "is_before", (x, y, e) -> version(x, e).isBefore(parameter(y, e)));
+        register.add(TemplateVersion.class, "is_after", (x, y, e) -> version(x, e).isAfter(parameter(y, e)));
+        register.add(TemplateVersion.class, "is_equal", (x, y, e) -> version(x, e).isEqual(parameter(y, e)));
+        register.add(TemplateVersion.class, "major", (x, y, e) -> version(x, e).major());
+        register.add(TemplateVersion.class, "minor", (x, y, e) -> version(x, e).minor());
+        register.add(TemplateVersion.class, "patch", (x, y, e) -> version(x, e).patch());
+        register.add(TemplateString.class, "version", (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString()));
+        register.add(TemplateString.class, "locale", (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString()));
+        register.add(TemplateLocale.class, "lang", (x, y, e) -> locale(x, e).getLanguage());
+        register.add(TemplateLocale.class, "language", (x, y, e) -> locale(x, e).getLanguage());
+        register.add(TemplateLocale.class, "language_name", (x, y, e) -> locale(x, e).getDisplayLanguage(e.getLocale()));
+        register.add(TemplateLocale.class, "country", (x, y, e) -> locale(x, e).getCountry());
+        register.add(TemplateLocale.class, "country_name", (x, y, e) -> locale(x, e).getDisplayCountry(e.getLocale()));
+        register.add(TemplateNull.class, "empty_to_null", BuiltIn.identity());
+        register.add(TemplateNull.class, "blank_to_null", BuiltIn.identity());
+        register.add(TemplateNull.class, "trim_to_null", BuiltIn.identity());
+        register.add(TemplateBoolean.class, "c", BuiltIn.string());
+        register.add(TemplateBoolean.class, "then", SystemBuiltInProvider::thenBuildIn);
+        register.add(TemplateBoolean.class, "string", SystemBuiltInProvider::stringBuiltIn);
+        register.add(TemplateBoolean.class, "h", SystemBuiltInProvider::humanBuiltIn);
+        register.add(TemplateEnum.class, "c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));
+        register.add(TemplateEnum.class, "ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()));
+        return register;
     }
 }

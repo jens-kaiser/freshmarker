@@ -1,6 +1,6 @@
 package org.freshmarker.core.extension;
 
-import org.freshmarker.api.extension.TemplateFeature;
+import org.freshmarker.api.TemplateFeature;
 import org.freshmarker.api.extension.TemplateFeatureProvider;
 import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.IncludeDirectiveFeature;

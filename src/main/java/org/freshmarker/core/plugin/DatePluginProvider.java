@@ -2,12 +2,12 @@ package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.extension.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
-import org.freshmarker.api.extension.Formatter;
+import org.freshmarker.api.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
+import org.freshmarker.api.extension.Register;
 import org.freshmarker.api.extension.TypeMapperProvider;
+import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.TypeMapper;
-import org.freshmarker.api.extension.BuiltInKey;
-import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;
@@ -20,29 +20,24 @@ import org.freshmarker.core.model.primitive.TemplateString;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class DatePluginProvider implements BuiltInProvider, TypeMapperProvider, FormatterProvider {
 
     @Override
-    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
-        BuiltInKeyBuilder<TemplateClassicDateTime> dateTimeBuilder = new BuiltInKeyBuilder<>(TemplateClassicDateTime.class);
-        BuiltInKeyBuilder<TemplateClassicDate> dateBuilder = new BuiltInKeyBuilder<>(TemplateClassicDate.class);
-        BuiltInKeyBuilder<TemplateClassicTime> timeBuilder = new BuiltInKeyBuilder<>(TemplateClassicTime.class);
-
-        Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-        builtIns.put(dateTimeBuilder.of("date"),
+    public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
+        BuiltInRegister builtInRegister = new BuiltInRegister();
+        builtInRegister.add(TemplateClassicDateTime.class, "date",
                 (x, y, c) -> new TemplateClassicDate(new Date(((TemplateClassicDateTime) x).getValue().getTime())));
-        builtIns.put(dateTimeBuilder.of("time"),
+        builtInRegister.add(TemplateClassicDateTime.class, "time",
                 (x, y, c) -> new TemplateClassicTime(new Time(((TemplateClassicDateTime) x).getValue().getTime())));
-        builtIns.put(dateTimeBuilder.of("c"),
+        builtInRegister.add(TemplateClassicDateTime.class, "c",
                 (x, y, c) -> new TemplateString(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").format(((TemplateClassicDateTime) x).getValue())));
-        builtIns.put(dateBuilder.of("date"), BuiltIn.identity());
-        builtIns.put(dateBuilder.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
-        builtIns.put(timeBuilder.of("time"), BuiltIn.identity());
-        builtIns.put(timeBuilder.of("c"), (x, y, c) -> new TemplateString(String.valueOf(x)));
-        return builtIns;
+        builtInRegister.add(TemplateClassicDate.class, "date", BuiltIn.identity());
+        builtInRegister.add(TemplateClassicDate.class, "c", (x, y, c) -> new TemplateString(String.valueOf(x)));
+        builtInRegister.add(TemplateClassicTime.class, "time", BuiltIn.identity());
+        builtInRegister.add(TemplateClassicTime.class, "c", (x, y, c) -> new TemplateString(String.valueOf(x)));
+        return builtInRegister;
     }
 
     @Override

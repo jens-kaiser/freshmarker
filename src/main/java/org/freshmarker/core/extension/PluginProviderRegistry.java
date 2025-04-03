@@ -25,12 +25,12 @@ import java.util.function.Function;
 public class PluginProviderRegistry {
     private static final Logger logger = LoggerFactory.getLogger(PluginProviderRegistry.class);
 
-    private final Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> builtIns = new HashMap<>();
+    private final Map<org.freshmarker.core.buildin.BuiltInKey, org.freshmarker.api.extension.BuiltIn> builtIns = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
     private final List<TemplateObjectProvider> providers = new ArrayList<>();
-    private final Map<NameSpaced, org.freshmarker.api.extension.UserDirective> userDirectives = new HashMap<>();
-    private final Map<String, org.freshmarker.api.extension.TemplateFunction> functions = new HashMap<>();
-    private final Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> formatterRegistry = new HashMap<>();
+    private final Map<NameSpaced, org.freshmarker.api.UserDirective> userDirectives = new HashMap<>();
+    private final Map<String, org.freshmarker.api.TemplateFunction> functions = new HashMap<>();
+    private final Map<Class<? extends TemplateObject>, org.freshmarker.api.Formatter> formatterRegistry = new HashMap<>();
 
     private final BuiltInVariableProvider builtInVariableProviders = new BuiltInVariableProvider();
 
@@ -60,7 +60,7 @@ public class PluginProviderRegistry {
         builtInVariableProviders.registerOld(builtInVariableProviderMap);
     }
 
-    public Map<org.freshmarker.api.extension.BuiltInKey, org.freshmarker.api.extension.BuiltIn> getBuiltIns() {
+    public Map<BuiltInKey, org.freshmarker.api.extension.BuiltIn> getBuiltIns() {
         return builtIns;
     }
 
@@ -72,15 +72,15 @@ public class PluginProviderRegistry {
         return providers;
     }
 
-    public Map<NameSpaced, org.freshmarker.api.extension.UserDirective> getUserDirectives() {
+    public Map<NameSpaced, org.freshmarker.api.UserDirective> getUserDirectives() {
         return userDirectives;
     }
 
-    public Map<String, org.freshmarker.api.extension.TemplateFunction> getFunctions() {
+    public Map<String, org.freshmarker.api.TemplateFunction> getFunctions() {
         return functions;
     }
 
-    public Map<Class<? extends TemplateObject>, org.freshmarker.api.extension.Formatter> getFormatterRegistry() {
+    public Map<Class<? extends TemplateObject>, org.freshmarker.api.Formatter> getFormatterRegistry() {
         return formatterRegistry;
     }
 

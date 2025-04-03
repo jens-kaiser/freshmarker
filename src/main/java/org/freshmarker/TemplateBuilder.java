@@ -1,7 +1,7 @@
 package org.freshmarker;
 
 import ftl.ParseException;
-import org.freshmarker.api.extension.TemplateFeature;
+import org.freshmarker.api.TemplateFeature;
 import org.freshmarker.api.OutputFormat;
 
 import java.io.IOException;

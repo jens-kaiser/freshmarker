@@ -2,10 +2,10 @@ package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.extension.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
-import org.freshmarker.api.extension.support.MapEntryBuilder;
+import org.freshmarker.api.extension.Register;
+import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -89,27 +88,26 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
     }
 
     @Override
-    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
-        MapEntryBuilder<TemplateNumber> builder = new MapEntryBuilder<>(TemplateNumber.class);
-        return Map.ofEntries(
-                builder.entry("c", BuiltIn.string()),
-                builder.entry("abs", (x, y, e) -> getNumber(x).abs()),
-                builder.entry("sign", (x, y, e) -> getNumber(x).sign()),
-                builder.entry("format", NumberBuiltInProvider::format),
-                builder.entry("int", (x, y, e) -> cast(x, Type.INTEGER, Number::intValue)),
-                builder.entry("long", (x, y, e) -> cast(x, Type.LONG, Number::longValue)),
-                builder.entry("short", (x, y, e) -> cast(x, Type.SHORT, Number::shortValue)),
-                builder.entry("byte", (x, y, e) -> cast(x, Type.BYTE, Number::byteValue)),
-                builder.entry("double", (x, y, e) -> cast(x, Type.DOUBLE, Number::doubleValue)),
-                builder.entry("float", (x, y, e) -> cast(x, Type.FLOAT, Number::floatValue)),
-                builder.entry("big_integer", (x, y, e) -> cast(x, Type.BIG_INTEGER, this::castBigInteger)),
-                builder.entry("big_decimal", (x, y, e) -> cast(x, Type.BIG_DECIMAL, this::castBigDecimal)),
-                builder.entry("roman", (x, y, e) -> RomanNumbers.roman(x)),
-                builder.entry("utf_roman", (x, y, e) -> RomanNumbers.utfRoman(x)),
-                builder.entry("clock_roman", (x, y, e) -> RomanNumbers.clockRoman(x)),
-                builder.entry("h", (x, y, e) -> human(getNumber(x), e)),
-                builder.entry("min", (x, y, e) -> getNumber(x).min(getNumberParameter(y))),
-                builder.entry("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)))
-        );
+    public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
+        BuiltInRegister builtInRegister = new BuiltInRegister();
+        builtInRegister.add(TemplateNumber.class, "c", BuiltIn.string());
+        builtInRegister.add(TemplateNumber.class, "abs", (x, y, e) -> getNumber(x).abs());
+        builtInRegister.add(TemplateNumber.class, "sign", (x, y, e) -> getNumber(x).sign());
+        builtInRegister.add(TemplateNumber.class, "format", NumberBuiltInProvider::format);
+        builtInRegister.add(TemplateNumber.class, "int", (x, y, e) -> cast(x, Type.INTEGER, Number::intValue));
+        builtInRegister.add(TemplateNumber.class, "long", (x, y, e) -> cast(x, Type.LONG, Number::longValue));
+        builtInRegister.add(TemplateNumber.class, "short", (x, y, e) -> cast(x, Type.SHORT, Number::shortValue));
+        builtInRegister.add(TemplateNumber.class, "byte", (x, y, e) -> cast(x, Type.BYTE, Number::byteValue));
+        builtInRegister.add(TemplateNumber.class, "double", (x, y, e) -> cast(x, Type.DOUBLE, Number::doubleValue));
+        builtInRegister.add(TemplateNumber.class, "float", (x, y, e) -> cast(x, Type.FLOAT, Number::floatValue));
+        builtInRegister.add(TemplateNumber.class, "big_integer", (x, y, e) -> cast(x, Type.BIG_INTEGER, this::castBigInteger));
+        builtInRegister.add(TemplateNumber.class, "big_decimal", (x, y, e) -> cast(x, Type.BIG_DECIMAL, this::castBigDecimal));
+        builtInRegister.add(TemplateNumber.class, "roman", (x, y, e) -> RomanNumbers.roman(x));
+        builtInRegister.add(TemplateNumber.class, "utf_roman", (x, y, e) -> RomanNumbers.utfRoman(x));
+        builtInRegister.add(TemplateNumber.class, "clock_roman", (x, y, e) -> RomanNumbers.clockRoman(x));
+        builtInRegister.add(TemplateNumber.class, "h", (x, y, e) -> human(getNumber(x), e));
+        builtInRegister.add(TemplateNumber.class, "min", (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
+        builtInRegister.add(TemplateNumber.class, "max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
+        return builtInRegister;
     }
 }

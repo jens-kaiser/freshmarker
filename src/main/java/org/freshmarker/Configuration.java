@@ -1,20 +1,21 @@
 package org.freshmarker;
 
+import org.freshmarker.api.TemplateLoader;
 import org.freshmarker.api.extension.Extension;
+import org.freshmarker.api.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.FunctionProvider;
 import org.freshmarker.api.extension.OutputFormatProvider;
-import org.freshmarker.api.extension.TemplateFeature;
+import org.freshmarker.api.TemplateFeature;
+import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.extension.TypeMapperProvider;
+import org.freshmarker.api.UserDirective;
 import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.directive.TemplateFunction;
-import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.NumberFormatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.model.TemplateNull;

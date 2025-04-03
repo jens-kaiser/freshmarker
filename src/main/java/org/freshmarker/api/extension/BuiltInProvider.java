@@ -1,14 +1,14 @@
 package org.freshmarker.api.extension;
 
-import java.util.Map;
+import org.freshmarker.core.model.TemplateObject;
 
 /**
  * An {@link Extension} to add new built-ins.
  */
 public interface BuiltInProvider extends Extension {
     /**
-     * Returns a map of built-ins
-     * @return a map of built-ins
+     * Returns a register of built-ins
+     * @return a register of built-ins
      */
-    Map<BuiltInKey, BuiltIn> provideBuiltIns();
+   Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister();
 }

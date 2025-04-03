@@ -1,5 +1,5 @@
 package org.freshmarker.core;
 
-public interface TypeMapper extends org.freshmarker.api.extension.TypeMapper {
+public interface TypeMapper extends org.freshmarker.api.TypeMapper {
     
 }

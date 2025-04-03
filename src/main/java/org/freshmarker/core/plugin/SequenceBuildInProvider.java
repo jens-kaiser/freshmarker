@@ -2,9 +2,9 @@ package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.extension.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
+import org.freshmarker.api.extension.Register;
+import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.api.extension.BuiltInKey;
-import org.freshmarker.api.extension.support.BuiltInKeyBuilder;
 import org.freshmarker.core.model.AbstractLimitedRange;
 import org.freshmarker.core.model.TemplateLengthLimitedRange;
 import org.freshmarker.core.model.TemplateListSequence;
@@ -14,9 +14,7 @@ import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static de.schegge.collector.EnumeratedCollector.enumerated;
 
@@ -46,28 +44,24 @@ public final class SequenceBuildInProvider implements BuiltInProvider {
     }
 
     @Override
-    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
-        BuiltInKeyBuilder<TemplateListSequence> list = new BuiltInKeyBuilder<>(TemplateListSequence.class);
-        BuiltInKeyBuilder<TemplateRightUnlimitedRange> unlimited = new BuiltInKeyBuilder<>(TemplateRightUnlimitedRange.class);
-        BuiltInKeyBuilder<TemplateRightLimitedRange> limited = new BuiltInKeyBuilder<>(TemplateRightLimitedRange.class);
-        BuiltInKeyBuilder<TemplateLengthLimitedRange> length = new BuiltInKeyBuilder<>(TemplateLengthLimitedRange.class);
-        Map<BuiltInKey, BuiltIn> builtIns = new HashMap<>();
-        builtIns.put(list.of(SIZE), (x, y, e) -> TemplateNumber.of(((TemplateListSequence) x).size(e)));
-        builtIns.put(list.of("first"), (x, y, e) -> first((TemplateListSequence) x, e));
-        builtIns.put(list.of("last"), (x, y, e) -> last((TemplateListSequence) x, e));
-        builtIns.put(list.of(REVERSE), (x, y, e) -> reverse((TemplateListSequence) x, e));
-        builtIns.put(list.of(JOIN), (x, y, e) -> join(y, e, ((TemplateListSequence) x).getSequence(e)));
-        builtIns.put(limited.of(SIZE), (x, y, e) -> TemplateNumber.of(((AbstractLimitedRange) x).size(e)));
-        builtIns.put(limited.of(LOWER), (x, y, e) -> ((AbstractLimitedRange) x).getLower());
-        builtIns.put(limited.of("upper"), (x, y, e) -> ((AbstractLimitedRange) x).getUpper(e));
-        builtIns.put(limited.of(REVERSE), (x, y, e) -> ((TemplateRightLimitedRange) x).reverse());
-        builtIns.put(limited.of(JOIN), (x, y, e) -> join(y, e, ((AbstractLimitedRange) x).getSequence(e)));
-        builtIns.put(length.of(SIZE), (x, y, e) -> TemplateNumber.of(((TemplateLengthLimitedRange) x).size(e)));
-        builtIns.put(length.of(LOWER), (x, y, e) -> ((TemplateLengthLimitedRange) x).getLower());
-        builtIns.put(length.of("upper"), (x, y, e) -> ((TemplateLengthLimitedRange) x).getUpper(e));
-        builtIns.put(length.of(REVERSE), (x, y, e) -> ((TemplateLengthLimitedRange) x).reverse());
-        builtIns.put(length.of(JOIN), (x, y, e) -> join(y, e, ((TemplateLengthLimitedRange) x).getSequence(e)));
-        builtIns.put(unlimited.of(LOWER), (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
-        return builtIns;
+    public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
+        BuiltInRegister register = new BuiltInRegister();
+        register.add(TemplateListSequence.class, SIZE, (x, y, e) -> TemplateNumber.of(((TemplateListSequence) x).size(e)));
+        register.add(TemplateListSequence.class, "first", (x, y, e) -> first((TemplateListSequence) x, e));
+        register.add(TemplateListSequence.class, "last", (x, y, e) -> last((TemplateListSequence) x, e));
+        register.add(TemplateListSequence.class, REVERSE, (x, y, e) -> reverse((TemplateListSequence) x, e));
+        register.add(TemplateListSequence.class, JOIN, (x, y, e) -> join(y, e, ((TemplateListSequence) x).getSequence(e)));
+        register.add(TemplateRightLimitedRange.class, SIZE, (x, y, e) -> TemplateNumber.of(((AbstractLimitedRange) x).size(e)));
+        register.add(TemplateRightLimitedRange.class, LOWER, (x, y, e) -> ((AbstractLimitedRange) x).getLower());
+        register.add(TemplateRightLimitedRange.class, "upper", (x, y, e) -> ((AbstractLimitedRange) x).getUpper(e));
+        register.add(TemplateRightLimitedRange.class, REVERSE, (x, y, e) -> ((TemplateRightLimitedRange) x).reverse());
+        register.add(TemplateRightLimitedRange.class, JOIN, (x, y, e) -> join(y, e, ((AbstractLimitedRange) x).getSequence(e)));
+        register.add(TemplateLengthLimitedRange.class, SIZE, (x, y, e) -> TemplateNumber.of(((TemplateLengthLimitedRange) x).size(e)));
+        register.add(TemplateLengthLimitedRange.class, LOWER, (x, y, e) -> ((TemplateLengthLimitedRange) x).getLower());
+        register.add(TemplateLengthLimitedRange.class, "upper", (x, y, e) -> ((TemplateLengthLimitedRange) x).getUpper(e));
+        register.add(TemplateLengthLimitedRange.class, REVERSE, (x, y, e) -> ((TemplateLengthLimitedRange) x).reverse());
+        register.add(TemplateLengthLimitedRange.class, JOIN, (x, y, e) -> join(y, e, ((TemplateLengthLimitedRange) x).getSequence(e)));
+        register.add(TemplateRightUnlimitedRange.class, LOWER, (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
+        return register;
     }
 }

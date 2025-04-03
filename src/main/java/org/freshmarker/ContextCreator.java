@@ -1,6 +1,6 @@
 package org.freshmarker;
 
-import org.freshmarker.api.extension.UserDirective;
+import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.environment.NameSpaced;
 

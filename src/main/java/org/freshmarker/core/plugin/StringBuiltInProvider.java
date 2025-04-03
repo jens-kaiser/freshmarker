@@ -2,10 +2,10 @@ package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.extension.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
-import org.freshmarker.api.extension.support.MapEntryBuilder;
+import org.freshmarker.api.extension.Register;
+import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateStringMarkup;
@@ -114,7 +114,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
     }
 
     @Override
-    public Map<BuiltInKey, BuiltIn> provideBuiltIns() {
+    public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         BuiltIn camelCase = (x, y, e) -> camelCase(x, e);
         BuiltIn kebabCase = (x, y, e) -> kebabCase(x, e);
         BuiltIn snakeCase = (x, y, e) -> snakeCase(x, e);
@@ -122,37 +122,36 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         BuiltIn noEscape = (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE);
         BuiltIn startsWith = (x, y, e) -> startsWith(x, (TemplateString) y.getFirst());
         BuiltIn endsWith = (x, y, e) -> endsWith(x, (TemplateString) y.getFirst());
-        MapEntryBuilder<TemplateString> builder = new MapEntryBuilder<>(TemplateString.class);
-        return Map.ofEntries(
-            builder.entry("upper_case", (x, y, e) -> upperCase(x, e)),
-            builder.entry("lower_case", (x, y, e) -> lowerCase(x, e)),
-            builder.entry("capitalize", (x, y, e) -> capitalize(x, e)),
-            builder.entry("uncapitalize", (x, y, e) -> uncapitalize(x, e)),
-            builder.entry("camel_case", camelCase),
-            builder.entry("camelCase", camelCase),
-            builder.entry("kebabCase", kebabCase),
-            builder.entry("kebab_case", kebabCase),
-            builder.entry("snake_case", snakeCase),
-            builder.entry("snakeCase", snakeCase),
-            builder.entry("screaming_snake_case", (x, y, e) -> screamingSnakeCase(x, e)),
-            builder.entry("trim", (x, y, e) -> new TemplateString(((TemplateString) x).getValue().trim())),
-            builder.entry("contains", (x, y, e) -> contains(x, (TemplateString) y.getFirst())),
-            builder.entry("ends_with", endsWith),
-            builder.entry("endsWith", endsWith),
-            builder.entry("starts_with", startsWith),
-            builder.entry("startsWith", startsWith),
-            builder.entry("boolean", (x, y, e) -> toBoolean(x)),
-            builder.entry("length", (x, y, e) -> TemplateNumber.of(((TemplateString) x).getValue().length())),
-            builder.entry("esc", escape),
-            builder.entry("escape", escape),
-            builder.entry("no_esc", noEscape),
-            builder.entry("no_escape", noEscape),
-            builder.entry("noEsc", noEscape),
-            builder.entry("slugify", (x, y, e) -> slugify(x)),
-            builder.entry("i18n", (x, y, e) -> i18n((TemplateString) x, e, y)),
-            builder.entry("blank_to_null", (x, y, e) -> ((TemplateString) x).getValue().isBlank() ? TemplateNull.NULL : x),
-            builder.entry("empty_to_null", (x, y, e) -> ((TemplateString) x).getValue().isEmpty() ? TemplateNull.NULL : x),
-            builder.entry("trim_to_null", (x, y, e) -> trim2null((TemplateString) x))
-        );
+        BuiltInRegister register = new BuiltInRegister();
+        register.add(TemplateString.class, "upper_case", (x, y, e) -> upperCase(x, e));
+        register.add(TemplateString.class, "lower_case", (x, y, e) -> lowerCase(x, e));
+        register.add(TemplateString.class, "capitalize", (x, y, e) -> capitalize(x, e));
+        register.add(TemplateString.class, "uncapitalize", (x, y, e) -> uncapitalize(x, e));
+        register.add(TemplateString.class, "camel_case", camelCase);
+        register.add(TemplateString.class, "camelCase", camelCase);
+        register.add(TemplateString.class, "kebabCase", kebabCase);
+        register.add(TemplateString.class, "kebab_case", kebabCase);
+        register.add(TemplateString.class, "snake_case", snakeCase);
+        register.add(TemplateString.class, "snakeCase", snakeCase);
+        register.add(TemplateString.class, "screaming_snake_case", (x, y, e) -> screamingSnakeCase(x, e));
+        register.add(TemplateString.class, "trim", (x, y, e) -> new TemplateString(((TemplateString) x).getValue().trim()));
+        register.add(TemplateString.class, "contains", (x, y, e) -> contains(x, (TemplateString) y.getFirst()));
+        register.add(TemplateString.class, "ends_with", endsWith);
+        register.add(TemplateString.class, "endsWith", endsWith);
+        register.add(TemplateString.class, "starts_with", startsWith);
+        register.add(TemplateString.class, "startsWith", startsWith);
+        register.add(TemplateString.class, "boolean", (x, y, e) -> toBoolean(x));
+        register.add(TemplateString.class, "length", (x, y, e) -> TemplateNumber.of(((TemplateString) x).getValue().length()));
+        register.add(TemplateString.class, "esc", escape);
+        register.add(TemplateString.class, "escape", escape);
+        register.add(TemplateString.class, "no_esc", noEscape);
+        register.add(TemplateString.class, "no_escape", noEscape);
+        register.add(TemplateString.class, "noEsc", noEscape);
+        register.add(TemplateString.class, "slugify", (x, y, e) -> slugify(x));
+        register.add(TemplateString.class, "i18n", (x, y, e) -> i18n((TemplateString) x, e, y));
+        register.add(TemplateString.class, "blank_to_null", (x, y, e) -> ((TemplateString) x).getValue().isBlank() ? TemplateNull.NULL : x);
+        register.add(TemplateString.class, "empty_to_null", (x, y, e) -> ((TemplateString) x).getValue().isEmpty() ? TemplateNull.NULL : x);
+        register.add(TemplateString.class, "trim_to_null", (x, y, e) -> trim2null((TemplateString) x));
+        return register;
     }
 }
