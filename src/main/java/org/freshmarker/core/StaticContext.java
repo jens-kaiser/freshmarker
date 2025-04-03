@@ -9,7 +9,7 @@ import org.freshmarker.api.extension.UserDirective;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.util.List;
@@ -18,8 +18,8 @@ import java.util.Map;
 public record StaticContext(Map<BuiltInKey, BuiltIn> builtIns, Map<Class<? extends TemplateObject>, Formatter> formatter, Map<String, OutputFormat> outputs,
                             List<TemplateObjectProvider> providers, Map<NameSpaced, UserDirective> userDirectives,
                             TemplateLoader templateLoader, Map<String, TemplateFunction> functions, BuiltInVariableProvider builtInVariableProviders) {
-    public StaticContext(ExtensionRegistry registry, Map<String, OutputFormat> outputs, ModelSecurityGateway modelSecurityGateway, TemplateLoader templateLoader) {
-        this(Map.copyOf(registry.getBuiltIns()), registry.getFormatterRegistry(), Map.copyOf(outputs), List.copyOf(registry.getProviders(modelSecurityGateway)),
+    public StaticContext(ExtensionRegistry registry, ModelSecurityGateway modelSecurityGateway, TemplateLoader templateLoader) {
+        this(Map.copyOf(registry.getBuiltIns()), registry.getFormatterRegistry(), registry.getOutputFormats(), List.copyOf(registry.getProviders(modelSecurityGateway)),
                 Map.copyOf(registry.getUserDirectives()), templateLoader, Map.copyOf(registry.getFunctions()), registry.getBuiltInVariableProviders().copy());
     }
 }

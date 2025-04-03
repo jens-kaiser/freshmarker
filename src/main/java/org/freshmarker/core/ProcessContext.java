@@ -9,7 +9,7 @@ import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 
 import java.io.Writer;

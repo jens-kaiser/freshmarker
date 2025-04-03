@@ -3,6 +3,7 @@ package org.freshmarker;
 import org.freshmarker.api.extension.Extension;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.OutputFormatProvider;
 import org.freshmarker.api.extension.TemplateFeature;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.api.extension.UserDirectiveProvider;
@@ -31,14 +32,12 @@ import org.freshmarker.core.plugin.PluginProvider;
 
 import java.time.Clock;
 import java.time.ZoneId;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
 public final class Configuration {
-    private final Map<String, OutputFormat> outputs;
     private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
 
     private org.freshmarker.api.TemplateLoader templateLoader;
@@ -49,20 +48,10 @@ public final class Configuration {
         modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
         templateLoader = new DefaultFileSystemTemplateLoader();
         extensionRegistry = new ExtensionRegistry(enabledFeatures);
-
-        outputs = new HashMap<>();
-        outputs.put("HTML", StandardOutputFormats.HTML);
-        outputs.put("XHTML", StandardOutputFormats.HTML);
-        outputs.put("XML", StandardOutputFormats.XML);
-        outputs.put("plainText", StandardOutputFormats.NONE);
-        outputs.put("JavaScript", StandardOutputFormats.JAVASCRIPT);
-        outputs.put("JSON", StandardOutputFormats.NONE);
-        outputs.put("CSS", StandardOutputFormats.CSS);
-        outputs.put("ADOC", StandardOutputFormats.ADOC);
     }
 
     public void registerOutputFormat(String name, OutputFormat format) {
-        outputs.put(Objects.requireNonNull(name), Objects.requireNonNull(format));
+        extensionRegistry.register((OutputFormatProvider) () -> Map.of(name, format));
     }
 
     public void registerSimpleMapping(Class<?>... types) {
@@ -101,7 +90,7 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        StaticContext context = new StaticContext(extensionRegistry, Map.copyOf(outputs),modelSecurityGateway, templateLoader);
+        StaticContext context = new StaticContext(extensionRegistry, modelSecurityGateway, templateLoader);
         return new DefaultTemplateBuilder(context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), extensionRegistry.getTemplateFeatures().create());
     }
 

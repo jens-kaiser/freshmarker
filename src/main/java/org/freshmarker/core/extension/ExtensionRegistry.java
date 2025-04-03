@@ -1,9 +1,11 @@
 package org.freshmarker.core.extension;
 
+import org.freshmarker.api.OutputFormat;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Extension;
 import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.api.extension.OutputFormatProvider;
 import org.freshmarker.api.extension.TemplateFeature;
 import org.freshmarker.api.extension.TemplateFeatureProvider;
 import org.freshmarker.api.extension.TemplateObjectProviders;
@@ -36,7 +38,7 @@ public class ExtensionRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
     private static final List<Extension> DEFAULT_EXTENSIONS = List.of(new DefaultFeatureProvider(), new DefaultUserDirectiveProvider(), new DefaultTypeMapperProvider(),
-            new DefaultFormatterProvider());
+            new DefaultFormatterProvider(), new DefaultOutputFormatProvider());
 
     private final TemplateFeatures templateFeatures = new TemplateFeatures();
 
@@ -115,6 +117,13 @@ public class ExtensionRegistry {
     }
 
     public void register(Extension extension) {
+        logger.debug("register: " + extension.getClass());
         extensions.add(extension);
+    }
+
+    public Map<String, OutputFormat> getOutputFormats() {
+        Map<String, OutputFormat> result = new HashMap<>();
+        stream(OutputFormatProvider.class).map(OutputFormatProvider::provideOutputFormats).forEach(result::putAll);
+        return result;
     }
 }
