@@ -1,4 +1,4 @@
-package org.freshmarker.api.extension;
+package org.freshmarker.api;
 
 public interface TemplateFeature {
     default boolean isEnabledByDefault() {
