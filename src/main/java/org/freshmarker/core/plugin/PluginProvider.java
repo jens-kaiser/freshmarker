@@ -21,6 +21,7 @@ import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 
+@Deprecated(since = "1.8.0", forRemoval = true)
 public interface PluginProvider {
 
   /**
