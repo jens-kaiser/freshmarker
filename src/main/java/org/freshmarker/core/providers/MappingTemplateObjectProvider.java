@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.freshmarker.core.TypeMapper;
+import org.freshmarker.api.TypeMapper;
 import org.freshmarker.core.model.TemplateObject;
 
 public class MappingTemplateObjectProvider implements TemplateObjectProvider {

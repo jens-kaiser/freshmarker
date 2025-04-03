@@ -1,5 +1,6 @@
 package org.freshmarker.core.plugin;
 
+import org.freshmarker.api.TypeMapper;
 import org.freshmarker.api.extension.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.Formatter;
@@ -7,7 +8,6 @@ import org.freshmarker.api.extension.FormatterProvider;
 import org.freshmarker.api.extension.Register;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.api.extension.support.BuiltInRegister;
-import org.freshmarker.core.TypeMapper;
 import org.freshmarker.core.formatter.ClassicDateFormatter;
 import org.freshmarker.core.formatter.ClassicDateTimeFormatter;
 import org.freshmarker.core.formatter.ClassicTimeFormatter;

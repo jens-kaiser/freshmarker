@@ -1,6 +1,6 @@
 package org.freshmarker.api.extension;
 
-import org.freshmarker.core.TypeMapper;
+import org.freshmarker.api.TypeMapper;
 
 import java.util.Map;
 

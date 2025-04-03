@@ -1,6 +1,5 @@
 package org.freshmarker.core.buildin;
 
-import org.freshmarker.api.extension.BuiltInKey;
 import org.freshmarker.core.model.TemplateObject;
 
 @Deprecated(since = "1.8.0", forRemoval = true)
@@ -17,7 +16,7 @@ public class BuiltInKeyBuilder<T extends TemplateObject> {
    * @param name the name of the Built-In
    * @return the {@link org.freshmarker.api.extension.BuiltInKey} instance
    */
-  public org.freshmarker.api.extension.BuiltInKey of(String name) {
+  public BuiltInKey of(String name) {
     return new BuiltInKey(type, name);
   }
 }

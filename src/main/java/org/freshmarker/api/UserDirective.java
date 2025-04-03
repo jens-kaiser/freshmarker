@@ -1,4 +1,4 @@
-package org.freshmarker.api.extension;
+package org.freshmarker.api;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.fragment.Fragment;
