@@ -9,7 +9,7 @@ import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.api.TypeMapper;
-import org.freshmarker.api.extension.BuiltIn;
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.DurationFormatter;

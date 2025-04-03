@@ -25,7 +25,7 @@ import java.util.function.Function;
 public class PluginProviderRegistry {
     private static final Logger logger = LoggerFactory.getLogger(PluginProviderRegistry.class);
 
-    private final Map<org.freshmarker.core.buildin.BuiltInKey, org.freshmarker.api.extension.BuiltIn> builtIns = new HashMap<>();
+    private final Map<org.freshmarker.core.buildin.BuiltInKey, org.freshmarker.api.BuiltIn> builtIns = new HashMap<>();
     private final MappingTemplateObjectProvider mappingTemplateObjectProvider = new MappingTemplateObjectProvider();
     private final List<TemplateObjectProvider> providers = new ArrayList<>();
     private final Map<NameSpaced, org.freshmarker.api.UserDirective> userDirectives = new HashMap<>();
@@ -60,7 +60,7 @@ public class PluginProviderRegistry {
         builtInVariableProviders.registerOld(builtInVariableProviderMap);
     }
 
-    public Map<BuiltInKey, org.freshmarker.api.extension.BuiltIn> getBuiltIns() {
+    public Map<BuiltInKey, org.freshmarker.api.BuiltIn> getBuiltIns() {
         return builtIns;
     }
 

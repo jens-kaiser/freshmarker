@@ -1,5 +1,6 @@
 package org.freshmarker.core.extension;
 
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.api.TemplateFunction;
@@ -70,8 +71,8 @@ public class ExtensionRegistry {
         return templateFeatures;
     }
 
-    public Map<BuiltInKey, org.freshmarker.api.extension.BuiltIn> getBuiltIns() {
-        Map<org.freshmarker.core.buildin.BuiltInKey, org.freshmarker.api.extension.BuiltIn> map = new HashMap<>(pluginProviderRegistry.getBuiltIns());
+    public Map<BuiltInKey, BuiltIn> getBuiltIns() {
+        Map<org.freshmarker.core.buildin.BuiltInKey, BuiltIn> map = new HashMap<>(pluginProviderRegistry.getBuiltIns());
         stream(BuiltInProvider.class).map(BuiltInProvider::provideBuiltInRegister).forEach(r -> {
             for (Class<? extends TemplateObject> type : r.types()) {
                 r.byType(type).forEach((key, value) -> {

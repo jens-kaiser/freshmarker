@@ -1,5 +1,6 @@
 package org.freshmarker.api.extension;
 
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.core.model.TemplateObject;
 
 /**

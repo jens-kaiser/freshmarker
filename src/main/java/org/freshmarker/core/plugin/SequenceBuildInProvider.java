@@ -1,6 +1,6 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.api.extension.BuiltIn;
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Register;
 import org.freshmarker.api.extension.support.BuiltInRegister;

@@ -1,6 +1,6 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.api.extension.BuiltIn;
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.environment.BaseEnvironment;

@@ -1,6 +1,6 @@
 package org.freshmarker.core;
 
-import org.freshmarker.api.extension.BuiltIn;
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFunction;

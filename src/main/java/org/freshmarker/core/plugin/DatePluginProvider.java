@@ -1,7 +1,7 @@
 package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.TypeMapper;
-import org.freshmarker.api.extension.BuiltIn;
+import org.freshmarker.api.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
