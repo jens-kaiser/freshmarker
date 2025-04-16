@@ -46,7 +46,7 @@ public class ExampleBuiltInVariable implements BuiltInVariable {
 ----
 
 .Example BuiltInVariable as Lambda
-[source,java,role="secodary"]
+[source,java,role="secondary"]
 ----
 (context) -> new TemplateString("EXAMPLE");
 ----
