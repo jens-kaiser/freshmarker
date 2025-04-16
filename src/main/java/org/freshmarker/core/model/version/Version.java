@@ -10,7 +10,7 @@ public record Version(int major, int minor, int patch) implements Comparable<Ver
     public static Version byString(String value) {
         Matcher matcher = PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalStateException("cannot parse version:" + value);
+            throw new IllegalArgumentException("cannot parse version:" + value);
         }
         return new Version(getParseInt(matcher, 1), getParseInt(matcher, 2), getParseInt(matcher, 3));
     }

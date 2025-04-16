@@ -1,6 +1,6 @@
 package org.freshmarker.core;
 
-import org.freshmarker.core.features.TemplateFeature;
+import org.freshmarker.api.TemplateFeature;
 
 public enum BuiltinHandlingFeature implements TemplateFeature {
     /**

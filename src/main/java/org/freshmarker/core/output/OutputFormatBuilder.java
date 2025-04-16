@@ -26,34 +26,34 @@ public class OutputFormatBuilder {
     public OutputFormat build() {
         if (escapes.isEmpty()) {
             return new OutputFormat() {
-
                 @Override
                 public TemplateString comment(TemplateString value) {
                     return new TemplateString(commentPrefix + value.getValue() + commentSuffix);
                 }
             };
         }
-        return new EscapingOutputFormat();
+        return new EscapingOutputFormat(escapes, commentPrefix, commentSuffix);
     }
 
-    private class EscapingOutputFormat implements OutputFormat {
+    private record EscapingOutputFormat(Map<Character, String> escapes,String commentPrefix, String commentSuffix) implements OutputFormat {
+
         @Override
-        public TemplateString escape(TemplateString value) {
-            StringBuilder builder = new StringBuilder();
-            for (char c : value.getValue().toCharArray()) {
-                String replacement = escapes.get(c);
-                if (replacement == null) {
-                    builder.append(c);
-                } else {
-                    builder.append(replacement);
+            public TemplateString escape(TemplateString value) {
+                StringBuilder builder = new StringBuilder();
+                for (char c : value.getValue().toCharArray()) {
+                    String replacement = escapes.get(c);
+                    if (replacement == null) {
+                        builder.append(c);
+                    } else {
+                        builder.append(replacement);
+                    }
                 }
+                return new TemplateString(builder.toString());
             }
-            return new TemplateString(builder.toString());
-        }
 
-        @Override
-        public TemplateString comment(TemplateString value) {
-            return new TemplateString(commentPrefix + value.getValue() + commentSuffix);
+            @Override
+            public TemplateString comment(TemplateString value) {
+                return new TemplateString(commentPrefix + value.getValue() + commentSuffix);
+            }
         }
-    }
 }

@@ -1,8 +1,7 @@
 package org.freshmarker.core.formatter;
 
-import java.util.Locale;
-import org.freshmarker.core.model.TemplateObject;
-
-public interface Formatter {
-  String format(TemplateObject object, Locale locale);
+@Deprecated(since = "1.8.0", forRemoval = true)
+public interface Formatter extends org.freshmarker.api.Formatter {
+  
 }
+

@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public record TemplateJunction(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
@@ -15,7 +16,7 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
             case OR -> right.evaluate(context, TemplateBoolean.class).getValue() || leftValue.getValue();
             case OR2 -> leftValue.getValue() || right.evaluate(context, TemplateBoolean.class).getValue();
             case XOR -> leftValue.getValue() ^ right.evaluate(context, TemplateBoolean.class).getValue();
-            default -> throw new IllegalArgumentException("unsupported junction: " + type);
+            default -> throw new ProcessException("unsupported junction: " + type);
         });
     }
 
@@ -28,7 +29,7 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
             case AND2 -> new TemplateJunction(TokenType.OR2, newLeft, new TemplateNegative(right));
             case OR2 -> new TemplateJunction(TokenType.AND2, newLeft, new TemplateNegative(right));
             case XOR -> new TemplateNegative(this);
-            default -> throw new IllegalArgumentException("unsupported junction: " + type);
+            default -> throw new ProcessException("unsupported junction: " + type);
         };
     }
 

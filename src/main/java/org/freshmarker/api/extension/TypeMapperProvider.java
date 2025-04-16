@@ -1,0 +1,16 @@
+package org.freshmarker.api.extension;
+
+import org.freshmarker.api.TypeMapper;
+
+import java.util.Map;
+
+/**
+ * An {@link Extension} to add new type mapper.
+ */
+public interface TypeMapperProvider extends Extension {
+    /**
+     * Returns a map of type mapper
+     * @return a map of type mapper
+     */
+    Map<Class<?>, TypeMapper> providerTypeMapper();
+}

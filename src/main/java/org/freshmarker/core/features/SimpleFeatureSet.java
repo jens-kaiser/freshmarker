@@ -2,6 +2,8 @@ package org.freshmarker.core.features;
 
 import java.util.BitSet;
 
+import org.freshmarker.api.TemplateFeature;
+
 public class SimpleFeatureSet implements FeatureSet {
     private final BitSet bitSet;
     private final TemplateFeatures templateFeatures;

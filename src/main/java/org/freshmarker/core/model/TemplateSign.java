@@ -6,6 +6,6 @@ public record TemplateSign(TemplateObject expression) implements TemplateExpress
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    return expression.evaluateToObject(context).negate();
+      return expression.evaluateToObject(context).negate();
   }
 }

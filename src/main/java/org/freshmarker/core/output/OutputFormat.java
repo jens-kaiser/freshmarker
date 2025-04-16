@@ -1,13 +1,6 @@
 package org.freshmarker.core.output;
 
-import org.freshmarker.core.model.primitive.TemplateString;
-
-public interface OutputFormat {
-    default TemplateString escape(TemplateString value) {
-        return value;
-    }
-
-    default TemplateString comment(TemplateString value) {
-        return TemplateString.EMPTY;
-    }
+@Deprecated(since = "1.8.0", forRemoval = true)
+public interface OutputFormat extends org.freshmarker.api.OutputFormat {
 }
+

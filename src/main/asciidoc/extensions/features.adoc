@@ -1,0 +1,21 @@
+==== Feature Handling
+
+`TemplateFeatureProvider` defines the API for `Extensions` that wish to add new Freshmarker template features.
+
+Template features are used to modify the behavior of _FreshMarker_ or third-party `Extensions`.
+
+.Example TemplateFeatureProvider
+[source,java,,role="primary"]
+----
+public class ExampleFeatureProvider implements TemplateFeatureProvider {
+    @Override
+    public Set<TemplateFeature> provideFeatures() {
+        return EnumSet.allOf(ExampleFeature.class);
+    }
+}
+----
+
+After registration, the features are available for all `Extension`.
+In order for an `Extension` to react to a feature, it must implement the `Extension#init(FeatureSet)` method.
+
+CAUTION: The `TemplateFeatureProviders` are already evaluated during registration, while the other extensions are first evaluated for the template builder and then for the template. All available features are then available for evaluation.

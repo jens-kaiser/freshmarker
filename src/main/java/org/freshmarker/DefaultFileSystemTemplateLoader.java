@@ -1,5 +1,7 @@
 package org.freshmarker;
 
+import org.freshmarker.api.TemplateLoader;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;

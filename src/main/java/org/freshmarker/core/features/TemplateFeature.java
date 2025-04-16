@@ -1,7 +1,6 @@
 package org.freshmarker.core.features;
 
-public interface TemplateFeature {
-    default boolean isEnabledByDefault() {
-        return true;
-    }
+@Deprecated(since = "1.8.0", forRemoval = true)
+public interface TemplateFeature extends org.freshmarker.api.TemplateFeature {
+
 }

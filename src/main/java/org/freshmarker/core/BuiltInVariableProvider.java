@@ -1,5 +1,6 @@
 package org.freshmarker.core;
 
+import org.freshmarker.api.extension.BuiltInVariable;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -12,7 +13,15 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BuiltInVariableProvider {
-    private final Map<String, Function<ProcessContext, TemplateObject>> providers = new HashMap<>();
+    private final Map<String, Function<ProcessContext, TemplateObject>> providers;
+
+    public BuiltInVariableProvider() {
+        providers = new HashMap<>();
+    }
+
+    public BuiltInVariableProvider(BuiltInVariableProvider builtInVariableProvider) {
+        providers = new HashMap<>(builtInVariableProvider.providers);
+    }
 
     public TemplateObject provide(String name, ProcessContext context) {
         return switch (name) {
@@ -28,12 +37,26 @@ public class BuiltInVariableProvider {
     private TemplateObject handleRegisteredProviders(String name, ProcessContext context) {
         Function<ProcessContext, TemplateObject> provider = providers.get(name);
         if (provider == null) {
-            throw new IllegalStateException("Unexpected built-in variable: " + name);
+            throw new ProcessException("Unexpected built-in variable: " + name);
         }
-        return provider.apply(context);
+        try {
+            return provider.apply(context);
+        } catch (RuntimeException e) {
+            throw new ProcessException(e.getMessage(), e);
+        }
     }
 
-    public void register(Map<String, Function<ProcessContext, TemplateObject>> providers) {
+    public void register(Map<String, BuiltInVariable> providers) {
         this.providers.putAll(providers);
+    }
+
+    public void registerOld(Map<String, Function<ProcessContext, TemplateObject>> providers) {
+        this.providers.putAll(providers);
+    }
+
+    public BuiltInVariableProvider copy() {
+        BuiltInVariableProvider provider = new BuiltInVariableProvider();
+        provider.providers.putAll(providers);
+        return provider;
     }
 }

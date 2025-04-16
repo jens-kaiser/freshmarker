@@ -3,16 +3,19 @@ package org.freshmarker;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
+import org.freshmarker.api.Formatter;
+import org.freshmarker.api.TemplateFeature;
+import org.freshmarker.api.TemplateLoader;
+import org.freshmarker.api.UserDirective;
+import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.directive.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.SimpleFeatureSet;
-import org.freshmarker.core.features.TemplateFeature;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
-import org.freshmarker.core.formatter.Formatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.ftl.FragmentBuilder;
@@ -22,7 +25,7 @@ import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
-import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
 
 import java.io.BufferedReader;
@@ -42,29 +45,42 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class DefaultTemplateBuilder implements ContextCreator, TemplateBuilder {
-    private final Configuration configuration;
-
     private final Locale locale;
     private final ZoneId zoneId;
     private final OutputFormat outputFormat;
-    private final StaticContext context;
     private final Clock clock;
     private final SimpleFeatureSet featureSet;
     private final Map<Class<? extends TemplateObject>, Formatter> formatter;
+    private final ExtensionRegistry registry;
+    private final ModelSecurityGateway modelSecurityGateway;
+    private final org.freshmarker.api.TemplateLoader templateLoader;
 
-    DefaultTemplateBuilder(Configuration configuration, StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
-        this.configuration = configuration;
+    DefaultTemplateBuilder(StaticContext context, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
         this.locale = locale;
         this.zoneId = zoneId;
         this.outputFormat = outputFormat;
-        this.context = context;
         this.clock = clock;
         this.featureSet = featureSet;
-        this.formatter = new HashMap<>(context.formatter());
+        this.formatter = new HashMap<>();
+        registry = context.registry();
+        modelSecurityGateway = context.modelSecurityGateway();
+        templateLoader = context.templateLoader();
+    }
+
+    DefaultTemplateBuilder(ExtensionRegistry registry, ModelSecurityGateway modelSecurityGateway, TemplateLoader templateLoader, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
+        this.locale = locale;
+        this.zoneId = zoneId;
+        this.outputFormat = outputFormat;
+        this.clock = clock;
+        this.featureSet = featureSet;
+        this.formatter = new HashMap<>();
+        this.registry = registry;
+        this.modelSecurityGateway = modelSecurityGateway;
+        this.templateLoader = templateLoader;
     }
 
     public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
@@ -72,47 +88,47 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     }
 
     public TemplateBuilder withDateTimeFormat(String pattern) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
         return newBuilder;
     }
 
     public TemplateBuilder withDateFormat(String pattern) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
         return newBuilder;
     }
 
     public TemplateBuilder withTimeFormat(String pattern) {
-        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, zoneId));
         return newBuilder;
     }
 
     @Override
     public TemplateBuilder withClock(Clock clock) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        return new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
     }
 
     @Override
     public TemplateBuilder withLocale(Locale locale) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        return new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
     }
 
     @Override
     public TemplateBuilder withZoneId(ZoneId zoneId) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, featureSet);
+        return new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, featureSet);
     }
 
     @Override
     public TemplateBuilder withOutputFormat(String outputFormat) {
-        return withOutputFormat(context.outputs().getOrDefault(outputFormat, StandardOutputFormats.NONE));
+        return withOutputFormat(registry.getOutputFormats().getOrDefault(outputFormat, StandardOutputFormats.NONE));
     }
 
     @Override
     public TemplateBuilder withOutputFormat(OutputFormat format) {
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, format, clock, featureSet);
+        return new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, format, clock, featureSet);
     }
 
     @Override
@@ -121,7 +137,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         if (newFeatureSet == featureSet) {
             return this;
         }
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
+        return new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, newFeatureSet);
     }
 
     @Override
@@ -130,7 +146,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         if (newFeatureSet == featureSet) {
             return this;
         }
-        return new DefaultTemplateBuilder(configuration, context, locale, zoneId, outputFormat, clock, newFeatureSet);
+        return new DefaultTemplateBuilder(registry, modelSecurityGateway, templateLoader, locale, zoneId, outputFormat, clock, newFeatureSet);
     }
 
     @Override
@@ -165,14 +181,19 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         parser.Root();
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
-        Template template = new Template(this, context.templateLoader(), importPath);
-        List<Fragment> fragments = root.accept(new FragmentBuilder(template, configuration, null, new SimpleFeatureSet(featureSet), 0), new ArrayList<>());
+        ExtensionRegistry extensionRegistry = new ExtensionRegistry(registry, featureSet);
+        StaticContext templateContext = new StaticContext(extensionRegistry, modelSecurityGateway, templateLoader);
+        Template template = new Template(this, templateContext, templateLoader, importPath);
+        List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, new SimpleFeatureSet(featureSet), 0), new ArrayList<>());
         fragments.forEach(template.getRootFragment()::addFragment);
         return template;
     }
 
-    public ProcessContext createContext(Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), configuration.getBuiltInVariableProviders(), clock);
+    @Override
+    public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), context.builtInVariableProviders(), clock);
+        Map<Class<? extends TemplateObject>, Formatter> formatter = context.registry().getFormatterRegistry();
+        formatter.putAll(this.formatter);
         return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, formatter);
     }
 }

@@ -1,10 +1,12 @@
 package org.freshmarker;
 
+import org.freshmarker.api.TemplateLoader;
+import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
-import org.freshmarker.core.directive.UserDirective;
+import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
@@ -27,17 +29,19 @@ public final class Template {
     private final BlockFragment rootFragment;
     private final Map<NameSpaced, UserDirective> userDirectives = new HashMap<>();
     private final ContextCreator contextCreator;
+    private final StaticContext context;
     private final TemplateLoader templateLoader;
     private final Path path;
     private final Map<String, Fragment> bricks = new HashMap<>();
     private String resourceBundleName;
 
-    Template(ContextCreator contextCreator, TemplateLoader templateLoader, Path path) {
-        this(contextCreator, templateLoader, path, new BlockFragment(new ArrayList<>()));
+    Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path) {
+        this(contextCreator, context, templateLoader, path, new BlockFragment(new ArrayList<>()));
     }
 
-    private Template(ContextCreator contextCreator, TemplateLoader templateLoader, Path path, BlockFragment rootFragment) {
+    private Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, BlockFragment rootFragment) {
         this.contextCreator = contextCreator;
+        this.context = context;
         this.templateLoader = templateLoader;
         this.path = path;
         this.rootFragment = rootFragment;
@@ -63,7 +67,7 @@ public final class Template {
     }
 
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
-        ProcessContext context = contextCreator.createContext(dataModel, writer, userDirectives);
+        ProcessContext context = contextCreator.createContext(this.context, dataModel, writer, userDirectives);
         context.setResourceBundle(resourceBundleName);
         try {
             brickFragment.process(context);
@@ -92,13 +96,13 @@ public final class Template {
 
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.total().set(rootFragment.getSize());
-        ProcessContext context = contextCreator.createContext(dataModel, new StringBuilderWriter(), userDirectives);
+        ProcessContext context = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives);
         context.setEnvironment(new ReducingVariableEnvironment(context.getEnvironment()));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());
             log.debug("reduced by: {}", status);
-            return new Template(contextCreator, templateLoader, path, reducedFragment);
+            return new Template(contextCreator, this.context, templateLoader, path, reducedFragment);
         } catch (RuntimeException e) {
             throw new ReduceException("cannot reduce: " + e.getMessage(), e);
         }
