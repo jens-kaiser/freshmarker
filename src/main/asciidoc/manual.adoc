@@ -36,4 +36,4 @@ include::expression.adoc[]
 
 include::customization.adoc[]
 
-include::extension.adoc[]
+include::extensions/extension.adoc[]

@@ -1,4 +1,4 @@
-==== Feature Handling
+=== Feature Handling
 
 `TemplateFeatureProvider` defines the API for `Extensions` that wish to add new Freshmarker template features.
 

@@ -1,4 +1,4 @@
-==== Additional Built-In
+=== Additional Built-Ins
 
 `BuiltInProvider` defines the API for `Extensions` that wish to add new built-ins.
 

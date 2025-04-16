@@ -29,7 +29,7 @@ include::features.adoc[]
 
 include::built-ins.adoc[]
 
-==== Additional Built-In Variables
+=== Additional Built-In Variables
 
 The `BuiltInVariableProvider` defines the API for `Extensions` that wish to add new built-in variables.
 
@@ -63,7 +63,7 @@ public final class ExampleBuiltInProvider implements BuilInProvider {
 }
 ----
 
-==== Additional User Directives
+=== Additional User Directives
 
 The `UserDirectiveProvider` defines the API for `Extensions` that wish to add new user directives.
 
@@ -100,7 +100,7 @@ public final class ExampleUserDirectiveProvider implements UserDirectiveProvider
 
 TBD
 
-==== Additional Function
+=== Additional Function
 
 The `FunctionProvider` defines the API for `Extensions` that wish to add new template functions.
 
@@ -135,25 +135,25 @@ public final class ExampleFunctionProvider implements UserDirectiveProvider {
 ----
 
 
-==== Additional Formatter
+=== Additional Formatter
 
 The `FormatterProvider` defines the API for `Extensions` that wish to add new formatter.
 
 TBD
 
-==== Additional Type Mapper
+=== Additional Type Mapper
 
 The `TypeMapperProvider` defines the API for `Extensions` that wish to add new type mapper.
 
 TBD
 
-==== Additional Template-Object Provider
+=== Additional Template-Object Provider
 
 The `TemplateObjectProviders` defines the API for `Extensions` that wish to add new template-object providers.
 
 TBD
 
-==== Additional Output Formats
+=== Additional Output Formats
 
 The `OutputFormatProviders` defines the API for `Extensions` that wish to add new output formats.
 
