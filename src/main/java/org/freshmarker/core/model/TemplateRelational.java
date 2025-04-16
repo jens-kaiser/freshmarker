@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public record TemplateRelational(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
@@ -18,7 +19,7 @@ public record TemplateRelational(TokenType type, TemplateObject left, TemplateOb
             case GT -> new TemplateRelational(TokenType.LTE, left, right);
             case LTE -> new TemplateRelational(TokenType.GT, left, right);
             case GTE, UNICODE_GTE -> new TemplateRelational(TokenType.LT, left, right);
-            default -> throw new IllegalArgumentException("unsupported relation: " + type);
+            default -> throw new ProcessException("unsupported relation: " + type);
         };
     }
 

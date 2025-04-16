@@ -24,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
 class SettingTest {
+    private static final LocalDate SPECIAL_DAY = LocalDate.of(1968, Month.AUGUST, 24);
+    private static final LocalTime TIME = LocalTime.of(12, 34, 56);
+
     private TemplateBuilder templateBuilder;
 
     @BeforeEach
@@ -42,7 +45,7 @@ class SettingTest {
     @CsvSource(value = "test: ${date?date_time} - <#setting zone_id=\"Europe/London\">${date?date_time},test: 2001-08-24 12:34:56 - 2001-08-24 11:34:56")
     void settingZoneI(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        ZonedDateTime zonedDateTime = LocalDateTime.of(2001, Month.AUGUST, 24, 12, 34, 56).atZone(ZoneId.of("Europe/Berlin"));
+        ZonedDateTime zonedDateTime = LocalDateTime.of(LocalDate.of(2001, Month.AUGUST, 24), TIME).atZone(ZoneId.of("Europe/Berlin"));
         assertEquals(expected, template.process(Map.of("date", zonedDateTime.toInstant())));
     }
 
@@ -50,21 +53,28 @@ class SettingTest {
     @CsvSource(value = "test: ${date} - <#setting date_format=\"dd. MMMM yyyy\">${date};test: 1968-08-24 - 24. August 1968", delimiterString = ";")
     void settingDateFormat(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("date", LocalDate.of(1968, Month.AUGUST, 24))));
+        assertEquals(expected, template.process(Map.of("date", SPECIAL_DAY)));
     }
 
     @ParameterizedTest
     @CsvSource(value = "test: ${date} - <#setting time_format=\"hh:mm\">${date};test: 12:34:56 - 12:34", delimiterString = ";")
     void settingTimeFormat(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("date", LocalTime.of(12, 34, 56))));
+        assertEquals(expected, template.process(Map.of("date", TIME)));
     }
 
     @ParameterizedTest
     @CsvSource(value = "test: ${date} - <#setting datetime_format=\"dd. MMMM yyyy hh:mm\">${date};test: 1968-08-24 12:34:56 - 24. August 1968 12:34", delimiterString = ";")
     void settingDateTimeFormat(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        assertEquals(expected, template.process(Map.of("date", LocalDateTime.of(1968, Month.AUGUST, 24, 12, 34, 56))));
+        assertEquals(expected, template.process(Map.of("date", LocalDateTime.of(SPECIAL_DAY, TIME))));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = "test: ${date} - <#setting zoned_datetime_format=\"dd. MMMM yyyy hh:mm\">${date};test: 1968-08-24 12:34:56 CET - 24. August 1968 12:34", delimiterString = ";")
+    void settingZoneDateTimeFormat(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("date", ZonedDateTime.of(LocalDateTime.of(SPECIAL_DAY, TIME), ZoneId.of("CET")))));
     }
 
     @Test

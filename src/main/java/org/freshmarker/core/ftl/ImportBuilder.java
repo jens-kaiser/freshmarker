@@ -3,7 +3,6 @@ package org.freshmarker.core.ftl;
 import ftl.Node;
 import ftl.Token;
 import ftl.ast.MacroDefinition;
-import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.features.FeatureSet;
 import org.freshmarker.core.fragment.Fragment;
@@ -13,15 +12,13 @@ import java.util.Objects;
 
 public class ImportBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final Template template;
-    private final Configuration configuration;
     private final String nameSpace;
     private final FeatureSet featureSet;
     private FragmentBuilder fragmentBuilder;
     private final int includeLevel;
 
-    public ImportBuilder(Template template, Configuration configuration, String nameSpace, FeatureSet featureSet, int includeLevel) {
+    public ImportBuilder(Template template, String nameSpace, FeatureSet featureSet, int includeLevel) {
         this.template = template;
-        this.configuration = configuration;
         this.nameSpace = nameSpace;
         this.featureSet = featureSet;
         this.includeLevel = includeLevel;
@@ -39,7 +36,7 @@ public class ImportBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
-        fragmentBuilder = Objects.requireNonNullElseGet(fragmentBuilder, () -> new FragmentBuilder(template, configuration, nameSpace, featureSet, includeLevel + 1));
+        fragmentBuilder = Objects.requireNonNullElseGet(fragmentBuilder, () -> new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1));
         return ftl.accept(fragmentBuilder, input);
     }
 }

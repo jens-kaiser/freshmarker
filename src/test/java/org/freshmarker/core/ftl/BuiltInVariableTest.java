@@ -5,6 +5,7 @@ import org.freshmarker.Configuration;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.primitive.TemplateVersion;
@@ -93,14 +94,14 @@ class BuiltInVariableTest {
     void invalidVersion(String input, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of();
-        assertThrows(IllegalStateException.class, () -> template.process(model));
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @Test
     void invalidVersion(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before}");
         Map<String, Object> model = Map.of();
-        assertThrows(IllegalArgumentException.class, () -> template.process(model));
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @Test

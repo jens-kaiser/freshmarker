@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import java.util.List;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedBuiltInException;
 
 public record TemplateBuiltIn(String name, TemplateObject expression, List<TemplateObject> parameter, boolean ignoreOptionalNull, boolean ignoreNull) implements TemplateExpression {
@@ -22,6 +23,8 @@ public record TemplateBuiltIn(String name, TemplateObject expression, List<Templ
       }
       result = result.evaluateToObject(context);
       return context.getBuiltIn(result.getClass(), name).apply(result, parameter, context);
+    } catch (RuntimeException e) {
+      throw new ProcessException(e.getMessage(), e);
     }
   }
 

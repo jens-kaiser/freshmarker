@@ -35,3 +35,5 @@ include::built-in-variables.adoc[]
 include::expression.adoc[]
 
 include::customization.adoc[]
+
+include::extension.adoc[]
