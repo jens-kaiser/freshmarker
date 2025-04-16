@@ -25,7 +25,7 @@ Since each `BuiltIn` is assigned to a model type and has a name, the `BuiltInPro
 The `BuiltInRegister` is a `Register` implementation and can be used in a custom `BuiltInProvider`.
 
 .Usage of BuiltInRegister
-[source,java,role="secondary"]
+[source,java]
 ----
 public final class ExampleBuiltInProvider implements BuilInProvider {
     @Override

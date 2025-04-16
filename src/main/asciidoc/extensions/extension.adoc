@@ -54,7 +54,7 @@ public class ExampleBuiltInVariable implements BuiltInVariable {
 Since each `BuiltInVariable` has a name, the `BuiltInVariableProvider` returns the built-in variables as `Map<String,BuiltInVariable>`.
 
 .Example BuiltInVariableProvider
-[source,java,role="secondary"]
+[source,java]
 ----
 public final class ExampleBuiltInProvider implements BuilInProvider {
     public Map<String,BuiltInVariable> provideBuiltIns() {
@@ -117,7 +117,7 @@ public class ExampleFunction implements TemplateFunction {
 ----
 
 .Example UserDirective as Lambda
-[source,java,role="second"]
+[source,java,role="secondary"]
 ----
 (context, args) -> TemplateNumber.of(args.size());
 ----
