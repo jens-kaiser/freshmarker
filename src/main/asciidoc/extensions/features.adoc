@@ -5,7 +5,7 @@
 Template features are used to modify the behavior of _FreshMarker_ or third-party `Extensions`.
 
 .Example TemplateFeatureProvider
-[source,java,,role="primary"]
+[source,java]
 ----
 public class ExampleFeatureProvider implements TemplateFeatureProvider {
     @Override

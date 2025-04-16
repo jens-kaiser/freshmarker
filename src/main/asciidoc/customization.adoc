@@ -45,6 +45,26 @@ configuration.registerSimpleMapping(BitSet.class, x -> {
 ○ ● ○ ● ● ○ ○ ● ●
 ----
 
+=== Custom Formatter
+
+The default formatting for number and temporal values can be changed with the
+`Configuration#registerFormatter(String, String)` method.
+
+The first parameter `type` specifies the value type `number`, `zoned-date-time` (for `Instant` and `ZonedDateTime`), `date-time` (for `LocalDateTime`), `date` (for `LocalDate`) and `time` (for `LocalTime`). The second parameter is a pattern of `DecimalFormatter` or `DateTimeFormatter`.
+
+.Example with custom number and temporal formatting
+[source,java]
+----
+Configuration config = new Configuration();
+config.registerFormatter("number", "#.00");
+TemplateBuilder templateBuilderWithNumber = config.builder();
+config.registerFormatter("date", "dd. MM. yyyy");
+config.registerFormatter("time", "HH:mm");
+TemplateBuilder templateBuilderWithNumberAndTemporal = config.builder();
+----
+
+TBD
+
 === Customization by `TemplateBuilder`
 
 TBD
@@ -167,49 +187,6 @@ Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormats.ADOC);
 ----
 
-=== Custom Formatter
-
-The default formatting for number and temporal values can be changed with the
-`Configuration#registerFormatter(String, String)` method.
-
-The first parameter `type` specifies the value type `number`, `zoned-date-time` (for `Instant` and `ZonedDateTime`), `date-time` (for `LocalDateTime`), `date` (for `LocalDate`) and `time` (for `LocalTime`). The second parameter is a pattern of `DecimalFormatter` or `DateTimeFormatter`.
-
-.Example with custom number and temporal formatting
-[source,java]
-----
-Configuration config = new Configuration();
-config.registerFormatter("number", "#.00");
-TemplateBuilder templateBuilderWithNumber = config.builder();
-config.registerFormatter("date", "dd. MM. yyyy");
-config.registerFormatter("time", "HH:mm");
-TemplateBuilder templateBuilderWithNumberAndTemporal = config.builder();
-----
-
-TBD
-
-=== Custom `OutputFormat`
-
-TBD
-
-[source,java]
-----
-include::../java/org/freshmarker/core/output/OutputFormat.java[lines="6..-1"]
-----
-
-=== Custom primitive Model Types
-
-==== Evaluate Value
-
-TBD
-
-==== Type Mapper
-
-TBD
-
-==== Operator Overloading
-
-TBD
-
 === Custom Plug-Ins
 
 WARNING: Since _FreshMarker 1.8.0_ the _Plug-in_ mechanism is deprecated in favor of the _Extension API_.
@@ -228,15 +205,3 @@ include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="17..-1"]
 ----
 
 TBD
-
-==== Custom Features
-
-Every Custom Plug-in can add its own features to the `Configuration`
-
-[source,java]
-----
-include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="19..22",indent=0]
-----
-
-TBD
-
