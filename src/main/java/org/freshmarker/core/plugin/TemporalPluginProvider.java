@@ -29,6 +29,7 @@ import org.freshmarker.core.model.temporal.TemplatePeriod;
 import org.freshmarker.core.model.temporal.TemplateYear;
 import org.freshmarker.core.model.temporal.TemplateYearMonth;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
+import org.freshmarker.core.utils.EasterCache;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -56,6 +57,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private static final String MONTH = "month";
     private static final String C = "c";
     private static final String DAY = "day";
+    private static final String EASTER = "easter";
 
     private TemplateZonedDateTime to(ZonedDateTime dateTime) {
         return new TemplateZonedDateTime(dateTime);
@@ -153,6 +155,10 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         }
     }
 
+    private TemplateLocalDate easter(int year) {
+        return new TemplateLocalDate(EasterCache.gauss(year));
+    }
+
     @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         BuiltInRegister register = new BuiltInRegister();
@@ -162,6 +168,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateInstant.class, C, BuiltIn.string());
         register.add(TemplateInstant.class, STRING, (x, y, e) -> formatTemporal(y, e, ((TemplateInstant) x).getValue()));
         register.add(TemplateInstant.class, AT_ZONE, (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(getZoneId(y, e))));
+        register.add(TemplateYearMonth.class, EASTER, (x, y, e) -> easter(((TemplateInstant)x).getValue().atZone(e.getZoneId()).getYear()));
 
         register.add(TemplateZonedDateTime.class, "date_time", (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDateTime()));
         register.add(TemplateZonedDateTime.class, "date", (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDate()));
@@ -171,6 +178,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateZonedDateTime.class, AT_ZONE, (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().withZoneSameInstant(getZoneId(y, e))));
         register.add(TemplateZonedDateTime.class, "zone", (x, y, e) -> toString(((TemplateZonedDateTime) x).getValue().getZone()));
         register.add(TemplateZonedDateTime.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateZonedDateTime) x).getValue().getDayOfMonth()));
+        register.add(TemplateYearMonth.class, EASTER, (x, y, e) -> easter(((TemplateZonedDateTime)x).getValue().getYear()));
 
         register.add(TemplateLocalDateTime.class, "date", (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().toLocalDate()));
         register.add(TemplateLocalDateTime.class, "time", (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().toLocalTime()));
@@ -180,6 +188,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateLocalDateTime.class, YEAR, (x, y, e) -> new TemplateYear(Year.of(((TemplateLocalDateTime) x).getValue().getYear())));
         register.add(TemplateLocalDateTime.class, MONTH, (x, y, e) -> new TemplateEnum<>(((TemplateLocalDateTime) x).getValue().getMonth()));
         register.add(TemplateLocalDateTime.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateLocalDateTime) x).getValue().getDayOfMonth()));
+        register.add(TemplateYearMonth.class, EASTER, (x, y, e) -> easter(((TemplateLocalDate)x).getValue().getYear()));
 
         register.add(TemplateLocalDate.class, "date", BuiltIn.identity());
         register.add(TemplateLocalDate.class, C, BuiltIn.string());
@@ -189,6 +198,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateLocalDate.class, "since", (x, y, e) -> since((TemplateLocalDate) x, y, e));
         register.add(TemplateLocalDate.class, YEAR, (x, y, e) -> new TemplateYear(Year.of(((TemplateLocalDateTime) x).getValue().getYear())));
         register.add(TemplateLocalDate.class, MONTH, (x, y, e) -> new TemplateEnum<>(((TemplateLocalDateTime) x).getValue().getMonth()));
+        register.add(TemplateYearMonth.class, EASTER, (x, y, e) -> easter(((TemplateLocalDateTime)x).getValue().getYear()));
 
         register.add(TemplateLocalTime.class, "time", BuiltIn.identity());
         register.add(TemplateLocalTime.class, C, BuiltIn.string());
@@ -203,11 +213,13 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateYear.class, C, BuiltIn.string());
         register.add(TemplateYear.class, "is_leap", (x, y, e) -> TemplateBoolean.from(((TemplateYear) x).getValue().isLeap()));
         register.add(TemplateYear.class, YEAR, BuiltIn.identity());
+        register.add(TemplateYearMonth.class, EASTER, (x, y, e) -> easter(((TemplateYear)x).getValue().getValue()));
 
         register.add(TemplateYearMonth.class, C, BuiltIn.string());
         register.add(TemplateYearMonth.class, "is_leap", (x, y, e) -> TemplateBoolean.from(new TemplateYear(((TemplateYearMonth) x).getValue().getYear()).isLeap()));
         register.add(TemplateYearMonth.class, YEAR, (x, y, e) -> new TemplateYear(((TemplateYearMonth) x).getValue().getYear()));
         register.add(TemplateYearMonth.class, MONTH, (x, y, e) -> new TemplateEnum<>(((TemplateYearMonth) x).getValue().getMonth()));
+        register.add(TemplateYearMonth.class, EASTER, (x, y, e) -> easter(((TemplateYearMonth)x).getValue().getYear()));
 
         register.add(TemplateMonthDay.class, C, BuiltIn.string());
         register.add(TemplateMonthDay.class, MONTH, (x, y, e) -> new TemplateEnum<>(((TemplateMonthDay) x).getValue().getMonth()));

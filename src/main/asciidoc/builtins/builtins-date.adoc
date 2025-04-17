@@ -140,3 +140,15 @@ m|${temporal?day}
 m|24
 |number
 |===
+
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.footnote:legacyTemporal[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|1968-04-14
+|date
+|===

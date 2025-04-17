@@ -81,7 +81,7 @@ m|Europe/Berlin
 
 ==== `year` Built-In (since 1.7.0)
 
-This built-in returns the year of the value.footnote:onlyLocalDatteTime[Only for `java.time.LocalDateTime`]
+This built-in returns the year of the value.footnote:onlyLocalDateTime[Only for `java.time.LocalDateTime`]
 
 |===
 | Interpolation | Output | Type
@@ -93,7 +93,7 @@ m|1968
 
 ==== `month` Built-In (since 1.7.0)
 
-This built-in returns the month of the value.footnote:onlyLocalDatteTime[]
+This built-in returns the month of the value.footnote:onlyLocalDateTime[]
 
 |===
 | Interpolation | Output | Type
@@ -105,7 +105,7 @@ m|AUGUST
 
 ==== `day` Built-In (since 1.7.0)
 
-This built-in returns the day of month of the value as a number.footnote:onlyLocalDatteTime[]
+This built-in returns the day of month of the value as a number.footnote:onlyLocalDateTime[]
 
 |===
 | Interpolation | Output | Type
@@ -113,4 +113,16 @@ This built-in returns the day of month of the value as a number.footnote:onlyLoc
 m|${temporal?day}
 m|24
 |number
+|===
+
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.footnote:legacyTemporal[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|1968-04-14
+|date
 |===

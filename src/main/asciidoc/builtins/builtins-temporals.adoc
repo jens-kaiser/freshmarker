@@ -38,6 +38,18 @@ m|false
 |boolean
 |===
 
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|2025-04-20
+|date
+|===
+
 === YearMonth Built-Ins
 
 The Built-Ins in the examples operate on the value `2025-08`.
@@ -88,6 +100,18 @@ This built-in returns true if the year is a leap year.
 m|${temporal?is_leap}
 m|false
 |boolean
+|===
+
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|2025-04-20
+|date
 |===
 
 === MonthDay Built-Ins

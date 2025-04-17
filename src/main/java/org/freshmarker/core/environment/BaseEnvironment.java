@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class BaseEnvironment implements Environment , TemplateObjectMapper {
+public class BaseEnvironment implements Environment, TemplateObjectMapper {
 
     private final Map<String, Object> dataModel;
     private final Map<String, TemplateObject> cached;
