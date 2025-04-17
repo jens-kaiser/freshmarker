@@ -22,6 +22,7 @@ class TemporalYearMonthInterpolationTest {
     @CsvSource({
             "test: ${year_month?is_leap},test: no",
             "test: ${leap_year_month?is_leap},test: yes",
+            "test: ${year_month?easter},test: 2025-04-20"
     })
     void interpolationLeapYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);

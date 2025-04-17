@@ -38,7 +38,8 @@ class TemporalInterpolationTest {
             "test: ${temporal},test: 1968-08-24",
             "test: ${temporal?c},test: 1968-08-24",
             "test: ${temporal?date},test: 1968-08-24",
-            "test: ${temporal?string('d. MMMM yyyy')},test: 24. August 1968"
+            "test: ${temporal?string('d. MMMM yyyy')},test: 24. August 1968",
+            "test: ${temporal?easter},test: 1968-04-14"
     })
     void interpolationLocalDate(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
@@ -179,7 +180,8 @@ class TemporalInterpolationTest {
             "${temporal},1968-08-24 12:30:45",
             "${temporal?c},1968-08-24T12:30:45",
             "${temporal?date},1968-08-24",
-            "${temporal?time},12:30:45"
+            "${temporal?time},12:30:45",
+            "${temporal?easter},1968-04-14"
     })
     void interpolationLocalDateTime(String templateString, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: " + templateString);
@@ -269,6 +271,7 @@ class TemporalInterpolationTest {
             "test: ${temporal?c},test: 1968-08-24T11:30:45Z",
             "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 11:30",
             "test: ${temporal?date},test: 1968-08-24",
+            "test: ${temporal?easter},test: 1968-04-14"
     })
     void interpolationInstant(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);

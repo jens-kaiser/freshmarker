@@ -21,7 +21,7 @@ class TemporalMonthDayInterpolationTest {
     @ParameterizedTest
     @CsvSource({
             "test: ${month_day},test: 08-24",
-            "test: ${month_day?month},test: AUGUST",
+            "test: ${month_day?month},test: AUGUST"
     })
     void interpolationYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.withLocale(Locale.GERMANY).getTemplate("test", input);

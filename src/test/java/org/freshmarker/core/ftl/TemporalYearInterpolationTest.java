@@ -31,10 +31,12 @@ class TemporalYearInterpolationTest {
             "test: ${leap_year},test: 2004",
             "test: ${year?year},test: 2025",
             "test: ${leap_year?year},test: 2004",
-              "test: ${year + 1},test: 2026",
+            "test: ${year + 1},test: 2026",
             "test: ${leap_year + 1},test: 2005",
             "test: ${year - 1},test: 2024",
             "test: ${leap_year - 1},test: 2003",
+            "test: ${year?easter},test: 2025-04-20"
+
     })
     void interpolationYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
