@@ -74,10 +74,10 @@ _User directives_ can be defined via _Macro directives_ or by implementing the `
 .UserDirective Interface
 [source,java]
 ----
-include::../java/org/freshmarker/core/directive/UserDirective.java[lines="8..-1"]
+include::../java/org/freshmarker/api/UserDirective.java[lines="9.."]
 ----
 
-It can be registered to the `Configuration` by the `registeruserDirective` method.
+It can be registered to the `Configuration` by the `registeruserDirective` method or by the _Extension API_.
 
 .Example _User Directive_ `doubles`
 [source,java]
@@ -95,11 +95,11 @@ Additional functionality can be added to the template-engine interpolations by _
 .Function Interface
 [source,java]
 ----
-include::../java/org/freshmarker/core/directive/TemplateFunction.java[lines="7..-1"]
+include::../java/org/freshmarker/api/TemplateFunction.java[lines="7..-1"]
 ----
 
 A _Function_ is a Java class implementing the functional interface `TemplateFunction`.
-It can be registered to the `Configuration` by the `registerFunction` method.
+It can be registered to the `Configuration` by the `registerFunction` method or by the _Extension API_.
 
 .Example Custom Function `abs` and `avg`
 [source,java]
@@ -260,7 +260,7 @@ public interface TemplateLoader {
 The `filename` parameter is the name of the import file and `path` is the parent directory of the template.
 The parent directory can be used to load import files located relative to the template.
 
-NOTE: For templates loaded by String or Reader the path is the current directory.
+NOTE: For templates loaded by `String` or `Reader` the path is the current directory.
 
 === Template Caching
 
