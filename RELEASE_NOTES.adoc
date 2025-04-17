@@ -2,6 +2,10 @@
 
 == Release 1.8.0 (2025-04-XX)
 
+=== Improvements
+
+- add `easter` built-ins for temporal types with a year component
+
 === Experimental
 
 - add new Extension API
