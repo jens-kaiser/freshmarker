@@ -1,5 +1,7 @@
 package org.freshmarker.core.output;
 
+import org.freshmarker.api.OutputFormat;
+
 public class StandardOutputFormats {
 
     private StandardOutputFormats() {
