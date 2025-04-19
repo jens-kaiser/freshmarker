@@ -1,0 +1,33 @@
+=== Additional Built-In Variables
+
+The `BuiltInVariableProvider` defines the API for `Extensions` that wish to add new built-in variables.
+
+Each custom built-in variable has to implement the `BuiltInVariable` interface.
+
+.Example BuiltInVariable
+[source,java,,role="primary"]
+----
+public class ExampleBuiltInVariable implements BuiltInVariable {
+    public TemplateObject apply(ProcessContext context) {
+        new TemplateString("EXAMPLE");
+    }
+}
+----
+
+.Example BuiltInVariable as Lambda
+[source,java,role="secondary"]
+----
+(context) -> new TemplateString("EXAMPLE");
+----
+
+Since each `BuiltInVariable` has a name, the `BuiltInVariableProvider` returns the built-in variables as `Map<String,BuiltInVariable>`.
+
+.Example BuiltInVariableProvider
+[source,java]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    public Map<String,BuiltInVariable> provideBuiltIns() {
+        Map.of("example", (context) -> new TemplateString("EXAMPLE"));
+    }
+}
+----
