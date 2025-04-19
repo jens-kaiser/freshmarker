@@ -5,7 +5,7 @@
 Each built-in must implement the `BuiltIn` interface.
 
 .Example BuiltIn
-[source,java,,role="primary"]
+[source,java,role="primary"]
 ----
 public class ExampleBuiltIn implements BuiltIn {
     public TemplateObject apply(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {

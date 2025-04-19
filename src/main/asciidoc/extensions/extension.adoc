@@ -44,8 +44,45 @@ TBD
 === Additional Type Mapper
 
 The `TypeMapperProvider` defines the API for `Extensions` that wish to add new type mapper.
+The _type mappers_ are used in the `MappingTemplateObjectProvider` to create _template-model objects_ from _Java_ objects.
 
-TBD
+The `MappingTemplateObjectProvider` ist the first `TemplateObjectProvider` in the chain of template-object providers.
+Its task is to create corresponding template-model objects for the registered primitive types.
+Other `TemplateObjectProviders` that follow in the chain are used to process _records_, _beans_ and _collection_ and _custom_ types.
+
+.Example TypeMapper
+[source,java,role="primary"]
+----
+public class ExampleTypeMapper implements TypeMapper {
+    public TemplateObject apply(Object o) {
+        Dimension d = (Dimension) o;
+        return new TemplateString(d.width + "x" + d.height);
+    }
+}
+----
+
+.Example TypeMapper als Lambda
+[source,java,role="primary"]
+----
+value -> {
+    Dimension d = (Dimension) o;
+    return new TemplateString(d.width + "x" + d.height);
+};
+----
+
+The parameter can be cast to the desired type in the `apply` method, as the `TypeMapper` is only called exactly for this type.
+
+Since each `TypeMapper` has a type, the `TypeMapperProvider` returns the type-mappers as `Map<Class<?>, TypeMapper>`.
+
+.Example TypeMapperProvider
+[source,java]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    public Map<String,BuiltInVariable> provideBuiltIns() {
+        Map.of(Dimension.class, new ExampleTypeMapper());
+    }
+}
+----
 
 === Additional Template-Object Provider
 
