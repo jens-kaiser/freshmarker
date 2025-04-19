@@ -4,7 +4,7 @@ import ftl.Node;
 import ftl.Token;
 import ftl.ast.MacroDefinition;
 import org.freshmarker.Template;
-import org.freshmarker.core.features.FeatureSet;
+import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.fragment.Fragment;
 
 import java.util.List;

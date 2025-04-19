@@ -7,7 +7,7 @@ import ftl.ast.BaseNode;
 import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.SwitchInstruction;
-import org.freshmarker.core.features.FeatureSet;
+import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.fragment.ConditionalFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.Fragments;
