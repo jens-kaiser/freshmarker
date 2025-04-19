@@ -6,6 +6,7 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Set;
 
+import org.freshmarker.api.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.temporal.TemplateLocalDate;
 

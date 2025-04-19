@@ -1,6 +1,8 @@
 package org.freshmarker.core.formatter;
 
 import java.util.Locale;
+
+import org.freshmarker.api.Formatter;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.TemplateObject;
 

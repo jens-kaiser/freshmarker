@@ -3,6 +3,8 @@ package org.freshmarker.core.formatter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import org.freshmarker.api.Formatter;
 import org.freshmarker.core.model.date.TemplateClassicTime;
 import org.freshmarker.core.model.TemplateObject;
 

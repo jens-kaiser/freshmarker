@@ -1,5 +1,6 @@
 package org.freshmarker.core.formatter;
 
+import org.freshmarker.api.Formatter;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;

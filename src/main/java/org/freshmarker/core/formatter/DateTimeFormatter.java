@@ -8,6 +8,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import java.util.Set;
 
+import org.freshmarker.api.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
