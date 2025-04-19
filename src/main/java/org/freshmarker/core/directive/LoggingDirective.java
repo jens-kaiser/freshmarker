@@ -11,12 +11,12 @@ import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 /**
- * This {@link UserDirective} writes a comment in the template output.
+ * This {@link org.freshmarker.api.UserDirective} writes a comment in the template output.
  * The form of the comment is based on the current output format.
  * The content of the comment comes from the parameter {@code message}
  * The {@code level} parameter modifies the output. For the value {@code warn}, the output is converted to uppercase.
  */
-public class LoggingDirective implements UserDirective {
+public class LoggingDirective implements org.freshmarker.api.UserDirective {
 
   @Override
   public void execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {

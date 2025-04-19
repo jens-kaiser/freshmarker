@@ -11,10 +11,10 @@ import java.io.Writer;
 import java.util.Map;
 
 /**
- * This {@link UserDirective} replaces consecutive spaces and line breaks with a single space or newline.
+ * This {@link org.freshmarker.api.UserDirective} replaces consecutive spaces and line breaks with a single space or newline.
  * Spaces at the beginning or end are truncated.
  */
-public class CompressDirective implements UserDirective {
+public class CompressDirective implements org.freshmarker.api.UserDirective {
 
     private static class CompressWriter extends FilterWriter {
         private boolean prefix = true;

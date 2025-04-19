@@ -1,5 +1,6 @@
 package org.freshmarker.core.directive;
 
+import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.model.TemplateObject;
