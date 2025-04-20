@@ -1,10 +1,10 @@
 = Release Notes
 
-== Release 1.8.0 (2025-04-XX)
+== Release 1.8.0 (2025-04-20)
 
 === Improvements
 
-- add `easter` built-ins for temporal types with a year component
+- add `easter` built-ins for temporal types with a year part
 
 === Experimental
 
