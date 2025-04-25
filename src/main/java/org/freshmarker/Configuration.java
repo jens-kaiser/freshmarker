@@ -28,12 +28,9 @@ import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
-import org.freshmarker.core.output.StandardOutputFormats;
 import org.freshmarker.core.plugin.PluginProvider;
 
-import java.time.Clock;
 import java.time.ZoneId;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -91,9 +88,9 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        ExtensionRegistry extensionRegistry = new ExtensionRegistry(this.extensionRegistry, this.extensionRegistry.getTemplateFeatures().create());
-        StaticContext context = new StaticContext(extensionRegistry, modelSecurityGateway, templateLoader);
-        return new DefaultTemplateBuilder(context, Locale.getDefault(), ZoneId.systemDefault(), StandardOutputFormats.NONE, Clock.systemUTC(), extensionRegistry.getTemplateFeatures().create());
+        ExtensionRegistry copy = new ExtensionRegistry(this.extensionRegistry, this.extensionRegistry.getTemplateFeatures().create());
+        StaticContext context = new StaticContext(copy, modelSecurityGateway, templateLoader);
+        return new DefaultTemplateBuilder(context, copy.getTemplateFeatures().create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
