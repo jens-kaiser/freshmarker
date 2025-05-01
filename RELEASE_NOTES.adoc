@@ -1,5 +1,11 @@
 = Release Notes
 
+== Release 1.8.1 (2025-05-XX)
+
+=== Bugfixes
+
+- fix the error message on non-primitive results in switch/on and switch/case expressions
+
 == Release 1.8.0 (2025-04-20)
 
 === Improvements

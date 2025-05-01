@@ -19,10 +19,6 @@ public interface TemplateVisitor<R> {
         return null;
     }
 
-    default R visit(HashListFragment fragment) {
-        return null;
-    }
-
     default R visit(IfFragment fragment, List<ConditionalFragment> fragments, Fragment endFragment) {
         return null;
     }

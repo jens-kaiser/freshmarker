@@ -78,21 +78,20 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     public SwitchFragment visit(CaseInstruction ftl, SwitchFragment input) {
         logger.debug("{} {}", ftl.size(), ftl.children());
         int blockIndex = ftl.indexOf(ftl.firstChildOfType(TokenType.CLOSE_TAG)) + 1;
-        List<TemplateObject> expressions = new LinkedList<>();
+        checkMissingBlock(blockIndex, ftl);
+        Node block = ftl.get(blockIndex);
+        List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
+        Fragment caseBlock = Fragments.optimize(fragments);
+        logger.debug("{}: {} {}", ftl.get(1), block, caseBlock);
         boolean onlyConstantsAllowed = featureSet.isEnabled(ftl.get(1).getType() == TokenType.ON ? ALLOW_ONLY_CONSTANT_ONS : ALLOW_ONLY_CONSTANT_CASES);
         for (int i = 3; i < blockIndex - 1; i +=2) {
             TemplateObject onExpression = ftl.get(i).accept(interpolationBuilder, null);
             if (onlyConstantsAllowed && !onExpression.isPrimitive()) {
                 throw new ParsingException("only constant expression allowed", ftl.get(i));
             }
-            expressions.add(onExpression);
+            logger.debug("conditional: {}", ftl.get(i));
+            input.addFragment(new ConditionalFragment(onExpression, caseBlock, ftl.get(i)));
         }
-        checkMissingBlock(blockIndex, ftl);
-        Node block = ftl.get(blockIndex);
-        List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
-        Fragment caseBlock = Fragments.optimize(fragments);
-        logger.debug("{}: {} {}", ftl.get(1), block, caseBlock);
-        expressions.stream().map(expression -> new ConditionalFragment(expression, caseBlock, ftl)).forEach(input::addFragment);
         return input;
     }
 

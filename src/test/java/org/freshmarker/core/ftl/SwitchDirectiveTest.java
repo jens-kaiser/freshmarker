@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES;
@@ -158,5 +160,19 @@ class SwitchDirectiveTest {
         ParsingException exception = assertThrows(ParsingException.class, () -> builder.getTemplate("test",
                 "test: <#switch text><#case 'AAA'>AAA1<#on 'AAA'>AAA1</#switch>"));
         assertEquals("switch directive contains on and case at test:1:7 '<#switch text><#case 'AAA'>AAA1<#on 'AAA'>AAA1</#switch>'", exception.getMessage());
+    }
+
+    @Test
+    void switchWithNonPrimitiveValue(TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", "test: <#switch text><#case 'AAA'>AAA1</#switch>");
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(Map.of("text", List.of(1,2))));
+        assertEquals("not a primitive type at test:1:16 'text'", exception.getMessage());
+    }
+
+    @Test
+    void switchWithNonPrimitiveCase(TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", "test: <#switch text><#case [ 'AAA' ]>AAA1</#switch>");
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(Map.of("text", "AAA")));
+        assertEquals("non primitive type: class org.freshmarker.core.model.TemplateListSequence at test:1:28 '[ 'AAA' ]'", exception.getMessage());
     }
 }
