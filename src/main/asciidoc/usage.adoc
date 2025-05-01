@@ -70,6 +70,4 @@ public Configuration freshmarker() {
 }
 ----
 
-The Template instance is not thread safe, so it must not be shared between different threads. The result is unpredictable.
-
-Also, the model must be static, the values should not change during processing. This can lead to surprising results.
+The model should be static, the values should not change during processing. This can lead to surprising results.
