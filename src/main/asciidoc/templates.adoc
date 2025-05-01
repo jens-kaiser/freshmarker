@@ -77,7 +77,7 @@ _User directives_ can be defined via _Macro directives_ or by implementing the `
 include::../java/org/freshmarker/api/UserDirective.java[lines="9.."]
 ----
 
-It can be registered to the `Configuration` by the `registeruserDirective` method or by the _Extension API_.
+It can be registered to the `Configuration` by the `registerUserDirective` method or by the _Extension API_.
 
 .Example _User Directive_ `doubles`
 [source,java]

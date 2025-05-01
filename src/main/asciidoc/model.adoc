@@ -174,7 +174,7 @@ An optional can therefore be checked with the existence operator and the default
 |`optional.isEmpty()`
 |${optional == null}
 
-|`optional.orElseGet(42)`
+|`optional.orElse(42)`
 |${optional!42}
 |===
 
