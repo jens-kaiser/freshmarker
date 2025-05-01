@@ -28,7 +28,6 @@ import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
-import org.freshmarker.core.plugin.PluginProvider;
 
 import java.time.ZoneId;
 import java.util.Map;
@@ -72,10 +71,6 @@ public final class Configuration {
 
     public void registerFunction(String name, TemplateFunction function) {
         extensionRegistry.register((FunctionProvider) () -> Map.of(name, function));
-    }
-
-    public void registerPlugin(PluginProvider provider) {
-        extensionRegistry.registerPlugin(provider);
     }
 
     public void register(Extension extension) {

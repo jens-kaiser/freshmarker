@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.freshmarker.api.TemplateFeature;
 
-public class TemplateFeatures implements FeatureSet {
+public class TemplateFeatures implements org.freshmarker.api.FeatureSet {
 
     record Entry(int flag, boolean enabled) {
 

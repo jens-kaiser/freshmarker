@@ -50,10 +50,6 @@ public class BuiltInVariableProvider {
         this.providers.putAll(providers);
     }
 
-    public void registerOld(Map<String, Function<ProcessContext, TemplateObject>> providers) {
-        this.providers.putAll(providers);
-    }
-
     public BuiltInVariableProvider copy() {
         BuiltInVariableProvider provider = new BuiltInVariableProvider();
         provider.providers.putAll(providers);

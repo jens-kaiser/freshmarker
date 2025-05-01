@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleFeatureSetTest {
-    private enum DemoFeature implements TemplateFeature {
+    private enum DemoFeature implements org.freshmarker.api.TemplateFeature {
         FIRST,
         SECOND;
 
@@ -16,11 +16,11 @@ class SimpleFeatureSetTest {
         }
     }
 
-    private enum SecondDemoFeature implements TemplateFeature {
+    private enum SecondDemoFeature implements org.freshmarker.api.TemplateFeature {
         FIRST
     }
 
-    private enum UnknownFeature implements TemplateFeature {
+    private enum UnknownFeature implements org.freshmarker.api.TemplateFeature {
         UNKNOWN_FEATURE
     }
 
