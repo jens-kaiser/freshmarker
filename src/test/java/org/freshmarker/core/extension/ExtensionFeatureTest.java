@@ -9,6 +9,7 @@ import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Register;
 import org.freshmarker.api.extension.TemplateFeatureProvider;
 import org.freshmarker.api.extension.support.BuiltInRegister;
+import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -28,7 +29,19 @@ class ExtensionFeatureTest {
     @Test
     void enabled() {
         Configuration configuration = new Configuration();
-        configuration.register((TemplateFeatureProvider) () -> Set.of(TestFeature.ENABLED));
+        configuration.register(new TemplateFeatureProvider() {
+            private boolean enabled;
+
+            @Override
+            public void init(FeatureSet featureSet) {
+                enabled = featureSet.isDisabled(IncludeDirectiveFeature.ENABLED);
+            }
+
+            @Override
+            public Set<TemplateFeature> provideFeatures() {
+                return enabled ? Set.of(TestFeature.ENABLED) : Set.of();
+            }
+        });
         configuration.register(new BuiltInProvider() {
             private boolean enabled;
             @Override
@@ -39,7 +52,6 @@ class ExtensionFeatureTest {
             @Override
             public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
                 BuiltInRegister register = new BuiltInRegister();
-                System.out.println(enabled);
                 if (enabled) {
                     register.add(TemplateString.class, "test", ((value, parameters, context) -> new TemplateString("test")));
                 }
@@ -53,7 +65,19 @@ class ExtensionFeatureTest {
     @Test
     void disabled() {
         Configuration configuration = new Configuration();
-        configuration.register((TemplateFeatureProvider) () -> Set.of(TestFeature.ENABLED));
+        configuration.register(new TemplateFeatureProvider() {
+            private boolean enabled;
+
+            @Override
+            public void init(FeatureSet featureSet) {
+                enabled = featureSet.isEnabled(IncludeDirectiveFeature.ENABLED);
+            }
+
+            @Override
+            public Set<TemplateFeature> provideFeatures() {
+                return enabled ? Set.of() : Set.of(TestFeature.ENABLED);
+            }
+        });
         configuration.register(new BuiltInProvider() {
             private boolean enabled;
             @Override

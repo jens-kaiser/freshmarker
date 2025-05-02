@@ -5,6 +5,7 @@
 === Bugfixes
 
 - fix the error message on non-primitive results in switch/on and switch/case expressions
+- fix missing `init` call, when manually register a `TemplateFeatureProvider`
 
 == Release 1.8.0 (2025-04-20)
 

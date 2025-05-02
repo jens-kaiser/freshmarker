@@ -82,6 +82,7 @@ public class ExtensionRegistry {
         logger.debug("registering: {}", extension.getClass());
         extensions.add(extension);
         if (extension instanceof TemplateFeatureProvider provider) {
+            extension.init(featureSet);
             provider.provideFeatures().forEach(templateFeatures::addFeatures);
         }
     }
