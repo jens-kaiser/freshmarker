@@ -20,7 +20,7 @@ public class ExampleBuiltIn implements BuiltIn {
 (value, parameters, context) -> new TemplateString("EXAMPLE: " + value);
 ----
 
-Since each `BuiltIn` is assigned to a model type and has a name, the `BuiltInProvider` returns the built-ins as `Register<BuiltInKey,BuiltIn>`.
+Since each `BuiltIn` is assigned to a model type and has a name, the `BuiltInProvider` returns the built-ins as `Register<Class<? extends TemplateObject>, String, BuiltIn>`.
 
 The `BuiltInRegister` is a `Register` implementation and can be used in a custom `BuiltInProvider`.
 
