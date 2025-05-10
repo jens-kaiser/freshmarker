@@ -62,7 +62,7 @@ public class ExampleTypeMapper implements TypeMapper {
 ----
 
 .Example TypeMapper als Lambda
-[source,java,role="primary"]
+[source,java,role="secondary"]
 ----
 value -> {
     Dimension d = (Dimension) o;
