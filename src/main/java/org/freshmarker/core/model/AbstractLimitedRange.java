@@ -18,8 +18,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     }
 
     protected AbstractLimitedRange(TemplateObject lower, TemplateObject upper, Bounds bounds) {
-        this.lower = lower;
-        this.upper = upper;
+        this(lower, upper);
         this.bounds = bounds;
     }
 

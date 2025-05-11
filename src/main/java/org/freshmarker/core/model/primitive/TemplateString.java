@@ -2,6 +2,7 @@ package org.freshmarker.core.model.primitive;
 
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateObjectVisitor;
 
@@ -30,11 +31,18 @@ public class TemplateString extends TemplatePrimitive<String> {
         return concat(operand.evaluate(context, TemplateString.class));
     }
 
+    private int checkLowerBound(int lowerBound) {
+        if (lowerBound < 0) {
+            throw new ProcessException("negative slicing values not allowed: " + lowerBound);
+        }
+        return lowerBound;
+    }
+
     public TemplateString substring(int min, int max) {
         if (min < max) {
-            return new TemplateString(getValue().substring(min, max + 1));
+            return new TemplateString(getValue().substring(checkLowerBound(min), max + 1));
         }
-        return new TemplateString(new StringBuilder(getValue().substring(max, min + 1)).reverse().toString());
+        return new TemplateString(new StringBuilder(getValue().substring(checkLowerBound(max), min + 1)).reverse().toString());
     }
 
     @Override

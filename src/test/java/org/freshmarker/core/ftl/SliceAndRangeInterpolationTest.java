@@ -208,6 +208,17 @@ class SliceAndRangeInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "test: ${list[-1..4]?join}",
+            "test: ${list[4..-1]?join}",
+    })
+    void invalidSequenceSlices(String input, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("slices", input);
+        Map<String, Object> model = Map.of("list", List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
             "test: ${string1[2..4]};test: 234",
             "test: ${string2[2..4]};test: 876",
             "test: ${string1[4..2]};test: 432",
@@ -229,6 +240,17 @@ class SliceAndRangeInterpolationTest {
         assertEquals(expected, template.process(Map.of(
                 "string1", "0123456789A", "string2", "A9876543210", "string3", "234", "string4", "432"
         )));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${string[-1..4]}",
+            "test: ${string[4..-1]}",
+    })
+    void invalidStringSlices(String input, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("slices", input);
+        Map<String, Object> model = Map.of("string", "0123456789A");
+        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @ParameterizedTest

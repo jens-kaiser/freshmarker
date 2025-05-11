@@ -24,11 +24,18 @@ public class TemplateListSequence implements TemplateSequence {
         return sequence.size();
     }
 
+    private int checkLowerBound(int lowerBound) {
+        if (lowerBound < 0) {
+            throw new ProcessException("negative slicing values not allowed: " + lowerBound);
+        }
+        return lowerBound;
+    }
+
     public TemplateListSequence slice(int min, int max) {
         if (min < max) {
-            return new TemplateListSequence(sequence.subList(min, max + 1));
+            return new TemplateListSequence(sequence.subList(checkLowerBound(min), max + 1));
         }
-        return new TemplateListSequence(sequence.subList(max, min + 1).reversed());
+        return new TemplateListSequence(sequence.subList(checkLowerBound(max), min + 1).reversed());
     }
 
     public TemplateListSequence slice(int min) {
