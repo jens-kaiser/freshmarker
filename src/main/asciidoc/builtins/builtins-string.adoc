@@ -130,8 +130,8 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 
 This built-in removes leading and trailing whitespaces from the text.
 The examples use `␣` as a replacement for the whitespace.
-If the result is an empty string, `null` is returned.
-If the text is `null`, then `null` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
+If the result is an empty string, `NULL` is returned.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
 
 |===
 |Input | Output | Type
@@ -141,18 +141,18 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 m|string
 
 m|${'␣␣␣␣␣'?trim_to_null}
-m|null
-m|null
+m|NULL
+m|NULL
 
 m|${null?trim_to_null}
-m|null
-m|null
+m|NULL
+m|NULL
 |===
 
 ==== `empty_to_null` Built-In (since 1.7.1)
 
-This built-in returns `null` if the text is empty.
-If the text is `null`, then `null` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
+This built-in returns `NULL` if the text is empty.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
 
 |===
 |Input | Output | Type
@@ -162,19 +162,19 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 m|string
 
 m|${''?empty_to_null}
-m|null
-m|null
+m|NULL
+m|NULL
 
 m|${null?empty_to_empty}
-m|null
-m|null
+m|NULL
+m|NULL
 |===
 
 ==== `blank_to_null` Built-In (since 1.7.1)
 
-This built-in returns `null` if the text is blank.
+This built-in returns `NULL` if the text is blank.
 The examples use `␣` as a replacement for the whitespace.
-If the text is `null`, then `null` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
 
 |===
 |Input | Output | Type
@@ -184,12 +184,12 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 m|string
 
 m|${'␣␣␣␣'?blank_to_null}
-m|null
-m|null
+m|NULL
+m|NULL
 
 m|${null?blank_to_null}
-m|null
-m|null
+m|NULL
+m|NULL
 |===
 
 ==== `contains` Built-In

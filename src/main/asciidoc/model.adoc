@@ -197,7 +197,7 @@ ${'abraxas'[1..<5>]} // => brax
 === Optional Values
 
 Optional values of type `java.util.Optional` are also supported in the model.
-Empty optionals are interpreted as `null` and all other values are interpreted as instances of the generic type.
+Empty optionals are interpreted as `NULL` and all other values are interpreted as instances of the generic type.
 
 An optional can therefore be checked with the existence operator and the default operator can be used to determine a replacement value for empty optionals.
 

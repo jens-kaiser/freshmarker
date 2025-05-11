@@ -137,7 +137,7 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 | `false`
 
 | IGNORE_NULL
-| Feature that ignores errors due null values on built-ins.
+| Feature that ignores errors due `NULL` values on built-ins.
 | `false`
 |
 |===
