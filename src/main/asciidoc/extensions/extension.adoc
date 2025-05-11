@@ -2,7 +2,7 @@
 
 === Overview
 
-The `Extension` mechanism replaces the previous `PlugInProvider` mechanism. Although the previous plug-in mechanism worked well, it shows weaknesses when extending FreshMarker.
+The `Extension` mechanism replaces the previous `PlugInProvider` mechanism. Although the previous plug-in mechanism worked well, it shows some weaknesses when extending _FreshMarker_.
 
 === Registering Extensions
 

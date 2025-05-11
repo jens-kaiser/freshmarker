@@ -7,7 +7,7 @@ The expressions are based on _Java_ expressions, but have some differences. The 
 As far as practicable, calculations should not take place within the template engine but in the external application. Basically, expressions should be used to make decisions in the _Conditional Directives_ and to influence the output of _Interpolations_.
 
 For this reason, _FreshMarker_ does not have any bit shift operators, for example.
-Variables are assigned values within the template via the _Var_ and _Set Directives_, so FreshMarker does not have an assignment operator or compound operators like _Java_.
+Variables are assigned values within the template via the _Var_ and _Set Directives_, so _FreshMarker_ does not have an assignment operator or compound operators like _Java_.
 
 === Literal Expressions
 

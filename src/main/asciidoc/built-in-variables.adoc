@@ -18,7 +18,7 @@ The `.laguage` built-in variable of Type `TemplateString`  provides the current 
 
 === Version Built-In Variable
 
-The `.version` built-in variable of Type `TemplateVersion`  provides the current FreshMarker version.
+The `.version` built-in variable of Type `TemplateVersion`  provides the current _FreshMarker_ version.
 
 === Random Built-In Variable
 

@@ -124,7 +124,13 @@ With _inverted ranges_, the slice operation produces an inverted result.
 
 ==== List Slices
 
-TBD
+The slice operator on `List` values extracts a sublist from a given list.
+The lower and upper bounds are the index in the source list for the first and last entry of the new list.
+For slices without an upper bound, the last entry of the source list is the last entry of the new list.
+
+Because the first entry of a list is zero in the Java Universe, a slice with a lower bound below zero is forbidden.
+
+In the case of a right-limited range, the upper bound must exist in the source list. Otherwise, a processing error will occur.
 
 .Example `List` slices
 [source,subs="verbatim,quotes"]
@@ -134,9 +140,21 @@ ${['a','b','c','d','e','f','g'][1..]?join(';')}  // => b;c;d;e;f;g
 ${['a','b','c','d','e','f','g'][4..1]?join(';')} // => e;d;c;b
 ----
 
+[TIP]
+====
+To imitate the behavior of a Java sublist with an exclusive upper bound, a right-limited range with an exclusive upper bound can be used.
+
+.Example `List` slice with exclusive upper bound
+[source,subs="verbatim,quotes"]
+----
+${['a','b','c','d','e','f','g'][1..<5]?join(';')} // => b:c:d:e
+----
+====
+
 ==== Range Slices
 
-TBD
+The slice operator on `Range` values extracts a range form a given range.
+For slices without an upper bound, the upper bound of a limited source range is the upper bound of the new range.
 
 .Example `Range` slices
 [source,subs="verbatim,quotes"]
@@ -148,7 +166,13 @@ ${(1..10)[4..1]?join(';')} // => 5;4;3;2
 
 ==== String Slices
 
-TBD
+The slice operator on `String` values extracts a substring from a given string.
+The lower and upper bounds are the index in the source string for the first and last character of the new string.
+For slices without an upper bound, the last character of the source string is the last character of the new string.
+
+Because the first index of a string is zero in the Java Universe, a slice with a lower bound below zero is forbidden.
+
+In the case of a right-limited slice, the upper bound must exist in the source string. Otherwise, a processing error will occur.
 
 .Example `String` slices
 [source,subs="verbatim,quotes"]
@@ -157,6 +181,18 @@ ${'abraxas'[1..4]} // => brax
 ${'abraxas'[1..]}  // => braxas
 ${'abraxas'[4..1]} // => xarb
 ----
+
+
+[TIP]
+====
+To imitate the behavior of a Java substring with an exclusive upper bound, a right-limited range with an exclusive upper bound can be used.
+
+.Example `String` slice with exclusive upper bound
+[source,subs="verbatim,quotes"]
+----
+${'abraxas'[1..<5>]} // => brax
+----
+====
 
 === Optional Values
 
