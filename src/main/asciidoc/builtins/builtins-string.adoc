@@ -395,18 +395,18 @@ The examples use `␣` as a replacement for the whitespace.
 |Interpolation | Output
 
 m|${'apple'?left_pad(8)}
-m|␣␣␣apple
+m|apple␣␣␣
 
 m|${'orange'?left_pad(8)}
-m|␣␣orange
+m|orange␣␣
 
 m|${'pineapple'?left_pad(8)}
 m|pineapple
 
 m|${'apple'?left_pad(8, '●')}
-m|●●●apple
+m|apple●●●
 
 m|${'apple'?left_pad(8, '●○')}
-m|●○●apple
+m|apple●○●
 
 |===
