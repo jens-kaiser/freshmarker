@@ -58,47 +58,47 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return new TemplateString(((TemplateString)value).getValue().toLowerCase(context.getLocale()));
     }
 
-    public static TemplateString capitalize(TemplateObject value, ProcessContext context) {
+    private static TemplateString capitalize(TemplateObject value, ProcessContext context) {
         Matcher matcher = CAPITALIZE.matcher(((TemplateString)value).getValue());
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toUpperCase(context.getLocale()) + matcher.group(2)));
     }
 
-    public static TemplateString uncapitalize(TemplateObject value, ProcessContext context) {
+    private static TemplateString uncapitalize(TemplateObject value, ProcessContext context) {
         Matcher matcher = UNCAPITALIZE.matcher(((TemplateString)value).getValue());
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(context.getLocale()) + matcher.group(2)));
     }
 
-    public static TemplateString camelCase(TemplateObject value, ProcessContext context) {
+    private static TemplateString camelCase(TemplateObject value, ProcessContext context) {
         Locale locale = context.getLocale();
         Matcher matcher = CAMEL_CASE.matcher(((TemplateString)value).getValue().toLowerCase(locale));
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(locale) + matcher.group(2).toUpperCase(locale)));
     }
 
-    public static TemplateString kebabCase(TemplateObject value, ProcessContext context) {
+    private static TemplateString kebabCase(TemplateObject value, ProcessContext context) {
         return new TemplateString(((TemplateString)value).getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getLocale()));
     }
 
-    public static TemplateString snakeCase(TemplateObject value, ProcessContext context) {
+    private static TemplateString snakeCase(TemplateObject value, ProcessContext context) {
         return new TemplateString(((TemplateString)value).getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getLocale()));
     }
 
-    public static TemplateString screamingSnakeCase(TemplateObject value, ProcessContext context) {
+    private static TemplateString screamingSnakeCase(TemplateObject value, ProcessContext context) {
         return new TemplateString(((TemplateString)value).getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getLocale()));
     }
 
-    public static TemplateBoolean contains(TemplateObject value, TemplateString contains) {
+    private static TemplateBoolean contains(TemplateObject value, TemplateString contains) {
         return TemplateBoolean.from(((TemplateString)value).getValue().contains(contains.getValue()));
     }
 
-    public static TemplateBoolean endsWith(TemplateObject value, TemplateString endsWith) {
+    private static TemplateBoolean endsWith(TemplateObject value, TemplateString endsWith) {
         return TemplateBoolean.from(((TemplateString)value).getValue().endsWith(endsWith.getValue()));
     }
 
-    public static TemplateBoolean startsWith(TemplateObject value, TemplateString endsWith) {
+    private static TemplateBoolean startsWith(TemplateObject value, TemplateString endsWith) {
         return TemplateBoolean.from(((TemplateString)value).getValue().startsWith(endsWith.getValue()));
     }
 
-    public static TemplateBoolean toBoolean(TemplateObject value) {
+    private static TemplateBoolean toBoolean(TemplateObject value) {
         String input = ((TemplateString)value).getValue();
         TemplateBoolean result = BOOLEAN_MAP.get(input);
         if (result == null) {
@@ -107,10 +107,34 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return result;
     }
 
-    public static TemplateStringMarkup esc(TemplateObject value, ProcessContext context, List<TemplateObject> parameters) {
+    private static TemplateStringMarkup esc(TemplateObject value, ProcessContext context, List<TemplateObject> parameters) {
         BuiltInHelper.checkParametersLength(parameters, 1);
         TemplateString templateString = parameters.getFirst().evaluate(context, TemplateString.class);
         return new TemplateStringMarkup(((TemplateString)value), context.getOutputFormat(templateString.getValue()));
+    }
+
+    private static TemplateString padding(TemplateString value, ProcessContext context, List<TemplateObject> parameters, boolean left) {
+        BuiltInHelper.checkParametersLength(parameters, 1, 2);
+        String text = value.getValue();
+        int size = parameters.getFirst().evaluate(context, TemplateNumber.class).asInt();
+        if (text.length() >= size) {
+            return value;
+        }
+        String paddingPattern = parameters.size() < 2 ? " " : parameters.get(1).evaluate(context, TemplateString.class).getValue();
+        String padding = padding(paddingPattern, size - text.length());
+        return new TemplateString(left ? padding + text : text + padding);
+    }
+
+    private static String padding(String paddingPattern, int paddingSize) {
+        if (paddingPattern.length() < 2) {
+            return paddingPattern.repeat(paddingSize);
+        }
+        int paddingRest = paddingSize % paddingPattern.length();
+        String patternStart = paddingPattern.repeat(paddingSize / paddingPattern.length());
+        if (paddingRest == 0) {
+            return patternStart;
+        }
+        return patternStart + paddingPattern.substring(0, paddingRest);
     }
 
     @Override
@@ -139,6 +163,8 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("blank_to_null", (x, y, e) -> ((TemplateString) x).getValue().isBlank() ? TemplateNull.NULL : x);
         register.add("empty_to_null", (x, y, e) -> ((TemplateString) x).getValue().isEmpty() ? TemplateNull.NULL : x);
         register.add("trim_to_null", (x, y, e) -> trim2null((TemplateString) x));
+        register.add("left_pad", (x, y, e) -> padding((TemplateString) x, e, y, true));
+        register.add("right_pad", (x, y, e) -> padding((TemplateString) x, e, y, false));
         return register;
     }
 }
