@@ -354,3 +354,59 @@ m|-
 m|
 
 |===
+
+==== `left_pad` Built-In (since 1.8.1)
+
+This built-in returns a string with the minimum length that was specified as the first parameter. If the original string is already this long or longer, the return value is equal to the original string.
+
+The string is padded on the left with whitespaces or a character from the optional padding parameter. If the padding parameter is longer than one character, then the padding is applied cyclically.
+
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Interpolation | Output
+
+m|${'apple'?left_pad(8)}
+m|␣␣␣apple
+
+m|${'orange'?left_pad(8)}
+m|␣␣orange
+
+m|${'pineapple'?left_pad(8)}
+m|pineapple
+
+m|${'apple'?left_pad(8, '●')}
+m|●●●apple
+
+m|${'apple'?left_pad(8, '●○')}
+m|●○●apple
+
+|===
+
+==== `right_pad` Built-In (since 1.8.1)
+
+This built-in returns a string with the minimum length that was specified as the first parameter. If the original string is already this long or longer, the return value is equal to the original string.
+
+The string is padded on the right with whitespaces or a character from the optional padding parameter. If the padding parameter is longer than one character, then the padding is applied cyclically.
+
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Interpolation | Output
+
+m|${'apple'?left_pad(8)}
+m|␣␣␣apple
+
+m|${'orange'?left_pad(8)}
+m|␣␣orange
+
+m|${'pineapple'?left_pad(8)}
+m|pineapple
+
+m|${'apple'?left_pad(8, '●')}
+m|●●●apple
+
+m|${'apple'?left_pad(8, '●○')}
+m|●○●apple
+
+|===

@@ -209,4 +209,51 @@ class StringInterpolationTest {
         Map<String, Object> model = Map.of();
         assertEquals("test: Wert 2", template.process(model));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${'apple'?left_pad(8)};test:    apple",
+            "test: ${'orange'?left_pad(8)};test:   orange",
+            "test: ${'pineapple'?left_pad(8)};test: pineapple",
+            "test: ${'apple'?left_pad(8, '')};test: apple",
+            "test: ${'apple'?left_pad(8, '●')};test: ●●●apple",
+            "test: ${'apple'?left_pad(8, '●○')};test: ●○●apple",
+            "test: ${'apple'?left_pad(9, '●○')};test: ●○●○apple",
+            "test: ${'apple'?left_pad(10, '●○')};test: ●○●○●apple",
+            "test: ${'apple'?left_pad(11, '●○')};test: ●○●○●○apple",
+            "test: ${'apple'?left_pad(11, '● ○')};test: ● ○● ○apple",
+            "test: ${'apple'?right_pad(8)};test: apple   ",
+            "test: ${'orange'?right_pad(8)};test: orange  ",
+            "test: ${'pineapple'?right_pad(8)};test: pineapple",
+            "test: ${'apple'?right_pad(8, '')};test: apple",
+            "test: ${'apple'?right_pad(8, '●')};test: apple●●●",
+            "test: ${'apple'?right_pad(8, '●○')};test: apple●○●",
+            "test: ${'apple'?right_pad(9, '●○')};test: apple●○●○",
+            "test: ${'apple'?right_pad(10, '●○')};test: apple●○●○●",
+            "test: ${'apple'?right_pad(11, '●○')};test: apple●○●○●○",
+            "test: ${'apple'?right_pad(11, '● ○')};test: apple● ○● ○",
+            "test: ${'pineapple'?left_pad(8, 8)};test: pineapple",
+            "test: ${'pineapple'?right_pad(8, 8)};test: pineapple",
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    void padding(String input, String expected, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${'apple'?left_pad}",
+            "test: ${'orange'?left_pad('8')}",
+            "test: ${'apple'?left_pad(8, 8)}",
+            "test: ${'pinapple'?left_pad(8, '●', true)}",
+            "test: ${'apple'?right_pad}",
+            "test: ${'orange'?right_pad('8')}",
+            "test: ${'apple'?right_pad(8, 8)}",
+            "test: ${'pinapple'?right_pad(8, '●', true)}",
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    void invalidPadding(String input,TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
 }
