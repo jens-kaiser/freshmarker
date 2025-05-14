@@ -24,6 +24,10 @@ public interface BuiltIn {
         return (x, y, e) -> x;
     }
 
+    static <T extends TemplateObject> BuiltIn value(T value) {
+        return (x, y, e) -> value;
+    }
+
     static BuiltIn string() {
         return (x, y, e) -> new TemplateString(x.toString());
     }

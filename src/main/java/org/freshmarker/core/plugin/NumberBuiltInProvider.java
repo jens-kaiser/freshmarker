@@ -7,6 +7,7 @@ import org.freshmarker.api.extension.support.SingleTypeBuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -108,6 +109,7 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         builtInRegister.add("h", (x, y, e) -> human(getNumber(x), e));
         builtInRegister.add("min", (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
         builtInRegister.add("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
+        builtInRegister.add( "is_number", BuiltIn.value(TemplateBoolean.TRUE));
         return builtInRegister;
     }
 }

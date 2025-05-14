@@ -5,6 +5,7 @@
 === Improvements
 
 - add string built-ins `left_pad` and `right_pad`
+- add type checking built_ins `is_null`, `is_string`, `is_boolean` and `is_number`
 
 === Bugfixes
 

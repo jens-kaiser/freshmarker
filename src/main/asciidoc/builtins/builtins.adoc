@@ -94,3 +94,5 @@ include::builtins-locale.adoc[]
 include::builtins-version.adoc[]
 
 include::builtins-random.adoc[]
+
+include::builtins-types.adoc[]

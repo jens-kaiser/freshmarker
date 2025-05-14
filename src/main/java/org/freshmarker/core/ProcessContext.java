@@ -10,6 +10,7 @@ import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.api.OutputFormat;
+import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.output.StandardOutputFormats;
 
 import java.io.Writer;
@@ -24,6 +25,8 @@ import java.util.Optional;
 
 public class ProcessContext {
     private static final Formatter SIMPLE = (object, locale) -> object.toString();
+
+    private static final List<String> TYPE_CHECK_BUILT_INS = List.of("is_null", "is_string", "is_boolean", "is_number");
 
     private Writer writer;
     protected Environment environment;
@@ -98,10 +101,13 @@ public class ProcessContext {
 
     public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
         BuiltIn result = builtIns.get(new BuiltInKey(type, name));
-        if (result == null) {
-            throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
+        if (result != null) {
+            return result;
         }
-        return result;
+        if (TYPE_CHECK_BUILT_INS.contains(name)) {
+            return (value, context, parameters) -> TemplateBoolean.FALSE;
+        }
+        throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
     }
 
     public OutputFormat getOutputFormat(String name) {

@@ -73,10 +73,12 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         register.add(TemplateNull.class, "empty_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "blank_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "trim_to_null", BuiltIn.identity());
+        register.add(TemplateNull.class, "is_null", BuiltIn.value(TemplateBoolean.TRUE));
         register.add(TemplateBoolean.class, "c", BuiltIn.string());
         register.add(TemplateBoolean.class, "then", SystemBuiltInProvider::thenBuildIn);
         register.add(TemplateBoolean.class, "string", SystemBuiltInProvider::stringBuiltIn);
         register.add(TemplateBoolean.class, "h", SystemBuiltInProvider::humanBuiltIn);
+        register.add(TemplateBoolean.class, "is_boolean", BuiltIn.value(TemplateBoolean.TRUE));
         register.add(TemplateEnum.class, "c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));
         register.add(TemplateEnum.class, "ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()));
         return register;
