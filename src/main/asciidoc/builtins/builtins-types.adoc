@@ -1,0 +1,75 @@
+=== Type checking Built-Ins (since 1.8.1)
+
+Normally, the type of a variable does not need to be checked because the data model has been modeled correctly.
+
+Nevertheless, it may occasionally be necessary to check the type of a variable so that it receives special treatment.
+
+==== `is_null` Built-In
+
+This built-in returns the `true` is the variable is `NULL` and `false otherwise.
+
+It only exists to complete the type checks, normally you use the existence operator.
+
+|===
+|Interpolation | Output | Type
+
+m|${null?is_null}
+m|yes
+m|boolean
+
+m|${42?is_null}
+m|no
+m|boolean
+
+|===
+
+==== `is_string` Built-In
+
+This built-in returns the `true` is the variable contains a string value and `false otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${'text'?is_string}
+m|yes
+m|boolean
+
+m|${42?is_string}
+m|no
+m|boolean
+
+|===
+
+==== `is_boolean` Built-In
+
+This built-in returns the `true` is the variable contains a boolean value and `false otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${false?is_boolean}
+m|yes
+m|boolean
+
+m|${42?is_boolean}
+m|no
+m|boolean
+
+|===
+
+==== `is_number` Built-In
+
+This built-in returns the `true` is the variable contains a number value and `false otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${42?is_number}
+m|yes
+m|boolean
+
+m|${true?is_number}
+m|no
+m|boolean
+
+|===

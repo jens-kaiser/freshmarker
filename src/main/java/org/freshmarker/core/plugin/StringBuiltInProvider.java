@@ -165,6 +165,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("trim_to_null", (x, y, e) -> trim2null((TemplateString) x));
         register.add("left_pad", (x, y, e) -> padding((TemplateString) x, e, y, true));
         register.add("right_pad", (x, y, e) -> padding((TemplateString) x, e, y, false));
+        register.add( "is_string", BuiltIn.value(TemplateBoolean.TRUE));
         return register;
     }
 }

@@ -12,9 +12,9 @@ public class BuiltInKeyBuilder<T extends TemplateObject> {
   }
 
   /**
-   * generates a {@link org.freshmarker.api.extension.BuiltInKey} instance with the specified name.
+   * generates a {@link BuiltInKey} instance with the specified name.
    * @param name the name of the Built-In
-   * @return the {@link org.freshmarker.api.extension.BuiltInKey} instance
+   * @return the {@link BuiltInKey} instance
    */
   public BuiltInKey of(String name) {
     return new BuiltInKey(type, name);
