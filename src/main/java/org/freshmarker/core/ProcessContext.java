@@ -105,7 +105,7 @@ public class ProcessContext {
             return result;
         }
         if (TYPE_CHECK_BUILT_INS.contains(name)) {
-            return (value, context, parameters) -> TemplateBoolean.FALSE;
+            return BuiltIn.value(TemplateBoolean.FALSE);
         }
         throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
     }
