@@ -26,7 +26,8 @@ import java.util.Optional;
 public class ProcessContext {
     private static final Formatter SIMPLE = (object, locale) -> object.toString();
 
-    private static final List<String> TYPE_CHECK_BUILT_INS = List.of("is_null", "is_string", "is_boolean", "is_number");
+    private static final List<String> TYPE_CHECK_BUILT_INS = List.of("is_null", "is_string", "is_boolean", "is_number", "is_hash", "is_sequence",
+            "is_enum", "is_range");
 
     private Writer writer;
     protected Environment environment;
