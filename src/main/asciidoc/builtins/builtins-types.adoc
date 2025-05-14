@@ -73,3 +73,71 @@ m|no
 m|boolean
 
 |===
+
+==== `is_sequence` Built-In
+
+This built-in returns the `true` is the variable contains a sequence value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${sequence?is_sequence}
+m|yes
+m|boolean
+
+m|${true?is_sequence}
+m|no
+m|boolean
+
+|===
+
+==== `is_hash` Built-In
+
+This built-in returns the `true` is the variable contains a hash value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${bean?is_hash}
+m|yes
+m|boolean
+
+m|${42?is_hash}
+m|no
+m|boolean
+
+|===
+
+==== `is_enum` Built-In
+
+This built-in returns the `true` is the variable contains an enum value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${enum?is_enum}
+m|yes
+m|boolean
+
+m|${'text'?is_enum}
+m|no
+m|boolean
+
+|===
+
+==== `is_range` Built-In
+
+This built-in returns the `true` is the variable contains a range value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${(1..3)?is_range}
+m|yes
+m|boolean
+
+m|${true?is_range}
+m|no
+m|boolean
+
+|===

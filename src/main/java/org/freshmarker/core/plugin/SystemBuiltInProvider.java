@@ -6,6 +6,7 @@ import org.freshmarker.api.extension.support.BuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.api.BuiltIn;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
@@ -81,6 +82,8 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         register.add(TemplateBoolean.class, "is_boolean", BuiltIn.value(TemplateBoolean.TRUE));
         register.add(TemplateEnum.class, "c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));
         register.add(TemplateEnum.class, "ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()));
+        register.add(TemplateEnum.class, "is_enum", BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateBean.class, "is_hash", BuiltIn.value(TemplateBoolean.TRUE));
         return register;
     }
 }
