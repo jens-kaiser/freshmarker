@@ -1,6 +1,6 @@
 = Release Notes
 
-== Release 1.8.1 (2025-05-XX)
+== Release 1.8.1 (2025-05-14)
 
 === Improvements
 
