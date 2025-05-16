@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
 class TypeCheckBuiltInTest {
-    private final Map<String, Object> model = Map.of(
+    private final Map<String, Object> typeExampleModel = Map.of(
             "string", "text", "boolean", true, "number", 42,
             "enum", StandardOpenOption.CREATE, "sequence", List.of(1, 2, 3), "hash", Map.of()
     );
@@ -43,7 +43,7 @@ class TypeCheckBuiltInTest {
     })
     void checkNotNull(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("is_null", input);
-        assertEquals("no", template.process(model));
+        assertEquals("no", template.process(typeExampleModel));
     }
 
     @ParameterizedTest
@@ -68,7 +68,7 @@ class TypeCheckBuiltInTest {
     })
     void checkNotString(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("is_string", input);
-        assertEquals("no", template.process(model));
+        assertEquals("no", template.process(typeExampleModel));
     }
 
     @ParameterizedTest
@@ -141,7 +141,7 @@ class TypeCheckBuiltInTest {
     })
     void checkNotEnum(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("is_number", input);
-        assertEquals("no", template.process(model));
+        assertEquals("no", template.process(typeExampleModel));
     }
 
 
@@ -163,7 +163,7 @@ class TypeCheckBuiltInTest {
     })
     void checkNotSequence(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("is_sequence", input);
-        assertEquals("no", template.process(model));
+        assertEquals("no", template.process(typeExampleModel));
     }
 
     @Test
@@ -184,7 +184,7 @@ class TypeCheckBuiltInTest {
     })
     void checkNotHash(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("is_hash", input);
-        assertEquals("no", template.process(model));
+        assertEquals("no", template.process(typeExampleModel));
     }
 
     @ParameterizedTest
@@ -210,6 +210,6 @@ class TypeCheckBuiltInTest {
     })
     void checkNotRange(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("is_hash", input);
-        assertEquals("no", template.process(model));
+        assertEquals("no", template.process(typeExampleModel));
     }
 }

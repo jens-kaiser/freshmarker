@@ -165,14 +165,16 @@ class SwitchDirectiveTest {
     @Test
     void switchWithNonPrimitiveValue(TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("test", "test: <#switch text><#case 'AAA'>AAA1</#switch>");
-        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(Map.of("text", List.of(1,2))));
+        Map<String, Object> dataModel = Map.of("text", List.of(1, 2));
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
         assertEquals("not a primitive type at test:1:16 'text'", exception.getMessage());
     }
 
     @Test
     void switchWithNonPrimitiveCase(TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("test", "test: <#switch text><#case [ 'AAA' ]>AAA1</#switch>");
-        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(Map.of("text", "AAA")));
+        Map<String, Object> dataModel = Map.of("text", "AAA");
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
         assertEquals("non primitive type: class org.freshmarker.core.model.TemplateListSequence at test:1:28 '[ 'AAA' ]'", exception.getMessage());
     }
 }

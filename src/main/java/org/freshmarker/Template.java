@@ -67,10 +67,10 @@ public final class Template {
     }
 
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
-        ProcessContext context = contextCreator.createContext(this.context, dataModel, writer, userDirectives);
-        context.setResourceBundle(resourceBundleName);
+        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, writer, userDirectives);
+        processContext.setResourceBundle(resourceBundleName);
         try {
-            brickFragment.process(context);
+            brickFragment.process(processContext);
         } catch (TemplateReturnException e) {
             log.debug("return exception: {}", e.getMessage());
         }
@@ -96,10 +96,10 @@ public final class Template {
 
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.total().set(rootFragment.getSize());
-        ProcessContext context = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives);
-        context.setEnvironment(new ReducingVariableEnvironment(context.getEnvironment()));
+        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives);
+        processContext.setEnvironment(new ReducingVariableEnvironment(processContext.getEnvironment()));
         try {
-            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(context, status)));
+            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());
             log.debug("reduced by: {}", status);
             return new Template(contextCreator, this.context, templateLoader, path, reducedFragment);
