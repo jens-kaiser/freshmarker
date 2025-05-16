@@ -8,5 +8,5 @@ public interface TemplateSequence extends TemplateObject {
 
   int size(ProcessContext context);
 
-  List<Object> getSequence(ProcessContext context);
+  List<Object> getSequence();
 }

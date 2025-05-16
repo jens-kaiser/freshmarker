@@ -15,7 +15,7 @@ public interface TemplateRange extends TemplateSequence {
         return false;
     }
 
-    TemplateRange slice(int min, ProcessContext context);
+    TemplateRange slice(int min);
 
-    TemplateRange slice(int min, int max, ProcessContext context);
+    TemplateRange slice(int min, int max);
 }

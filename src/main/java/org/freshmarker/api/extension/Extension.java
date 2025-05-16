@@ -7,7 +7,7 @@ import org.freshmarker.api.FeatureSet;
  */
 public interface Extension {
     /**
-     * This method can be used, to modify this {@link Extension} by a feature from the current feature set.
+     * This method can be used, to modify this by a feature from the current feature set.
      *
      * @param featureSet the current feature set
      */

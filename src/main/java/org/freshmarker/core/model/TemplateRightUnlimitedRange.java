@@ -54,17 +54,17 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     }
 
     @Override
-    public List<Object> getSequence(ProcessContext context) {
+    public List<Object> getSequence() {
         throw new ProcessException("right unlimited range not supported");
     }
 
     @Override
-    public TemplateRange slice(int min, ProcessContext context) {
+    public TemplateRange slice(int min) {
         return new TemplateRightUnlimitedRange(TemplateNumber.of(lowerNumber + min), lowerNumber + min);
     }
 
     @Override
-    public TemplateRange slice(int min, int max, ProcessContext context) {
+    public TemplateRange slice(int min, int max) {
         return new TemplateRightLimitedRange(new Bounds(lowerNumber + min, lowerNumber + max));
     }
 

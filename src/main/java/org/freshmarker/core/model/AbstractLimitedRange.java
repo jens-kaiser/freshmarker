@@ -63,7 +63,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     }
 
     @Override
-    public List<Object> getSequence(ProcessContext context) {
+    public List<Object> getSequence() {
         return new AbstractList<>() {
 
             @Override
@@ -81,7 +81,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     protected abstract TemplateRange newRange(Bounds bounds);
 
     @Override
-    public TemplateRange slice(int min, ProcessContext context) {
+    public TemplateRange slice(int min) {
         if (bounds.size() == 0) {
             throw new ProcessException("cannot slice empty range");
         }
@@ -89,7 +89,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     }
 
     @Override
-    public TemplateRange slice(int min, int max, ProcessContext context) {
+    public TemplateRange slice(int min, int max) {
         if (bounds.size() == 0) {
             throw new ProcessException("cannot slice empty range");
         }

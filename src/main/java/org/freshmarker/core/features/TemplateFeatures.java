@@ -12,7 +12,7 @@ public class TemplateFeatures implements FeatureSet {
 
     }
 
-    Map<TemplateFeature, Entry> masks = new HashMap<>();
+    final Map<TemplateFeature, Entry> masks = new HashMap<>();
 
     public void addFeatures(TemplateFeature... features) {
         for (TemplateFeature feature : features) {

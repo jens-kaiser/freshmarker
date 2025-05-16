@@ -27,7 +27,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     @Override
     public void process(ProcessContext context) {
         try {
-            List<Object> objectList = list.evaluate(context, TemplateSequence.class).getSequence(context);
+            List<Object> objectList = list.evaluate(context, TemplateSequence.class).getSequence();
             objectList = filterSequence(context, objectList);
 
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);

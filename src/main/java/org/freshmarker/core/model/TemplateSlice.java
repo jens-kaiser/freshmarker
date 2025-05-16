@@ -37,13 +37,13 @@ public class TemplateSlice implements TemplateObject {
         checkRanges(context, templateRange);
         int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
-            return templateRangeValue.slice(min, context);
+            return templateRangeValue.slice(min);
         }
         int max = getInt(templateRange.getUpper(context), context);
         if (templateRangeValue.isLengthLimited()) {
-            return templateRangeValue.slice(min, Math.min(templateRangeValue.size(context), max), context);
+            return templateRangeValue.slice(min, Math.min(templateRangeValue.size(context), max));
         }
-        return templateRangeValue.slice(min, max, context);
+        return templateRangeValue.slice(min, max);
     }
 
     private TemplateListSequence handleSequence(ProcessContext context, TemplateRange templateRange, TemplateListSequence templateListSequence) {

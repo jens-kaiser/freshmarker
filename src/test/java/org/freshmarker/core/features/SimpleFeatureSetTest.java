@@ -1,12 +1,13 @@
 package org.freshmarker.core.features;
 
+import org.freshmarker.api.TemplateFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleFeatureSetTest {
-    private enum DemoFeature implements TemplateFeature {
+    private enum DemoFeature implements org.freshmarker.api.TemplateFeature {
         FIRST,
         SECOND;
 
@@ -16,7 +17,7 @@ class SimpleFeatureSetTest {
         }
     }
 
-    private enum SecondDemoFeature implements TemplateFeature {
+    private enum SecondDemoFeature implements org.freshmarker.api.TemplateFeature {
         FIRST
     }
 

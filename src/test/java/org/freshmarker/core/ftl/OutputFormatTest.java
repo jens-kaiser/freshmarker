@@ -5,7 +5,7 @@ import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.core.directive.LoggingDirective;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.freshmarker.core.output.OutputFormat;
+import org.freshmarker.api.OutputFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
