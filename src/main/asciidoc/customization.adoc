@@ -176,6 +176,39 @@ Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withZoneId(ZoneId.of("Europe/Berlin"));
 ----
 
+==== With Date-Time Format
+
+TBD
+
+.Example builder with custom date-time format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withDateTimeFormat("short");
+----
+
+==== With Date Format
+
+TBD
+
+.Example builder with custom date format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withDateFormat("dd. MMMM yyyy");
+----
+
+==== With Time Format
+
+TBD
+
+.Example builder with custom time format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withTimeFormat("medium");
+----
+
 ==== With Output-Format
 
 TBD
