@@ -33,7 +33,7 @@ public final class SequenceBuildInProvider implements BuiltInProvider {
         return value.get(context, value.size(context) - 1);
     }
 
-    private static TemplateListSequence reverse(TemplateListSequence value, ProcessContext context) {
+    private static TemplateListSequence reverse(TemplateListSequence value) {
         return new TemplateListSequence(value.getSequence().reversed());
     }
 
@@ -50,7 +50,7 @@ public final class SequenceBuildInProvider implements BuiltInProvider {
         register.add(TemplateListSequence.class, SIZE, (x, y, e) -> TemplateNumber.of(((TemplateListSequence) x).size(e)));
         register.add(TemplateListSequence.class, "first", (x, y, e) -> first((TemplateListSequence) x, e));
         register.add(TemplateListSequence.class, "last", (x, y, e) -> last((TemplateListSequence) x, e));
-        register.add(TemplateListSequence.class, REVERSE, (x, y, e) -> reverse((TemplateListSequence) x, e));
+        register.add(TemplateListSequence.class, REVERSE, (x, y, e) -> reverse((TemplateListSequence) x));
         register.add(TemplateListSequence.class, JOIN, (x, y, e) -> join(y, e, ((TemplateListSequence) x).getSequence()));
         register.add(TemplateListSequence.class, "is_sequence", BuiltIn.value(TemplateBoolean.TRUE));
         register.add(TemplateRightLimitedRange.class, SIZE, (x, y, e) -> TemplateNumber.of(((AbstractLimitedRange) x).size(e)));
