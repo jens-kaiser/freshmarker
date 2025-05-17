@@ -109,7 +109,7 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         builtInRegister.add("h", (x, y, e) -> human(getNumber(x), e));
         builtInRegister.add("min", (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
         builtInRegister.add("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
-        builtInRegister.add( "is_number", BuiltIn.value(TemplateBoolean.TRUE));
+        builtInRegister.add( "is_number", BuiltInHelper.alwaysTrue());
         return builtInRegister;
     }
 }

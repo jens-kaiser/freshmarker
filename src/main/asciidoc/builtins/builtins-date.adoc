@@ -152,3 +152,23 @@ m|${temporal?day}
 m|1968-04-14
 |date
 |===
+
+==== `supports` Built-In (since 1.8.2)
+
+This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS` and `DAYS` are all supported.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?supports('YEARS'}
+m|true
+|boolean
+
+m|${temporal?supports('MONTHS'}
+m|true
+|boolean
+
+m|${temporal?supports('DAYS'}
+m|true
+|boolean
+|===

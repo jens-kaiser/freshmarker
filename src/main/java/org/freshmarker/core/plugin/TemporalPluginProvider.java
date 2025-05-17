@@ -18,6 +18,7 @@ import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateEnum;
 import org.freshmarker.core.model.primitive.TemplateNumber;
+import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.model.temporal.TemplateDuration;
 import org.freshmarker.core.model.temporal.TemplateInstant;
@@ -43,7 +44,9 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +61,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private static final String C = "c";
     private static final String DAY = "day";
     private static final String EASTER = "easter";
+    private static final EnumSet<ChronoUnit> SUPPORTED_TEMPORAL_UNITS = EnumSet.of(ChronoUnit.DAYS, ChronoUnit.MONTHS, ChronoUnit.YEARS);
 
     private TemplateZonedDateTime to(ZonedDateTime dateTime) {
         return new TemplateZonedDateTime(dateTime);
@@ -159,6 +163,16 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         return new TemplateLocalDate(EasterCache.gauss(year));
     }
 
+    private TemplateBoolean supports(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        Temporal temporal = (Temporal) ((TemplatePrimitive<?>)value).getValue();
+        BuiltInHelper.checkParametersLength(parameters, 1);
+        ChronoUnit unit = ChronoUnit.valueOf(parameters.getFirst().evaluate(context, TemplateString.class).getValue());
+        if (!SUPPORTED_TEMPORAL_UNITS.contains(unit))  {
+            throw new ProcessException("unsupported temporal unit");
+        }
+        return TemplateBoolean.from(temporal.isSupported(unit));
+    }
+
     @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         BuiltInRegister register = new BuiltInRegister();
@@ -224,6 +238,12 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateMonthDay.class, C, BuiltIn.string());
         register.add(TemplateMonthDay.class, MONTH, (x, y, e) -> new TemplateEnum<>(((TemplateMonthDay) x).getValue().getMonth()));
         register.add(TemplateMonthDay.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateMonthDay) x).getValue().getDayOfMonth()));
+
+        for (Class<? extends TemplateObject> type : List.of(TemplateInstant.class, TemplateZonedDateTime.class, TemplateLocalDateTime.class,
+                TemplateLocalDate.class, TemplateLocalTime.class, TemplateYear.class, TemplateYearMonth.class, TemplateMonthDay.class)) {
+            register.add(type, "is_temporal", BuiltInHelper.alwaysTrue());
+            register.add(type, "supports", this::supports);
+        }
         return register;
     }
 

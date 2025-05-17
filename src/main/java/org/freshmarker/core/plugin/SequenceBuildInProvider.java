@@ -53,21 +53,21 @@ public final class SequenceBuildInProvider implements BuiltInProvider {
         register.add(TemplateListSequence.class, "last", (x, y, e) -> last((TemplateListSequence) x, e));
         register.add(TemplateListSequence.class, REVERSE, (x, y, e) -> reverse((TemplateListSequence) x));
         register.add(TemplateListSequence.class, JOIN, (x, y, e) -> join(y, e, ((TemplateListSequence) x).getSequence()));
-        register.add(TemplateListSequence.class, "is_sequence", BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateListSequence.class, "is_sequence", BuiltInHelper.alwaysTrue());
         register.add(TemplateRightLimitedRange.class, SIZE, (x, y, e) -> TemplateNumber.of(((AbstractLimitedRange) x).size(e)));
         register.add(TemplateRightLimitedRange.class, LOWER, (x, y, e) -> ((AbstractLimitedRange) x).getLower());
         register.add(TemplateRightLimitedRange.class, "upper", (x, y, e) -> ((AbstractLimitedRange) x).getUpper(e));
         register.add(TemplateRightLimitedRange.class, REVERSE, (x, y, e) -> ((TemplateRightLimitedRange) x).reverse());
         register.add(TemplateRightLimitedRange.class, JOIN, (x, y, e) -> join(y, e, ((AbstractLimitedRange) x).getSequence()));
-        register.add(TemplateRightLimitedRange.class, IS_RANGE, BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateRightLimitedRange.class, IS_RANGE, BuiltInHelper.alwaysTrue());
         register.add(TemplateLengthLimitedRange.class, SIZE, (x, y, e) -> TemplateNumber.of(((TemplateLengthLimitedRange) x).size(e)));
         register.add(TemplateLengthLimitedRange.class, LOWER, (x, y, e) -> ((TemplateLengthLimitedRange) x).getLower());
         register.add(TemplateLengthLimitedRange.class, "upper", (x, y, e) -> ((TemplateLengthLimitedRange) x).getUpper(e));
         register.add(TemplateLengthLimitedRange.class, REVERSE, (x, y, e) -> ((TemplateLengthLimitedRange) x).reverse());
         register.add(TemplateLengthLimitedRange.class, JOIN, (x, y, e) -> join(y, e, ((TemplateLengthLimitedRange) x).getSequence()));
-        register.add(TemplateLengthLimitedRange.class, IS_RANGE, BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateLengthLimitedRange.class, IS_RANGE, BuiltInHelper.alwaysTrue());
         register.add(TemplateRightUnlimitedRange.class, LOWER, (x, y, e) -> ((TemplateRightUnlimitedRange) x).getLower());
-        register.add(TemplateRightUnlimitedRange.class, IS_RANGE, BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateRightUnlimitedRange.class, IS_RANGE, BuiltInHelper.alwaysTrue());
         return register;
     }
 }

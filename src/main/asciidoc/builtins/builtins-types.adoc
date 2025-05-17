@@ -141,3 +141,25 @@ m|no
 m|boolean
 
 |===
+
+==== `is_temporal` Built-In (since 1.8.2)
+
+This built-in returns the `true` is the variable contains a temporal value and `false` otherwise.
+
+A temporal value is one of the types
+`java.util.Date`, `java.sql.Time`, `java.sql.Date`,
+`java.time.Instant`,
+`java.time.ZonedDateTime`,
+`java.time.LocalDateTime`, `java.time.LocalDate`, `java.time.LocalTime`,
+`java.time.Year`,`java.time.YearMonth` and `java.time.MonthDay`.
+
+|===
+|Interpolation | Output | Type
+
+m|${.now?is_temporal}
+m|yes
+m|boolean
+
+m|${42?is_temporal}
+m|no
+m|boolean
