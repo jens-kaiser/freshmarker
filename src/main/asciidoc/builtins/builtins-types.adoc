@@ -4,6 +4,8 @@ Normally, the type of a variable does not need to be checked because the data mo
 
 Nevertheless, it may occasionally be necessary to check the type of a variable so that it receives special treatment.
 
+IMPORTANT: This built-ins available on all _FreshMarker_ types (this includes your custom types too).
+
 ==== `is_null` Built-In
 
 This built-in returns the `true` is the variable is `NULL` and `false` otherwise.
