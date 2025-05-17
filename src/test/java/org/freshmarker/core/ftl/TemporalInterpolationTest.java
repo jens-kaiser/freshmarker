@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,6 +20,7 @@ import java.time.Month;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
@@ -271,7 +274,7 @@ class TemporalInterpolationTest {
             "test: ${temporal?c},test: 1968-08-24T11:30:45Z",
             "test: ${temporal?string('dd. MMMM yyyy hh:mm')},test: 24. August 1968 11:30",
             "test: ${temporal?date},test: 1968-08-24",
-            "test: ${temporal?easter},test: 1968-04-14"
+            "test: ${temporal?easter},test: 1968-04-14",
     })
     void interpolationInstant(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
@@ -323,7 +326,7 @@ class TemporalInterpolationTest {
     void interpolationInvalidAtZone(TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${temporal?at_zone('Europe/Berlin','Europe/London')}");
         Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneId.of("UTC")));
-        ProcessException exception = assertThrows(ProcessException.class, () ->template.process(model));
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(model));
         assertEquals("invalid parameter count:2 at test:1:7 '${temporal?at_zone('Europe/Berlin','Europe/London')}'", exception.getMessage());
     }
 
@@ -380,7 +383,7 @@ class TemporalInterpolationTest {
             "test: ${temporal + 1},test: 1968-08-25",
             "test: ${temporal - 1},test: 1968-08-23"
     })
-    void dateOperationInteger(String input, String expected,TemplateBuilder templateBuilder) throws ParseException {
+    void dateOperationInteger(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate());
         assertEquals(expected, template.process(model));
@@ -394,12 +397,12 @@ class TemporalInterpolationTest {
     })
     void periodOperationPeriod(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
-        Map<String, Object> model = Map.of( "period1", Period.of(0, 0, 1), "period2", Period.of(0, 0, 2));
+        Map<String, Object> model = Map.of("period1", Period.of(0, 0, 1), "period2", Period.of(0, 0, 2));
         assertEquals(expected, template.process(model));
     }
-    
+
     @ParameterizedTest
-    @CsvSource({
+    @ValueSource(strings = {
             "test: ${temporal * period}",
             "test: ${temporal + 1.0}",
             "test: ${temporal + 1.0?float}",
@@ -409,6 +412,44 @@ class TemporalInterpolationTest {
     void invalidOperation(String input, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of("temporal", LOCAL_DATE_TIME.toLocalDate(), "period", Period.of(0, 0, 3));
-        assertThrows(ProcessException.class, () ->  template.process(model));
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${zoneddatetime?supports('YEARS')}",
+            "test: ${zoneddatetime?supports('MONTHS')}",
+            "test: ${zoneddatetime?supports('DAYS')}",
+            "test: ${instant?supports('DAYS')}",
+            "test: ${localdatetime?supports('YEARS')}",
+            "test: ${localdatetime?supports('MONTHS')}",
+            "test: ${localdatetime?supports('DAYS')}",
+            "test: ${localdate?supports('YEARS')}",
+            "test: ${localdate?supports('MONTHS')}",
+            "test: ${localdate?supports('DAYS')}",
+    })
+    void supports(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of(
+                "localdatetime", LocalDateTime.now(),
+                "localdate", LocalDate.now(),
+                "zoneddatetime", ZonedDateTime.now(),
+                "instant", Instant.now()
+                );
+        assertEquals("test: yes", template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${localtime?supports('YEARS')}",
+            "test: ${localtime?supports('MONTHS')}",
+            "test: ${localtime?supports('DAYS')}",
+            "test: ${instant?supports('YEARS')}",
+            "test: ${instant?supports('MONTHS')}",
+    })
+    void supportsNot(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of("localtime", LocalTime.now(), "instant", Instant.now());
+        assertEquals("test: no", template.process(model));
     }
 }

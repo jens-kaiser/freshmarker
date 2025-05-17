@@ -40,3 +40,25 @@ m|${temporal?string('hh:mm')}
 m|24. August 1968
 |string
 |===
+
+==== `supports` Built-In (since 1.8.2)
+
+This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS` and `DAYS` are not supported. The built-in returns always false for time values.
+
+NOTE: This built-in exists for time values so that all temporal types can be checked for temporal units.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?supports('YEARS'}
+m|false
+|boolean
+
+m|${temporal?supports('MONTHS'}
+m|false
+|boolean
+
+m|${temporal?supports('DAYS'}
+m|false
+|boolean
+|===

@@ -74,16 +74,16 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         register.add(TemplateNull.class, "empty_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "blank_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "trim_to_null", BuiltIn.identity());
-        register.add(TemplateNull.class, "is_null", BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateNull.class, "is_null", BuiltInHelper.alwaysTrue());
         register.add(TemplateBoolean.class, "c", BuiltIn.string());
         register.add(TemplateBoolean.class, "then", SystemBuiltInProvider::thenBuildIn);
         register.add(TemplateBoolean.class, "string", SystemBuiltInProvider::stringBuiltIn);
         register.add(TemplateBoolean.class, "h", (x, y, e) ->  SystemBuiltInProvider.humanBuiltIn(x, e));
-        register.add(TemplateBoolean.class, "is_boolean", BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateBoolean.class, "is_boolean", BuiltInHelper.alwaysTrue());
         register.add(TemplateEnum.class, "c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));
         register.add(TemplateEnum.class, "ordinal", (x, y, e) -> TemplateNumber.of(((TemplateEnum<?>) x).getValue().ordinal()));
-        register.add(TemplateEnum.class, "is_enum", BuiltIn.value(TemplateBoolean.TRUE));
-        register.add(TemplateBean.class, "is_hash", BuiltIn.value(TemplateBoolean.TRUE));
+        register.add(TemplateEnum.class, "is_enum", BuiltInHelper.alwaysTrue());
+        register.add(TemplateBean.class, "is_hash", BuiltInHelper.alwaysTrue());
         return register;
     }
 }

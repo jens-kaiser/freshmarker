@@ -7,8 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +25,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
 class TypeCheckBuiltInTest {
-    private final Map<String, Object> typeExampleModel = Map.of(
-            "string", "text", "boolean", true, "number", 42,
-            "enum", StandardOpenOption.CREATE, "sequence", List.of(1, 2, 3), "hash", Map.of()
+    private final Map<String, Object> typeExampleModel = Map.ofEntries(
+            Map.entry("string", "text"),
+            Map.entry("boolean", true),
+            Map.entry("number", 42),
+            Map.entry("enum", StandardOpenOption.CREATE),
+            Map.entry("sequence", List.of(1, 2, 3)),
+            Map.entry("hash", Map.of()),
+            Map.entry("instant", Instant.now()),
+            Map.entry("zoned", ZonedDateTime.now()),
+            Map.entry("datetime", LocalDateTime.now()),
+            Map.entry("date", LocalDate.now()),
+            Map.entry("time", LocalTime.now()),
+            Map.entry("year", Year.now()),
+            Map.entry("yearmonth", YearMonth.now()),
+            Map.entry("monthday", MonthDay.now())
     );
 
     @ParameterizedTest
@@ -32,17 +53,11 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_null}",
-            "${boolean?is_null}",
-            "${number?is_null}",
-            "${enum?is_null}",
-            "${sequence?is_null}",
-            "${hash?is_null}",
-            "${(1..10)?is_null}"
+    @ValueSource(strings = { "string", "boolean", "number", "enum", "sequence", "hash", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotNull(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_null", input);
+        Template template = templateBuilder.getTemplate("is_null", "${" + input + "?is_null}");
         assertEquals("no", template.process(typeExampleModel));
     }
 
@@ -57,17 +72,11 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${null?is_string}",
-            "${boolean?is_string}",
-            "${number?is_string}",
-            "${enum?is_string}",
-            "${sequence?is_string}",
-            "${hash?is_string}",
-            "${(1..10)?is_string}"
+    @ValueSource(strings = { "null", "boolean", "number", "enum", "sequence", "hash", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotString(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_string", input);
+        Template template = templateBuilder.getTemplate("is_string", "${" + input + "?is_string}");
         assertEquals("no", template.process(typeExampleModel));
     }
 
@@ -82,19 +91,12 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_boolean}",
-            "${null?is_boolean}",
-            "${number?is_boolean}",
-            "${enum?is_boolean}",
-            "${sequence?is_boolean}",
-            "${hash?is_boolean}",
-            "${(1..10)?is_boolean}"
+    @ValueSource(strings = { "string", "null", "number", "enum", "sequence", "hash", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotBoolean(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_boolean", input);
-        Map<String, Object> model = Map.of( "string", "test", "number", 42);
-        assertEquals("no", template.process(model));
+        Template template = templateBuilder.getTemplate("is_boolean", "${" + input + "?is_boolean}");
+        assertEquals("no", template.process(typeExampleModel));
     }
 
     @ParameterizedTest
@@ -108,17 +110,11 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_number}",
-            "${null?is_number}",
-            "${boolean?is_number}",
-            "${enum?is_number}",
-            "${sequence?is_number}",
-            "${hash?is_number}",
-            "${(1..10)?is_number}"
+    @ValueSource(strings = { "string", "null", "boolean", "enum", "sequence", "hash", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotNumber(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_number", input);
+        Template template = templateBuilder.getTemplate("is_number", "${" + input + "?is_number}");
         Map<String, Object> model = Map.of( "string", "test", "boolean", true);
         assertEquals("no", template.process(model));
     }
@@ -130,17 +126,11 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_enum}",
-            "${null?is_enum}",
-            "${boolean?is_enum}",
-            "${number?is_enum}",
-            "${sequence?is_enum}",
-            "${hash?is_enum}",
-            "${(1..10)?is_enum}"
+    @ValueSource(strings = { "null", "string", "boolean", "number", "sequence", "hash", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotEnum(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_number", input);
+        Template template = templateBuilder.getTemplate("is_enum", "${" + input + "?is_enum}");
         assertEquals("no", template.process(typeExampleModel));
     }
 
@@ -152,17 +142,11 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_sequence}",
-            "${null?is_sequence}",
-            "${boolean?is_sequence}",
-            "${number?is_sequence}",
-            "${enum?is_sequence}",
-            "${hash?is_sequence}",
-            "${(1..10)?is_sequence}"
+    @ValueSource(strings = { "null", "string", "boolean", "number", "enum", "hash", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotSequence(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_sequence", input);
+        Template template = templateBuilder.getTemplate("is_sequence", "${" + input + "?is_sequence}");
         assertEquals("no", template.process(typeExampleModel));
     }
 
@@ -173,17 +157,11 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_hash}",
-            "${null?is_hash}",
-            "${boolean?is_hash}",
-            "${number?is_hash}",
-            "${enum?is_hash}",
-            "${sequence?is_hash}",
-            "${(1..10)?is_hash}"
+    @ValueSource(strings = { "null", "string", "boolean", "number", "enum", "sequence", "(1..10)",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotHash(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_hash", input);
+        Template template = templateBuilder.getTemplate("is_hash", "${" + input + "?is_hash}");
         assertEquals("no", template.process(typeExampleModel));
     }
 
@@ -199,17 +177,25 @@ class TypeCheckBuiltInTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "${string?is_range}",
-            "${null?is_range}",
-            "${boolean?is_range}",
-            "${number?is_range}",
-            "${enum?is_range}",
-            "${sequence?is_range}",
-            "${hash?is_range}"
+    @ValueSource(strings = { "null", "string", "boolean", "number", "enum", "sequence", "hash",
+            "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday",
     })
     void checkNotRange(String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("is_hash", input);
+        Template template = templateBuilder.getTemplate("is_range", "${" + input + "?is_range}");
+        assertEquals("no", template.process(typeExampleModel));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "instant", "zoned", "datetime", "date", "time", "year", "yearmonth", "monthday" })
+    void checkTemporal(String input, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("is_temporal", "${" + input + "?is_temporal}");
+        assertEquals("yes", template.process(typeExampleModel));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "null", "string", "boolean", "number", "enum", "sequence", "hash", "(1..10)" })
+    void checkNotTemporal(String input, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("is_temporal", "${" + input + "?is_temporal}");
         assertEquals("no", template.process(typeExampleModel));
     }
 }
