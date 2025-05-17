@@ -113,6 +113,23 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return new TemplateStringMarkup(((TemplateString)value), context.getOutputFormat(templateString.getValue()));
     }
 
+    private static TemplateString padding(TemplateString value, ProcessContext context, List<TemplateObject> parameters) {
+        BuiltInHelper.checkParametersLength(parameters, 1, 2);
+        String text = value.getValue();
+        int size = parameters.getFirst().evaluate(context, TemplateNumber.class).asInt();
+        if (text.length() >= size) {
+            return value;
+        }
+        String paddingPattern = parameters.size() < 2 ? " " : parameters.get(1).evaluate(context, TemplateString.class).getValue();
+        if (paddingPattern.isEmpty()) {
+            return value;
+        }
+        String padding = padding(paddingPattern, size);
+        int paddingSize = size - text.length();
+        int paddingLeftSize = paddingSize / 2 + paddingSize % 2;
+        return new TemplateString(padding.substring(0, paddingLeftSize) + text + padding.substring(paddingLeftSize + text.length()));
+    }
+
     private static TemplateString padding(TemplateString value, ProcessContext context, List<TemplateObject> parameters, boolean left) {
         BuiltInHelper.checkParametersLength(parameters, 1, 2);
         String text = value.getValue();
@@ -121,6 +138,9 @@ public final class StringBuiltInProvider implements BuiltInProvider {
             return value;
         }
         String paddingPattern = parameters.size() < 2 ? " " : parameters.get(1).evaluate(context, TemplateString.class).getValue();
+        if (paddingPattern.isEmpty()) {
+            return value;
+        }
         String padding = padding(paddingPattern, size - text.length());
         return new TemplateString(left ? padding + text : text + padding);
     }
@@ -165,6 +185,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("trim_to_null", (x, y, e) -> trim2null((TemplateString) x));
         register.add("left_pad", (x, y, e) -> padding((TemplateString) x, e, y, true));
         register.add("right_pad", (x, y, e) -> padding((TemplateString) x, e, y, false));
+        register.add("center_pad", (x, y, e) -> padding((TemplateString) x, e, y));
         register.add( "is_string", BuiltIn.value(TemplateBoolean.TRUE));
         return register;
     }
