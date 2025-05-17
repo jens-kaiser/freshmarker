@@ -222,6 +222,7 @@ class StringInterpolationTest {
             "test: ${'apple'?left_pad(10, '●○')};test: ●○●○●apple",
             "test: ${'apple'?left_pad(11, '●○')};test: ●○●○●○apple",
             "test: ${'apple'?left_pad(11, '● ○')};test: ● ○● ○apple",
+
             "test: ${'apple'?right_pad(8)};test: apple   ",
             "test: ${'orange'?right_pad(8)};test: orange  ",
             "test: ${'pineapple'?right_pad(8)};test: pineapple",
@@ -232,8 +233,17 @@ class StringInterpolationTest {
             "test: ${'apple'?right_pad(10, '●○')};test: apple●○●○●",
             "test: ${'apple'?right_pad(11, '●○')};test: apple●○●○●○",
             "test: ${'apple'?right_pad(11, '● ○')};test: apple● ○● ○",
-            "test: ${'pineapple'?left_pad(8, 8)};test: pineapple",
-            "test: ${'pineapple'?right_pad(8, 8)};test: pineapple",
+
+            "test: ${'apple'?center_pad(8)};test:   apple ",
+            "test: ${'orange'?center_pad(8)};test:  orange ",
+            "test: ${'pineapple'?center_pad(8)};test: pineapple",
+            "test: ${'apple'?center_pad(8, '')};test: apple",
+            "test: ${'apple'?center_pad(8, '●')};test: ●●apple●",
+            "test: ${'apple'?center_pad(8, '●○')};test: ●○apple○",
+            "test: ${'apple'?center_pad(9, '●○')};test: ●○apple○●",
+            "test: ${'apple'?center_pad(10, '123')};test: 123apple31",
+            "test: ${'apple'?center_pad(11, '123')};test: 123apple312",
+            "test: ${'orange'?center_pad(11, '123')};test: 123orange12",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void padding(String input, String expected, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("test", input);

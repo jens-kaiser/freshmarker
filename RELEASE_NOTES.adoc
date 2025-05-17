@@ -1,5 +1,11 @@
 = Release Notes
 
+== Release 1.8.2 (2025-05-XX planned)
+
+=== Improvements
+
+- add string built-ins `center_pad`
+
 == Release 1.8.1 (2025-05-14)
 
 === Improvements
