@@ -27,6 +27,7 @@ import ftl.ast.VarInstruction;
 import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.api.FeatureSet;
+import org.freshmarker.core.VariableScopeFeature;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.environment.NameSpaced;
@@ -39,9 +40,10 @@ import org.freshmarker.core.fragment.NestedInstructionFragment;
 import org.freshmarker.core.fragment.OutputFormatFragment;
 import org.freshmarker.core.fragment.ReturnInstructionFragment;
 import org.freshmarker.core.fragment.SequenceListFragment;
+import org.freshmarker.core.fragment.SetVariableFragment;
 import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
-import org.freshmarker.core.fragment.VariableFragment;
+import org.freshmarker.core.fragment.VarVariableFragment;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
@@ -178,7 +180,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             limit = ftl.get(index + 1).accept(interpolationBuilder, null);
             index += 2;
         }
-        Fragment block = Fragments.optimize(ftl.get(index + 1).accept(this, new ArrayList<>()));
+        Fragment block = Fragments.optimizeWithVariableContext(ftl.get(index + 1).accept(this, new ArrayList<>()));
         if (valueIdentifier != null) {
             input.add(new HashListFragment(list, identifier, valueIdentifier, looperIdentifier, block, ftl, comparator, filter, offset, limit));
         } else {
@@ -197,7 +199,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(OutputFormatBlock ftl, List<Fragment> input) {
-        Fragment block = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()));
+        Fragment block = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), featureSet.isEnabled(VariableScopeFeature.ALL_BLOCKS));
         String image = ftl.get(3).toString();
         input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
         return input;
@@ -223,7 +225,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
                 .skip(1).findFirst().orElse(null);
         Fragment body = null;
         if (node != null) {
-            body = Fragments.optimize(node.accept(this, new ArrayList<>()));
+            body = Fragments.optimize(node.accept(this, new ArrayList<>()), featureSet.isEnabled(VariableScopeFeature.ALL_BLOCKS));
         }
         logger.debug("user directive: {} {}", node, body);
         input.add(new UserDirectiveFragment(name, currentNameSpace, namedArgs, Objects.requireNonNullElse(body, ConstantFragment.EMPTY)));
@@ -248,7 +250,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
             return ConstantFragment.EMPTY;
         }
-        return Fragments.optimize(ftl.get(ftl.size() - 2).accept(this, new ArrayList<>()));
+        return Fragments.optimizeWithVariableContext(ftl.get(ftl.size() - 2).accept(this, new ArrayList<>()));
     }
 
     private List<ParameterHolder> getParameterHolders(MacroDefinition ftl) {
@@ -289,7 +291,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             if (ftl.get(i + 1).getType() == TokenType.COMMA) {
                 i++;
             }
-            input.add(new VariableFragment(name, expression, true, ftl));
+            input.add(new SetVariableFragment(name, expression, ftl));
         }
         return input;
     }
@@ -313,7 +315,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             if (ftl.get(i + 1).getType() == TokenType.COMMA) {
                 i++;
             }
-            input.add(new VariableFragment(name, expression, false, ftl));
+            input.add(new VarVariableFragment(name, expression, ftl));
         }
         return input;
     }
@@ -374,7 +376,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
             List<Fragment> fragments = root.accept(new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1), new ArrayList<>());
-            fragments.forEach(template.getRootFragment()::addFragment);
+            Fragments.withVariableContext(fragments).forEach(template.getRootFragment()::addFragment);
             return input;
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
@@ -404,7 +406,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(BrickInstruction ftl, List<Fragment> input) {
         String name = ftl.get(3).toString();
-        Fragment optimize = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()));
+        Fragment optimize = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), featureSet.isEnabled(VariableScopeFeature.ALL_BLOCKS));
         template.addBrick(name.substring(1, name.length() - 1), optimize);
         input.add(optimize);
         return input;

@@ -77,7 +77,7 @@ _User directives_ can be defined via _Macro directives_ or by implementing the `
 include::../java/org/freshmarker/api/UserDirective.java[lines="9.."]
 ----
 
-It can be registered to the `Configuration` by the `registerUserDirective` method or by the _Extension API_.
+It can be registered to the `Configuration` by the `registerUserDirective` method or by the <<extension_api>>.
 
 .Example _User Directive_ `doubles`
 [source,java]
@@ -99,7 +99,7 @@ include::../java/org/freshmarker/api/TemplateFunction.java[lines="7..-1"]
 ----
 
 A _Function_ is a Java class implementing the functional interface `TemplateFunction`.
-It can be registered to the `Configuration` by the `registerFunction` method or by the _Extension API_.
+It can be registered to the `Configuration` by the `registerFunction` method or by the <<extension_api>>.
 
 .Example Custom Function `abs` and `avg`
 [source,java]

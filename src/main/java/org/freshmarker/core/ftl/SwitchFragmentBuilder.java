@@ -80,7 +80,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         checkMissingBlock(blockIndex, ftl);
         Node block = ftl.get(blockIndex);
         List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
-        Fragment caseBlock = Fragments.optimize(fragments);
+        Fragment caseBlock = Fragments.optimizeWithVariableContext(fragments);
         logger.debug("{}: {} {}", ftl.get(1), block, caseBlock);
         boolean onlyConstantsAllowed = featureSet.isEnabled(ftl.get(1).getType() == TokenType.ON ? ALLOW_ONLY_CONSTANT_ONS : ALLOW_ONLY_CONSTANT_CASES);
         for (int i = 3; i < blockIndex - 1; i +=2) {
@@ -99,7 +99,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         checkMissingBlock(3, ftl);
         Node block = ftl.get(3);
         List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
-        input.addDefaultFragment(Fragments.optimize(fragments));
+        input.addDefaultFragment(Fragments.optimizeWithVariableContext(fragments));
         return input;
     }
 

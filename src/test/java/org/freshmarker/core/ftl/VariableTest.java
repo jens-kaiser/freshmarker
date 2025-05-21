@@ -4,6 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.VariableScopeFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,6 +88,36 @@ class VariableTest {
                 ${v}
                 """);
         assertEquals("test\n1\n2\n3\ntest\n", template.process(Map.of("sequence", List.of(1, 2, 3))));
+    }
+
+    @Test
+    void nestedWithBrickDirectiveDisabledVariableContext(TemplateBuilder builder) {
+        Template template = builder.getTemplate("test", """
+                <#var v="eins">
+                ${v}
+                <#brick 'signature'>
+                  <#var v="zwei">
+                ${v}
+                </#brick>
+                ${v}
+                """);
+        Map<String, Object> dataModel = Map.of();
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
+        assertEquals("variable v must not exist at test:4:3 '<#var v=\"zwei\">'", exception.getMessage());
+    }
+
+    @Test
+    void nestedWithBrickDirectiveEnabledVariableContext(TemplateBuilder builder) {
+        Template template = builder.with(VariableScopeFeature.ALL_BLOCKS).getTemplate("test", """
+                <#var v="eins">
+                ${v}
+                <#brick 'signature'>
+                  <#var v="zwei">
+                ${v}
+                </#brick>
+                ${v}
+                """);
+        assertEquals("eins\nzwei\neins\n", template.process(Map.of()));
     }
 
     @Test

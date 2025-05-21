@@ -8,7 +8,6 @@ import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.environment.ReducingLoopVariableEnvironment;
-import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
 import org.freshmarker.core.model.TemplateSequenceLooper;
@@ -46,7 +45,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     public Fragment reduce(ReduceContext context) {
         Environment environment = context.getEnvironment();
         try {
-            context.setEnvironment(new ReducingVariableEnvironment(new ReducingLoopVariableEnvironment(environment, identifier, looperIdentifier)));
+            context.setEnvironment(new ReducingLoopVariableEnvironment(environment, identifier, looperIdentifier));
             Fragment reduce = block.reduce(context);
             return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl, filter, offset, limit));
         } finally {

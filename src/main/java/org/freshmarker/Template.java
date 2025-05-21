@@ -1,5 +1,6 @@
 package org.freshmarker;
 
+import org.freshmarker.api.FeatureSet;
 import org.freshmarker.api.TemplateLoader;
 import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.ProcessContext;
@@ -33,18 +34,20 @@ public final class Template {
     private final TemplateLoader templateLoader;
     private final Path path;
     private final Map<String, Fragment> bricks = new HashMap<>();
+    private final FeatureSet featureSet;
     private String resourceBundleName;
 
-    Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path) {
-        this(contextCreator, context, templateLoader, path, new BlockFragment(new ArrayList<>()));
+    Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, FeatureSet featureSet) {
+        this(contextCreator, context, templateLoader, path, new BlockFragment(new ArrayList<>()), featureSet);
     }
 
-    private Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, BlockFragment rootFragment) {
+    private Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, BlockFragment rootFragment, FeatureSet featureSet) {
         this.contextCreator = contextCreator;
         this.context = context;
         this.templateLoader = templateLoader;
         this.path = path;
         this.rootFragment = rootFragment;
+        this.featureSet = featureSet;
     }
 
     public void addBrick(String key, Fragment fragment) {
@@ -99,10 +102,10 @@ public final class Template {
         ProcessContext processContext = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives);
         processContext.setEnvironment(new ReducingVariableEnvironment(processContext.getEnvironment()));
         try {
-            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status)));
+            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status, featureSet)));
             status.deleted().set(rootFragment.getSize() - reducedFragment.getSize());
             log.debug("reduced by: {}", status);
-            return new Template(contextCreator, this.context, templateLoader, path, reducedFragment);
+            return new Template(contextCreator, this.context, templateLoader, path, reducedFragment, featureSet);
         } catch (RuntimeException e) {
             throw new ReduceException("cannot reduce: " + e.getMessage(), e);
         }

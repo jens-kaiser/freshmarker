@@ -6,7 +6,7 @@
 
     <groupId>de.schegge</groupId>
     <artifactId>freshmarker</artifactId>
-    <version>1.8.2-SNAPSHOT</version>
+    <version>1.9.0-SNAPSHOT</version>
     <url>https://gitlab.com/schegge/freshmarker.git</url>
     <name>FreshMarker</name>
     <description>A simple, small but powerful template engine based loosely on the FreeMarker syntax. FreshMarker is
@@ -57,7 +57,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <jacoco.version>0.8.11</jacoco.version>
-        <mockito.version>5.11.0</mockito.version>
+        <mockito.version>5.14.2</mockito.version>
         <sonar.organization>schegge</sonar.organization>
         <asciidoctor-maven-plugin.version>3.1.0</asciidoctor-maven-plugin.version>
         <asciidoctor-extensions-spring-boot>0.6.3</asciidoctor-extensions-spring-boot>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.15</version>
+            <version>2.0.16</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -123,7 +123,7 @@
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
-                <version>1.16.1</version>
+                <version>1.16.2</version>
                 <configuration>
                     <targetClasses>
                         <param>org.freshmarker.core.*</param>

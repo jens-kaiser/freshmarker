@@ -7,7 +7,6 @@ import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
-import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
@@ -60,7 +59,7 @@ public class ProcessContext {
 
     public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter) {
         this.baseEnvironment = baseEnvironment;
-        this.environment = new VariableEnvironment(baseEnvironment);
+        this.environment = baseEnvironment;
         this.writer = writer;
         this.userDirectives = List.of(userDirectives, context.userDirectives());
         this.builtIns = context.builtIns();

@@ -25,7 +25,8 @@ class TemplateVisitorTest {
         assertNull(new SettingFragment(null, null, null).accept(visitor));
         assertNull(new SwitchFragment(null, null).accept(visitor));
         assertNull(new UserDirectiveFragment(null, null, null, null).accept(visitor));
-        assertNull(new VariableFragment(null, null, false, null).accept(visitor));
+        assertNull(new VarVariableFragment(null, null, null).accept(visitor));
+        assertNull(new SetVariableFragment(null, null, null).accept(visitor));
         assertNull(new HashListFragment(null, null, null, null, null, null, null, null, null, null).accept(visitor));
     }
 }

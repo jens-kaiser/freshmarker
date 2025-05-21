@@ -157,6 +157,7 @@ class ReduceTemplateTest {
         assertNotNull(reducedTemplate);
         assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
         assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(2, reductionStatus.changed().get());
     }
 
     @Test
@@ -258,8 +259,8 @@ class ReduceTemplateTest {
         Template template = templateBuilder.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(12, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(13, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
         assertEquals("""
                 1. schegge.de/1 jens
@@ -283,8 +284,8 @@ class ReduceTemplateTest {
         Template template = templateBuilder.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(14, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(15, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
         assertEquals("""
                 1. schegge.de/3 1
@@ -322,8 +323,8 @@ class ReduceTemplateTest {
         Template template = templateBuilder.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(9, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(10, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
@@ -335,8 +336,8 @@ class ReduceTemplateTest {
         Template template = templateBuilder.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(9, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(10, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
         assertEquals(2, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
@@ -348,8 +349,8 @@ class ReduceTemplateTest {
         Template template = templateBuilder.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(10, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(11, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
         assertEquals(3, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
     }
@@ -361,8 +362,8 @@ class ReduceTemplateTest {
         Template template = templateBuilder.getTemplate("test", input);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertNotNull(reducedTemplate);
-        assertEquals(9, reductionStatus.total().get());
-        assertEquals(0, reductionStatus.deleted().get());
+        assertEquals(10, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
         assertEquals(1, reductionStatus.changed().get());
         assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS",
                 reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4), "firstname", "jens")));

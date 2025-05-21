@@ -1,8 +1,6 @@
 package org.freshmarker.core.fragment;
 
-import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Map;
@@ -22,13 +20,7 @@ public class UserDirectiveFragment implements Fragment {
 
     @Override
     public void process(ProcessContext context) {
-        Environment environment = context.getEnvironment();
-        try {
-            context.setEnvironment(new VariableEnvironment(environment));
-            context.getDirective(nameSpace, directive).execute(context, namedArgs, body);
-        } finally {
-            context.setEnvironment(environment);
-        }
+        context.getDirective(nameSpace, directive).execute(context, namedArgs, body);
     }
 
     @Override

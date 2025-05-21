@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class BlockFragment implements Fragment {
 
-    private final List<Fragment> fragments;
+    protected final List<Fragment> fragments;
 
     public BlockFragment(List<Fragment> fragments) {
         this.fragments = fragments;
@@ -27,7 +27,7 @@ public class BlockFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        return Fragments.optimize(fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList());
+        return Fragments.optimize(fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList(), false);
     }
 
     @Override
