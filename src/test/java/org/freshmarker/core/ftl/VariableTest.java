@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,14 @@ class VariableTest {
 
     @ParameterizedTest
     @CsvSource({
+            "test: <#var test/>${test!1}, test: 1",
+            "test: <#var test/><#set test='eins'/>${test}, test: eins",
             "test: <#var test='eins'/>${test}, test: eins",
             "test: <#var test='eins'/><#set test='zwei'/>${test}, test: zwei",
             "test: <#var test='eins'/><#set test='zwei'/><#set test='drei'/>${test}, test: drei",
+            "test: <#var test/><#assign test='eins'/>${test}, test: eins",
+            "test: <#var test='eins'/><#assign test='zwei'/>${test}, test: zwei",
+            "test: <#var test='eins'/><#assign test='zwei'/><#assign test='drei'/>${test}, test: drei",
     })
     void setVariable(String templateSource, String expected, TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("test", templateSource);
@@ -31,7 +37,22 @@ class VariableTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @CsvSource(value = {
+            "test: <#var test1, test2/>${test1!1} ${test2!2}; test: 1 2",
+            "test: <#var test1 test2/><#set test1='eins' test2='zwei'/>${test1} ${test2}; test: eins zwei",
+            "test: <#var test1, test2/><#set test1='eins', test2='zwei'/>${test1} ${test2}; test: eins zwei",
+            "test: <#var test1='eins' test2='zwei'/>${test1} ${test2}; test: eins zwei",
+            "test: <#var test1='eins', test2='zwei'/>${test1} ${test2}; test: eins zwei",
+            "test: <#var test1 test2/><#assign test1='eins' test2='zwei'/>${test1} ${test2}; test: eins zwei",
+            "test: <#var test1, test2/><#assign test1='eins', test2='zwei'/>${test1} ${test2}; test: eins zwei",
+    }, delimiterString = ";")
+    void setVariables(String templateSource, String expected, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
             "test: <#set test='zwei'/>",
             "test: <#var test='eins'/><#var test='eins'/>",
     })
@@ -42,17 +63,16 @@ class VariableTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "<#var test1='eins' test2='zwei'/>",
-            "<#var test1='eins', test2='zwei'/>",
-            "<#assign test1='eins'/>",
-            "<#global test1='eins'/>",
-            "<#local test1='eins'/>",
-            "<#set test1='eins' test2='zwei'/>",
-            "<#set test1='eins', test2='zwei'/>",
-    }, delimiterString = ";")
-    void unsupported(String input, TemplateBuilder builder) {
-        assertThrows(ParsingException.class, () -> builder.getTemplate("test", input));
+    @ValueSource(strings = {
+            "test: <#var test1 test1/>",
+            "test: <#var test1, test1/>",
+            "test: <#var test1='eins' test1='eins'/>",
+            "test: <#var test1='eins', test1='eins'/>",
+            "test: <#set test1='eins' test1='eins'/>",
+            "test: <#set test1='eins', test1='eins'/>",
+    })
+    void notUnique(String templateSource, TemplateBuilder builder) throws ParseException {
+        assertThrows(ParsingException.class, () -> builder.getTemplate("test", templateSource));
     }
 
     @Test

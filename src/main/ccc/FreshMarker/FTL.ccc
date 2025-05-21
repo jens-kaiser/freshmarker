@@ -181,8 +181,6 @@ TOKEN :
     |
     <MACRO : "macro">
     |
-    <LOCAL : "local">
-    |
     <BREAK : "break">
     |
     <NESTED : "nested">
@@ -194,8 +192,6 @@ TOKEN :
     <DEFAULT : "default">
     |
     <RETURN : "return">
-    |
-    <GLOBAL : "global">
     |
     <ASSIGN : "assign">
     |
@@ -245,26 +241,14 @@ Assignment :
     (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
     (
        t=<SET>|
-       t=<ASSIGN>|
-       t=<LOCAL>|
-       t=<GLOBAL>
+       t=<ASSIGN>
     )
     <BLANK>
     <IDENTIFIER>
     (
-      (
        <EQUALS>Expression
        ([<COMMA>] <IDENTIFIER> <EQUALS> Expression)*
-       [<IN> Expression]
        LooseTagEnd
-      )
-      |
-      (
-         [<IN> Expression]
-         <CLOSE_TAG>
-         Block
-         DirectiveEnd(t.toString())
-      )
     )
 ;
 

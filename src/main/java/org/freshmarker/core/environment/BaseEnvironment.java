@@ -89,7 +89,7 @@ public class BaseEnvironment implements Environment, TemplateObjectMapper {
 
     @Override
     public void setVariable(String name, TemplateObject value) {
-        throw new ProcessException("variable " + name + "not found");
+        throw new ProcessException("variable " + name + " not found");
     }
 
     @Override
