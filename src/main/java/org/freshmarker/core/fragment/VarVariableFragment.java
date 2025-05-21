@@ -7,19 +7,19 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
 
-public record VariableFragment(String name, TemplateObject expression, boolean exists, Node node) implements Fragment {
+public record VarVariableFragment(String name, TemplateObject expression, Node node) implements Fragment {
 
     @Override
     public void process(ProcessContext context) {
+        handleVar(context);
+    }
+
+    private void handleVar(ProcessContext context) {
         Environment environment = context.getEnvironment();
-        if (exists) {
-            environment.setVariable(name, expression.evaluateToObject(context));
-        } else {
-            if (environment.checkVariable(name)) {
-                throw new ProcessException("variable " + name + " must not exist", node);
-            }
-            environment.createVariable(name, expression.evaluateToObject(context));
+        if (environment.checkVariable(name)) {
+            throw new ProcessException("variable " + name + " must not exist", node);
         }
+        environment.createVariable(name, expression.evaluateToObject(context));
     }
 
     @Override
@@ -30,19 +30,12 @@ public record VariableFragment(String name, TemplateObject expression, boolean e
             if (value.isNull()) {
                 return this;
             }
-            if (exists) {
-                if (environment.getVariable(name) == null) {
-                    return this;
-                }
-                environment.setVariable(name, value);
-            } else {
-                if (environment.checkVariable(name)) {
-                    return this;
-                }
-                environment.createVariable(name, value);
+            if (environment.checkVariable(name)) {
+                return this;
             }
+            environment.createVariable(name, value);
             context.getStatus().changed().incrementAndGet();
-            return new VariableFragment(name, value, exists, node);
+            return new VarVariableFragment(name, value, node);
         } catch (RuntimeException e) {
             return this;
         }

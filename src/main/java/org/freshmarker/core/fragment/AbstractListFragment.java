@@ -5,7 +5,6 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
-import org.freshmarker.core.environment.VariableEnvironment;
 import org.freshmarker.core.model.TemplateLooper;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
@@ -56,6 +55,7 @@ public abstract class AbstractListFragment<T> implements Fragment {
         }
         return list.subList(start, end);
     }
+
     protected List<T> handleFilter(ProcessContext context, List<T> objectList, int offset, Integer intLimit) {
         Environment contextEnvironment = context.getEnvironment();
         int counter = Objects.requireNonNullElse(intLimit, objectList.size());
@@ -87,7 +87,7 @@ public abstract class AbstractListFragment<T> implements Fragment {
         for (int i = 0, n = looper.size(); i < n; i++) {
             Environment environment = context.getEnvironment();
             try {
-                context.setEnvironment(new VariableEnvironment(hashEnvironment));
+                context.setEnvironment(hashEnvironment);
                 block.process(context);
             } finally {
                 context.setEnvironment(environment);

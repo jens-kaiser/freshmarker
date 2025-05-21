@@ -17,6 +17,7 @@ import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.fragment.Fragment;
+import org.freshmarker.core.fragment.Fragments;
 import org.freshmarker.core.ftl.FragmentBuilder;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.temporal.TemplateInstant;
@@ -182,9 +183,10 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         new TokenLineNormalizer().normalize(root);
         ExtensionRegistry extensionRegistry = new ExtensionRegistry(registry, featureSet);
         StaticContext templateContext = new StaticContext(extensionRegistry, modelSecurityGateway, templateLoader);
-        Template template = new Template(this, templateContext, templateLoader, importPath);
-        List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, new SimpleFeatureSet(featureSet), 0), new ArrayList<>());
-        fragments.forEach(template.getRootFragment()::addFragment);
+        SimpleFeatureSet featureSetCopy = new SimpleFeatureSet(featureSet);
+        Template template = new Template(this, templateContext, templateLoader, importPath, featureSetCopy);
+        List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, featureSetCopy, 0), new ArrayList<>());
+        Fragments.withVariableContext(fragments).forEach(template.getRootFragment()::addFragment);
         return template;
     }
 

@@ -32,7 +32,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
         if (indexAfterIfBlock(ftl) == 5) {
             ifBlock = ConstantFragment.EMPTY;
         } else {
-            ifBlock = Fragments.optimize(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
+            ifBlock = Fragments.optimizeWithVariableContext(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
         }
         IfFragment ifFragment = new IfFragment();
         ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
@@ -57,7 +57,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
         if (ftl.size() == 5) {
             ifBlock = ConstantFragment.EMPTY;
         } else {
-            ifBlock = Fragments.optimize(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
+            ifBlock = Fragments.optimizeWithVariableContext(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
         }
         input.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
         return input;
@@ -68,7 +68,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
         if (ftl.size() != 3) {
             Node expression = ftl.get(3);
             List<Fragment> fragments = expression.accept(fragmentBuilder, new ArrayList<>());
-            input.addElseFragment(Fragments.optimize(fragments));
+            input.addElseFragment(Fragments.optimizeWithVariableContext(fragments));
         }
         return input;
     }

@@ -55,7 +55,11 @@ public interface TemplateVisitor<R> {
         return null;
     }
 
-    default R visit(VariableFragment fragment) {
+    default R visit(VarVariableFragment fragment) {
+        return null;
+    }
+
+    default R visit(SetVariableFragment fragment) {
         return null;
     }
 

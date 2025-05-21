@@ -139,7 +139,20 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 | IGNORE_NULL
 | Feature that ignores errors due `NULL` values on built-ins.
 | `false`
-|
+|===
+
+[#variable-scope-feature,reftext=Variable Scope Feature]
+===== Variable Scope Feature (since 1.9.0)
+
+These feature is controlled by a constant in the `VariableScopeFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| ALL_BLOCKS
+| Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
+| `false`
 |===
 
 ==== With Clock (since 1.6.9)
