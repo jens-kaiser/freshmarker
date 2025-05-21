@@ -27,6 +27,7 @@ import ftl.ast.VarInstruction;
 import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.api.FeatureSet;
+import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.fragment.ConstantFragment;
@@ -42,9 +43,9 @@ import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
 import org.freshmarker.core.fragment.VariableFragment;
 import org.freshmarker.core.model.TemplateMarkup;
+import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.freshmarker.core.IncludeDirectiveFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -270,30 +272,49 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (openParen != null && closeParen != null) {
             return 5;
         }
-        throw new ParsingException("invalid syntax",  ftl);
+        throw new ParsingException("invalid syntax", ftl);
     }
 
     @Override
     public List<Fragment> visit(Assignment ftl, List<Fragment> input) {
-        TokenType type = (TokenType) ftl.get(1).getType();
-        if (type != TokenType.SET) {
-            throw new ParsingException("assignment type " + type + " not supported", ftl.get(1));
+        Set<String> variables = new HashSet<>();
+        for (int i = 3; i < ftl.size() - 1; i++) {
+            String name = ftl.get(i).toString();
+            if (variables.contains(name)) {
+                throw new ParsingException("unique variable names required: " + name, ftl);
+            }
+            variables.add(name);
+            TemplateObject expression = ftl.get(i + 2).accept(interpolationBuilder, null);
+            i += 2;
+            if (ftl.get(i + 1).getType() == TokenType.COMMA) {
+                i++;
+            }
+            input.add(new VariableFragment(name, expression, true, ftl));
         }
-        String name = ftl.get(3).toString();
-        if (ftl.size() != 7) {
-            throw new ParsingException("only one assignment supported", ftl);
-        }
-        input.add(new VariableFragment(name, ftl.get(5).accept(interpolationBuilder, null), true, ftl.get(5)));
         return input;
     }
 
     @Override
     public List<Fragment> visit(VarInstruction ftl, List<Fragment> input) {
-        String name = ftl.get(3).toString();
-        if (ftl.size() != 7) {
-            throw new ParsingException("only one assignment supported", ftl);
+        Set<String> variables = new HashSet<>();
+        for (int i = 3; i < ftl.size() - 1; i++) {
+            String name = ftl.get(i).toString();
+            if (variables.contains(name)) {
+                throw new ParsingException("unique variable names required: " + name, ftl);
+            }
+            variables.add(name);
+            TemplateObject expression;
+            if (ftl.get(i + 1).getType() == TokenType.EQUALS) {
+                expression = ftl.get(i + 2).accept(interpolationBuilder, null);
+                i += 2;
+            } else {
+                expression = TemplateNull.NULL;
+            }
+            if (ftl.get(i + 1).getType() == TokenType.COMMA) {
+                i++;
+            }
+            input.add(new VariableFragment(name, expression, false, ftl));
         }
-        input.add(new VariableFragment(name, ftl.get(5).accept(interpolationBuilder, null), false, ftl.get(5)));
         return input;
     }
 

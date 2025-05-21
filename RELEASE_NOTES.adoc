@@ -1,12 +1,14 @@
 = Release Notes
 
-== Release 1.8.2 (2025-05-XX planned)
+== Release 1.9.0 (2025-05-XX planned)
 
 === Improvements
 
 - add string built-ins `center_pad`
 - add type checking built_ins `is_temporal`
 - add temporal `supports` built-in
+- add assign directive
+- add multiple variable support for variable directives
 
 == Release 1.8.1 (2025-05-14)
 

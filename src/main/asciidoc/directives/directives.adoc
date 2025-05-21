@@ -38,13 +38,35 @@ The _Var_ and _Set Directives_ are used to define local variables in the templat
 Unlike the model values, new values can be assigned to variables. 
 
 The first use of a variable is with the _Var Directive_. This defines the variables in the current context. 
-Later, the variable can be assigned new values with the _Set Directive_. A variable only exists within its context. 
+Later, the variable can be assigned new values with the _Set Directive_. A variable only exists within its context.
 
+.Example _Var Directive_ without value assignment
+[source,freshmarker]
+----
+<#var test/>
+<#set test='zwei'/>
+<#set test='drei'/>
+----
+
+The  _Var Directive_ allows the assignment of an initial value to the variable.
+
+.Example Var Directive with value assignment
 [source,freshmarker]
 ----
 <#var test='eins'/>
 <#set test='zwei'/>
 <#set test='drei'/>
+----
+
+Instead of multiple _Var Directives_ a single _Var Directive_ with several variable definitions can be used.
+The individual definitions can be separated from each other by a space or a comma.
+
+
+.Example Var Directive with multiple variable
+[source,freshmarker]
+----
+<#var test1='eins' test2='zwei'/>
+<#var test3, test4/>
 ----
 
 A new context is created within the _List Directive_, _Macro Directive_ and the conditional _If_ and _Switch Directives_.
