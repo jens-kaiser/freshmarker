@@ -200,6 +200,8 @@ m| JSON
 2+| no comments
 |===
 
+Custom output formats can be registered to the `Configuration` by the `registerOutputFormat` method or by the <<extension_api>>.
+
 === Template Loading
 
 The `Configuration` (`DefaultTemplateBuilder` since 1.5.0) class offers four methods for loading templates.
