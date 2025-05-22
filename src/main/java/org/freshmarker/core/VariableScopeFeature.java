@@ -6,9 +6,9 @@ public enum VariableScopeFeature implements TemplateFeature {
     /**
      * Feature that determines whether each block can create a new variable context.
      *<p>
-     * Default value is 'false', meaning that variable contexts con only created by macro, conditional, and list directives.
+     * The default value is 'false', meaning that variable contexts con only created by macro, conditional, and list directives.
      *<p>
-     * Feature is disabled by default.
+     * The feature is disabled by default.
      */
     ALL_BLOCKS;
 
