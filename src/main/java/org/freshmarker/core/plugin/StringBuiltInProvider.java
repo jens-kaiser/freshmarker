@@ -157,6 +157,28 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return patternStart + paddingPattern.substring(0, paddingRest);
     }
 
+    private TemplateString mask(TemplateString value, ProcessContext context, List<TemplateObject> parameters, boolean full) {
+        String string = value.getValue();
+        if (string.isEmpty()) {
+            return value;
+        }
+        String maskPattern = "*";
+        int firstIndex = 0;
+        if (!parameters.isEmpty() && parameters.getFirst().evaluateToObject(context) instanceof TemplateString first) {
+            maskPattern = first.getValue();
+            firstIndex = 1;
+        }
+
+        StringBuilder builder = new StringBuilder(string);
+        int unmaskCharacters = parameters.size() > firstIndex? parameters.get(firstIndex).evaluate(context, TemplateNumber.class).asInt() : 0;
+        for (int i = 0; i < string.length() - unmaskCharacters; i++) {
+            if (full || builder.charAt(i) != ' ') {
+                builder.setCharAt(i, maskPattern.charAt(i % maskPattern.length()));
+            }
+        }
+        return new TemplateString(builder.toString());
+    }
+
     @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         BuiltIn noEscape = (x, y, e) -> new TemplateStringMarkup((TemplateString) x, StandardOutputFormats.NONE);
@@ -186,6 +208,8 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("left_pad", (x, y, e) -> padding((TemplateString) x, e, y, true));
         register.add("right_pad", (x, y, e) -> padding((TemplateString) x, e, y, false));
         register.add("center_pad", (x, y, e) -> padding((TemplateString) x, e, y));
+        register.add("mask", (x, y, e) -> mask((TemplateString) x, e, y, false));
+        register.add("mask_full", (x, y, e) -> mask((TemplateString) x, e, y, true));
         register.add( "is_string", BuiltInHelper.alwaysTrue());
         return register;
     }

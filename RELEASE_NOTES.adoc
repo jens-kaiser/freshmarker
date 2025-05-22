@@ -8,9 +8,10 @@
 - add type checking built_ins `is_temporal`
 - add temporal `supports` built-in
 - change variable context mechanism.
-- add `VariableContextFeature.ALL_BLOCKS` feature, to allow variable scoped to user and brick directives
-- add assign directive
-- add multiple variable support for var, set and assign directives
+- add `VariableContextFeature.ALL_BLOCKS` feature, to allow variable scopes to `user` and `brick` directives
+- add `assign` directive
+- add multiple variable support for `var`, `set` and `assign` directives
+- add string built-ins `mask` and `mask_full`
 
 == Release 1.8.1 (2025-05-14)
 
