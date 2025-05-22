@@ -422,7 +422,7 @@ m|•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●
 
 |===
 
-==== `center_pad` Built-In (since 1.8.2)
+==== `center_pad` Built-In (since 1.9.0)
 
 This built-in returns a string with the minimum length that was specified as the first parameter. If the original string is already this long or longer, the return value is equal to the original string.
 
@@ -447,5 +447,67 @@ m|●●apple●
 
 m|${'apple'?center_pad(8, '●○')}
 m|●○apple○
+
+|===
+
+==== `mask` Built-In (since 1.9.0)
+
+This built-in returns a masked string with the length of the original string.
+Every none space character is replaced by characters from the mask pattern.
+
+If the first parameter is a string, then it is the mask pattern.
+Otherwise, it is the asterisk character.
+If the mask pattern is longer than one character, then the mask pattern is applied cyclically.
+
+A first number parameter is the number of unmasked characters at the end of the masked string.
+
+|===
+|Interpolation | Output
+
+m|${'secret'?mask}
+m|+******+
+
+m|${'+49 176 04069042'?mask}
+m|+*** *** ********+
+
+m|${'+49 176 04069042'?mask('●')}
+m|●●● ●●● ●●●●●●●●
+
+m|${'+49 176 04069042'?mask(2)}
+m|+*** *** ******42+
+
+m|${'+49 176 04069042'?mask('●○', 2)}
+m|●○● ●○● ●○●○●○42
+
+|===
+
+==== `mask_full` Built-In (since 1.9.0)
+
+This built-in returns a masked string with the length of the original string.
+Every character is replaced by characters from the mask pattern.
+
+If the first parameter is a string, then it is the mask pattern.
+Otherwise, it is the asterisk character.
+If the mask pattern is longer than one character, then the mask pattern is applied cyclically.
+
+A first number parameter is the number of unmasked characters at the end of the masked string.
+
+|===
+|Interpolation | Output
+
+m|${'secret'?mask}
+m|+******+
+
+m|${'+49 176 04069042'?mask_full}
+m|+****************+
+
+m|${'+49 176 04069042'?mask_full('✱')}
+m|✱✱✱✱✱✱✱✱✱✱✱✱✱✱✱✱
+
+m|${'+49 176 04069042'?mask_full(2)}
+m|+**************42+
+
+m|${'+49 176 04069042'?mask_full('●○', 2)}
+m|●○●○●○●○●○●○●○42
 
 |===

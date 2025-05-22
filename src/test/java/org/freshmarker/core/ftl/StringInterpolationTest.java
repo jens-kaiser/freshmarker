@@ -246,7 +246,7 @@ class StringInterpolationTest {
             "test: ${'orange'?center_pad(11, '123')};test: 123orange12",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void padding(String input, String expected, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("test", input);
+        Template template = templateBuilder.getTemplate("padding", input);
         assertEquals(expected, template.process(Map.of()));
     }
 
@@ -262,8 +262,64 @@ class StringInterpolationTest {
             "test: ${'pinapple'?right_pad(8, '●', true)}",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void invalidPadding(String input,TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("test", input);
+        Template template = templateBuilder.getTemplate("padding", input);
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${'secret'?mask};test: ******",
+            "test: ${'5555 5555 5555 4444'?mask};test: **** **** **** ****",
+            "test: ${'+49 176 04069042'?mask};test: *** *** ********",
+            "test: ${'secret'?mask(1)};test: *****t",
+            "test: ${'5555 5555 5555 4444'?mask(2)};test: **** **** **** **44",
+            "test: ${'+49 176 04069042'?mask(2)};test: *** *** ******42",
+
+            "test: ${'secret'?mask('●')};test: ●●●●●●",
+            "test: ${'5555 5555 5555 4444'?mask('●')};test: ●●●● ●●●● ●●●● ●●●●",
+            "test: ${'+49 176 04069042'?mask('●')};test: ●●● ●●● ●●●●●●●●",
+            "test: ${'secret'?mask('●', 1)};test: ●●●●●t",
+            "test: ${'5555 5555 5555 4444'?mask('●', 2)};test: ●●●● ●●●● ●●●● ●●44",
+            "test: ${'+49 176 04069042'?mask('●', 2)};test: ●●● ●●● ●●●●●●42",
+
+            "test: ${'secret'?mask('░▒▓')};test: ░▒▓░▒▓",
+            "test: ${'5555 5555 5555 4444'?mask('░▒▓')};test: ░▒▓░ ▓░▒▓ ▒▓░▒ ░▒▓░",
+            "test: ${'+49 176 04069042'?mask('░▒▓')};test: ░▒▓ ▒▓░ ▓░▒▓░▒▓░",
+            "test: ${'secret'?mask('░▒▓', 1)};test: ░▒▓░▒t",
+            "test: ${'5555 5555 5555 4444'?mask('░▒▓', 2)};test: ░▒▓░ ▓░▒▓ ▒▓░▒ ░▒44",
+            "test: ${'+49 176 04069042'?mask('░▒▓', 2)};test: ░▒▓ ▒▓░ ▓░▒▓░▒42",
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    void mask(String input, String expected, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("mask", input);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${'secret'?mask_full};test: ******",
+            "test: ${'5555 5555 5555 4444'?mask_full};test: *******************",
+            "test: ${'+49 176 04069042'?mask_full};test: ****************",
+            "test: ${'secret'?mask_full(1)};test: *****t",
+            "test: ${'5555 5555 5555 4444'?mask_full(2)};test: *****************44",
+            "test: ${'+49 176 04069042'?mask_full(2)};test: **************42",
+
+            "test: ${'secret'?mask('●')};test: ●●●●●●",
+            "test: ${'5555 5555 5555 4444'?mask_full('●')};test: ●●●●●●●●●●●●●●●●●●●",
+            "test: ${'+49 176 04069042'?mask_full('●')};test: ●●●●●●●●●●●●●●●●",
+            "test: ${'secret'?mask_full('●', 1)};test: ●●●●●t",
+            "test: ${'5555 5555 5555 4444'?mask_full('●', 2)};test: ●●●●●●●●●●●●●●●●●44",
+            "test: ${'+49 176 04069042'?mask_full('●', 2)};test: ●●●●●●●●●●●●●●42",
+
+            "test: ${'secret'?mask_full('░▒▓')};test: ░▒▓░▒▓",
+            "test: ${'5555 5555 5555 4444'?mask_full('░▒▓')};test: ░▒▓░▒▓░▒▓░▒▓░▒▓░▒▓░",
+            "test: ${'+49 176 04069042'?mask_full('░▒▓')};test: ░▒▓░▒▓░▒▓░▒▓░▒▓░",
+            "test: ${'secret'?mask_full('░▒▓', 1)};test: ░▒▓░▒t",
+            "test: ${'5555 5555 5555 4444'?mask_full('░▒▓', 2)};test: ░▒▓░▒▓░▒▓░▒▓░▒▓░▒44",
+            "test: ${'+49 176 04069042'?mask_full('░▒▓', 2)};test: ░▒▓░▒▓░▒▓░▒▓░▒42",
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    void mask_full(String input, String expected, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("mask_full", input);
+        assertEquals(expected, template.process(Map.of()));
     }
 }
