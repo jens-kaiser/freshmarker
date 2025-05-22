@@ -32,13 +32,13 @@ include::directives-switch.adoc[]
 
 include::directives-list.adoc[]
 
-=== Var/Set Directive
+=== Var/Set/Assign Directive
 
-The _Var_ and _Set Directives_ are used to define local variables in the template. 
+The _Var_, _Set_ and _Assign Directives_ are used to define local variables in the template.
 Unlike the model values, new values can be assigned to variables. 
 
 The first use of a variable is with the _Var Directive_. This defines the variables in the current context. 
-Later, the variable can be assigned new values with the _Set Directive_. A variable only exists within its context.
+The variable can be assigned later new values with the _Set_ and _Assign Directive_. A variable only exists within its context.
 
 .Example _Var Directive_ without value assignment
 [source,freshmarker]
