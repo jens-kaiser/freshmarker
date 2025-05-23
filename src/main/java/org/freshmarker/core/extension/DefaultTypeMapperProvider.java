@@ -24,7 +24,7 @@ public class DefaultTypeMapperProvider implements TypeMapperProvider {
     public Map<Class<?>, TypeMapper> providerTypeMapper() {
         return Map.ofEntries(
                 Map.entry(String.class, o -> new TemplateString((String) o)),
-                Map.entry(Boolean.class, o -> ((Boolean)o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE),
+                Map.entry(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE),
                 Map.entry(AtomicBoolean.class, o -> ((AtomicBoolean) o).get() ? TemplateBoolean.TRUE : TemplateBoolean.FALSE),
                 Map.entry(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o, Type.LONG)),
                 Map.entry(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o, Type.INTEGER)),
