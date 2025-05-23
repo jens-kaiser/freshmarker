@@ -280,7 +280,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(Assignment ftl, List<Fragment> input) {
         Set<String> variables = new HashSet<>();
-        for (int i = 3; i < ftl.size() - 1; i++) {
+        int i = 3;
+        while (i < ftl.size() - 1) {
             String name = ftl.get(i).toString();
             if (variables.contains(name)) {
                 throw new ParsingException("unique variable names required: " + name, ftl);
@@ -291,6 +292,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             if (ftl.get(i + 1).getType() == TokenType.COMMA) {
                 i++;
             }
+            i++;
             input.add(new SetVariableFragment(name, expression, ftl));
         }
         return input;
@@ -299,7 +301,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(VarInstruction ftl, List<Fragment> input) {
         Set<String> variables = new HashSet<>();
-        for (int i = 3; i < ftl.size() - 1; i++) {
+        int i = 3;
+        while (i < ftl.size() - 1) {
             String name = ftl.get(i).toString();
             if (variables.contains(name)) {
                 throw new ParsingException("unique variable names required: " + name, ftl);
@@ -315,6 +318,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             if (ftl.get(i + 1).getType() == TokenType.COMMA) {
                 i++;
             }
+            i++;
             input.add(new VarVariableFragment(name, expression, ftl));
         }
         return input;
