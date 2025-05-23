@@ -162,7 +162,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         if (string.isEmpty()) {
             return value;
         }
-        if (parameters.isEmpty()) {
+        if (full && parameters.isEmpty()) {
             return new TemplateString("*".repeat(string.length()));
         }
         String maskPattern = "*";
