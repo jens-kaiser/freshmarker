@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -23,7 +24,8 @@ public class DefaultTypeMapperProvider implements TypeMapperProvider {
     public Map<Class<?>, TypeMapper> providerTypeMapper() {
         return Map.ofEntries(
                 Map.entry(String.class, o -> new TemplateString((String) o)),
-                Map.entry(Boolean.class, o -> Boolean.TRUE.equals(o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE),
+                Map.entry(Boolean.class, o -> ((Boolean)o) ? TemplateBoolean.TRUE : TemplateBoolean.FALSE),
+                Map.entry(AtomicBoolean.class, o -> ((AtomicBoolean) o).get() ? TemplateBoolean.TRUE : TemplateBoolean.FALSE),
                 Map.entry(AtomicLong.class, o -> new TemplateNumber((AtomicLong) o, Type.LONG)),
                 Map.entry(AtomicInteger.class, o -> new TemplateNumber((AtomicInteger) o, Type.INTEGER)),
                 Map.entry(Long.class, o -> new TemplateNumber((Long) o)),

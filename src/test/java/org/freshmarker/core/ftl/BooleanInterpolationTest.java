@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,4 +63,15 @@ class BooleanInterpolationTest {
         Template template = templateBuilder.getTemplate("test", "${100 + (x > y)?then(x, y)}");
         assertEquals("142", template.process(Map.of("var", true, "x", 42, "y", 23)));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "test: ${flagTrue},test: yes",
+            "test: ${flagFalse},test: no",
+    })
+    void interpolationAtomicInteger(String templateSource, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("flagTrue", new AtomicBoolean(true), "flagFalse", new AtomicBoolean())));
+    }
+
 }
