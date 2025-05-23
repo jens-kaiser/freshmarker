@@ -171,7 +171,6 @@ public final class StringBuiltInProvider implements BuiltInProvider {
             maskPattern = first.getValue().isEmpty() ? "*" : first.getValue();
             firstIndex = 1;
         }
-
         StringBuilder builder = new StringBuilder(string);
         int unmaskCharacters = parameters.size() > firstIndex? parameters.get(firstIndex).evaluate(context, TemplateNumber.class).asInt() : 0;
         for (int i = 0; i < string.length() - unmaskCharacters; i++) {
