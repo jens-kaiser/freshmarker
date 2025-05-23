@@ -289,6 +289,8 @@ class StringInterpolationTest {
             "test: ${'secret'?mask('░▒▓', 1)};test: ░▒▓░▒t",
             "test: ${'5555 5555 5555 4444'?mask('░▒▓', 2)};test: ░▒▓░ ▓░▒▓ ▒▓░▒ ░▒44",
             "test: ${'+49 176 04069042'?mask('░▒▓', 2)};test: ░▒▓ ▒▓░ ▓░▒▓░▒42",
+            "test: ${'secret'?mask(6)};test: secret",
+            "test: ${'secret'?mask(10)};test: secret",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void mask(String input, String expected, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("mask", input);
