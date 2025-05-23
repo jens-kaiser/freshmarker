@@ -167,7 +167,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         }
         String maskPattern = "*";
         int firstIndex = 0;
-        if (parameters.getFirst().evaluateToObject(context) instanceof TemplateString first) {
+        if (!parameters.isEmpty() && parameters.getFirst().evaluateToObject(context) instanceof TemplateString first) {
             maskPattern = first.getValue().isEmpty() ? "*" : first.getValue();
             firstIndex = 1;
         }
