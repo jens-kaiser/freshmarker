@@ -56,10 +56,10 @@ Without a package specification, the class names refer to the classes of the sam
 |Version|-|yes
 |===
 
-==== Primitive Types
+=== Primitive Types
 
 _FreshMarker_ distinguishes between primitive and non-primitive types.
-All primitive types, except Null, have a default representation via their `toString` method.
+All primitive types, except _Null_, have a default representation via their `toString` method.
 
 NOTE: This must be considered with the enums, because the `toString` method can be overridden.
 
@@ -75,7 +75,7 @@ Literals of primitive types can be used for Null, String, Boolean, Integer and D
 | Double | 12.34, 42.0
 |===
 
-==== Sequences
+=== Sequences
 
 _Sequences_ represent all data structures that implement `java.util.List`.
 
@@ -98,11 +98,11 @@ It is possible to use literals of sequences in templates, whereby the elements a
 [1,3,5,7,9]
 ----
 
-==== Hashes
+=== Hashes
 
 TBD
 
-==== Ranges
+=== Ranges
 
 Ranges are data structures that represent an interval with a lower limit and an optional upper limit.
 
@@ -111,7 +111,7 @@ If the size of the interval is specified instead of the upper limit, then this r
 
 Ranges differ from other types because they only exists as literals in the templates. Ranges cannot be injected via the model.
 
-===== Right-unlimited Range
+==== Right-unlimited Range
 
 In principle, a right-unlimited range has no upper limit and can therefore only be used in a few places.
 
@@ -127,7 +127,7 @@ A right unlimited range has the form `_x_..` where `_x_` can be any numerical ex
 a..   // lower bound in the variable _a_ (must be a numeric value)
 ----
 
-===== Right-limited Range
+==== Right-limited Range
 
 A _right-limited range_ has a lower and an upper limit. It also represents a sequence of numbers and can be used in this way in a list directive. A _right-limited range_ has the form `_x_.._y_` or  `_x_..+++<+++_y_` where `_x_` and `_y_` can be any numeric expression. The second form describes a range with an exclusive upper limit. This form is called a _right-limited exclusive range_.
 
@@ -143,7 +143,7 @@ a..<b   // lower bound in variable _a_ and an exclusive upper bound in variable 
 
 As can be seen in the examples, the lower limit may be greater than the upper limit. This means that the representation as a sequence cannot be monotonically increasing, but can be monotonically decreasing. In the case of a monotonically increasing sequence, we speak of a _legal range_, otherwise of an _inverse range_.
 
-===== Length-limited Range (since 1.6.4)
+==== Length-limited Range (since 1.6.4)
 
 A _length-limited range_ is a _right-limited range_ with a different syntax `_a_..*_c_`. 
 Where `a` again corresponds to the lower limit of the range and `c` indicates the size of the range.
@@ -159,7 +159,7 @@ If the size of the range is positive, then the upper limit is greater than the l
 a..*b   // lower bound in variable _a_ and an range size in variable _c_
 ----
 
-==== Slices
+=== Slices
 
 `Slices` define slice operators on other data types.
 These operators can be applied to `Range`, `List`, and `String` values.
