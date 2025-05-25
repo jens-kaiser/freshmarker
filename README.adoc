@@ -5,9 +5,11 @@ A simple, small but powerful template engine based loosely on the _FreeMarker_ s
 
 You can find a detailed description of all _Freshmarker_ features in the https://schegge.gitlab.io/freshmarker/[manual].
 
-The https://gitlab.com/schegge/freshmarker/-/blob/develop/RELEASE_NOTES.adoc[release notes] contain changes to the template engine since version 1.4.6.
+The https://gitlab.com/schegge/freshmarker/-/blob/develop/RELEASE_NOTES.adoc[release notes] contains changes to the template engine since version 1.4.6.
 
 Some in-depth articles on _Freshmarker_ can be found on https://schegge.de/category/freshmarker/[schegge.de].
+
+A https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/resources/fmcs.pdf[cheat sheet] for _FreshMarker_ is also available.
 
 == Example Benchmarks
 

@@ -325,6 +325,9 @@
                             <Built-By>jaz</Built-By>
                         </manifestEntries>
                     </archive>
+                    <excludes>
+                        <exclude>**/*.pdf</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
