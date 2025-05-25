@@ -33,7 +33,7 @@ Without a package specification, the class names refer to the classes of the sam
 |Number|`long`, `int`, `short`, `byte`, `double`, `float`|yes
 |Number|`BigDecimal`, `Double`, `Float`|yes
 |Number|`AtomicLong`, `AtomicInteger`|yes
-|Boolean|`Boolean`, `boolean`|yes
+|Boolean|`Boolean`, `boolean`, `AtomicBoolean`|yes
 |DateTime|`Instant`, `ZonedDateTime`, `LocalDateTime`, `Date`|yes
 |Date|`LocalDate`, `java.sql.Date`|yes
 |Time|`LocalTime`, `java.sql.Time`|yes
@@ -54,7 +54,10 @@ Without a package specification, the class names refer to the classes of the sam
 |Null|-|yes
 |Locale|`Locale`|yes
 |Version|-|yes
+|Random|`Random`, `SecureRandom`| yes
 |===
+
+CAUTION: The types _File_, _Path_ and _Random_ are part of the _FreshMarker File_ respectively _FreshMarker Random_
 
 === Primitive Types
 
