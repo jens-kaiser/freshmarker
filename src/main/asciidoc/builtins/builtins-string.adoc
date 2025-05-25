@@ -213,10 +213,10 @@ This built-in return `true` if the text starts with the specified parameter, oth
 |===
 |Interpolation | Output
 
-m|${'The quick brown Fox jumps over the lazy Dog'?endsWith('Dog')}
+m|${'The quick brown Fox jumps over the lazy Dog'?startsWith('Dog')}
 m|true
 
-m|${'The quick brown Fox jumps over the lazy Dog'?ends_with('Cat')}
+m|${'The quick brown Fox jumps over the lazy Dog'?starts_with('Cat')}
 m|false
 |===
 
