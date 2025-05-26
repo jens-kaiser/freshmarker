@@ -54,7 +54,7 @@ In all other cases the German `Hallo` is written.
 Another important template concept is the built-in.
 The result of an interpolation is changed by the built-ins.
 The interpolation from the last example produces the output `World` from the value `World`.
-If the interpolation is extended to `${example?uppercase}` then the interpolation produces `WORLD`.
+If the interpolation is extended to `${example?upper_case}` then the interpolation produces `WORLD`.
 In this case the built-in `upper_case` has been added.
 Depending on the type of value, a wide variety of built-ins can be used.
 footnote:[The library https://gitlab.com/schegge/holidays[Holidays] adds Built-Ins for Holidays].
