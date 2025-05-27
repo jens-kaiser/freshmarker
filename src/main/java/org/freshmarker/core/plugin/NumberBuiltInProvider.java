@@ -7,7 +7,6 @@ import org.freshmarker.api.extension.support.SingleTypeBuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
