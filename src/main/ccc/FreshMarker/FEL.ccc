@@ -42,7 +42,8 @@ INJECT LEXER_CLASS :
   }
 }
 
-INCLUDE "../Java/JavaIdentifierDef.ccc"
+INCLUDE JAVA_IDENTIFIER_DEF
+
 
 SKIP :
     <EXP_WHITE_SPACE : (" "|"\t"|"\n"|"\r")+>
