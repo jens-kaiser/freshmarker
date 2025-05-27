@@ -63,14 +63,12 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private static final String C = "c";
     private static final String DAY = "day";
     private static final String EASTER = "easter";
+    private static final String DATE_TIME = "date_time";
+
     private static final EnumSet<ChronoUnit> SUPPORTED_TEMPORAL_UNITS = EnumSet.of(ChronoUnit.DAYS, ChronoUnit.MONTHS, ChronoUnit.YEARS);
 
     private TemplateZonedDateTime to(ZonedDateTime dateTime) {
         return new TemplateZonedDateTime(dateTime);
-    }
-
-    private TemplateOffsetDateTime to(OffsetDateTime dateTime) {
-        return new TemplateOffsetDateTime(dateTime);
     }
 
     private TemplateLocalDateTime to(LocalDateTime dateTime) {
@@ -182,7 +180,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         BuiltInRegister register = new BuiltInRegister();
-        register.add(TemplateInstant.class, "date_time", (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalDateTime()));
+        register.add(TemplateInstant.class, DATE_TIME, (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalDateTime()));
         register.add(TemplateInstant.class, "date", (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalDate()));
         register.add(TemplateInstant.class, "time", (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalTime()));
         register.add(TemplateInstant.class, C, BuiltIn.string());
@@ -190,7 +188,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateInstant.class, AT_ZONE, (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(getZoneId(y, e))));
         register.add(TemplateInstant.class, EASTER, (x, y, e) -> easter(((TemplateInstant)x).getValue().atZone(e.getZoneId()).getYear()));
 
-        register.add(TemplateZonedDateTime.class, "date_time", (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDateTime()));
+        register.add(TemplateZonedDateTime.class, DATE_TIME, (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDateTime()));
         register.add(TemplateZonedDateTime.class, "date", (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalDate()));
         register.add(TemplateZonedDateTime.class, "time", (x, y, e) -> to(((TemplateZonedDateTime) x).getValue().toLocalTime()));
         register.add(TemplateZonedDateTime.class, C, BuiltIn.string());
@@ -200,7 +198,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateZonedDateTime.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateZonedDateTime) x).getValue().getDayOfMonth()));
         register.add(TemplateZonedDateTime.class, EASTER, (x, y, e) -> easter(((TemplateZonedDateTime)x).getValue().getYear()));
 
-        register.add(TemplateOffsetDateTime.class, "date_time", (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalDateTime()));
+        register.add(TemplateOffsetDateTime.class, DATE_TIME, (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalDateTime()));
         register.add(TemplateOffsetDateTime.class, "date", (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalDate()));
         register.add(TemplateOffsetDateTime.class, "time", (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalTime()));
         register.add(TemplateOffsetDateTime.class, C, BuiltIn.string());

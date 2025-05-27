@@ -11,7 +11,6 @@ import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateRightLimitedRange;
 import org.freshmarker.core.model.TemplateRightUnlimitedRange;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 
