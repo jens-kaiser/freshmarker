@@ -26,6 +26,7 @@ import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateMonthDay;
+import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplatePeriod;
 import org.freshmarker.core.model.temporal.TemplateYear;
 import org.freshmarker.core.model.temporal.TemplateYearMonth;
@@ -38,6 +39,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.MonthDay;
+import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
@@ -65,6 +67,10 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
 
     private TemplateZonedDateTime to(ZonedDateTime dateTime) {
         return new TemplateZonedDateTime(dateTime);
+    }
+
+    private TemplateOffsetDateTime to(OffsetDateTime dateTime) {
+        return new TemplateOffsetDateTime(dateTime);
     }
 
     private TemplateLocalDateTime to(LocalDateTime dateTime) {
@@ -194,6 +200,16 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateZonedDateTime.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateZonedDateTime) x).getValue().getDayOfMonth()));
         register.add(TemplateZonedDateTime.class, EASTER, (x, y, e) -> easter(((TemplateZonedDateTime)x).getValue().getYear()));
 
+        register.add(TemplateOffsetDateTime.class, "date_time", (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalDateTime()));
+        register.add(TemplateOffsetDateTime.class, "date", (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalDate()));
+        register.add(TemplateOffsetDateTime.class, "time", (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().toLocalTime()));
+        register.add(TemplateOffsetDateTime.class, C, BuiltIn.string());
+        register.add(TemplateOffsetDateTime.class, STRING, (x, y, e) -> formatTemporal(y, e, ((TemplateOffsetDateTime) x).getValue()));
+        register.add(TemplateOffsetDateTime.class, AT_ZONE, (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().atZoneSameInstant(getZoneId(y, e))));
+        register.add(TemplateOffsetDateTime.class, "offset", (x, y, e) -> toString(((TemplateOffsetDateTime) x).getValue().getOffset()));
+        register.add(TemplateOffsetDateTime.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateOffsetDateTime) x).getValue().getDayOfMonth()));
+        register.add(TemplateOffsetDateTime.class, EASTER, (x, y, e) -> easter(((TemplateOffsetDateTime)x).getValue().getYear()));
+
         register.add(TemplateLocalDateTime.class, "date", (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().toLocalDate()));
         register.add(TemplateLocalDateTime.class, "time", (x, y, e) -> to(((TemplateLocalDateTime) x).getValue().toLocalTime()));
         register.add(TemplateLocalDateTime.class, C, BuiltIn.string());
@@ -252,6 +268,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
         formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd hh:mm:ss VV", ZoneOffset.UTC));
         formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss VV"));
+        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss VV"));
         formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss"));
         formatter.put(TemplateLocalDate.class, new DateFormatter("yyyy-MM-dd"));
         formatter.put(TemplateLocalTime.class, new TimeFormatter("hh:mm:ss", ZoneOffset.UTC));
@@ -267,6 +284,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         Map<Class<?>, TypeMapper> mapper = new HashMap<>();
         mapper.put(Instant.class, o -> new TemplateInstant((Instant) o));
         mapper.put(ZonedDateTime.class, o -> new TemplateZonedDateTime((ZonedDateTime) o));
+        mapper.put(OffsetDateTime.class, o -> new TemplateOffsetDateTime((OffsetDateTime) o));
         mapper.put(LocalDateTime.class, o -> new TemplateLocalDateTime((LocalDateTime) o));
         mapper.put(LocalDate.class, o -> new TemplateLocalDate((LocalDate) o));
         mapper.put(LocalTime.class, o -> new TemplateLocalTime((LocalTime) o));

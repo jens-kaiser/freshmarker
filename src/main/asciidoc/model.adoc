@@ -34,7 +34,7 @@ Without a package specification, the class names refer to the classes of the sam
 |Number|`BigDecimal`, `Double`, `Float`|yes
 |Number|`AtomicLong`, `AtomicInteger`|yes
 |Boolean|`Boolean`, `boolean`, `AtomicBoolean`|yes
-|DateTime|`Instant`, `ZonedDateTime`, `LocalDateTime`, `Date`|yes
+|DateTime|`Instant`, `ZonedDateTime`, `OffsetDateTime`, LocalDateTime`, `Date`|yes
 |Date|`LocalDate`, `java.sql.Date`|yes
 |Time|`LocalTime`, `java.sql.Time`|yes
 |Year|`Year`|yes

@@ -13,6 +13,7 @@
 - add multiple variable support for `var`, `set` and `assign` directives
 - add string built-ins `mask` and `mask_full`
 - add `AtomicBoolean` support
+- add `OffsetDateTime` support
 
 == Release 1.8.1 (2025-05-14)
 

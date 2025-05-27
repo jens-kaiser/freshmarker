@@ -1,6 +1,6 @@
 === Date-Time Built-Ins
 
-The Built-Ins in the examples operate on the `java.time.Instant`, `java.time.ZonedDateTime`, `java.time.LocalDateTime` respectively `java.util.Date` value `1968-08-24 12:34:56`.
+The Built-Ins in the examples operate on the `java.time.Instant`, `java.time.ZonedDateTime`, `java.time.OffsetDateTime`,`java.time.LocalDateTime` respectively `java.util.Date` value `1968-08-24 12:34:56`.
 
 ==== `date` Built-In
 
