@@ -327,6 +327,7 @@
                     </archive>
                     <excludes>
                         <exclude>**/*.pdf</exclude>
+                        <exclude>**/*.svg</exclude>
                     </excludes>
                 </configuration>
             </plugin>
