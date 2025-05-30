@@ -17,6 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -81,8 +82,8 @@ class BuiltInVariableTest {
 
     @Test
     void now(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${.now?date}");
-        assertEquals("test: " + LocalDate.now(), template.process(Map.of()));
+        Template template = templateBuilder.withZoneId(ZoneOffset.UTC).getTemplate("test", "test: ${.now?date}");
+        assertEquals("test: " + LocalDate.now(ZoneOffset.UTC), template.process(Map.of()));
     }
 
     @ParameterizedTest
