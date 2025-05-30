@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -95,11 +96,12 @@ class LocalDatelInterpolationTest {
             "P2D,${tomorrow?since(yesterday)}",
     })
     void interpolateSinceAndUntil(String expected, String input, TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("test", input);
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        LocalDate dayBefore = LocalDate.now().minusDays(2);
-        Map<String, Object> dataModel = Map.of("now", LocalDate.now(), "yesterday", yesterday, "tomorrow", tomorrow, "dayBefore", dayBefore);
+        Template template = templateBuilder.withZoneId(ZoneOffset.UTC).getTemplate("test", input);
+        LocalDate now = LocalDate.now(ZoneOffset.UTC);
+        LocalDate tomorrow = now.plusDays(1);
+        LocalDate yesterday = now.minusDays(1);
+        LocalDate dayBefore = now.minusDays(2);
+        Map<String, Object> dataModel = Map.of("now", now, "yesterday", yesterday, "tomorrow", tomorrow, "dayBefore", dayBefore);
         assertEquals(expected, template.process(dataModel));
     }
 
