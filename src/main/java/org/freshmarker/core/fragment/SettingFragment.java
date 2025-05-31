@@ -37,6 +37,7 @@ public record SettingFragment(String name, TemplateObject expression, SettingIns
             case "time_format" -> processTimeFormat(context, setting);
             case "datetime_format" -> processDateTimeFormat(context, setting);
             case "zoned_datetime_format" -> processZonedDateTimeFormat(context, setting);
+            case "offset_datetime_format" -> processOffsetDateTimeFormat(context, setting);
             case "zone_id" -> context.push(ZoneId.of(setting.evaluate(context, TemplateString.class).getValue()));
             default -> throw new ProcessException("unknown setting: " + name, ftl);
         }
@@ -46,9 +47,13 @@ public record SettingFragment(String name, TemplateObject expression, SettingIns
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
                 TemplateInstant.class, new DateTimeFormatter(value, context.getZoneId()),
-                TemplateZonedDateTime.class, new DateTimeFormatter(value),
-                TemplateOffsetDateTime.class, new DateTimeFormatter(value));
+                TemplateZonedDateTime.class, new DateTimeFormatter(value));
         context.pushFormatter(formatter);
+    }
+
+    private static void processOffsetDateTimeFormat(ProcessContext context, TemplateObject setting) {
+        String value = setting.evaluate(context, TemplateString.class).getValue();
+        context.pushFormatter(Map.of(TemplateOffsetDateTime.class, new DateTimeFormatter(value)));
     }
 
     private static void processDateTimeFormat(ProcessContext context, TemplateObject setting) {

@@ -116,8 +116,8 @@ public final class Configuration {
             case "number" -> Map.of(TemplateNumber.class, new NumberFormatter(pattern));
             case "zoned-date-time" ->  Map.of(
                     TemplateZonedDateTime.class, new DateTimeFormatter(pattern),
-                    TemplateOffsetDateTime.class, new DateTimeFormatter(pattern),
                     TemplateInstant.class, new DateTimeFormatter(pattern, ZoneId.systemDefault()));
+            case "offset-date-time" ->  Map.of(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern));
             case "date-time" ->  Map.of(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
             case "date" ->  Map.of(TemplateLocalDate.class, new DateFormatter(pattern));
             case "time" ->  Map.of(TemplateLocalTime.class, new TimeFormatter(pattern, ZoneId.systemDefault()));

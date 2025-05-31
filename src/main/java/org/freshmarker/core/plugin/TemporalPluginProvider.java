@@ -204,7 +204,6 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateOffsetDateTime.class, C, BuiltIn.string());
         register.add(TemplateOffsetDateTime.class, STRING, (x, y, e) -> formatTemporal(y, e, ((TemplateOffsetDateTime) x).getValue()));
         register.add(TemplateOffsetDateTime.class, AT_ZONE, (x, y, e) -> to(((TemplateOffsetDateTime) x).getValue().atZoneSameInstant(getZoneId(y, e))));
-        register.add(TemplateOffsetDateTime.class, "offset", (x, y, e) -> toString(((TemplateOffsetDateTime) x).getValue().getOffset()));
         register.add(TemplateOffsetDateTime.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateOffsetDateTime) x).getValue().getDayOfMonth()));
         register.add(TemplateOffsetDateTime.class, EASTER, (x, y, e) -> easter(((TemplateOffsetDateTime)x).getValue().getYear()));
 
@@ -266,7 +265,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
         formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd hh:mm:ss VV", ZoneOffset.UTC));
         formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss VV"));
-        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss VV"));
+        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss XX"));
         formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss"));
         formatter.put(TemplateLocalDate.class, new DateFormatter("yyyy-MM-dd"));
         formatter.put(TemplateLocalTime.class, new TimeFormatter("hh:mm:ss", ZoneOffset.UTC));

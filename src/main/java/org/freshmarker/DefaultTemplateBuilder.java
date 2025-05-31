@@ -24,6 +24,7 @@ import org.freshmarker.core.model.temporal.TemplateInstant;
 import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
+import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
@@ -37,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +85,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
+        newBuilder.formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
         return newBuilder;
     }
@@ -90,6 +93,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     public TemplateBuilder withDateTimeFormat(String pattern) {
         DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, featureSet);
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
+        newBuilder.formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern));
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
         return newBuilder;
     }

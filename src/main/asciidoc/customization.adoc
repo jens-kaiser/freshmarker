@@ -50,7 +50,7 @@ configuration.registerSimpleMapping(BitSet.class, x -> {
 The default formatting for number and temporal values can be changed with the
 `Configuration#registerFormatter(String, String)` method.
 
-The first parameter `type` specifies the value type `number`, `zoned-date-time` (for `Instant` and `ZonedDateTime`), `date-time` (for `LocalDateTime`), `date` (for `LocalDate`) and `time` (for `LocalTime`). The second parameter is a pattern of `DecimalFormatter` or `DateTimeFormatter`.
+The first parameter `type` specifies the value type `number`, `zoned-date-time` (for `Instant` and `ZonedDateTime`), `offset-date-time` (for `OffsetDateTime`), `date-time` (for `LocalDateTime`), `date` (for `LocalDate`) and `time` (for `LocalTime`). The second parameter is a pattern of `DecimalFormatter` or `DateTimeFormatter`.
 
 .Example with custom number and temporal formatting
 [source,java]

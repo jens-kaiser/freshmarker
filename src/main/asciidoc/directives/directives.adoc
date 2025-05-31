@@ -116,6 +116,40 @@ ${42.23}
 ${42.23}
 ----
 
+The following list of settings is supported.
+
+[cols="1,2,2"]
+|===
+|Name | Example | Description
+|locale
+m|<#setting locale="de-DE">
+| Set the locale with a language tag.
+
+|date_format
+m|<#setting date_format="dd. MMMM yyyy">
+| Set the format for date values.
+
+|time_format
+m|<#setting time_format="hh:mm">
+| Set the format for time values.
+
+|datetime_format
+m|<#setting datetime_format="dd. MMMM yyyy hh:mm">
+| Set the format for datetime values.
+
+|offset_datetime_format
+m|<#setting offset_datetime_format="dd. MMMM yyyy hh:mm">
+| Set the format for datetime values.
+
+|zoned_datetime_format
+m|<#setting zoned_datetime_format="dd. MMMM yyyy hh:mm">
+| Set the format for datetime values.
+
+|zone_id
+m|<#setting zone-id="Europe/Berlin">
+| Set the zone-id.
+|===
+
 === Macro Directive
 
 The macro directive can be used to create a macro, which can then be used as a user directive in the template.
