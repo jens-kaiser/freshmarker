@@ -81,6 +81,13 @@ class SettingTest {
         assertEquals(expected, template.process(Map.of("date", ZonedDateTime.of(LocalDateTime.of(SPECIAL_DAY, TIME), ZoneId.of("CET")))));
     }
 
+    @ParameterizedTest
+    @CsvSource(value = "test: ${date} - <#setting offset_datetime_format=\"dd. MMMM yyyy hh:mm\">${date};test: 1968-08-24 12:34:56 Z - 24. August 1968 12:34", delimiterString = ";")
+    void settingOffsetDateTimeFormat(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("date", OffsetDateTime.of(LocalDateTime.of(SPECIAL_DAY, TIME), ZoneOffset.UTC))));
+    }
+
     @Test
     void unknownSetting() throws ParseException {
         Template template = templateBuilder.getTemplate("test", "<#setting gonzo=''>");

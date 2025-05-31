@@ -5,7 +5,6 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.model.TemplateObject;
 
 public record VarVariableFragment(String name, TemplateObject expression, Node node) implements Fragment {
@@ -34,9 +33,7 @@ public record VarVariableFragment(String name, TemplateObject expression, Node n
             environment.createVariable(name, value);
             context.getStatus().changed().incrementAndGet();
             return new VarVariableFragment(name, value, node);
-        } catch (ReduceException e) {
-            throw  e;
-        }catch (RuntimeException e) {
+        }  catch (RuntimeException e) {
             return this;
         }
     }
