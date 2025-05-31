@@ -266,15 +266,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (closeTag == 4) {
             return 4;
         }
-        Node openParen = ftl.firstChildOfType(TokenType.OPEN_PAREN);
-        Node closeParen = ftl.firstChildOfType(TokenType.CLOSE_PAREN);
-        if (openParen == null && closeParen == null) {
-            return 4;
-        }
-        if (openParen != null && closeParen != null) {
-            return 5;
-        }
-        throw new ParsingException("invalid syntax", ftl);
+        return ftl.firstChildOfType(TokenType.OPEN_PAREN) == null ? 4 : 5;
     }
 
     @Override

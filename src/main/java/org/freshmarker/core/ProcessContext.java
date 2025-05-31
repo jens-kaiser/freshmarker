@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 public class ProcessContext {
     private static final Formatter SIMPLE = (object, locale) -> object.toString();
@@ -96,7 +95,11 @@ public class ProcessContext {
     }
 
     public TemplateFunction getFunction(String name) {
-        return Optional.ofNullable(functions.get(name)).orElseThrow(() -> new ProcessException("unknown function: " + name));
+        TemplateFunction function = functions.get(name);
+        if (function == null) {
+            throw new ProcessException("unknown function: " + name);
+        }
+        return function;
     }
 
     public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
