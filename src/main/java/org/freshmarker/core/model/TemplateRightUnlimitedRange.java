@@ -29,11 +29,6 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     }
 
     @Override
-    public boolean isLengthLimited() {
-        return false;
-    }
-
-    @Override
     public boolean isRightUnlimited() {
         return true;
     }

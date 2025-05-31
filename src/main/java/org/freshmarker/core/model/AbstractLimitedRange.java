@@ -25,16 +25,6 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     protected abstract Bounds evaluate(ProcessContext context);
 
     @Override
-    public boolean isLengthLimited() {
-        return true;
-    }
-
-    @Override
-    public boolean isRightUnlimited() {
-        return false;
-    }
-
-    @Override
     public TemplateObject getLower() {
         return lower;
     }

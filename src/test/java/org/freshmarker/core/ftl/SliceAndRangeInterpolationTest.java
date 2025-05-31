@@ -177,6 +177,9 @@ class SliceAndRangeInterpolationTest {
 
             "test: ${(0..10)[2..2]?join};test: 2",
             "test: ${(10..0)[2..2]?join};test: 8",
+
+            "test: ${(0..10)[2..*3]?join};test: 2, 3, 4",
+            "test: ${(0..10)[2..*-3]?join};test: 2, 1, 0",
     }, delimiterString = ";")
     void interpolationRangeSlices(String input, String expected, TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("slices", input);

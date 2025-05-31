@@ -3,9 +3,13 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 
 public interface TemplateRange extends TemplateSequence {
-    boolean isLengthLimited();
+    default boolean isLengthLimited() {
+        return false;
+    }
 
-    boolean isRightUnlimited();
+    default  boolean isRightUnlimited() {
+        return false;
+    }
 
     TemplateObject getLower();
 

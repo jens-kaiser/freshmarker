@@ -13,7 +13,7 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
         this.count = count;
     }
 
-public TemplateLengthLimitedRange(TemplateObject lower, TemplateObject upper, TemplateNumber count, Bounds bounds) {
+    public TemplateLengthLimitedRange(TemplateObject lower, TemplateObject upper, TemplateNumber count, Bounds bounds) {
         super(lower, upper, bounds);
         this.evaluatedUpper = upper;
         this.count = count;
@@ -32,6 +32,11 @@ public TemplateLengthLimitedRange(TemplateObject lower, TemplateObject upper, Te
             newUpper = newLower - size + 1;
         }
         return new Bounds(newLower, newUpper, size);
+    }
+
+    @Override
+    public boolean isLengthLimited() {
+        return true;
     }
 
     @Override
