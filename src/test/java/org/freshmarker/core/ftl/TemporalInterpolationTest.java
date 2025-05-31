@@ -88,11 +88,22 @@ class TemporalInterpolationTest {
             "${temporal?c},1968-08-24T12:30:45",
             "${temporal?date},1968-08-24",
             "${temporal?time},12:30:45",
-            "${temporal?easter},1968-04-14"
+            "${temporal?easter},1968-04-14",
     })
     void interpolationLocalDateTime(String templateString, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: " + templateString);
         assertEquals("test: " + expected, template.process(TEMPORAL));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${temporal?easter},1968-04-14",
+            "${temporal?easter},2025-04-20",
+            "${temporal?easter},2121-04-06"
+    })
+    void interpolationEaster(String templateString, LocalDate date, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: " + templateString);
+        assertEquals("test: " + date, template.process(Map.of("temporal", date)));
     }
 
     @Test
