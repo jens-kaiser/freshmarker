@@ -17,8 +17,6 @@ import java.math.BigInteger;
 import java.util.Formatter;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.UnaryOperator;
 
 public final class NumberBuiltInProvider implements BuiltInProvider {
