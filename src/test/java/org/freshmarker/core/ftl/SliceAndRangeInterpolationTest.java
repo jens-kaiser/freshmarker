@@ -110,6 +110,9 @@ class SliceAndRangeInterpolationTest {
             "test: ${(a..b)[c..d]?join};1;7;2;4;test: 3, 4, 5",
             "test: ${(a..b)[c..d]?join};7;1;2;4;test: 5, 4, 3",
             "test: ${(a..)[c..d]?join};1;7;2;4;test: 3, 4, 5",
+            "test: ${(a..b)[c..*(d-1)]?join};1;7;2;4;test: 3, 4, 5",
+            "test: ${(a..b)[c..*(d-1)]?join};7;1;2;4;test: 5, 4, 3",
+            "test: ${(a..)[c..*(d-1)]?join};1;7;2;4;test: 3, 4, 5",
     }, delimiterString = ";")
     void interpolationLimitedSliceOnRange(String input, int a, int b, int c, int d, String expected, TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("test", input);
@@ -197,6 +200,9 @@ class SliceAndRangeInterpolationTest {
 
             "test: ${list1[2..2]?join};test: 2",
             "test: ${list2[2..2]?join};test: 8",
+
+            "test: ${list1[2..*3]?join};test: 2, 3, 4",
+            "test: ${list1[2..*-3]?join};test: 2, 1, 0",
     }, delimiterString = ";")
     void interpolationSequenceSlices(String input, String expected, TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("slices", input);
@@ -234,6 +240,9 @@ class SliceAndRangeInterpolationTest {
 
             "test: ${string1[2..2]};test: 2",
             "test: ${string2[2..2]};test: 8",
+
+            "test: ${string1[2..*3]};test: 234",
+            "test: ${string1[2..*-3]};test: 210",
     }, delimiterString = ";")
     void interpolationStringSlices(String input, String expected, TemplateBuilder builder) throws ParseException {
         Template template = builder.getTemplate("slices", input);
