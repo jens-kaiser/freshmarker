@@ -27,6 +27,7 @@ import org.freshmarker.core.model.temporal.TemplateInstant;
 import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
+import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.core.plugin.PluginProvider;
 
@@ -115,6 +116,7 @@ public final class Configuration {
             case "number" -> Map.of(TemplateNumber.class, new NumberFormatter(pattern));
             case "zoned-date-time" ->  Map.of(
                     TemplateZonedDateTime.class, new DateTimeFormatter(pattern),
+                    TemplateOffsetDateTime.class, new DateTimeFormatter(pattern),
                     TemplateInstant.class, new DateTimeFormatter(pattern, ZoneId.systemDefault()));
             case "date-time" ->  Map.of(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
             case "date" ->  Map.of(TemplateLocalDate.class, new DateFormatter(pattern));

@@ -19,6 +19,7 @@ import org.freshmarker.core.model.temporal.TemplateInstant;
 import org.freshmarker.core.model.temporal.TemplateLocalDate;
 import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
+import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 
 import java.time.ZoneId;
@@ -44,7 +45,9 @@ public record SettingFragment(String name, TemplateObject expression, SettingIns
     private static void processZonedDateTimeFormat(ProcessContext context, TemplateObject setting) {
         String value = setting.evaluate(context, TemplateString.class).getValue();
         Map<Class<? extends TemplateObject>, Formatter> formatter = Map.of(
-                TemplateInstant.class, new DateTimeFormatter(value, context.getZoneId()), TemplateZonedDateTime.class, new DateTimeFormatter(value));
+                TemplateInstant.class, new DateTimeFormatter(value, context.getZoneId()),
+                TemplateZonedDateTime.class, new DateTimeFormatter(value),
+                TemplateOffsetDateTime.class, new DateTimeFormatter(value));
         context.pushFormatter(formatter);
     }
 

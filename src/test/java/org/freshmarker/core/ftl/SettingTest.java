@@ -15,7 +15,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
@@ -42,11 +44,13 @@ class SettingTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = "test: ${date?date_time} - <#setting zone_id=\"Europe/London\">${date?date_time},test: 2001-08-24 12:34:56 - 2001-08-24 11:34:56")
-    void settingZoneI(String templateSource, String expected) throws ParseException {
+    @CsvSource(value = "test: ${date?date_time} - <#setting zone_id=\"Europe/London\">${date?date_time},test: 2001-08-24 02:34:56 - 2001-08-24 01:34:56")
+    void settingZoneID(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
-        ZonedDateTime zonedDateTime = LocalDateTime.of(LocalDate.of(2001, Month.AUGUST, 24), TIME).atZone(ZoneId.of("Europe/Berlin"));
+        ZonedDateTime zonedDateTime = LocalDateTime.of(LocalDate.of(2001, Month.AUGUST, 24), TIME).atZone(ZoneOffset.UTC);
         assertEquals(expected, template.process(Map.of("date", zonedDateTime.toInstant())));
+        OffsetDateTime offsetDateTime = LocalDateTime.of(LocalDate.of(2001, Month.AUGUST, 24), TIME).atOffset(ZoneOffset.UTC);
+        assertEquals(expected, template.process(Map.of("date", offsetDateTime.toInstant())));
     }
 
     @ParameterizedTest
