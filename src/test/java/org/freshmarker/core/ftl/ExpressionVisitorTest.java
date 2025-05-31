@@ -24,6 +24,7 @@ import ftl.ast.NumberLiteral;
 import ftl.ast.OrExpression;
 import ftl.ast.ParameterList;
 import ftl.ast.Parenthesis;
+import ftl.ast.PositionalArgsList;
 import ftl.ast.PrimaryExpression;
 import ftl.ast.RangeExpression;
 import ftl.ast.RelationalExpression;
@@ -190,7 +191,7 @@ class ExpressionVisitorTest {
 
     @Test
     void visitPositionalArgsList() {
-        assertEquals("", visitor.visit((Exists) null, ""));
+        assertEquals("", visitor.visit((PositionalArgsList) null, ""));
     }
 
     @Test
