@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Period;
 import java.time.Year;
@@ -56,9 +57,10 @@ class TemporalYearInterpolationTest {
         assertEquals(expected, template.process(dataModel));
     }
 
-    @Test
-    void unsupportedOperation(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("test", "test: ${year * 2}");
+    @ParameterizedTest
+    @ValueSource(strings = { "test: ${year * 2}", "test: ${year + '2'}", "test: ${year + 2.0}"})
+    void unsupportedOperation(String content, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", content);
         Map<String, Object> model = Map.of("year", YEAR_2025);
         assertThrows(ProcessException.class, () -> template.process(model));
     }

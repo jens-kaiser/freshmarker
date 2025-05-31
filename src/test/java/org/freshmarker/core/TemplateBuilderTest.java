@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class TemplateBuilderTest {
     TemplateBuilder templateBuilder;
@@ -44,5 +45,11 @@ class TemplateBuilderTest {
         assertEquals("1968-08-24 01:30:05 Europe/Berlin", template.process(Map.of()));
         TimeUnit.SECONDS.sleep(5);
         assertEquals("1968-08-24 01:30:05 Europe/Berlin", template.process(Map.of()));
+    }
+
+    @Test
+    void withoutSameFeature() {
+        TemplateBuilder without = templateBuilder.without(VariableScopeFeature.ALL_BLOCKS);
+        assertSame(templateBuilder, without);
     }
 }
