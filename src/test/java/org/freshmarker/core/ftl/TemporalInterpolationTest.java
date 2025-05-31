@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.EnumSource.Mode;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Duration;
@@ -24,6 +26,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -197,7 +200,7 @@ class TemporalInterpolationTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @ValueSource(strings = {
             "test: ${zoneddatetime?supports('YEARS')}",
             "test: ${zoneddatetime?supports('MONTHS')}",
             "test: ${zoneddatetime?supports('DAYS')}",
@@ -221,7 +224,7 @@ class TemporalInterpolationTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @ValueSource(strings = {
             "test: ${localtime?supports('YEARS')}",
             "test: ${localtime?supports('MONTHS')}",
             "test: ${localtime?supports('DAYS')}",
@@ -232,5 +235,15 @@ class TemporalInterpolationTest {
         Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of("localtime", LocalTime.now(), "instant", Instant.now());
         assertEquals("test: no", template.process(model));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ChronoUnit.class, mode = Mode.EXCLUDE, names = { "YEARS", "MONTHS", "DAYS"})
+    void unsupported(ChronoUnit unit, TemplateBuilder templateBuilder) throws ParseException {
+        String name = unit.name();
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal?supports('" + name + "')}");
+        Map<String, Object> model = Map.of("temporal", LocalDateTime.now());
+        ProcessException exception = assertThrows(ProcessException.class, () ->template.process(model));
+        assertEquals("unsupported temporal unit at test:1:7 '${temporal?supports('" + name + "')}'", exception.getMessage());
     }
 }
