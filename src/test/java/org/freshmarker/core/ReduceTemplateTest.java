@@ -377,6 +377,32 @@ class ReduceTemplateTest {
     }
 
     @Test
+    void reduceWithNullVariable() {
+        String input = "<#var name=value>${name}";
+        Template template = templateBuilder.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(4, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
+        assertEquals(0, reductionStatus.changed().get());
+        assertEquals("Jens", reducedTemplate.process(Map.of("value", "Jens")));
+    }
+
+    @Test
+    void reduceWithInvalidVariableDefinition() {
+        String input = "<#var name=value><#var name=value>${name}";
+        Template template = templateBuilder.getTemplate("test", input);
+        Template reducedTemplate = template.reduce(Map.of("value", "Jens"), reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals(5, reductionStatus.total().get());
+        assertEquals(1, reductionStatus.deleted().get());
+        assertEquals(2, reductionStatus.changed().get());
+        Map<String, Object> dataModel = Map.of();
+        ProcessException exception = assertThrows(ProcessException.class, () -> reducedTemplate.process(dataModel));
+        assertEquals("variable name must not exist at test:1:18 '<#var name=value>'", exception.getMessage());
+    }
+
+    @Test
     void demo() {
         String input = """
                 <#switch flag>
