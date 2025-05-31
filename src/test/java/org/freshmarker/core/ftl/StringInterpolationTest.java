@@ -291,6 +291,9 @@ class StringInterpolationTest {
             "test: ${'+49 176 04069042'?mask('░▒▓', 2)};test: ░▒▓ ▒▓░ ▓░▒▓░▒42",
             "test: ${'secret'?mask(6)};test: secret",
             "test: ${'secret'?mask(10)};test: secret",
+
+            "test: ${''?mask};test: ",
+            "test: ${'secret'?mask('')};test: ******",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void mask(String input, String expected, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("mask", input);
@@ -319,6 +322,9 @@ class StringInterpolationTest {
             "test: ${'secret'?mask_full('░▒▓', 1)};test: ░▒▓░▒t",
             "test: ${'5555 5555 5555 4444'?mask_full('░▒▓', 2)};test: ░▒▓░▒▓░▒▓░▒▓░▒▓░▒44",
             "test: ${'+49 176 04069042'?mask_full('░▒▓', 2)};test: ░▒▓░▒▓░▒▓░▒▓░▒42",
+
+            "test: ${''?mask_full};test: ",
+            "test: ${'secret'?mask_full('')};test: ******",
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
     void mask_full(String input, String expected, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("mask_full", input);
