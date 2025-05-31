@@ -87,7 +87,7 @@ class SimpleToStringMapperTest {
     void renderNullValues() {
         configuration.registerSimpleMapping(BitSet.class, x -> null);
         Template template = configuration.builder().getTemplate("test", "BitSet: ${bitSet!'empty'}");
-        assertEquals("empty", template.process(Map.of("bitSet", new BitSet(10))));
+        assertEquals("BitSet: empty", template.process(Map.of("bitSet", new BitSet(10))));
     }
 
 }
