@@ -4,15 +4,18 @@ import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
 import org.freshmarker.api.extension.FunctionProvider;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FunctionProviderTest {
 
@@ -35,5 +38,12 @@ class FunctionProviderTest {
     void avg(String templateSource, String expected) throws ParseException {
         Template template = configuration.builder().getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test", "test")));
+    }
+
+    @Test
+    void unknown() {
+        Template template = configuration.builder().getTemplate("test", "${fizzBuzz()}");
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(Map.of()));
+        assertEquals("unknown function: fizzBuzz at test:1:1 '${fizzBuzz()}'", exception.getMessage());
     }
 }
