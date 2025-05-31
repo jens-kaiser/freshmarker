@@ -31,6 +31,7 @@ class SimpleFeatureSetTest {
     void setUp() {
         TemplateFeatures templateFeatures = new TemplateFeatures();
         templateFeatures.addFeatures(DemoFeature.values());
+        templateFeatures.addFeatures(DemoFeature.values());
         templateFeatures.addFeatures(SecondDemoFeature.values());
         simpleFeatureSet = templateFeatures.create();
     }
