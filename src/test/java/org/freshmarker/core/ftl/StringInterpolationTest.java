@@ -56,8 +56,10 @@ class StringInterpolationTest {
             "test:${text?trim_to_null!'xxx'},'  text  ',test:text",
             "test:${text?trim_to_null!'xxx'},'    ',test:xxx",
             "test:${text?trim_to_null!'xxx'},,test:xxx",
+            "test:${text?empty_to_null!'xxx'},'test',test:test",
             "test:${text?empty_to_null!'xxx'},'',test:xxx",
             "test:${text?empty_to_null!'xxx'},,test:xxx",
+            "test:${text?blank_to_null!'xxx'},'test',test:test",
             "test:${text?blank_to_null!'xxx'},'    ',test:xxx",
             "test:${text?blank_to_null!'xxx'},,test:xxx",
     })
