@@ -7,7 +7,7 @@
 :email: schegge42@gmail.com
 :favicon: favicon.png
 
-image::freshmarker.png[width=800,align="left"]
+image::freshmarker-logo3.svg[width=800,align="left"]
 
 == Introduction
 
