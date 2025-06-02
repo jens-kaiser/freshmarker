@@ -1,5 +1,6 @@
 package org.freshmarker.core.plugin;
 
+import ftl.Token.TokenType;
 import org.freshmarker.api.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Register;
@@ -68,6 +69,17 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         return number.getType() == type ? number : TemplateNumber.of(converter.apply(number.getValue()), type);
     }
 
+    private TemplateObject clamp(TemplateNumber value, ProcessContext context, List<TemplateObject> parameter) {
+        BuiltInHelper.checkParametersLength(parameter, 2);
+        TemplateNumber min = parameter.getFirst().evaluate(context, TemplateNumber.class);
+        TemplateNumber max = parameter.get(1).evaluate(context, TemplateNumber.class);
+        if (min.relation(TokenType.GT, max, context)) {
+            throw new ProcessException(min + " > " + max);
+        }
+        TemplateNumber result = value.max(min).min(max);
+        return TemplateNumber.of(result.getValue(), result.getType());
+    }
+
     @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         SingleTypeBuiltInRegister builtInRegister = new SingleTypeBuiltInRegister(TemplateNumber.class);
@@ -89,7 +101,8 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         builtInRegister.add("h", (x, y, e) -> human(getNumber(x), e));
         builtInRegister.add("min", (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
         builtInRegister.add("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
-        builtInRegister.add( "is_number", BuiltInHelper.alwaysTrue());
+        builtInRegister.add("is_number", BuiltInHelper.alwaysTrue());
+        builtInRegister.add("clamp", (x, y, e) -> clamp((TemplateNumber) x, e, y));
         return builtInRegister;
     }
 }

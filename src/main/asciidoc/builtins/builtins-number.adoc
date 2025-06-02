@@ -202,3 +202,20 @@ m|Ⅳ
 m|${9?utf_roman}
 m|Ⅸ
 |===
+
+==== `clamp` Built-In (since 1.9.1)
+
+Clamps the value to fit between min and max. If the value is less than min, then min is returned. If the value is greater than max, then max is returned. Otherwise, the original value is returned.
+
+|===
+|Interpolation | Output
+
+m|${10?clamp(20, 30)}
+m|20
+
+m|${25?clamp(20, 30)}
+m|25
+
+m|${40?clamp(20, 30)}
+m|30
+|===

@@ -448,6 +448,7 @@ class NumberInterpolationTest {
                 "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"))));
     }
 
+
     @ParameterizedTest
     @CsvSource(value = {
             "${a?max('45')}",
@@ -487,6 +488,86 @@ class NumberInterpolationTest {
             "${h?min}",
     }, delimiterString = ";")
     void interpolationInvalidMinMax(String templateSource) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        Map<String, Object> model = Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
+                "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"));
+        assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${a?clamp(45,50)};45",
+            "${b?clamp(45,50)};45",
+            "${c?clamp(45,50)};45",
+            "${d?clamp(45,50)};45",
+            "${e?clamp(45,50)};45",
+            "${f?clamp(45,50)};45",
+            "${g?clamp(45,50)};45",
+            "${h?clamp(45,50)};45",
+
+            "${a?clamp(30,35)};35",
+            "${b?clamp(30,35)};35",
+            "${c?clamp(30,35)};35",
+            "${d?clamp(30,35)};35",
+            "${e?clamp(30,35)};35",
+            "${f?clamp(30,35)};35",
+            "${g?clamp(30,35)};35",
+            "${h?clamp(30,35)};35",
+
+            "${a?clamp(40,50)};42",
+            "${b?clamp(40,50)};42",
+            "${c?clamp(40,50)};42",
+            "${d?clamp(40,50)};42",
+            "${e?clamp(40,50)};42",
+            "${f?clamp(40,50)};42",
+            "${g?clamp(40,50)};42",
+            "${h?clamp(40,50)};42",
+
+            "${a?clamp(a,a)};42",
+            "${b?clamp(b,b)};42",
+            "${c?clamp(c,c)};42",
+            "${d?clamp(d,d)};42",
+            "${e?clamp(e,e)};42",
+            "${f?clamp(f,f)};42",
+            "${g?clamp(g,g)};42",
+            "${h?clamp(h,h)};42",
+    }, delimiterString = ";")
+    void interpolationClamp(String templateSource, String expected) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", templateSource);
+        assertEquals(expected, template.process(Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
+                "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"))));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${a?clamp(40,'45')}",
+            "${b?clamp(40,'45')}",
+            "${c?clamp(40,'45')}",
+            "${d?clamp(40,'45')}",
+            "${e?clamp(40,'45')}",
+            "${f?clamp(40,'45')}",
+            "${g?clamp(40,'45')}",
+            "${h?clamp(40,'45')}",
+
+            "${a?clamp}",
+            "${b?clamp}",
+            "${c?clamp}",
+            "${d?clamp}",
+            "${e?clamp}",
+            "${f?clamp}",
+            "${g?clamp}",
+            "${h?clamp}",
+
+            "${a?clamp(40,30)}",
+            "${b?clamp(40,30)}",
+            "${c?clamp(40,30)}",
+            "${d?clamp(40,30)}",
+            "${e?clamp(40,30)}",
+            "${f?clamp(40,30)}",
+            "${g?clamp(40,30)}",
+            "${h?clamp(40,30)}",
+    }, delimiterString = ";")
+    void interpolationInvalidClamp(String templateSource) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         Map<String, Object> model = Map.of("a", 42, "b", 42L, "c", (short) 42, "d", (byte) 42,
                 "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"));
