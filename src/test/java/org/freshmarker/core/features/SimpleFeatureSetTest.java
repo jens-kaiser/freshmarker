@@ -89,4 +89,15 @@ class SimpleFeatureSetTest {
         SimpleFeatureSet derived = simpleFeatureSet.without(DemoFeature.SECOND);
         assertSame(simpleFeatureSet, derived);
     }
+
+    @Test
+    void changedConfiguredFeatured() {
+        SimpleFeatureSet derived = simpleFeatureSet.with(DemoFeature.FIRST, 42).with(DemoFeature.SECOND);
+        assertTrue(derived.isEnabled(DemoFeature.FIRST));
+        assertTrue(derived.getConfigured(DemoFeature.FIRST).isPresent());
+        assertEquals(42, derived.getConfigured(DemoFeature.FIRST).orElse(null));
+        assertTrue(derived.isEnabled(DemoFeature.SECOND));
+        assertTrue(derived.getConfigured(DemoFeature.SECOND).isEmpty());
+    }
+
 }

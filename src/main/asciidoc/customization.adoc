@@ -144,7 +144,7 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 [#variable-scope-feature,reftext=Variable Scope Feature]
 ===== Variable Scope Feature (since 1.9.0)
 
-These feature is controlled by a constant in the `VariableScopeFeature` class.
+This feature is controlled by a constant in the `VariableScopeFeature` class.
 
 [cols="2,4,1"]
 |===
@@ -154,6 +154,32 @@ These feature is controlled by a constant in the `VariableScopeFeature` class.
 | Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
 | `false`
 |===
+
+===== Partial Reduction Features (since 1.9.1)
+
+These features are controlled by constants in the `ReductionFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| UNFOLD_LIST
+| Feature that allows template reduction by unrolling list directives.
+Feature that determines whether list directives are unrolled.
+Only list directives that do not exceed a configurable number of elements are unrolled. The default value is 5.
+| `false`
+
+| MERGE_CONSTANT_FRAGMENTS
+| Feature that determines whether constant fragments are merged.
+| `false`
+|===
+
+.Example change maximum element number for unrolling lists
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder()
+    .with(ReductionFeature.UNFOLD_LIST, 7);
+----
 
 ==== With Clock (since 1.6.9)
 

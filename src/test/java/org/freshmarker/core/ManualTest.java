@@ -6,6 +6,7 @@ import org.freshmarker.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,5 +48,70 @@ class ManualTest {
                 2 * 2 = 4
                 1 * 1 = 1
                 """, template.process(Map.of("a", 3, "b", 1)));
+    }
+    @Test
+    void reduce1() {
+        Template template = configuration.builder().with(ReductionFeature.MERGE_CONSTANT_FRAGMENTS).getTemplate("test", """
+                Name:   ${firstname} ${lastname}
+                <#if email??>
+                E-Mail: ${email?lower_case}
+                <#else>
+                E-Mail: ●●●
+                </#if>
+                Company: ${company}
+                """);
+        Template reduced = template.reduce(Map.of("company", "ACME", "email",  "Wile.E.Coyote@acme.com"));
+        reduced.process(Map.of("firstname", "", "lastname", ""));
+    }
+
+    @Test
+    void reduce2() {
+        Template template = configuration.builder().with(ReductionFeature.UNROLL_LIST).with(ReductionFeature.MERGE_CONSTANT_FRAGMENTS).getTemplate("test", """
+                ${''?right_pad(32, '•●⬤●')}
+                <#list employees as e with l>
+                Name:   ${e.firstname} ${e.lastname}
+                <#if e.email??>
+                E-Mail: ${e.email?lower_case}
+                <#else>
+                E-Mail: ●●●
+                </#if>
+                Company: ${company}
+                <#if l?has_next>
+                ${''?right_pad(32, '•●')}
+                </#if>
+                </#list>
+                ${''?right_pad(32, '•●⬤●')}
+                """);
+        List<Map<String, String>> employees = List.of(Map.of("email", "Wile.E.Coyote@acme.com"), Map.of("email", "Elmar.J.Fudd@acme.com"));
+        Map<String, Object> dataModel = Map.of("company", "ACME", "employees", employees);
+        Template reduced = template.reduce(dataModel);
+        List<Map<String, String>> employeesNames = List.of(
+                Map.of("firstname", "Wile E.", "lastname", "Coyote"),
+                Map.of("firstname", "Elmar J.", "lastname", "Fudd"));
+        String content = reduced.process(Map.of("employees", employeesNames));
+        assertEquals("""
+                •●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●
+                Name:   Wile E. Coyote
+                E-Mail: wile.e.coyote@acme.com
+                Company: ACME
+                •●•●•●•●•●•●•●•●•●•●•●•●•●•●•●•●
+                Name:   Elmar J. Fudd
+                E-Mail: elmar.j.fudd@acme.com
+                Company: ACME
+                •●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●
+                """, content);
+    }
+
+    @Test
+    void reduce3() {
+        Template template = configuration.builder().with(ReductionFeature.UNROLL_LIST).with(ReductionFeature.MERGE_CONSTANT_FRAGMENTS).getTemplate("test", """
+                <#list bean as key, value>
+                ${key?upper_case} ${value?lower_case}
+                </#list>
+                """);
+        Map<String, String> bean = Map.of("email", "Wile.E.Coyote@acme.com", "company", "ACME");
+        Map<String, Object> dataModel = Map.of("bean", bean);
+        Template reduced = template.reduce(dataModel);
+        reduced.process(Map.of("bean", bean));
     }
 }

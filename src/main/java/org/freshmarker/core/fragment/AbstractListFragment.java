@@ -3,6 +3,8 @@ package org.freshmarker.core.fragment;
 import ftl.ast.ListInstruction;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.model.TemplateLooper;
@@ -96,6 +98,28 @@ public abstract class AbstractListFragment<T> implements Fragment {
         }
     }
 
+    protected Fragment reduceLoop(ReduceContext context, ListEnvironment hashEnvironment, ReductionStrategy strategy) {
+        TemplateLooper looper = hashEnvironment.getLooper();
+        List<Fragment> fragments = new ArrayList<>();
+        for (int i = 0, n = looper.size(); i < n; i++) {
+            List<Fragment> loopFragments = new ArrayList<>();
+            Environment environment = context.getEnvironment();
+            try {
+                context.setEnvironment(hashEnvironment);
+                loopFragments.add(block.reduce(context));
+            } finally {
+                context.setEnvironment(environment);
+            }
+            looper.increment();
+            if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {
+                loopFragments = Fragments.optimizeReduction(loopFragments);
+            }
+            strategy.handle(loopFragments, i);
+            fragments.add(Fragments.optimizeWithVariableContext(loopFragments));
+        }
+        return Fragments.optimize(fragments, false);
+    }
+
     protected Fragment optimize(Fragment original, Fragment reduced, UnaryOperator<Fragment> function) {
         if (reduced == ConstantFragment.EMPTY)  {
             return ConstantFragment.EMPTY;
@@ -106,5 +130,9 @@ public abstract class AbstractListFragment<T> implements Fragment {
     @Override
     public int getSize() {
         return block.getSize() + 1;
+    }
+
+    protected Integer getUnfoldLimit(ReduceContext context) {
+        return (Integer) context.getFeatureSet().getConfigured(ReductionFeature.UNROLL_LIST).orElse(5);
     }
 }

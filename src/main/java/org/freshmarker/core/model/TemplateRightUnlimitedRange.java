@@ -49,7 +49,7 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     }
 
     @Override
-    public List<Object> getSequence() {
+    public List<Object> sequence() {
         throw new ProcessException("right unlimited range not supported");
     }
 

@@ -144,6 +144,15 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     }
 
     @Override
+    public TemplateBuilder with(TemplateFeature templateFeature, Object parameter) {
+        SimpleFeatureSet newFeatureSet = featureSet.with(templateFeature, parameter);
+        if (newFeatureSet == featureSet) {
+            return this;
+        }
+        return new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, newFeatureSet);
+    }
+
+    @Override
     public TemplateBuilder without(TemplateFeature templateFeature) {
         SimpleFeatureSet newFeatureSet = featureSet.without(templateFeature);
         if (newFeatureSet == featureSet) {

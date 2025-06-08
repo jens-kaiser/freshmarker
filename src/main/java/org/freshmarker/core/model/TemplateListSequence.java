@@ -7,7 +7,7 @@ import org.freshmarker.core.ProcessException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemplateListSequence implements TemplateSequence {
+public class TemplateListSequence implements TemplateSequence<Object> {
 
     private final List<Object> sequence;
 
@@ -47,7 +47,7 @@ public class TemplateListSequence implements TemplateSequence {
         return this;
     }
 
-    public List<Object> getSequence() {
+    public List<Object> sequence() {
         return sequence;
     }
 

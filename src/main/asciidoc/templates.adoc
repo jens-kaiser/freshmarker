@@ -290,5 +290,11 @@ Template reducedTemplate = template.reduce("company", new Company("schegge.de"))
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
 
-WARNING: A reduction cannot be carried out if loop variables, the default or exist operator are used.
-Variables and parameter should not hide model variables, this could be produced unpredicted results.
+==== List Unfolding (since 1.9.1)
+
+_Partial Reduction_ on _List Directives_ is executed by unfolding the loops.
+Unfolding is used only if there is a maximum of five entries in the list.
+
+This feature has to be activated with `ReductionFeature.UNFOLD_LIST`.
+
+WARNING: A reduction cannot be carried out on the default or the exist operator.

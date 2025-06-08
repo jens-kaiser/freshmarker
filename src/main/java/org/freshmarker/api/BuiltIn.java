@@ -11,12 +11,12 @@ import java.util.List;
  */
 public interface BuiltIn {
     /**
-     * The current value is processed by the Built-In and a changed object is returned.
+     * The current value is processed by the Built-In and a replaced object is returned.
      *
      * @param value the object to be processed
      * @param parameters the current parameters of the Built-In
      * @param context the current process context
-     * @return the possibly changed object
+     * @return the possibly replaced object
      */
     TemplateObject apply(TemplateObject value, List<TemplateObject> parameters, ProcessContext context);
 

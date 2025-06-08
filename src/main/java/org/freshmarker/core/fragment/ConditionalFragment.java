@@ -27,7 +27,7 @@ public record ConditionalFragment(TemplateObject conditional, Fragment content, 
             if (reduce == content) {
                 return this;
             }
-            context.getStatus().changed().incrementAndGet();
+            context.getStatus().replaced().incrementAndGet();
             return new ConditionalFragment(conditional, reduce, node);
         } catch (RuntimeException e) {
             return this;

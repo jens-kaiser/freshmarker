@@ -26,7 +26,7 @@ public record SetVariableFragment(String name, TemplateObject expression, Node n
                 return this;
             }
             environment.setVariable(name, value);
-            context.getStatus().changed().incrementAndGet();
+            context.getStatus().replaced().incrementAndGet();
             return new SetVariableFragment(name, value, node);
         } catch (RuntimeException e) {
             return this;
