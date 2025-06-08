@@ -49,6 +49,7 @@ class ManualTest {
                 1 * 1 = 1
                 """, template.process(Map.of("a", 3, "b", 1)));
     }
+
     @Test
     void reduce1() {
         Template template = configuration.builder().with(ReductionFeature.MERGE_CONSTANT_FRAGMENTS).getTemplate("test", """
@@ -61,7 +62,11 @@ class ManualTest {
                 Company: ${company}
                 """);
         Template reduced = template.reduce(Map.of("company", "ACME", "email",  "Wile.E.Coyote@acme.com"));
-        reduced.process(Map.of("firstname", "", "lastname", ""));
+        assertEquals("""
+                Name:   \s
+                E-Mail: wile.e.coyote@acme.com
+                Company: ACME
+                """, reduced.process(Map.of("firstname", "", "lastname", "")));
     }
 
     @Test
@@ -112,6 +117,9 @@ class ManualTest {
         Map<String, String> bean = Map.of("email", "Wile.E.Coyote@acme.com", "company", "ACME");
         Map<String, Object> dataModel = Map.of("bean", bean);
         Template reduced = template.reduce(dataModel);
-        reduced.process(Map.of("bean", bean));
+        assertEquals("""
+            COMPANY acme
+            EMAIL wile.e.coyote@acme.com
+            """,reduced.process(Map.of("bean", bean)));
     }
 }

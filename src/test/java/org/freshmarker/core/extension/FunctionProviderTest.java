@@ -43,7 +43,8 @@ class FunctionProviderTest {
     @Test
     void unknown() {
         Template template = configuration.builder().getTemplate("test", "${fizzBuzz()}");
-        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(Map.of()));
+        Map<String, Object> dataModel = Map.of();
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
         assertEquals("unknown function: fizzBuzz at test:1:1 '${fizzBuzz()}'", exception.getMessage());
     }
 }
