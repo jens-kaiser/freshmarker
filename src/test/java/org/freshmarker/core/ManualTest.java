@@ -110,7 +110,7 @@ class ManualTest {
     @Test
     void reduce3() {
         Template template = configuration.builder().with(ReductionFeature.UNROLL_LIST).with(ReductionFeature.MERGE_CONSTANT_FRAGMENTS).getTemplate("test", """
-                <#list bean as key, value>
+                <#list bean as key sorted desc, value>
                 ${key?upper_case} ${value?lower_case}
                 </#list>
                 """);
