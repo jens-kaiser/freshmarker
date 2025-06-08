@@ -31,7 +31,7 @@ public record VarVariableFragment(String name, TemplateObject expression, Node n
                 return this;
             }
             environment.createVariable(name, value);
-            context.getStatus().changed().incrementAndGet();
+            context.getStatus().replaced().incrementAndGet();
             return new VarVariableFragment(name, value, node);
         }  catch (RuntimeException e) {
             return this;

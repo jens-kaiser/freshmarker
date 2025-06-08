@@ -25,7 +25,12 @@ public class OutputFormatFragment implements Fragment {
 
     @Override
     public OutputFormatFragment reduce(ReduceContext context) {
-        return new OutputFormatFragment(content.reduce(context), format);
+        Fragment reduced = content.reduce(context);
+        if (content == reduced) {
+            return this;
+        }
+        context.getStatus().replaced().incrementAndGet();
+        return new OutputFormatFragment(reduced, format);
     }
 
     @Override

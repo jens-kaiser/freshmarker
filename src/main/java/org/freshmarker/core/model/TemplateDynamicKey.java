@@ -49,8 +49,8 @@ public class TemplateDynamicKey implements TemplateExpression {
             }
             return lower.add(lower.asInt() < upper.asInt() ? index : index.negate());
         }
-        TemplateListSequence list = (TemplateListSequence) templateObject;
-        return list.get(context, beginIndex);
+        TemplateSequence<?> list = (TemplateSequence<?>) templateObject;
+        return context.mapObject(list.sequence().get(beginIndex));
     }
 
     @Override

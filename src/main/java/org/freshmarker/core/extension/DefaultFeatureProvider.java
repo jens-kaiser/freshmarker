@@ -4,6 +4,7 @@ import org.freshmarker.api.TemplateFeature;
 import org.freshmarker.api.extension.TemplateFeatureProvider;
 import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.IncludeDirectiveFeature;
+import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.VariableScopeFeature;
 
@@ -20,6 +21,7 @@ public class DefaultFeatureProvider implements TemplateFeatureProvider {
         templateFeatures.addAll(EnumSet.allOf(SwitchDirectiveFeature.class));
         templateFeatures.addAll(EnumSet.allOf(BuiltinHandlingFeature.class));
         templateFeatures.addAll(EnumSet.allOf(VariableScopeFeature.class));
+        templateFeatures.addAll(EnumSet.allOf(ReductionFeature.class));
         return templateFeatures;
     }
 }

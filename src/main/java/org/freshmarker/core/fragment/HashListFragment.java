@@ -5,6 +5,7 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.environment.ReducingLoopVariableEnvironment;
@@ -12,6 +13,7 @@ import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.model.TemplateHashLooper;
 import org.freshmarker.core.model.TemplateMap;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateSequence;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -35,12 +37,7 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
     @Override
     public void process(ProcessContext context) {
         try {
-            Map<String, Object> map = ((TemplateMap) list.evaluateToObject(context)).map();
-            List<Entry<String, Object>> sequence = new ArrayList<>(map.entrySet());
-            if (comparator != null) {
-                sequence.sort(Entry.comparingByKey(comparator));
-            }
-            sequence = filterSequence(context, sequence);
+            List<Entry<String, Object>> sequence = getList(context);
 
             TemplateHashLooper looper = new TemplateHashLooper(sequence);
             ListEnvironment hashEnvironment = new ListEnvironment(context.getEnvironment(), keyIdentifier, valueIdentifier, looperIdentifier, looper);
@@ -56,17 +53,56 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
         environment.setValue(valueIdentifier, value.getValue());
     }
 
+    private Fragment simpleReduce(ReduceContext context, Environment environment) {
+        context.setEnvironment(new ReducingVariableEnvironment(new ReducingLoopVariableEnvironment(environment, keyIdentifier, valueIdentifier, looperIdentifier)));
+        Fragment reduce = block.reduce(context);
+        return optimize(block, reduce, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator, filter, limit, limit));
+    }
+
     @Override
     public Fragment reduce(ReduceContext context) {
         Environment environment = context.getEnvironment();
         try {
-            Environment reducingVariableEnvironment = new ReducingVariableEnvironment(new ReducingLoopVariableEnvironment(environment, keyIdentifier, valueIdentifier, looperIdentifier));
-            context.setEnvironment(reducingVariableEnvironment);
-            Fragment reduce = block.reduce(context);
-            return optimize(block, reduce, r -> new HashListFragment(list, keyIdentifier, valueIdentifier, looperIdentifier, r, ftl, comparator, filter, limit, limit));
+            if (context.getFeatureSet().isDisabled(ReductionFeature.UNROLL_LIST)) {
+                return simpleReduce(context, environment);
+            }
+            List<Entry<String, Object>> objectList = getList(context);
+            int unfoldLimit = getUnfoldLimit(context);
+            if (objectList.isEmpty() || objectList.size() > unfoldLimit) {
+                return simpleReduce(context, environment);
+            }
+            TemplateHashLooper looper = new TemplateHashLooper(objectList);
+            HashListStrategy strategy = new HashListStrategy(keyIdentifier, valueIdentifier, this);
+            return reduceLoop(context, new ListEnvironment(context.getEnvironment(), keyIdentifier, valueIdentifier, looperIdentifier, looper), strategy);
         } finally {
             context.setEnvironment(environment);
         }
+    }
+
+    private List<Entry<String, Object>> getList(ProcessContext context) {
+        Map<String, Object> map = ((TemplateMap) list.evaluateToObject(context)).map();
+        List<Entry<String, Object>> sequence = new ArrayList<>(map.entrySet());
+        if (comparator != null) {
+            sequence.sort(Entry.comparingByKey(comparator));
+        }
+        return filterSequence(context, sequence);
+    }
+
+    private record HashSequence(List<Entry<String, Object>> sequence) implements TemplateSequence<Entry<String, Object>> {
+
+        @Override
+        public TemplateObject evaluateToObject(ProcessContext context) {
+            return this;
+        }
+
+        @Override
+        public int size(ProcessContext context) {
+            return sequence.size();
+        }
+    }
+
+    public TemplateObject getMapAccess() {
+        return context -> new HashSequence(getList(context));
     }
 
     @Override

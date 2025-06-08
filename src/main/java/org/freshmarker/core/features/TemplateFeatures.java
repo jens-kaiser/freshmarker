@@ -3,6 +3,7 @@ package org.freshmarker.core.features;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.freshmarker.api.TemplateFeature;
 
@@ -30,7 +31,7 @@ public class TemplateFeatures implements FeatureSet {
     public SimpleFeatureSet create() {
         BitSet bitSet = new BitSet(masks.size());
         masks.values().stream().filter(Entry::enabled).forEach(v -> bitSet.set(v.flag()));
-        return new SimpleFeatureSet(bitSet, this);
+        return new SimpleFeatureSet(bitSet, this, new HashMap<>());
     }
 
     int getFlag(TemplateFeature feature) {
@@ -46,5 +47,10 @@ public class TemplateFeatures implements FeatureSet {
     @Override
     public boolean isDisabled(TemplateFeature feature) {
         return !masks.getOrDefault(feature, new Entry(0, false)).enabled();
+    }
+
+    @Override
+    public Optional<Object> getConfigured(TemplateFeature feature) {
+        return Optional.empty();
     }
 }

@@ -2,9 +2,11 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReductionFeature;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class BlockFragment implements Fragment {
 
@@ -27,7 +29,11 @@ public class BlockFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        return Fragments.optimize(fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList(), false);
+        List<Fragment> list = fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList();
+        if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {
+            list = Fragments.optimizeReduction(list);
+        }
+        return Fragments.optimize(list, false);
     }
 
     @Override

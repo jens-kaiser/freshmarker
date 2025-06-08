@@ -5,9 +5,11 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.environment.ReducingLoopVariableEnvironment;
+import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateSequence;
 import org.freshmarker.core.model.TemplateSequenceLooper;
@@ -26,9 +28,8 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     @Override
     public void process(ProcessContext context) {
         try {
-            List<Object> objectList = list.evaluate(context, TemplateSequence.class).getSequence();
-            objectList = filterSequence(context, objectList);
-
+            TemplateSequence<Object> evaluate = list.evaluate(context, TemplateSequence.class);
+            List<Object> objectList = filterSequence(context, evaluate.sequence());
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
             processLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper));
         } catch (RuntimeException e) {
@@ -45,12 +46,36 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     public Fragment reduce(ReduceContext context) {
         Environment environment = context.getEnvironment();
         try {
-            context.setEnvironment(new ReducingLoopVariableEnvironment(environment, identifier, looperIdentifier));
-            Fragment reduce = block.reduce(context);
-            return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl, filter, offset, limit));
+            if (context.getFeatureSet().isDisabled(ReductionFeature.UNROLL_LIST)) {
+                return simpleReduce(context, environment);
+            }
+            int unfoldLimit = getUnfoldLimit(context);
+            List<Object> objectList = getList(context);
+            if (objectList.isEmpty() || objectList.size() > unfoldLimit) {
+                return simpleReduce(context, environment);
+            }
+            TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
+            SequenceListStrategy strategy = new SequenceListStrategy(identifier, list);
+            return reduceLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper), strategy);
+        } catch (RuntimeException e) {
+            return this;
         } finally {
             context.setEnvironment(environment);
         }
+    }
+
+    private Fragment simpleReduce(ReduceContext context, Environment environment) {
+        context.setEnvironment(new ReducingLoopVariableEnvironment(environment, identifier, looperIdentifier));
+        Fragment reduce = block.reduce(context);
+        return optimize(block, reduce, r -> new SequenceListFragment(list, identifier, looperIdentifier, r, ftl, filter, offset, limit));
+    }
+
+    private List<Object> getList(ReduceContext context) {
+        TemplateObject templateObject = list.evaluateToObject(context);
+        if (templateObject instanceof TemplateListSequence sequence) {
+            return filterSequence(context, sequence.sequence());
+        }
+        return List.of();
     }
 
     @Override

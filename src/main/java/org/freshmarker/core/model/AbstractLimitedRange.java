@@ -53,7 +53,7 @@ public abstract class AbstractLimitedRange implements TemplateRange {
     }
 
     @Override
-    public List<Object> getSequence() {
+    public List<Object> sequence() {
         return new AbstractList<>() {
 
             @Override

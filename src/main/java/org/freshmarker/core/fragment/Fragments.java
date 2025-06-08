@@ -1,5 +1,6 @@
 package org.freshmarker.core.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Fragments {
@@ -38,4 +39,29 @@ public final class Fragments {
         return fragments.stream().anyMatch(VarVariableFragment.class::isInstance);
     }
 
+    public static List<Fragment> optimizeReduction(List<Fragment> fragments) {
+        List<Fragment> result = new ArrayList<>();
+        StringBuilder constantContent = new StringBuilder();
+        boolean previousConstant = true;
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof ConstantFragment constantFragment) {
+                if (!previousConstant) {
+                    constantContent.setLength(0);
+                }
+                constantContent.append(constantFragment.getValue());
+                previousConstant = true;
+            } else {
+                if (!constantContent.isEmpty()) {
+                    result.add(new ConstantFragment(constantContent.toString()));
+                    constantContent.setLength(0);
+                }
+                previousConstant = false;
+                result.add(fragment);
+            }
+        }
+        if (!constantContent.isEmpty()) {
+            result.add(new ConstantFragment(constantContent.toString()));
+        }
+        return result;
+    }
 }

@@ -33,6 +33,8 @@ public interface TemplateBuilder {
 
     TemplateBuilder with(TemplateFeature templateFeature);
 
+    TemplateBuilder with(TemplateFeature templateFeature, Object parameter);
+
     TemplateBuilder without(TemplateFeature templateFeature);
 
     Template getTemplate(Path path) throws ParseException, IOException;

@@ -4,9 +4,9 @@ import org.freshmarker.core.ProcessContext;
 
 import java.util.List;
 
-public interface TemplateSequence extends TemplateObject {
+public interface TemplateSequence<T> extends TemplateObject {
 
   int size(ProcessContext context);
 
-  List<Object> getSequence();
+  List<T> sequence();
 }

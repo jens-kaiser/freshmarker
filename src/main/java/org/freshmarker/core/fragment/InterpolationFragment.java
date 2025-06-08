@@ -38,7 +38,7 @@ public class InterpolationFragment implements Fragment {
     public Fragment reduce(ReduceContext context) {
         try {
             TemplateString templateObject = expression.evaluate(context, TemplateString.class);
-            context.getStatus().changed().incrementAndGet();
+            context.getStatus().replaced().incrementAndGet();
             return new ConstantFragment(templateObject.getValue());
         } catch (WrongTypeException e) {
             throw new WrongTypeException(e.getMessage(), ftl, e);

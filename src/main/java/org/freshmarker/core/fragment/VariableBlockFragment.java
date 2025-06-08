@@ -34,7 +34,7 @@ public class VariableBlockFragment extends BlockFragment{
             for (Fragment fragment : fragments) {
                 reduced.add(fragment.reduce(context));
             }
-            return new VariableBlockFragment(reduced);
+            return new VariableBlockFragment(Fragments.optimizeReduction(reduced));
         } catch (RuntimeException e) {
             return this;
         } finally {
