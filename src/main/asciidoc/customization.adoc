@@ -155,6 +155,7 @@ This feature is controlled by a constant in the `VariableScopeFeature` class.
 | `false`
 |===
 
+[#partial-reduction-feature,reftext=Partial Reduction Features]
 ===== Partial Reduction Features (since 1.9.1)
 
 These features are controlled by constants in the `ReductionFeature` class.
