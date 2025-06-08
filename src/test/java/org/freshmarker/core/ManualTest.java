@@ -118,8 +118,8 @@ class ManualTest {
         Map<String, Object> dataModel = Map.of("bean", bean);
         Template reduced = template.reduce(dataModel);
         assertEquals("""
-            COMPANY acme
             EMAIL wile.e.coyote@acme.com
+            COMPANY acme
             """,reduced.process(Map.of("bean", bean)));
     }
 }
