@@ -10,6 +10,7 @@
 - add `ReductionFeature.MERGE_CONSTANT_FRAGMENTS` feature, to activate merging of constant fragments
 - add `Character` support
 - add number built-in `unicode`
+- add `SecurityFeature.MODEL_SECURITY` feature, to deactivate model security
 
 == Release 1.9.0 (2025-06-01)
 

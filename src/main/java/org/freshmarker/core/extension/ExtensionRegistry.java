@@ -6,6 +6,7 @@ import org.freshmarker.api.Formatter;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.UserDirective;
+import org.freshmarker.core.ModelSecurityGateway.ModelSecurityHandler;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Extension;
@@ -18,7 +19,6 @@ import org.freshmarker.api.extension.TemplateObjectProviders;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.BuiltInVariableProvider;
-import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.model.TemplateObject;
@@ -111,18 +111,18 @@ public class ExtensionRegistry {
         return pluginProviderRegistry.getMappingTemplateObjectProvider();
     }
 
-    public List<TemplateObjectProvider> getProviders(ModelSecurityGateway modelSecurityGateway) {
+    public List<TemplateObjectProvider> getProviders(ModelSecurityHandler modelSecurityHandler) {
         List<TemplateObjectProvider> templateObjectProviders = new ArrayList<>(pluginProviderRegistry.getProviders());
         stream(TemplateObjectProviders.class).map(TemplateObjectProviders::provideProviders).forEach(templateObjectProviders::addAll);
         MappingTemplateObjectProvider newMappingTemplateObjectProvider = pluginProviderRegistry.getMappingTemplateObjectProvider().copy();
         stream(TypeMapperProvider.class).map(TypeMapperProvider::providerTypeMapper).forEach(newMappingTemplateObjectProvider::register);
         List<TemplateObjectProvider> copy = new ArrayList<>();
         copy.add(newMappingTemplateObjectProvider);
-        copy.add(new RecordTemplateObjectProvider(modelSecurityGateway));
+        copy.add(new RecordTemplateObjectProvider(modelSecurityHandler));
         copy.add(new EnumTemplateObjectProvider());
         copy.addAll(templateObjectProviders);
         copy.add(new CompoundTemplateObjectProvider());
-        copy.add(new BeanTemplateObjectProvider(modelSecurityGateway));
+        copy.add(new BeanTemplateObjectProvider(modelSecurityHandler));
         return copy;
     }
 

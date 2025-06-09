@@ -283,7 +283,9 @@ template.process(model);
 
 In the example above, the `familyTree` value is lazy evaluated, when the variable is accessed during template processing.
 
-=== Forbidden Types
+=== Forbidden Types (deprecated since 1.9.1)
+
+CAUTION: As FreshMarker does not execute any methods on model classes, there is no risk of injection. This mechanism will therefore be removed with version 2.0.0.
 
 Although many Java types are supported directly or as a Java Bean, some classes cannot be used. For security reasons, all classes from the `java`, `javax`, `sun` and `com.sun` packages are ignored.
 
@@ -300,3 +302,5 @@ configuration.getSecurity().addAllowedPackages("java.io");
 NOTE: Of course, it only makes sense to allow classes that can also be interpreted by _FreshMarker_. Alternatively, a class can also be integrated via _Custom String Types_ or a _Plug-in_.
 
 In the example above, the class `java.lang.Runtime` and all classes in the packages `java.lang.annotation` and `java.io` and all of their subpackages are allowed.
+
+Der Mechanismus kann
