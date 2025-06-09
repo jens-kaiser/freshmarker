@@ -30,36 +30,53 @@ public class ModelSecurityGateway {
         addAllowedPackages(type.getPackageName());
     }
 
-    public void check(Class<?> type) {
-        boolean isForbiddenPackage = isForbiddenPackage(type);
-        if (!isForbiddenPackage) {
-            return;
-        }
-        boolean isAllowedClass = allowedClasses.contains(type.getName());
-        if (isAllowedClass) {
-            return;
-        }
-        boolean isAllowedPackage = isAllowedPackage(type);
-        if (isAllowedPackage) {
-            return;
-        }
-        throw new UnsupportedDataTypeException("unsupported system class: " + type);
+    public interface ModelSecurityHandler {
+        void check(Class<?> type);
     }
 
-    private boolean isAllowedPackage(Class<?> type) {
-        return isPackage(allowedPackages, type.getName());
-    }
-
-    private boolean isForbiddenPackage(Class<?> type) {
-        return isPackage(forbiddenPackages, type.getName());
-    }
-
-    private boolean isPackage(Set<String> packages, String name) {
-        for (String forbidden : packages) {
-            if (name.startsWith(forbidden)) {
-                return true;
+    public record SimpleModelSecurityHandler(Set<String> allowedPackages, Set<String> allowedClasses, Set<String> forbiddenPackages, Set<String> checked)
+            implements ModelSecurityHandler {
+        public void check(Class<?> type) {
+            if (checked.contains(type.getName())) {
+                return;
             }
+            boolean isForbiddenPackage = isForbiddenPackage(type);
+            if (!isForbiddenPackage) {
+                checked.add(type.getName());
+                return;
+            }
+            boolean isAllowedClass = allowedClasses.contains(type.getName());
+            if (isAllowedClass) {
+                checked.add(type.getName());
+                return;
+            }
+            boolean isAllowedPackage = isAllowedPackage(type);
+            if (isAllowedPackage) {
+                checked.add(type.getName());
+                return;
+            }
+            throw new UnsupportedDataTypeException("unsupported system class: " + type);
         }
-        return false;
+
+        private boolean isAllowedPackage(Class<?> type) {
+            return isPackage(allowedPackages, type.getName());
+        }
+
+        private boolean isForbiddenPackage(Class<?> type) {
+            return isPackage(forbiddenPackages, type.getName());
+        }
+
+        private boolean isPackage(Set<String> packages, String name) {
+            for (String forbidden : packages) {
+                if (name.startsWith(forbidden)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public ModelSecurityHandler build() {
+        return new SimpleModelSecurityHandler(Set.copyOf(allowedPackages), Set.copyOf(allowedClasses), Set.copyOf(forbiddenPackages), new HashSet<>());
     }
 }

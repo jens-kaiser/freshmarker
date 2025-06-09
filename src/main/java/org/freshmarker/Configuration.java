@@ -89,8 +89,8 @@ public final class Configuration {
      * @return a new {@code TemplateBuilder}
      */
     public TemplateBuilder builder() {
-        ExtensionRegistry copy = new ExtensionRegistry(this.extensionRegistry, this.extensionRegistry.getTemplateFeatures().create());
-        StaticContext context = new StaticContext(copy, modelSecurityGateway, templateLoader);
+        ExtensionRegistry copy = new ExtensionRegistry(extensionRegistry, extensionRegistry.getTemplateFeatures().create());
+        StaticContext context = new StaticContext(copy, modelSecurityGateway.build(), templateLoader);
         return new DefaultTemplateBuilder(context, copy.getTemplateFeatures().create());
     }
 

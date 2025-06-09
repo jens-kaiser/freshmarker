@@ -2,6 +2,7 @@ package org.freshmarker.core;
 
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ModelSecurityGateway.ModelSecurityHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,41 +25,46 @@ class ModelSecurityGatewayTest {
     @ParameterizedTest
     @CsvSource( {"java.io", "java.io."})
     void addForbiddenPackages(String forbiddenPackage) {
-        assertDoesNotThrow(() -> modelSecurityGateway.check(File.class));
+        assertDoesNotThrow(() -> modelSecurityGateway.build().check(File.class));
         modelSecurityGateway.addForbiddenPackages(forbiddenPackage);
-        assertThrows(UnsupportedDataTypeException.class, () -> modelSecurityGateway.check(File.class));
+        ModelSecurityHandler handler = modelSecurityGateway.build();
+        assertThrows(UnsupportedDataTypeException.class, () -> handler.check(File.class));
     }
 
     @Test
     void addForbiddenPackagesByClass() {
-        assertDoesNotThrow(() -> modelSecurityGateway.check(File.class));
+        assertDoesNotThrow(() -> modelSecurityGateway.build().check(File.class));
         modelSecurityGateway.addForbiddenPackages(File.class);
-        assertThrows(UnsupportedDataTypeException.class, () -> modelSecurityGateway.check(File.class));
+        ModelSecurityHandler handler = modelSecurityGateway.build();
+        assertThrows(UnsupportedDataTypeException.class, () -> handler.check(File.class));
     }
 
     @Test
     void addAllowedClass() {
         modelSecurityGateway.addForbiddenPackages("java.io");
-        assertThrows(UnsupportedDataTypeException.class, () -> modelSecurityGateway.check(File.class));
+        ModelSecurityHandler handler = modelSecurityGateway.build();
+        assertThrows(UnsupportedDataTypeException.class, () -> handler.check(File.class));
         modelSecurityGateway.addAllowedClass(File.class);
-        assertDoesNotThrow(() -> modelSecurityGateway.check(File.class));
+        assertDoesNotThrow(() -> modelSecurityGateway.build().check(File.class));
     }
 
     @ParameterizedTest
     @CsvSource( {"java.nio,java.nio.file", "java.nio.,java.nio.file.","java.nio.,java.nio.file", "java.nio.,java.nio.file"})
     void addAllowedPackages(String forbiddenPackage, String allowedPackage) {
         modelSecurityGateway.addForbiddenPackages(forbiddenPackage);
-        assertThrows(UnsupportedDataTypeException.class, () -> modelSecurityGateway.check(Path.class));
+        ModelSecurityHandler handler = modelSecurityGateway.build();
+        assertThrows(UnsupportedDataTypeException.class, () -> handler.check(Path.class));
         modelSecurityGateway.addAllowedPackages(allowedPackage);
-        assertDoesNotThrow(() -> modelSecurityGateway.check(Path.class));
+        assertDoesNotThrow(() -> modelSecurityGateway.build().check(Path.class));
     }
 
     @Test
     void addAllowedPackagesByClass() {
         modelSecurityGateway.addForbiddenPackages("java.nio");
-        assertThrows(UnsupportedDataTypeException.class, () -> modelSecurityGateway.check(Path.class));
+        ModelSecurityHandler handler = modelSecurityGateway.build();
+        assertThrows(UnsupportedDataTypeException.class, () -> handler.check(Path.class));
         modelSecurityGateway.addAllowedPackages(Path.class);
-        assertDoesNotThrow(() -> modelSecurityGateway.check(Path.class));
+        assertDoesNotThrow(() -> modelSecurityGateway.build().check(Path.class));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.freshmarker.core.providers;
 
-import org.freshmarker.core.ModelSecurityGateway;
+import org.freshmarker.core.ModelSecurityGateway.ModelSecurityHandler;
 import org.freshmarker.core.model.TemplateBean;
 
 import java.util.Map;
@@ -9,10 +9,10 @@ public class RecordTemplateObjectProvider implements TemplateObjectProvider {
 
     private final TemplateMapGetterProvider getterProvider;
 
-    private final ModelSecurityGateway modelSecurityGateway;
+    private final ModelSecurityHandler modelSecurityHandler;
 
-    public RecordTemplateObjectProvider(ModelSecurityGateway modelSecurityGateway) {
-        this.modelSecurityGateway = modelSecurityGateway;
+    public RecordTemplateObjectProvider(ModelSecurityHandler modelSecurityHandler) {
+        this.modelSecurityHandler = modelSecurityHandler;
         getterProvider = new TemplateMapGetterProvider(new RecordMethodProvider());
     }
 
@@ -22,10 +22,7 @@ public class RecordTemplateObjectProvider implements TemplateObjectProvider {
         if (!type.isRecord()) {
             return null;
         }
-        if (!environment.getChecks().contains(type)) {
-            modelSecurityGateway.check(type);
-        }
-        environment.getChecks().add(type);
+        modelSecurityHandler.check(type);
         Map<String, Object> map = getterProvider.provide(o, environment);
         return new TemplateBean(map, o.getClass());
     }

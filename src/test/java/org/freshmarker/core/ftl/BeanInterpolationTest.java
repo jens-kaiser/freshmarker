@@ -4,6 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.SecurityFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,9 +75,16 @@ class BeanInterpolationTest {
 
     @Test
     void illegalBeanAccess(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "${bean}");
-        Map<String, Object> data = Map.of("bean", Runtime.getRuntime());
-        ProcessException processException = assertThrows(ProcessException.class, () -> template.process(data));
-        assertEquals("unsupported system class: class java.lang.Runtime at test:1:1 '${bean}'", processException.getMessage());
+        Template template = templateBuilder.getTemplate("test", "${bean.alive}");
+        Map<String, Object> data = Map.of("bean", new Thread());
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(data));
+        assertEquals("unsupported system class: class java.lang.Thread at test:1:1 '${bean.alive}'", exception.getMessage());
+    }
+
+    @Test
+    void illegalBeanAccessDeactivated(TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.without(SecurityFeature.MODEL_SECURITY).getTemplate("test", "${bean.alive}");
+        Map<String, Object> data = Map.of("bean", new Thread());
+        assertEquals("no", template.process(data));
     }
 }
