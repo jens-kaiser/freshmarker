@@ -3,6 +3,7 @@ package org.freshmarker.core.extension;
 import org.freshmarker.api.TypeMapper;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
+import org.freshmarker.core.model.primitive.TemplateCharacter;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
@@ -41,7 +42,8 @@ public class DefaultTypeMapperProvider implements TypeMapperProvider {
                 Map.entry(StringBuffer.class, o -> new TemplateString(o.toString())),
                 Map.entry(URI.class, o -> new TemplateString(o.toString())),
                 Map.entry(URL.class, o -> new TemplateString(o.toString())),
-                Map.entry(UUID.class, o -> new TemplateString(o.toString()))
+                Map.entry(UUID.class, o -> new TemplateString(o.toString())),
+                Map.entry(Character.class, o -> new TemplateCharacter((Character)o))
         );
     }
 }

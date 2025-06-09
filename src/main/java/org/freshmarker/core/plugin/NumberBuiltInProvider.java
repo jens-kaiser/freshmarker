@@ -8,6 +8,7 @@ import org.freshmarker.api.extension.support.SingleTypeBuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplateCharacter;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateNumber.Type;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -80,6 +81,16 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         return TemplateNumber.of(result.getValue(), result.getType());
     }
 
+    private TemplateObject unicode(TemplateNumber number, ProcessContext context, List<TemplateObject> parameter) {
+        BuiltInHelper.checkParametersLength(parameter, 0,1);
+        int base = number.getValue().intValue();
+        if (parameter.isEmpty()) {
+            return new TemplateCharacter((char) base);
+        }
+        int offset = parameter.getFirst().evaluate(context, TemplateNumber.class).getValue().intValue();
+        return new TemplateCharacter((char)(base + offset));
+    }
+
     @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         SingleTypeBuiltInRegister builtInRegister = new SingleTypeBuiltInRegister(TemplateNumber.class);
@@ -103,6 +114,7 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         builtInRegister.add("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
         builtInRegister.add("is_number", BuiltInHelper.alwaysTrue());
         builtInRegister.add("clamp", (x, y, e) -> clamp((TemplateNumber) x, e, y));
+        builtInRegister.add("unicode", (x, y, e) -> unicode((TemplateNumber) x, e, y));
         return builtInRegister;
     }
 }

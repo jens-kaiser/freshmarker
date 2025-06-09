@@ -219,3 +219,25 @@ m|25
 m|${40?clamp(20, 30)}
 m|30
 |===
+
+==== `unicode` Built-In (since 1.9.1)
+
+Convert value into the corresponding Unicode character.
+If the number is not an integer, it is converted appropriately.
+With an additional parameter, this is added to the value as an offset.
+
+|===
+|Interpolation | Output
+
+m|${48?unicode}
+m|0
+
+m|${9312?unicode}
+m|①
+
+m|${40?unicode(8)}
+m|0
+
+m|${9300?unicode(12)}
+m|①
+|===

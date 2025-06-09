@@ -573,4 +573,17 @@ class NumberInterpolationTest {
                 "e", (float) 42, "f", (double) 42, "g", new BigInteger("42"), "h", new BigDecimal("42"));
         assertThrows(ProcessException.class, () -> template.process(model));
     }
+
+    @ParameterizedTest
+    @CsvSource({ "0123456789,47", "①②③④⑤⑥⑦⑧⑨⑩,9311", "ᚠᚡᚢᚣᚤᚥᚦᚧᚨᚩ,5791"})
+    void interpolateUnicodeWithOffset(String expected, int offset) {
+        Template template = templateBuilder.getTemplate("test", "<#list 1..10 as c>${c?unicode(o)}</#list>");
+        assertEquals(expected, template.process(Map.of("o", offset)));
+    }
+
+    @Test
+    void interpolateUnicode() {
+        Template template = templateBuilder.getTemplate("test", "<#list 48..57 as c>${c?unicode}</#list>");
+        assertEquals("0123456789", template.process(Map.of()));
+    }
 }
