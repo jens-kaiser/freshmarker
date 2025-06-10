@@ -302,4 +302,23 @@ class SliceAndRangeInterpolationTest {
         Template template = builder.getTemplate("test", "<#var x=10..>test: ${(0..)[x][10]}");
         assertEquals("test: 20", template.process(Map.of()));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "${10[0..20]},10",
+            "${10[20..30]},20",
+            "${20[0..10]},10",
+            "${10[0..*20]},10",
+            "${10[20..*10]},20",
+            "${20[1..*10]},10",
+            "${0[10..]},10",
+            "${10[10..]},10",
+            "${20[10..]},20",
+    })
+    void sliceNumber(String input, String result, TemplateBuilder builder) {
+        Template template = builder.getTemplate("numbers", input);
+        Map<String, Object> model = Map.of();
+        assertEquals(result, template.process(model));
+    }
+
 }

@@ -5,3 +5,4 @@ org.freshmarker.core.plugin.NumberBuiltInProvider
 org.freshmarker.core.plugin.StringBuiltInProvider
 org.freshmarker.core.plugin.SequenceBuildInProvider
 org.freshmarker.core.plugin.TemporalPluginProvider
+org.freshmarker.core.plugin.CharacterExtension

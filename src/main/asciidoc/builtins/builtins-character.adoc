@@ -1,0 +1,111 @@
+=== Character Built-Ins (since 1.9.1)
+
+==== `c` (computer language) Built-In
+
+This built-in converts a character to a string .
+
+==== `is_whitespace` Built-In
+
+This built-in returns `true` if the character is a whitespace and `false` otherwise (see `java.lang.Character#isWitespace`).
+
+==== `is_digit` Built-In
+
+This built-in returns `true` if the character is a digit and `false` otherwise. See `java.lang.Character#isDigit`).
+
+==== `is_letter` Built-In
+
+This built-in returns `true` if the character is a letter and `false` otherwise (see `java.lang.Character#isLetter`).
+
+==== `is_upper_case` Built-In
+
+This built-in returns `true` if the character is an uppercase character and `false` otherwise (see `java.lang.Character#isUpperCase`).
+
+[cols="2,1,1"]
+|===
+| Interpolation | Output | Type
+
+m|${'A'[0]?is_upper_case}
+m|false
+|boolean
+
+m|${'a'[0]?is_upper_case}
+m|true
+|boolean
+|===
+
+==== `is_lower_case` Built-In
+
+This built-in returns `true` if the character is a lowercase character and `false` otherwise (see `java.lang.Character#isLowerCase`).
+
+[cols="2,1,1"]
+|===
+| Interpolation | Output | Type
+
+m|${'A'[0]?is_lower_case}
+m|false
+|boolean
+
+m|${'a'[0]?is_lower_case}
+m|true
+|boolean
+|===
+
+==== `is_alphabetic` Built-In
+
+This built-in returns `true` if the character is an alphabetic character and `false` otherwise (see `java.lang.Character#isAlphabetic`).
+
+==== `is_letter` Built-In
+
+This built-in returns `true` if the character is a letter and `false` otherwise (see `java.lang.Character#isLetter`).
+
+==== `is_emoji` Built-In (experimental)
+
+This built-in returns `true` if the character is a lower case letter and `false` otherwise (see `java.lang.Character#isLowerCase`).
+
+==== `upper_case` Built-In
+This built-in converts the character to lowercase (see `java.lang.Character#toUpperCase`).
+
+[cols="2,1,1"]
+|===
+| Interpolation | Output | Type
+
+m|${'A'[0]?upper_case}
+m|A
+|character
+
+m|${'a'[0]?upper_case}
+m|A
+|character
+|===
+
+==== `lower_case` Built-In
+This built-in converts the character to uppercase (see `java.lang.Character#toLowerCase`).
+
+[cols="2,1,1"]
+|===
+| Interpolation | Output | Type
+
+m|${'A'[0]?lower_case}
+m|a
+|character
+
+m|${'a'[0]?lower_case}
+m|a
+|character
+|===
+
+==== `unicode_block` Built-In (experimental)
+This built-in returns the name of the containing unicode block.
+
+[cols="2,1,1"]
+|===
+| Interpolation | Output | Type
+
+m|${'€❶'[0]}
+m|CURRENCY_SYMBOLS
+|string
+
+m|${'€❶'[1]}
+m|DINGBATS
+|string
+|===

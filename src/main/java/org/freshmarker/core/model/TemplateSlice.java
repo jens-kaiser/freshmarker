@@ -25,8 +25,26 @@ public class TemplateSlice implements TemplateObject {
             case TemplateString templateString -> handleSequence(context, templateRange, templateString);
             case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
             case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
+            case TemplateNumber templateNumberValue -> handleNumber(context, templateRange, templateNumberValue);
             default -> throw new UnsupportedDataTypeException("slicing not supported on " + value.getClass().getSimpleName());
         };
+    }
+
+    private TemplateObject handleNumber(ProcessContext context, TemplateRange templateRange, TemplateNumber templateNumberValue) {
+        checkRanges(context, templateRange);
+        int numberValue = templateNumberValue.getValue().intValue();
+        if (templateRange instanceof TemplateRightUnlimitedRange unlimitedRange) {
+            int value = ((TemplateNumber) unlimitedRange.getLower()).getValue().intValue();
+            return TemplateNumber.of(Math.max(numberValue, value));
+        }
+        if (templateRange instanceof AbstractLimitedRange limitedRange) {
+            AbstractLimitedRange newRange = (AbstractLimitedRange) limitedRange.evaluateToObject(context);
+
+            int left = ((TemplateNumber) newRange.getLower()).getValue().intValue();
+            int right = ((TemplateNumber) newRange.getUpper(context)).getValue().intValue();
+            return TemplateNumber.of(Math.clamp(numberValue, left, right));
+        }
+        throw new ProcessException("unsupported range: " + templateRange.getModelType());
     }
 
     private int getInt(TemplateObject value, ProcessContext context) {

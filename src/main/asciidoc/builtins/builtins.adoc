@@ -71,6 +71,8 @@ include::builtins-boolean.adoc[]
 
 include::builtins-number.adoc[]
 
+include::builtins-character.adoc[]
+
 include::builtins-datetime.adoc[]
 
 include::builtins-date.adoc[]

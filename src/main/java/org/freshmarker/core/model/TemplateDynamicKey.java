@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.model.primitive.TemplateCharacter;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 
@@ -36,7 +37,7 @@ public class TemplateDynamicKey implements TemplateExpression {
     private TemplateObject handleIndex(ProcessContext context, TemplateObject templateObject, TemplateNumber index) {
         int beginIndex = index.asInt();
         if (templateObject instanceof TemplateString templateString) {
-            return new TemplateString(templateString.getValue().substring(beginIndex, beginIndex + 1));
+            return new TemplateCharacter(templateString.getValue().charAt(beginIndex));
         }
         if (templateObject instanceof TemplateRange range) {
             TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
