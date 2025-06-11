@@ -60,10 +60,11 @@ This built-in returns `true` if the character is a letter and `false` otherwise 
 
 ==== `is_emoji` Built-In (experimental)
 
-This built-in returns `true` if the character is a lower case letter and `false` otherwise (see `java.lang.Character#isLowerCase`).
+This built-in returns `true` if the character is an emoji and `false` otherwise (see `java.lang.Character#isLowerCase`).
 
 ==== `upper_case` Built-In
-This built-in converts the character to lowercase (see `java.lang.Character#toUpperCase`).
+
+This built-in converts the character to uppercase (see `java.lang.Character#toUpperCase`).
 
 [cols="2,1,1"]
 |===
@@ -79,7 +80,7 @@ m|A
 |===
 
 ==== `lower_case` Built-In
-This built-in converts the character to uppercase (see `java.lang.Character#toLowerCase`).
+This built-in converts the character to lowercase (see `java.lang.Character#toLowerCase`).
 
 [cols="2,1,1"]
 |===
