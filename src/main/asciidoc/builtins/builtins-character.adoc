@@ -102,11 +102,11 @@ This built-in returns the name of the containing unicode block.
 |===
 | Interpolation | Output | Type
 
-m|${'€❶'[0]}
+m|${'€❶'[0]?unicode_block}
 m|CURRENCY_SYMBOLS
 |string
 
-m|${'€❶'[1]}
+m|${'€❶'[1]?unicode_block}
 m|DINGBATS
 |string
 |===
