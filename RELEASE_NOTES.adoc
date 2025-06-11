@@ -5,14 +5,25 @@
 === Improvements
 
 - add number built-in `clamp`
-- unfold ist directives on partial reduction
+- unfold list directives on partial reduction
 - add `ReductionFeature.UNFOLD_LIST` feature, to activate unfolding
 - add `ReductionFeature.MERGE_CONSTANT_FRAGMENTS` feature, to activate merging of constant fragments
 - add `Character` support
 - add character built-ins `is_digit`, `is_letter`, `is_whitespace`, `is_upper_case`, `is_lower_case`, `upper_case`, `lower_case`, `is_alphabetic`
-- add experimental character built-ins `is_emoji`, `unicode_block`
 - add number built-in `unicode`
 - add `SecurityFeature.MODEL_SECURITY` feature, to deactivate model security
+
+=== Experimental
+
+- add character built-ins `is_emoji`, `unicode_block`
+
+=== Deprecations
+
+- deprecate `ModeSecurityGateway`
+
+=== Breaking Changes
+
+- the string index operator returns a character instead of a string
 
 == Release 1.9.0 (2025-06-01)
 
