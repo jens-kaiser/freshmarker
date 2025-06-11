@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@Deprecated
 public class ModelSecurityGateway {
     private final Set<String> allowedPackages = new HashSet<>();
     private final Set<String> allowedClasses = new HashSet<>();
