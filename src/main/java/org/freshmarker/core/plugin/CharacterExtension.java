@@ -28,6 +28,7 @@ public class CharacterExtension implements BuiltInProvider {
         builtInRegister.add("is_upper_case", (x, y, e) -> apply((TemplateCharacter) x, Character::isUpperCase));
         builtInRegister.add("lower_case", (x, y, e) -> convert((TemplateCharacter) x, Character::toLowerCase));
         builtInRegister.add("upper_case", (x, y, e) -> convert((TemplateCharacter) x, Character::toUpperCase));
+        builtInRegister.add("is_character", BuiltInHelper.alwaysTrue());
         return builtInRegister;
     }
 

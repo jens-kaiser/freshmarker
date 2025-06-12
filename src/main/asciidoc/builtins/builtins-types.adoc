@@ -42,6 +42,23 @@ m|boolean
 
 |===
 
+==== `is_character` Built-In
+
+This built-in returns the `true` is the variable contains a character value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${character?is_character}
+m|yes
+m|boolean
+
+m|${42?is_character}
+m|no
+m|boolean
+
+|===
+
 ==== `is_boolean` Built-In
 
 This built-in returns the `true` is the variable contains a boolean value and `false` otherwise.
