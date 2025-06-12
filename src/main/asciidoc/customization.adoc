@@ -141,8 +141,10 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 | `false`
 |===
 
-[#variable-scope-feature,reftext=Variable Scope Feature]
-===== Variable Scope Feature (since 1.9.0)
+[#variable-scope-feature]
+===== Variable Scope Feature
+
+CAUTION: This feature is deprecated and the feature `SystemFeature.ALL_BLOCKS` should be used. See <<system-feature>>
 
 This feature is controlled by a constant in the `VariableScopeFeature` class.
 
@@ -187,6 +189,8 @@ TemplateBuilder builder = new Configuration().builder()
 
 A constant controls this feature in the `SystemFeature` class.
 
+CAUTION: These features will be removed in the version 2.0.0, and the default enabled implementation is removed too.
+
 [cols="2,4,1"]
 |===
 |Feature | Description | Initial enabled
@@ -197,6 +201,10 @@ A constant controls this feature in the `SystemFeature` class.
 
 | STRING_INDEX_RETURNS_CHARACTER
 | Feature that determines whether the index operator on string return a character or a string.
+| `false`
+
+| ALL_BLOCKS
+| Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
 | `false`
 |===
 
