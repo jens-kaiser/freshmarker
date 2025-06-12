@@ -203,7 +203,7 @@ m|${9?utf_roman}
 m|Ⅸ
 |===
 
-==== `clamp` Built-In (since 1.9.1)
+==== `clamp` Built-In (since 1.10.0)
 
 Clamps the value to fit between min and max. If the value is less than min, then min is returned. If the value is greater than max, then max is returned. Otherwise, the original value is returned.
 
@@ -220,7 +220,7 @@ m|${40?clamp(20, 30)}
 m|30
 |===
 
-==== `unicode` Built-In (since 1.9.1)
+==== `unicode` Built-In (since 1.10.0)
 
 Convert value into the corresponding Unicode character.
 If the number is not an integer, it is converted appropriately.

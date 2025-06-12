@@ -156,7 +156,7 @@ This feature is controlled by a constant in the `VariableScopeFeature` class.
 |===
 
 [#partial-reduction-feature,reftext=Partial Reduction Features]
-===== Partial Reduction Features (since 1.9.1)
+===== Partial Reduction Features (since 1.10.0)
 
 These features are controlled by constants in the `ReductionFeature` class.
 
@@ -183,7 +183,7 @@ TemplateBuilder builder = new Configuration().builder()
 ----
 
 [#security-feature,reftext=Partial Reduction Features]
-===== Security Features (since 1.9.1)
+===== Security Features (since 1.10.0)
 
 A constant controls this feature in the `SecurityFeature` class.
 

@@ -283,7 +283,7 @@ template.process(model);
 
 In the example above, the `familyTree` value is lazy evaluated, when the variable is accessed during template processing.
 
-=== Forbidden Types (deprecated since 1.9.1)
+=== Forbidden Types (deprecated since 1.10.0)
 
 CAUTION: As FreshMarker does not execute any methods on model classes, there is no risk of injection. This mechanism will therefore be removed with version 2.0.0.
 

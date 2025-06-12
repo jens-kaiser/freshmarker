@@ -1,4 +1,4 @@
-=== Character Built-Ins (since 1.9.1)
+=== Character Built-Ins (since 1.10.0)
 
 ==== `c` (computer language) Built-In
 
