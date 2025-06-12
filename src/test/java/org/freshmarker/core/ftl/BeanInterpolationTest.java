@@ -4,7 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.SecurityFeature;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +83,7 @@ class BeanInterpolationTest {
 
     @Test
     void illegalBeanAccessDeactivated(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.without(SecurityFeature.MODEL_SECURITY).getTemplate("test", "${bean.alive}");
+        Template template = templateBuilder.without(SystemFeature.MODEL_SECURITY).getTemplate("test", "${bean.alive}");
         Map<String, Object> data = Map.of("bean", new Thread());
         assertEquals("no", template.process(data));
     }

@@ -11,7 +11,8 @@
 - add `Character` support
 - add character built-ins `is_digit`, `is_letter`, `is_whitespace`, `is_upper_case`, `is_lower_case`, `upper_case`, `lower_case`, `is_alphabetic`
 - add number built-in `unicode`
-- add `SecurityFeature.MODEL_SECURITY` feature, to deactivate model security
+- add `SystemFeature.MODEL_SECURITY` feature, to deactivate model security
+- add `SystemFeature.STRING_INDEX_RETURNS_CHARACTER` feature, to change the result type of the string index operator
 
 === Experimental
 
@@ -20,6 +21,7 @@
 === Deprecations
 
 - deprecate `ModeSecurityGateway`
+- replace `VariableContextFeature.ALL_BLOCKS` by `SystemFeature.ALL_BLOCKS`
 
 === Breaking Changes
 

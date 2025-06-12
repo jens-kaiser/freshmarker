@@ -49,7 +49,7 @@ class TemplateBuilderTest {
 
     @Test
     void withoutSameFeature() {
-        TemplateBuilder without = templateBuilder.without(VariableScopeFeature.ALL_BLOCKS);
+        TemplateBuilder without = templateBuilder.without(SystemFeature.ALL_BLOCKS);
         assertSame(templateBuilder, without);
     }
 }

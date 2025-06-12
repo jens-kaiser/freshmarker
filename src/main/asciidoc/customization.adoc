@@ -182,10 +182,10 @@ TemplateBuilder builder = new Configuration().builder()
     .with(ReductionFeature.UNFOLD_LIST, 7);
 ----
 
-[#security-feature,reftext=Partial Reduction Features]
-===== Security Features (since 1.10.0)
+[#system-feature,reftext=System Features]
+===== System Features (since 1.10.0)
 
-A constant controls this feature in the `SecurityFeature` class.
+A constant controls this feature in the `SystemFeature` class.
 
 [cols="2,4,1"]
 |===
@@ -194,6 +194,10 @@ A constant controls this feature in the `SecurityFeature` class.
 | MODEL_SECURITY
 | Feature that determines whether the model classes are checked.
 | `true`
+
+| STRING_INDEX_RETURNS_CHARACTER
+| Feature that determines whether the index operator on string return a character or a string.
+| `false`
 |===
 
 ==== With Clock (since 1.6.9)

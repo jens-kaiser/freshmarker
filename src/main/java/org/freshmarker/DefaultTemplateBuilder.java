@@ -8,8 +8,8 @@ import org.freshmarker.api.TemplateFeature;
 import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.ModelSecurityGateway.ModelSecurityHandler;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.SecurityFeature;
 import org.freshmarker.core.StaticContext;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.ExtensionRegistry;
@@ -195,7 +195,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
         ExtensionRegistry extensionRegistry = new ExtensionRegistry(registry, featureSet);
-        ModelSecurityHandler handler = featureSet.isEnabled(SecurityFeature.MODEL_SECURITY) ? modelSecurityHandler : type -> {};
+        ModelSecurityHandler handler = featureSet.isEnabled(SystemFeature.MODEL_SECURITY) ? modelSecurityHandler : type -> {};
         StaticContext templateContext = new StaticContext(extensionRegistry, handler, templateLoader);
         SimpleFeatureSet featureSetCopy = new SimpleFeatureSet(featureSet);
         Template template = new Template(this, templateContext, templateLoader, importPath, featureSetCopy);

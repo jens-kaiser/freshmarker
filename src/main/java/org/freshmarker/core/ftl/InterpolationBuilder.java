@@ -30,6 +30,7 @@ import ftl.ast.RelationalExpression;
 import ftl.ast.UnaryPlusMinusExpression;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.BuiltinHandlingFeature;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
@@ -156,7 +157,14 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (dynamicKey instanceof TemplateRange) {
             return new TemplateSlice((TemplateObject) input, dynamicKey);
         }
-        return new TemplateDynamicKey((TemplateObject) input, dynamicKey);
+        if (featureSet.isEnabled(SystemFeature.STRING_INDEX_RETURNS_CHARACTER)) {
+            return new TemplateDynamicKey((TemplateObject) input, dynamicKey);
+        }
+        return new TemplateDynamicKey((TemplateObject) input, dynamicKey) {
+            protected TemplateObject getStringIndexResult(TemplateString templateString, int beginIndex) {
+                return new TemplateString(String.valueOf(templateString.getValue().charAt(beginIndex)));
+            }
+        };
     }
 
     @Override

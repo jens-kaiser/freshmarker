@@ -37,7 +37,7 @@ public class TemplateDynamicKey implements TemplateExpression {
     private TemplateObject handleIndex(ProcessContext context, TemplateObject templateObject, TemplateNumber index) {
         int beginIndex = index.asInt();
         if (templateObject instanceof TemplateString templateString) {
-            return new TemplateCharacter(templateString.getValue().charAt(beginIndex));
+            return getStringIndexResult(templateString, beginIndex);
         }
         if (templateObject instanceof TemplateRange range) {
             TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
@@ -52,6 +52,10 @@ public class TemplateDynamicKey implements TemplateExpression {
         }
         TemplateSequence<?> list = (TemplateSequence<?>) templateObject;
         return context.mapObject(list.sequence().get(beginIndex));
+    }
+
+    protected TemplateObject getStringIndexResult(TemplateString templateString, int beginIndex) {
+        return new TemplateCharacter(templateString.getValue().charAt(beginIndex));
     }
 
     @Override

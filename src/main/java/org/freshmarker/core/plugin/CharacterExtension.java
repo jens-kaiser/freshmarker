@@ -10,7 +10,8 @@ import org.freshmarker.core.model.primitive.TemplateCharacter;
 import org.freshmarker.core.model.primitive.TemplateString;
 
 import java.lang.Character.UnicodeBlock;
-import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 public class CharacterExtension implements BuiltInProvider {
     @Override
@@ -34,11 +35,11 @@ public class CharacterExtension implements BuiltInProvider {
         return new TemplateString(UnicodeBlock.of(x.getValue()).toString());
     }
 
-    private static TemplateBoolean apply(TemplateCharacter x, Function<Character,Boolean> function) {
-        return TemplateBoolean.from(function.apply(x.getValue()));
+    private static TemplateBoolean apply(TemplateCharacter x, Predicate<Character> predicate) {
+        return TemplateBoolean.from(predicate.test(x.getValue()));
     }
 
-    private static TemplateCharacter convert(TemplateCharacter x, Function<Character,Character> function) {
-        return new TemplateCharacter(function.apply(x.getValue()));
+    private static TemplateCharacter convert(TemplateCharacter x, UnaryOperator<Character> operator) {
+        return new TemplateCharacter(operator.apply(x.getValue()));
     }
 }
