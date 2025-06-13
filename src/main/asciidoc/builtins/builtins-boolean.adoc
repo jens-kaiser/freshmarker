@@ -34,7 +34,7 @@ m|${false?then(23, 42)}
 m|42
 |===
 
-==== `string` Built-In
+==== `string` Built-In (deprecated)
 
 This built-in returns its first string parameter if the value is `true` or the second string parameter if the value is `false`.
 The `string` Built-In is replaceable by the `then` Built-In.
