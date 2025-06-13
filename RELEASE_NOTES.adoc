@@ -9,6 +9,7 @@
 - add `ReductionFeature.UNFOLD_LIST` feature, to activate unfolding
 - add `ReductionFeature.MERGE_CONSTANT_FRAGMENTS` feature, to activate merging of constant fragments
 - add `Character` support
+- add type checking built_in `is_character`
 - add character built-ins `is_digit`, `is_letter`, `is_whitespace`, `is_upper_case`, `is_lower_case`, `upper_case`, `lower_case`, `is_alphabetic`
 - add number built-in `unicode`
 - add `SystemFeature.MODEL_SECURITY` feature, to deactivate model security

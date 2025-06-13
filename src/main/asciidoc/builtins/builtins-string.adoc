@@ -49,7 +49,7 @@ A word with a first uppercase letter means `\b(\p{javaUpperCase})(\p{IsAlphabeti
 ==== `camelCase` Built-In
 
 This built-in converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
-The result may look strange is the input is in some other format.
+The result may look strange if the input is in some other format.
 
 |===
 |Input | Output
@@ -64,7 +64,7 @@ m|theQuickBrownFoxJumpsOverTheLazyDog
 ==== `snake_case` Built-In
 
 This built-in converts a text from _camelCase_ to _snake_case_.
-The result may look strange is the input is in some other format.
+The result may look strange if the input is in some other format.
 
 |===
 |Input | Output
@@ -76,7 +76,7 @@ m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
 ==== `screaming_snake_case` Built-In
 
 This built-in converts a text from _camelCase_ to _screaming_snake_case_.
-The result may look strange is the input is in some other format.
+The result may look strange if the input is in some other format.
 
 |===
 |Input | Output
@@ -88,7 +88,7 @@ m|THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG
 ==== `kebab_case` Built-In
 
 This built-in converts a text from _camelCase_ to _kebab-case_.
-The result may look strange is the input is in some other format.
+The result may look strange if the input is in some other format.
 
 |===
 |Input | Output
