@@ -24,10 +24,6 @@
 - deprecate `ModeSecurityGateway`
 - replace `VariableContextFeature.ALL_BLOCKS` by `SystemFeature.ALL_BLOCKS`
 
-=== Breaking Changes
-
-- the string index operator returns a character instead of a string
-
 == Release 1.9.0 (2025-06-01)
 
 === Improvements
