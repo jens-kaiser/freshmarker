@@ -5,8 +5,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,6 @@ import java.util.Objects;
 import static java.util.stream.Collectors.toMap;
 
 public class MapSwitchFragment extends AbstractConditionalFragment implements SwitchFragment {
-    private static final Logger log = LoggerFactory.getLogger(MapSwitchFragment.class);
 
     private final TemplateObject switchExpression;
     private final Map<TemplatePrimitive<?>, Fragment> fragmentMap;
@@ -39,10 +36,9 @@ public class MapSwitchFragment extends AbstractConditionalFragment implements Sw
             TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
             return Objects.requireNonNullElse(fragmentMap.get(switchValue), endFragment).reduce(context);
         } catch (RuntimeException e) {
-            log.info("cannot reduce: {}", e.getMessage(), e);
+            Map<TemplatePrimitive<?>, Fragment> reduced = fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> f.getValue().reduce(context)));
+            return new MapSwitchFragment(switchExpression, node, reduced, endFragment.reduce(context));
         }
-        Map<TemplatePrimitive<?>, Fragment> reduced = fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> f.getValue().reduce(context)));
-        return new MapSwitchFragment(switchExpression, node, reduced, endFragment.reduce(context));
     }
 
     @Override

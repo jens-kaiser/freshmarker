@@ -6,13 +6,10 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ListSwitchFragment extends AbstractConditionalFragment implements SwitchFragment {
-    private static final Logger log = LoggerFactory.getLogger(ListSwitchFragment.class);
 
     private final TemplateObject switchExpression;
     private final List<ConditionalFragment> fragments;
@@ -47,7 +44,6 @@ public class ListSwitchFragment extends AbstractConditionalFragment implements S
             }
             return endFragment.reduce(context);
         } catch (RuntimeException e) {
-            log.info("cannot reduce: {}", e.getMessage(), e);
             return new ListSwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
         }
     }

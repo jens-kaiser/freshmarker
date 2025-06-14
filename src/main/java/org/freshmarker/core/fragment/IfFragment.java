@@ -5,13 +5,10 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class IfFragment extends AbstractConditionalFragment {
-    private static final Logger log = LoggerFactory.getLogger(IfFragment.class);
 
     protected final List<ConditionalFragment> fragments;
 
@@ -60,9 +57,8 @@ public class IfFragment extends AbstractConditionalFragment {
             }
             return endFragment.reduce(context);
         } catch (RuntimeException e) {
-            log.info("cannot reduce: {}", e.getMessage(), e);
+            return new IfFragment(fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context), node);
         }
-        return new IfFragment(fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context), node);
     }
 
     @Override
