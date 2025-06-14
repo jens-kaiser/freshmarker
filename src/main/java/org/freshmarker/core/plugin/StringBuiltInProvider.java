@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -193,7 +194,10 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("kebabCase", "kebab_case", (x1, y1, e1) -> kebabCase(x1, e1));
         register.add("snake_case", "snakeCase", (x1, y1, e1) -> snakeCase(x1, e1));
         register.add("screaming_snake_case", (x, y, e) -> screamingSnakeCase(x, e));
-        register.add("trim", (x, y, e) -> new TemplateString(((TemplateString) x).getValue().trim()));
+        register.add("trim", (x, y, e) -> apply(x, String::trim));
+        register.add("strip", (x, y, e) -> apply(x, String::strip));
+        register.add("strip_leading", (x, y, e) -> apply(x, String::stripLeading));
+        register.add("strip_trailing", (x, y, e) -> apply(x, String::stripTrailing));
         register.add("contains", (x, y, e) -> contains(x, (TemplateString) y.getFirst()));
         register.add("ends_with", "endsWith", (x3, y3, e3) -> endsWith(x3, (TemplateString) y3.getFirst()));
         register.add("starts_with", "startsWith", (x2, y2, e2) -> startsWith(x2, (TemplateString) y2.getFirst()));
@@ -214,5 +218,9 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("mask_full", (x, y, e) -> mask((TemplateString) x, e, y, true));
         register.add( "is_string", BuiltInHelper.alwaysTrue());
         return register;
+    }
+
+    private TemplateString apply(TemplateObject value, UnaryOperator<String> operator) {
+        return new TemplateString(operator.apply(((TemplateString)value).getValue()));
     }
 }

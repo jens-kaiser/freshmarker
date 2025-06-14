@@ -114,6 +114,42 @@ m|${'Die heisse Wueste'?slugify}
 m|die-heisse-wueste
 |===
 
+==== `strip` Built-In (since 1.10.1)
+
+This built-in removes leading and trailing Unicode whitespaces from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `stripLeading` Built-In (since 1.10.1)
+
+This built-in removes leading Unicode whitespaces from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣
+|===
+
+==== `stripTrailing` Built-In (since 1.10.1)
+
+This built-in removes trailing Unicode whitespaces from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip}
+m|␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
 ==== `trim` Built-In
 
 This built-in removes leading and trailing whitespaces from the text.
