@@ -101,7 +101,7 @@ These features are controlled by constants in the `IncludeDirectiveFeature` clas
 
 ===== Switch Directive Features
 
-These features are controlled by constants in the `SwitchDirectiveFeature` class.
+Constants in the `SwitchDirectiveFeature` class control these features.
 
 [cols="2,4,1"]
 |===
@@ -121,6 +121,14 @@ These features are controlled by constants in the `SwitchDirectiveFeature` class
 
 | ALLOW_ONLY_EQUAL_TYPE_ONS
 | Feature that determines whether all on expressions must contain constants from the same type.
+| `false`
+
+| OPTIMIZE_CONSTANT_SWITCH
+| Feature that determines whether the switch optimized with a map.
+| `false`
+
+| ERROR_ON_DUPLICATE_CASE_EXPRESSION
+| Feature that determines whether a duplicate case expression results in an error.
 | `false`
 |===
 

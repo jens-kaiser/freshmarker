@@ -26,7 +26,7 @@ public enum SystemFeature implements TemplateFeature {
      *<p>
      * The default value is 'true', meaning that model variables are checked.
      *<p>
-     * The feature is disabled by default.
+     * The feature is enabled by default.
      */
     MODEL_SECURITY;
 

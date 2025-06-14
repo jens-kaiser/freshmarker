@@ -1,5 +1,6 @@
 package org.freshmarker.core.fragment;
 
+import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.TemplateObject;
@@ -12,16 +13,24 @@ import java.util.List;
 public class IfFragment extends AbstractConditionalFragment {
     private static final Logger log = LoggerFactory.getLogger(IfFragment.class);
 
-    public IfFragment(List<ConditionalFragment> fragments, Fragment endFragment) {
-        super(fragments, endFragment);
-    }
+    protected final List<ConditionalFragment> fragments;
 
-    public IfFragment() {
-        super();
+    public IfFragment(List<ConditionalFragment> fragments, Fragment endFragment, Node node) {
+        super(endFragment, node);
+        this.fragments = fragments;
     }
 
     public void addElseFragment(Fragment fragment) {
         endFragment = fragment;
+    }
+
+    public void addFragment(ConditionalFragment fragment) {
+        fragments.add(fragment);
+    }
+
+    @Override
+    public int getSize() {
+        return fragments.stream().mapToInt(Fragment::getSize).sum() + endFragment.getSize() + 1;
     }
 
     @Override
@@ -53,7 +62,7 @@ public class IfFragment extends AbstractConditionalFragment {
         } catch (RuntimeException e) {
             log.info("cannot reduce: {}", e.getMessage(), e);
         }
-        return new IfFragment(fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
+        return new IfFragment(fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context), node);
     }
 
     @Override

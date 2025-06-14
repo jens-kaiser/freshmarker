@@ -8,11 +8,16 @@ import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.SwitchInstruction;
 import org.freshmarker.api.FeatureSet;
+import org.freshmarker.core.SwitchDirectiveFeature;
 import org.freshmarker.core.fragment.ConditionalFragment;
+import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.Fragments;
+import org.freshmarker.core.fragment.ListSwitchFragment;
+import org.freshmarker.core.fragment.MapSwitchFragment;
 import org.freshmarker.core.fragment.SwitchFragment;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES;
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS;
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES;
@@ -34,11 +40,28 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
     private final FragmentBuilder fragmentBuilder;
     private final InterpolationBuilder interpolationBuilder;
     private final FeatureSet featureSet;
+    private final SwitchCollector collector;
+
+    private static class SwitchCollector {
+        List<ConditionalFragment> fragments = new ArrayList<>();
+        Fragment fragment = ConstantFragment.EMPTY;
+        boolean isAllPrimitive;
+
+        public void addFragment(ConditionalFragment fragment) {
+            fragments.add(fragment);
+            isAllPrimitive |= fragment.conditional().isPrimitive();
+        }
+
+        public void addDefaultFragment(Fragment fragment) {
+            this.fragment = fragment;
+        }
+    }
 
     public SwitchFragmentBuilder(FragmentBuilder fragmentBuilder, InterpolationBuilder interpolationBuilder, FeatureSet featureSet) {
-    this.fragmentBuilder = fragmentBuilder;
+        this.fragmentBuilder = fragmentBuilder;
         this.interpolationBuilder = interpolationBuilder;
         this.featureSet = featureSet;
+        this.collector = new SwitchCollector();
     }
 
     @Override
@@ -46,29 +69,36 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         logger.debug("children: {}", ftl.children());
         Node expression = ftl.get(3);
         TemplateObject switchExpression = expression.accept(interpolationBuilder, null);
-        SwitchFragment switchFragment = new SwitchFragment(switchExpression, expression);
-        Map<NodeType, List<CaseInstruction>> parts = ftl.childrenOfType(CaseInstruction.class).stream().collect(Collectors.groupingBy(p -> p.get(1).getType()));
+        Map<NodeType, List<CaseInstruction>> parts = ftl.childrenOfType(CaseInstruction.class).stream().collect(groupingBy(p -> p.get(1).getType()));
         List<CaseInstruction> caseParts = parts.getOrDefault(TokenType.CASE, List.of());
         List<CaseInstruction> switchOnParts = parts.getOrDefault(TokenType.ON, List.of());
         if (!caseParts.isEmpty() && !switchOnParts.isEmpty()) {
             throw new ParsingException("switch directive contains on and case", ftl);
         }
         if (!caseParts.isEmpty()) {
-            handle(caseParts, switchFragment, ftl, featureSet.isEnabled(ALLOW_ONLY_CONSTANT_CASES) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_CASES));
+            handle(caseParts, collector, ftl, featureSet.isEnabled(ALLOW_ONLY_CONSTANT_CASES) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_CASES));
         }
         if (!switchOnParts.isEmpty()) {
-            handle(switchOnParts, switchFragment, ftl, featureSet.isEnabled(ALLOW_ONLY_CONSTANT_ONS) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_ONS));
+            handle(switchOnParts, collector, ftl, featureSet.isEnabled(ALLOW_ONLY_CONSTANT_ONS) && featureSet.isEnabled(ALLOW_ONLY_EQUAL_TYPE_ONS));
         }
         DefaultInstruction defaultPart = ftl.firstChildOfType(DefaultInstruction.class);
         if (defaultPart != null) {
-            defaultPart.accept(this, switchFragment);
+            defaultPart.accept(this, null);
         }
-        return switchFragment;
+        if (featureSet.isEnabled(SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH) && collector.isAllPrimitive) {
+            Map<TemplatePrimitive<?>, Fragment> switchMap = collector.fragments.stream()
+                    .collect(toMap(c -> (TemplatePrimitive<?>) c.conditional(), ConditionalFragment::content, (a, b) -> a));
+            if (switchMap.size() < collector.fragments.size() && featureSet.isEnabled(SwitchDirectiveFeature.ERROR_ON_DUPLICATE_CASE_EXPRESSION)) {
+                throw new ParsingException("switch with duplicate conditionals", ftl);
+            }
+            return new MapSwitchFragment(switchExpression, expression, switchMap, collector.fragment);
+        }
+        return new ListSwitchFragment(switchExpression, expression, collector.fragments, collector.fragment);
     }
 
-    private <T extends BaseNode> void handle(List<T> switchParts, SwitchFragment switchFragment, SwitchInstruction ftl, boolean isOnlyEqualTypes) {
-        switchParts.forEach(part -> part.accept(this, switchFragment));
-        if (isOnlyEqualTypes && Set.copyOf(switchFragment.getConditionals()).size() > 1) {
+    private <T extends BaseNode> void handle(List<T> switchParts, SwitchCollector switchFragment, SwitchInstruction ftl, boolean isOnlyEqualTypes) {
+        switchParts.forEach(part -> part.accept(this, null));
+        if (isOnlyEqualTypes && Set.copyOf(switchFragment.fragments).size() > 1) {
             throw new ParsingException("constants with different types", ftl);
         }
     }
@@ -89,7 +119,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
                 throw new ParsingException("only constant expression allowed", ftl.get(i));
             }
             logger.debug("conditional: {}", ftl.get(i));
-            input.addFragment(new ConditionalFragment(onExpression, caseBlock, ftl.get(i)));
+            collector.addFragment(new ConditionalFragment(onExpression, caseBlock, ftl.get(i)));
         }
         return input;
     }
@@ -99,7 +129,7 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
         checkMissingBlock(3, ftl);
         Node block = ftl.get(3);
         List<Fragment> fragments = block.accept(fragmentBuilder, new ArrayList<>());
-        input.addDefaultFragment(Fragments.optimizeWithVariableContext(fragments));
+        collector.addDefaultFragment(Fragments.optimizeWithVariableContext(fragments));
         return input;
     }
 

@@ -18,6 +18,8 @@ import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CA
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS;
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES;
 import static org.freshmarker.core.SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_ONS;
+import static org.freshmarker.core.SwitchDirectiveFeature.ERROR_ON_DUPLICATE_CASE_EXPRESSION;
+import static org.freshmarker.core.SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -176,5 +178,41 @@ class SwitchDirectiveTest {
         Map<String, Object> dataModel = Map.of("text", "AAA");
         ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
         assertEquals("non primitive type: class org.freshmarker.core.model.TemplateListSequence at test:1:28 '[ 'AAA' ]'", exception.getMessage());
+    }
+
+    @Test
+    void listSwitchWithMultipleConstants(TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", "test: <#switch value><#case 1>1<#case 2>2<#case 3>3<#case 4>4</#switch>");
+        for (int x = 0; x < 10000; x++) {
+            for (int i = 0; i < 4; i++) {
+                assertEquals("test: " + (i == 0 ? "" : i), template.process(Map.of("value", i)));
+            }
+        }
+    }
+
+    @Test
+    void mapSwitchWithMultipleConstants(TemplateBuilder builder) throws ParseException {
+        Template template = builder.with(OPTIMIZE_CONSTANT_SWITCH)
+                .getTemplate("test", "test: <#switch value><#case 1>1<#case 2>2<#case 3>3<#case 4>4</#switch>");
+        for (int x = 0; x < 10000; x++) {
+            for (int i = 0; i < 4; i++) {
+                assertEquals("test: " + (i == 0 ? "" : i), template.process(Map.of("value", i)));
+            }
+        }
+    }
+
+    @Test
+    void switchWithDuplicateConstantWithError(TemplateBuilder builder) throws ParseException {
+        TemplateBuilder modifiedBuilder = builder.with(OPTIMIZE_CONSTANT_SWITCH).with(ERROR_ON_DUPLICATE_CASE_EXPRESSION);
+        ParsingException exception = assertThrows(ParsingException.class, () -> modifiedBuilder
+                .getTemplate("test", "test: <#switch value><#case 1>1<#case 1>1</#switch>"));
+        assertEquals("switch with duplicate conditionals at test:1:7 '<#switch value><#case 1>1<#case 1>1</#switch>'", exception.getMessage());
+    }
+
+    @Test
+    void switchWithDuplicateConstant(TemplateBuilder builder) throws ParseException {
+        Template template = builder.with(OPTIMIZE_CONSTANT_SWITCH)
+                .getTemplate("test", "test: <#switch value><#case 1>1<#case 1>1</#switch>");
+        assertEquals("test: 1", template.process(Map.of("value", 1)));
     }
 }

@@ -522,7 +522,7 @@ class ReduceTemplateTest {
     class ReduceSwitchDirective {
         @ParameterizedTest
         @CsvSource({
-                "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,1,schegge.de,2",
+                "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,1,schegge.de,1",
                 "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,2,Jens Kaiser,0",
                 "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>,3,three,0",
         })
@@ -532,7 +532,7 @@ class ReduceTemplateTest {
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
             assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-            assertEquals(new ReductionStatus(9, 3, replaced), reductionStatus);
+            assertEquals(new ReductionStatus(9, 2, replaced), reductionStatus);
         }
 
         @Test
@@ -807,6 +807,25 @@ class ReduceTemplateTest {
         Template reducedTemplate = template.reduce(Map.of("flag", 3), reductionStatus);
         assertNotNull(reducedTemplate);
         assertEquals("Jens Kaiser\n", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 3)));
-        assertEquals(new ReductionStatus(18, 8, 1), reductionStatus);
+        assertEquals(new ReductionStatus(18, 6, 0), reductionStatus);
+    }
+
+    @Test
+    void reduceMapSwitch() {
+        Template template = templateBuilder.getTemplate("test", "<#switch flag><#case 1>1<#case 2>2</#switch>");
+        Template reducedTemplate = template.reduce(Map.of("flag", 1), reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("1", reducedTemplate.process(Map.of()));
+        assertEquals(new ReductionStatus(7, 2, 0), reductionStatus);
+    }
+
+    @Test
+    void reduceListSwitch() {
+        Template template = templateBuilder.with(SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH)
+                .getTemplate("test", "<#switch flag><#case 1>1<#case 2>2</#switch>");
+        Template reducedTemplate = template.reduce(Map.of("flag", 1), reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("1", reducedTemplate.process(Map.of()));
+        assertEquals(new ReductionStatus(5, 2, 0), reductionStatus);
     }
 }
