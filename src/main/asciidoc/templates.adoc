@@ -287,6 +287,8 @@ Template template = templateBuilder.getTemplate("test", """"
 Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
 ----
 
+WARNING: A reduction cannot be carried out on the default or the exist operator.
+
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
 
@@ -296,5 +298,3 @@ _Partial Reduction_ on _List Directives_ is executed by unrolling the loops.
 Unrolling is used by default only if there is a maximum of five entries in the list.
 
 This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.
-
-WARNING: A reduction cannot be carried out on the default or the exist operator.
