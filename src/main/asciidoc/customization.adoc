@@ -124,11 +124,11 @@ Constants in the `SwitchDirectiveFeature` class control these features.
 | `false`
 
 | OPTIMIZE_CONSTANT_SWITCH
-| Feature that determines whether the switch optimized with a map.
+| Feature that determines whether the switch optimized with a map (since 1.10.1).
 | `false`
 
 | ERROR_ON_DUPLICATE_CASE_EXPRESSION
-| Feature that determines whether a duplicate case expression results in an error.
+| Feature that determines whether a duplicate case expression results in an error (since 1.10.1).
 | `false`
 |===
 
