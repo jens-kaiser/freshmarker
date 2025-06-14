@@ -34,7 +34,7 @@ class IfFragmentBuilder implements FtlVisitor<IfFragment, IfFragment> {
         } else {
             ifBlock = Fragments.optimizeWithVariableContext(ftl.get(5).accept(fragmentBuilder, new ArrayList<>()));
         }
-        IfFragment ifFragment = new IfFragment();
+        IfFragment ifFragment = new IfFragment(new ArrayList<>(), ConstantFragment.EMPTY, ftl);
         ifFragment.addFragment(new ConditionalFragment(ifExpression, ifBlock, expression));
         ftl.childrenOfType(ElseIfBlock.class).forEach(elseIfPart -> elseIfPart.accept(this, ifFragment));
         ElseBlock elsePart = ftl.firstChildOfType(ElseBlock.class);

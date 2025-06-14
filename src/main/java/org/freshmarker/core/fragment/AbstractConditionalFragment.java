@@ -8,24 +8,13 @@ import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public abstract class AbstractConditionalFragment implements Fragment {
-    protected final List<ConditionalFragment> fragments;
     protected Fragment endFragment;
+    protected final Node node;
 
-    protected AbstractConditionalFragment() {
-        this(new LinkedList<>(), ConstantFragment.EMPTY);
-    }
-
-    protected AbstractConditionalFragment(List<ConditionalFragment> fragments, Fragment endFragment) {
-        this.fragments = fragments;
+    protected AbstractConditionalFragment(Fragment endFragment, Node node) {
         this.endFragment = endFragment;
-    }
-
-    public void addFragment(ConditionalFragment fragment) {
-        fragments.add(fragment);
+        this.node = node;
     }
 
     protected TemplatePrimitive<?> evaluatePrimitive(TemplateObject conditional, ProcessContext context, Node node) {
@@ -48,18 +37,5 @@ public abstract class AbstractConditionalFragment implements Fragment {
         } catch (ProcessException e) {
             throw new ProcessException(e.getMessage(), node, e);
         }
-    }
-
-    @Override
-    public int getSize() {
-        return fragments.stream().mapToInt(Fragment::getSize).sum() + endFragment.getSize() + 1;
-    }
-
-    public List<Class<?>> getConditionals() {
-        List<Class<?>> result = new LinkedList<>();
-        for (ConditionalFragment fragment : fragments) {
-            result.add(fragment.conditional().getModelType());
-        }
-        return result;
     }
 }

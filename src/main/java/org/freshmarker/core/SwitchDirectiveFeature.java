@@ -34,7 +34,25 @@ public enum SwitchDirectiveFeature implements TemplateFeature {
      *<p>
      * The feature is disabled by default.
      */
-    ALLOW_ONLY_EQUAL_TYPE_ONS;
+    ALLOW_ONLY_EQUAL_TYPE_ONS,
+
+    /**
+     * Feature that determines whether the switch optimized with a map.
+     *<p>
+     * The default value is 'false', meaning that the optimization is disabled.
+     *<p>
+     * The feature is disabled by default.
+     */
+    OPTIMIZE_CONSTANT_SWITCH,
+
+    /**
+     * Feature that determines whether a duplicate case expression results in an error.
+     *<p>
+     * The default value is 'false', meaning that duplicate case expression does not result in an error.
+     *<p>
+     * The feature is disabled by default.
+     */
+    ERROR_ON_DUPLICATE_CASE_EXPRESSION;
 
     @Override
     public boolean isEnabledByDefault() {
