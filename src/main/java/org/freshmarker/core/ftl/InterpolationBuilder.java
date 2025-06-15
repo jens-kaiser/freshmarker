@@ -161,6 +161,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             return new TemplateDynamicKey((TemplateObject) input, dynamicKey);
         }
         return new TemplateDynamicKey((TemplateObject) input, dynamicKey) {
+            @Override
             protected TemplateObject getStringIndexResult(TemplateString templateString, int beginIndex) {
                 return new TemplateString(String.valueOf(templateString.getValue().charAt(beginIndex)));
             }
