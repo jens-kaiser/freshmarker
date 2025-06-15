@@ -290,6 +290,51 @@ Template reducedTemplate = template.reduce("company", new Company("schegge.de"))
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
 
+_Partial Reduction_ works at the level of directives and interpolations. The reduction is performed differently depending on the type of directive.
+
+==== Die Besonderheit der Default und Exist Operatoren
+
+_Partial Reduction_ evaluates all expressions based on the available data. Where the evaluation can be carried out in full, a reduction is possible; where the evaluation runs into an error because data is missing, no reduction can take place.
+
+The default and exist operators have a special quality. Their mode of operation includes the reaction to non-existent data. Therefore, only their reactions to existing data can be taken into account in the reduction. The missing values are only not specified in the reduction, the normal evaluation can provide these values later. Therefore, evaluating NULL values during reduction is considered an error.
+
+==== Reducing Interpolations
+
+Partial reduction replaces interpolations with text fragments if the expression can be fully evaluated within the interpolation.
+
+.Example Template with reduction on If Direktive
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
+   ${company.domain?upper_case}
+   """);
+Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+----
+
+In this example, the interpolation is replaced by the text `SCHEGGE.DE`.
+
+==== Reducing Conditionals
+
+The conditional directives _If_ and _Switch_ are reduced by replacing their fragment with the block whose condition is fulfilled.
+If an error occurs during the evaluation of a condition because data is missing, the conditional directive is not replaced.
+
+.Example Template with reduction on If Direktive
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
+   <#if company.domain??>
+   ${e.firstname}.${e.lastname}@${company.domain}
+   <#else>
+   No email address
+   </#if>
+   """);
+Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+----
+
+In this example, the _If Directive_ can be replaced by `${e.firstname}.${e.lastname}@schegge.de` because the expression `company.domain??` could be evaluated.
+
 ==== List Unrolling (since 1.10.0)
 
 _Partial Reduction_ on _List Directives_ is executed by unrolling the loops.
