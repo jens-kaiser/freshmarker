@@ -132,7 +132,7 @@ public abstract class AbstractListFragment<T> implements Fragment {
         return block.getSize() + 1;
     }
 
-    protected Integer getUnfoldLimit(ReduceContext context) {
-        return (Integer) context.getFeatureSet().getConfigured(ReductionFeature.UNROLL_LIST).orElse(5);
+    protected int getUnfoldLimit(ReduceContext context) {
+        return context.getFeatureSet().getConfigured(ReductionFeature.UNROLL_LIST).map(Integer.class::cast).orElse(5);
     }
 }

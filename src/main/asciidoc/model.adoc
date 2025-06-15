@@ -105,7 +105,7 @@ It is possible to use literals of sequences in templates, whereby the elements a
 === Hashes
 
 _Hashes_ represent data structures in which a data element is accessed via a `String` key. This includes all implementations of `java.util.Map` that define a `String` key.
-FreshMarker also supports _Java Beans_ and _Records_ as _Hash_. In this case, the data elements are accessed via the attribute names.
+_FreshMarker_ also supports _Java Beans_ and _Records_ as _Hash_. In this case, the data elements are accessed via the attribute names.
 The elements can be accessed via the _dot operator_ `hash._name_`.
 
 .Example Hash dot operator
@@ -114,6 +114,17 @@ The elements can be accessed via the _dot operator_ `hash._name_`.
 hash.value
 ----
 
+It is possible to use literals of hashes in templates, whereby the key-value pairs are written comma-separated between curly brackets.
+
+.Example Hash literals
+[source,subs="verbatim,quotes"]
+----
+{ 'firstname': 'Jens', 'lastname': 'Kaiser' }
+{ 'boolean': true, 'integer': 42 }
+----
+
+NOTE: Up to version 1.10.1, only primitive values could be specified in hash literals.
+This can be configured now via `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES`. See <<system-feature>>.
 
 === Ranges
 
