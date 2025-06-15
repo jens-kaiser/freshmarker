@@ -83,9 +83,9 @@ Literals of primitive types can be used for Null, String, Boolean, Integer and D
 
 _Sequences_ represent all data structures that implement `java.util.List`.
 
-The elements of sequences can be accessed via the hash operator `sequence[_index_]` or the <<_list_slices,slice>> operator.
+The elements of sequences can be accessed via the _hash operator_ `sequence[_index_]` or the <<_list_slices,slice>> operator.
 
-.Example Sequence hash operators
+.Example Sequence hash operator
 [source,subs="verbatim,quotes"]
 ----
 sequence[42]
@@ -95,7 +95,7 @@ The expression index can be a value between `0` and the length of the sequence. 
 
 It is possible to use literals of sequences in templates, whereby the elements are written comma-separated between square brackets.
 
-.Example Ssequence literals
+.Example Sequence literals
 [source,subs="verbatim,quotes"]
 ----
 ['a','b','c']
@@ -104,7 +104,16 @@ It is possible to use literals of sequences in templates, whereby the elements a
 
 === Hashes
 
-TBD
+_Hashes_ represent data structures in which a data element is accessed via a `String` key. This includes all implementations of `java.util.Map` that define a `String` key.
+FreshMarker also supports _Java Beans_ and _Records_ as _Hash_. In this case, the data elements are accessed via the attribute names.
+The elements can be accessed via the _dot operator_ `hash._name_`.
+
+.Example Hash operators
+[source,subs="verbatim,quotes"]
+----
+hash.value
+----
+
 
 === Ranges
 
@@ -113,7 +122,7 @@ Ranges are data structures that represent an interval with a lower limit and an 
 Ranges without an upper limit are called _right-unlimited ranges_, ranges with an upper limit are called _right-limited ranges_.
 If the size of the interval is specified instead of the upper limit, then this range is called a _length-limited range_.
 
-Ranges differ from other types because they only exists as literals in the templates. Ranges cannot be injected via the model.
+Ranges differ from other types because they only exist as literals in the templates. Ranges cannot be injected via the model.
 
 ==== Right-unlimited Range
 
