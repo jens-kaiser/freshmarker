@@ -828,4 +828,32 @@ class ReduceTemplateTest {
         assertEquals("1", reducedTemplate.process(Map.of()));
         assertEquals(new ReductionStatus(5, 2, 0), reductionStatus);
     }
+
+    @Test
+    void reduceHashListWithHashLiteral() {
+        Template template = templateBuilder.with(ReductionFeature.UNROLL_LIST)
+                .getTemplate("test", "<#list { 'a': 'A', 'b': 'B' } as k, v>${k}=${v} </#list>");
+        Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
+        assertNotNull(reducedTemplate);
+        assertEquals("a=A b=B ", reducedTemplate.process(Map.of()));
+        assertEquals(new ReductionStatus(7, 11, 4), reductionStatus);
+    }
+
+    public record Artist(String name, String band) {
+
+    }
+
+    @Test
+    void reduceHashList() {
+        Template template = templateBuilder.with(ReductionFeature.UNROLL_LIST).with(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)
+                .getTemplate("test", "<#list map as k sorted asc, v>${k} (${v.name} ${v.band}) </#list>");
+        Map<String, Object> reduceModel = Map.of(
+                "map", Map.of("bobby", new Artist("Bobby Hatfield", null), "bill", new Artist("Bill Medley", null)));
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertNotNull(reducedTemplate);
+        Map<String, Object> processModel = Map.of(
+                "map", Map.of("bobby", new Artist("Bobby Hatfield", "TRB"), "bill", new Artist("Bill Medley", "TRB")));
+        assertEquals("bill (Bill Medley TRB) bobby (Bobby Hatfield TRB) ", reducedTemplate.process(processModel));
+        assertEquals(new ReductionStatus(9, 15, 4), reductionStatus);
+    }
 }

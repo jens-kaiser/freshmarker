@@ -5,6 +5,7 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.fragment.Fragment;
+import org.freshmarker.core.model.TemplateHash;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateObjectMapper;
@@ -55,6 +56,9 @@ public class BaseEnvironment implements Environment, TemplateObjectMapper {
         switch (o) {
             case null -> {
                 return TemplateNull.NULL;
+            }
+            case Map.Entry entry -> {
+                return new TemplateHash(entry);
             }
             case TemplateObject templateObject -> {
                 return templateObject;
