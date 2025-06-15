@@ -28,7 +28,16 @@ public enum SystemFeature implements TemplateFeature {
      *<p>
      * The feature is enabled by default.
      */
-    MODEL_SECURITY;
+    MODEL_SECURITY,
+
+    /**
+     * Feature that determines whether the hash literal could contain non-primitive values.
+     *<p>
+     * The default value is 'false', meaning that hash literal could contain only primitive values.
+     *<p>
+     * The feature is enabled by default.
+     */
+    NON_PRIMITIVE_HASH_LITERAL_VALUES;
 
     @Override
     public boolean isEnabledByDefault() {

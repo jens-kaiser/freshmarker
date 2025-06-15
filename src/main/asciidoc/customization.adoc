@@ -82,19 +82,19 @@ These features are controlled by constants in the `IncludeDirectiveFeature` clas
 |===
 |Feature | Description | Initial enabled
 
-| ENABLED
+| *ENABLED*
 | Feature that determines whether include directives are evaluated.
 | `false`
 
-| LIMIT_INCLUDE_LEVEL
+| *LIMIT_INCLUDE_LEVEL*
 | Feature that determines whether the level of includes is limited.
 | `true`
 
-| IGNORE_LIMIT_EXCEEDED_ERROR
+| *IGNORE_LIMIT_EXCEEDED_ERROR*
 | Feature that determines whether the exceeded level of includes is an error.
 | `false`
 
-| PARSE_BY_DEFAULT
+| *PARSE_BY_DEFAULT*
 | Feature that determines whether the content of include directives is parsed by default.
 | `true`
 |===
@@ -107,27 +107,27 @@ Constants in the `SwitchDirectiveFeature` class control these features.
 |===
 |Feature | Description | Initial enabled
 
-| ALLOW_ONLY_CONSTANT_CASES
+| *ALLOW_ONLY_CONSTANT_CASES*
 | Feature that determines whether case expressions must be constants.
 | `false`
 
-| ALLOW_ONLY_CONSTANT_ONS
+| *ALLOW_ONLY_CONSTANT_ONS*
 | Feature that determines whether on expressions must be constants.
 | `false`
 
-| ALLOW_ONLY_EQUAL_TYPE_CASES
+| *ALLOW_ONLY_EQUAL_TYPE_CASES*
 | Feature that determines whether all case expressions must contain constants from the same type.
 | `false`
 
-| ALLOW_ONLY_EQUAL_TYPE_ONS
+| *ALLOW_ONLY_EQUAL_TYPE_ONS*
 | Feature that determines whether all on expressions must contain constants from the same type.
 | `false`
 
-| OPTIMIZE_CONSTANT_SWITCH
+| *OPTIMIZE_CONSTANT_SWITCH*
 | Feature that determines whether the switch optimized with a map (since 1.10.1).
 | `false`
 
-| ERROR_ON_DUPLICATE_CASE_EXPRESSION
+| *ERROR_ON_DUPLICATE_CASE_EXPRESSION*
 | Feature that determines whether a duplicate case expression results in an error (since 1.10.1).
 | `false`
 |===
@@ -140,11 +140,11 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 |===
 |Feature | Description | Initial enabled
 
-| IGNORE_OPTIONAL_EMPTY
+| *IGNORE_OPTIONAL_EMPTY*
 | Feature that ignores errors due empty optionals on built-ins.
 | `false`
 
-| IGNORE_NULL
+| *IGNORE_NULL*
 | Feature that ignores errors due `NULL` values on built-ins.
 | `false`
 |===
@@ -160,7 +160,7 @@ This feature is controlled by a constant in the `VariableScopeFeature` class.
 |===
 |Feature | Description | Initial enabled
 
-| ALL_BLOCKS
+| *ALL_BLOCKS*
 | Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
 | `false`
 |===
@@ -174,13 +174,13 @@ These features are controlled by constants in the `ReductionFeature` class.
 |===
 |Feature | Description | Initial enabled
 
-| UNFOLD_LIST
+| *UNFOLD_LIST*
 | Feature that allows template reduction by unrolling list directives.
 Feature that determines whether list directives are unrolled.
 Only list directives that do not exceed a configurable number of elements are unrolled. The default value is 5.
 | `false`
 
-| MERGE_CONSTANT_FRAGMENTS
+| *MERGE_CONSTANT_FRAGMENTS*
 | Feature that determines whether constant fragments are merged.
 | `false`
 |===
@@ -203,17 +203,22 @@ CAUTION: These features will be removed in the version 2.0.0, and the default en
 |===
 |Feature | Description | Initial enabled
 
-| MODEL_SECURITY
+| *MODEL_SECURITY*
 | Feature that determines whether the model classes are checked.
 | `true`
 
-| STRING_INDEX_RETURNS_CHARACTER
+| *STRING_INDEX_RETURNS_CHARACTER*
 | Feature that determines whether the index operator on string return a character or a string.
 | `false`
 
-| ALL_BLOCKS
+| *ALL_BLOCKS*
 | Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
 | `false`
+
+| *NON_PRIMITIVE_HASH_LITERAL_VALUES*
+| Feature that determines whether the hash literal could contain non-primitive values. Prior version 1.10.1 only primitive values are allowed.
+| `false`
+
 |===
 
 ==== With Clock (since 1.6.9)
