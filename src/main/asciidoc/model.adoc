@@ -108,7 +108,7 @@ _Hashes_ represent data structures in which a data element is accessed via a `St
 FreshMarker also supports _Java Beans_ and _Records_ as _Hash_. In this case, the data elements are accessed via the attribute names.
 The elements can be accessed via the _dot operator_ `hash._name_`.
 
-.Example Hash operators
+.Example Hash dot operator
 [source,subs="verbatim,quotes"]
 ----
 hash.value
