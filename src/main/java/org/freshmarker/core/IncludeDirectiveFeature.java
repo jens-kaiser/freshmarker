@@ -13,6 +13,7 @@ public enum IncludeDirectiveFeature implements TemplateFeature {
      * The feature is disabled by default.
      */
     ENABLED,
+
     /**
      * Feature that determines whether the level of includes is limited
      *<p>
@@ -21,6 +22,7 @@ public enum IncludeDirectiveFeature implements TemplateFeature {
      * The feature is enabled by default.
      */
     LIMIT_INCLUDE_LEVEL,
+
     /**
      * Feature that determines whether the exceeded level of includes is an error
      *<p>
@@ -29,6 +31,7 @@ public enum IncludeDirectiveFeature implements TemplateFeature {
      * The feature is disabled by default.
      */
     IGNORE_LIMIT_EXCEEDED_ERROR,
+
     /**
      * Feature that determines whether the content of include directives is parsed by default.
      *<p>

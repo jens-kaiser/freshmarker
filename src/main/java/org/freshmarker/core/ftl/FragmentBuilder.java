@@ -393,7 +393,8 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         if (featureSet.isDisabled(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL)) {
             return false;
         }
-        boolean isLimitExceeded = includeLevel > 4;
+        int configured = featureSet.getConfigured(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL).map(Integer.class::cast).orElse(4);
+        boolean isLimitExceeded = includeLevel > configured;
         if (isLimitExceeded && featureSet.isDisabled(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR)) {
             throw new ParsingException("include level exceeded: " + includeLevel, ftl);
         }

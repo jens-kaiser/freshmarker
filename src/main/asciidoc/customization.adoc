@@ -99,6 +99,14 @@ These features are controlled by constants in the `IncludeDirectiveFeature` clas
 | `true`
 |===
 
+.Example change limit for the include level
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder()
+    .with(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, 2);
+----
+
+
 ===== Switch Directive Features
 
 Constants in the `SwitchDirectiveFeature` class control these features.

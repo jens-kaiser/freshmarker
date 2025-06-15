@@ -84,4 +84,12 @@ class IncludeDirectiveTest {
         Template template = builderWithInclude.with(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR).getTemplate("template", "<#include 'recursive.fmt'>");
         assertEquals("recursive recursive recursive recursive recursive ", template.process(Map.of()));
     }
+
+    @Test
+    void recursiveIncludeIgnoredErrorWithChangedLimit() throws IOException {
+        Files.writeString(fileSystem.getPath("recursive.fmt"), "recursive <#include 'recursive.fmt'>");
+        TemplateBuilder builderWithInclude = builder.with(IncludeDirectiveFeature.ENABLED).with(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, 2);
+        Template template = builderWithInclude.with(IncludeDirectiveFeature.IGNORE_LIMIT_EXCEEDED_ERROR).getTemplate("template", "<#include 'recursive.fmt'>");
+        assertEquals("recursive recursive recursive ", template.process(Map.of()));
+    }
 }
