@@ -292,7 +292,7 @@ As a result, it delivers a new template in which part of the structure has been 
 
 _Partial Reduction_ works at the level of directives and interpolations. The reduction is performed differently depending on the type of directive.
 
-==== Die Besonderheit der Default und Exist Operatoren
+==== The special nature of the Default and Exist Operators
 
 _Partial Reduction_ evaluates all expressions based on the available data. Where the evaluation can be carried out in full, a reduction is possible; where the evaluation runs into an error because data is missing, no reduction can take place.
 
