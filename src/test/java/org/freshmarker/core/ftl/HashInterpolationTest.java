@@ -1,0 +1,35 @@
+package org.freshmarker.core.ftl;
+
+import org.freshmarker.Template;
+import org.freshmarker.TemplateBuilder;
+import org.freshmarker.core.SystemFeature;
+import org.freshmarker.test.util.TemplateBuilderParameterResolver;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(TemplateBuilderParameterResolver.class)
+class HashInterpolationTest {
+
+    @Test
+    void constantHashValues(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "${{'a': 'A', 'b': 'B', 'c': 'C'}.b}");
+        assertEquals("B", template.process(Map.of()));
+    }
+
+    @Test
+    void variableHashValues(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES).getTemplate("test", "${{'a': 'A', 'b': b, 'c': 'C'}.b}");
+        assertEquals("BB", template.process(Map.of("b", "BB")));
+    }
+
+    @Test
+    void hashHashValues(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)
+                .getTemplate("test", "${{'hash': { 'a': 'A', 'b': 'B'}}.hash.b}");
+        assertEquals("B", template.process(Map.of()));
+    }
+}

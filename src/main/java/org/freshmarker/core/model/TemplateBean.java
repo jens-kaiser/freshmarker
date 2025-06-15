@@ -28,8 +28,9 @@ public class TemplateBean implements TemplateMap {
             return TemplateNull.NULL;
         }
         if (object instanceof TemplateObject t) {
-            mapped.put(name, t);
-            return t;
+            TemplateObject value = t.evaluateToObject(context);
+            mapped.put(name, value);
+            return value;
         }
         TemplateObject result = context.mapObject(object);
         mapped.put(name, result);

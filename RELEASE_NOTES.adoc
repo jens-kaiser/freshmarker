@@ -2,7 +2,11 @@
 
 == Release 1.10.1 (2025-06-XX  planned)
 
+=== Improvements
+
 - add string-built-ins `strip`, `stripLeading` and `stripTrailing`
+- add `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES` to allow non-primitive values in hash literals
+
 
 === Deprecations
 

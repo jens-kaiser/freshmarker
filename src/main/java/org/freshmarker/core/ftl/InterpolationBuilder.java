@@ -387,7 +387,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
                 throw new IllegalArgumentException("key is not a string");
             }
             TemplateObject value = expression.get(i + 3).accept(this, null);
-            if (!value.isPrimitive()) {
+            if (!value.isPrimitive() && featureSet.isDisabled(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)) {
                 throw new IllegalArgumentException("value is not a primitive");
             }
             hash.put(string.getValue(), value);
