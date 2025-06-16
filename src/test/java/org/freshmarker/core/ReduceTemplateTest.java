@@ -232,7 +232,7 @@ class ReduceTemplateTest {
         }
 
         @Test
-        void reduceListWithLoopVariableAndVVariable() {
+        void reduceListWithLoopVariableAndVariable() {
             Map<String, Object> reduceModel = Map.of("company", "schegge.de", "firstname", "jens");
             String input = """
                 <#var name=firstname>
