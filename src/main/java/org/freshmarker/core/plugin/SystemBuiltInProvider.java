@@ -74,6 +74,7 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         register.add(TemplateNull.class, "empty_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "blank_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "trim_to_null", BuiltIn.identity());
+        register.add(TemplateNull.class, "strip_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "is_null", BuiltInHelper.alwaysTrue());
         register.add(TemplateBoolean.class, "c", BuiltIn.string());
         register.add(TemplateBoolean.class, "then", SystemBuiltInProvider::thenBuildIn);

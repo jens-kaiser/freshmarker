@@ -116,7 +116,7 @@ m|die-heisse-wueste
 
 ==== `strip` Built-In (since 1.10.1)
 
-This built-in removes leading and trailing Unicode whitespaces from the text.
+This built-in removes leading and trailing Unicode whitespacesfootnote:whitespace[The _Java_ definition of whitespace, which does not include the non-breakable space, for example.] from the text.
 The examples use `␣` as a replacement for the whitespace.
 
 |===
@@ -126,28 +126,51 @@ m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 |===
 
-==== `stripLeading` Built-In (since 1.10.1)
+==== `strip_leading` Built-In (since 1.10.1)
 
-This built-in removes leading Unicode whitespaces from the text.
+This built-in removes leading Unicode whitespacesfootnote:whitespace[] from the text.
 The examples use `␣` as a replacement for the whitespace.
 
 |===
 |Input | Output
 
-m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip}
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip_leading}
 m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣
 |===
 
-==== `stripTrailing` Built-In (since 1.10.1)
+==== `strip_trailing` Built-In (since 1.10.1)
 
-This built-in removes trailing Unicode whitespaces from the text.
+This built-in removes trailing Unicode whitespacesfootnote:whitespace[] from the text.
 The examples use `␣` as a replacement for the whitespace.
 
 |===
 |Input | Output
 
-m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip}
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip_trailing}
 m|␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `strip_to_null` Built-In (since 1.10.1)
+
+This built-in removes leading and trailing Unicode whitespacesfootnote:whitespace[] from the text.
+The examples use `␣` as a replacement for the whitespace.
+If the result is an empty string, `NULL` is returned.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value, of course]
+
+|===
+|Input | Output | Type
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim_to_null}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${'␣␣␣␣␣'?trim_to_null}
+m|NULL
+m|NULL
+
+m|${null?trim_to_null}
+m|NULL
+m|NULL
 |===
 
 ==== `trim` Built-In
@@ -167,7 +190,7 @@ m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
 This built-in removes leading and trailing whitespaces from the text.
 The examples use `␣` as a replacement for the whitespace.
 If the result is an empty string, `NULL` is returned.
-If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[]
 
 |===
 |Input | Output | Type
@@ -188,7 +211,7 @@ m|NULL
 ==== `empty_to_null` Built-In (since 1.7.1)
 
 This built-in returns `NULL` if the text is empty.
-If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[]
 
 |===
 |Input | Output | Type
@@ -210,7 +233,7 @@ m|NULL
 
 This built-in returns `NULL` if the text is blank.
 The examples use `␣` as a replacement for the whitespace.
-If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value of course]
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[]
 
 |===
 |Input | Output | Type

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +38,11 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return value.isEmpty() ? TemplateNull.NULL : new TemplateString(value);
     }
 
+    private static TemplateObject strip2null(TemplateString x) {
+        String value = x.getValue().strip();
+        return value.isEmpty() ? TemplateNull.NULL : new TemplateString(value);
+    }
+
     private TemplateObject i18n(TemplateString x, ProcessContext e, List<TemplateObject> y) {
         BuiltInHelper.checkParametersLength(y, 0, 1);
         String resourceBundle = y.isEmpty() ? e.getResourceBundle() : y.getFirst().evaluate(e, TemplateString.class).getValue();
@@ -47,16 +53,16 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         }
     }
 
-    private static TemplateString slugify(TemplateObject value) {
-        return new TemplateString(((TemplateString)value).getValue().replaceAll("[^ a-zA-Z0-9-]", "").replace(' ', '-').toLowerCase());
+    private TemplateString slugify(TemplateObject value) {
+        return apply(value, x -> x.replaceAll("[^ a-zA-Z0-9-]", "").replace(' ', '-').toLowerCase());
     }
 
-    private static TemplateString upperCase(TemplateObject value, ProcessContext context) {
-        return new TemplateString(((TemplateString)value).getValue().toUpperCase(context.getLocale()));
+    private TemplateString upperCase(TemplateObject value, ProcessContext context) {
+        return apply(value, x -> x.toUpperCase(context.getLocale()));
     }
 
-    private static TemplateString lowerCase(TemplateObject value, ProcessContext context) {
-        return new TemplateString(((TemplateString)value).getValue().toLowerCase(context.getLocale()));
+    private TemplateString lowerCase(TemplateObject value, ProcessContext context) {
+        return apply(value, x -> x.toLowerCase(context.getLocale()));
     }
 
     private static TemplateString capitalize(TemplateObject value, ProcessContext context) {
@@ -75,28 +81,28 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return new TemplateString(matcher.replaceAll(r -> matcher.group(1).toLowerCase(locale) + matcher.group(2).toUpperCase(locale)));
     }
 
-    private static TemplateString kebabCase(TemplateObject value, ProcessContext context) {
-        return new TemplateString(((TemplateString)value).getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getLocale()));
+    private TemplateString kebabCase(TemplateObject value, ProcessContext context) {
+        return apply(value, x -> x.replaceAll(LOWER_CASE_UPPER_CASES, "$1-$2").toLowerCase(context.getLocale()));
     }
 
-    private static TemplateString snakeCase(TemplateObject value, ProcessContext context) {
-        return new TemplateString(((TemplateString)value).getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getLocale()));
+    private TemplateString snakeCase(TemplateObject value, ProcessContext context) {
+        return apply(value, x -> x.replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toLowerCase(context.getLocale()));
     }
 
-    private static TemplateString screamingSnakeCase(TemplateObject value, ProcessContext context) {
-        return new TemplateString(((TemplateString)value).getValue().replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getLocale()));
+    private TemplateString screamingSnakeCase(TemplateObject value, ProcessContext context) {
+        return apply(value, x -> x.replaceAll(LOWER_CASE_UPPER_CASES, "$1_$2").toUpperCase(context.getLocale()));
     }
 
-    private static TemplateBoolean contains(TemplateObject value, TemplateString contains) {
-        return TemplateBoolean.from(((TemplateString)value).getValue().contains(contains.getValue()));
+    private TemplateBoolean contains(TemplateObject value, TemplateString contains) {
+        return applyToBoolean(value, x -> x.contains(contains.getValue()));
     }
 
-    private static TemplateBoolean endsWith(TemplateObject value, TemplateString endsWith) {
-        return TemplateBoolean.from(((TemplateString)value).getValue().endsWith(endsWith.getValue()));
+    private TemplateBoolean endsWith(TemplateObject value, TemplateString endsWith) {
+        return applyToBoolean(value, x -> x.endsWith(endsWith.getValue()));
     }
 
-    private static TemplateBoolean startsWith(TemplateObject value, TemplateString endsWith) {
-        return TemplateBoolean.from(((TemplateString)value).getValue().startsWith(endsWith.getValue()));
+    private TemplateBoolean startsWith(TemplateObject value, TemplateString endsWith) {
+        return applyToBoolean(value, x -> x.startsWith(endsWith.getValue()));
     }
 
     private static TemplateBoolean toBoolean(TemplateObject value) {
@@ -211,6 +217,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("blank_to_null", (x, y, e) -> ((TemplateString) x).getValue().isBlank() ? TemplateNull.NULL : x);
         register.add("empty_to_null", (x, y, e) -> ((TemplateString) x).getValue().isEmpty() ? TemplateNull.NULL : x);
         register.add("trim_to_null", (x, y, e) -> trim2null((TemplateString) x));
+        register.add("strip_to_null", (x, y, e) -> strip2null((TemplateString) x));
         register.add("left_pad", (x, y, e) -> padding((TemplateString) x, e, y, true));
         register.add("right_pad", (x, y, e) -> padding((TemplateString) x, e, y, false));
         register.add("center_pad", (x, y, e) -> padding((TemplateString) x, e, y));
@@ -222,5 +229,9 @@ public final class StringBuiltInProvider implements BuiltInProvider {
 
     private TemplateString apply(TemplateObject value, UnaryOperator<String> operator) {
         return new TemplateString(operator.apply(((TemplateString)value).getValue()));
+    }
+
+    private TemplateBoolean applyToBoolean(TemplateObject value, Function<String, Boolean> operator) {
+        return TemplateBoolean.from(operator.apply(((TemplateString)value).getValue()));
     }
 }

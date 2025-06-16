@@ -53,9 +53,17 @@ class StringInterpolationTest {
     @ParameterizedTest
     @CsvSource({
             "test:${text?trim},'  text  ',test:text",
+            "test:${text?trim},'\u1680 text \u1680',test:\u1680 text \u1680",
+            "test:${text?strip},'\u000B\t\n\f\r\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u001C\u001D\u001E\u001F',test:\u2007",
+            "test:${text?strip},'\u1680 text \u1680',test:text",
+            "test:${text?strip_leading},'\u1680 text \u1680',test:text \u1680",
+            "test:${text?strip_trailing},'\u1680 text \u1680',test:\u1680 text",
             "test:${text?trim_to_null!'xxx'},'  text  ',test:text",
             "test:${text?trim_to_null!'xxx'},'    ',test:xxx",
             "test:${text?trim_to_null!'xxx'},,test:xxx",
+            "test:${text?strip_to_null!'xxx'},'\u1680  text  \u1680',test:text",
+            "test:${text?strip_to_null!'xxx'},'  \u1680  ',test:xxx",
+            "test:${text?strip_to_null!'xxx'},,test:xxx",
             "test:${text?empty_to_null!'xxx'},'test',test:test",
             "test:${text?empty_to_null!'xxx'},'',test:xxx",
             "test:${text?empty_to_null!'xxx'},,test:xxx",
