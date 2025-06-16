@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -231,7 +231,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         return new TemplateString(operator.apply(((TemplateString)value).getValue()));
     }
 
-    private TemplateBoolean applyToBoolean(TemplateObject value, Function<String, Boolean> operator) {
-        return TemplateBoolean.from(operator.apply(((TemplateString)value).getValue()));
+    private TemplateBoolean applyToBoolean(TemplateObject value, Predicate<String> operator) {
+        return TemplateBoolean.from(operator.test(((TemplateString)value).getValue()));
     }
 }
