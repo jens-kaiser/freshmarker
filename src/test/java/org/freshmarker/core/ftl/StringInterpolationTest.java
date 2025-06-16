@@ -4,6 +4,7 @@ import ftl.ParseException;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -85,9 +86,16 @@ class StringInterpolationTest {
     }
 
     @Test
-    void interpolationDynamicKey(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${text[2]} ${text[3]}");
-        assertEquals("test: x t", template.process(Map.of("text", "text")));
+    void interpolationDynamicKeyAsString(TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${text[2]} ${text[3]} ${text[2]?is_string} ${text[3]?is_string}");
+        assertEquals("test: x t yes yes", template.process(Map.of("text", "text")));
+    }
+
+    @Test
+    void interpolationDynamicKeyAsCharacter(TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.with(SystemFeature.STRING_INDEX_RETURNS_CHARACTER)
+                .getTemplate("test", "test: ${text[2]} ${text[3]} ${text[2]?is_character} ${text[3]?is_character}");
+        assertEquals("test: x t yes yes", template.process(Map.of("text", "text")));
     }
 
     @ParameterizedTest
