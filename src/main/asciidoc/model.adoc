@@ -322,5 +322,3 @@ configuration.getSecurity().addAllowedPackages("java.io");
 NOTE: Of course, it only makes sense to allow classes that can also be interpreted by _FreshMarker_. Alternatively, a class can also be integrated via _Custom String Types_ or a _Plug-in_.
 
 In the example above, the class `java.lang.Runtime` and all classes in the packages `java.lang.annotation` and `java.io` and all of their subpackages are allowed.
-
-Der Mechanismus kann
