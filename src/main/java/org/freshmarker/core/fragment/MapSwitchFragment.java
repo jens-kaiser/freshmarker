@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
@@ -35,9 +36,17 @@ public class MapSwitchFragment extends AbstractConditionalFragment implements Sw
         try {
             TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
             return Objects.requireNonNullElse(fragmentMap.get(switchValue), endFragment).reduce(context);
+        } catch (ReduceException e) {
+            throw e;
         } catch (RuntimeException e) {
-            Map<TemplatePrimitive<?>, Fragment> reduced = fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> f.getValue().reduce(context)));
-            return new MapSwitchFragment(switchExpression, node, reduced, endFragment.reduce(context));
+            try {
+                Map<TemplatePrimitive<?>, Fragment> reduced = fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> f.getValue().reduce(context)));
+                return new MapSwitchFragment(switchExpression, node, reduced, endFragment.reduce(context));
+            } catch (ReduceException f) {
+                throw e;
+            } catch (RuntimeException f) {
+               return this;
+            }
         }
     }
 

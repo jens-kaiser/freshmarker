@@ -4,6 +4,7 @@ import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
@@ -43,8 +44,16 @@ public class ListSwitchFragment extends AbstractConditionalFragment implements S
                 }
             }
             return endFragment.reduce(context);
+        } catch (ReduceException e) {
+            throw e;
         } catch (RuntimeException e) {
-            return new ListSwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
+            try {
+                return new ListSwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
+            } catch (ReduceException f) {
+                throw e;
+            } catch (RuntimeException f) {
+                return this;
+            }
         }
     }
 

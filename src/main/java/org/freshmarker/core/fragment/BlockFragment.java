@@ -2,6 +2,7 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.ReductionFeature;
 
 import java.util.List;
@@ -28,11 +29,17 @@ public class BlockFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        List<Fragment> list = fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList();
-        if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {
-            list = Fragments.optimizeReduction(list);
+        try {
+            List<Fragment> list = fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList();
+            if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {
+                list = Fragments.optimizeReduction(list);
+            }
+            return Fragments.optimize(list, false);
+        } catch (ReduceException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            return this;
         }
-        return Fragments.optimize(list, false);
     }
 
     @Override

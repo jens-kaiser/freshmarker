@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
@@ -56,6 +57,8 @@ public class IfFragment extends AbstractConditionalFragment {
                 }
             }
             return endFragment.reduce(context);
+        } catch (ReduceException e) {
+            throw e;
         } catch (RuntimeException e) {
             return new IfFragment(fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context), node);
         }

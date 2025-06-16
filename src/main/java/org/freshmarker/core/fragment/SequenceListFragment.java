@@ -5,6 +5,7 @@ import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
@@ -57,6 +58,8 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
             SequenceListStrategy strategy = new SequenceListStrategy(identifier, list);
             return reduceLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper), strategy);
+        } catch (ReduceException e) {
+            throw e;
         } catch (RuntimeException e) {
             return this;
         } finally {

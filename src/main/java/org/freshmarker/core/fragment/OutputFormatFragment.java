@@ -2,6 +2,7 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 
 public class OutputFormatFragment implements Fragment {
 
@@ -25,12 +26,18 @@ public class OutputFormatFragment implements Fragment {
 
     @Override
     public OutputFormatFragment reduce(ReduceContext context) {
-        Fragment reduced = content.reduce(context);
-        if (content == reduced) {
+        try {
+            Fragment reduced = content.reduce(context);
+            if (content == reduced) {
+                return this;
+            }
+            context.getStatus().replaced().incrementAndGet();
+            return new OutputFormatFragment(reduced, format);
+        } catch (ReduceException e) {
+            throw e;
+        } catch (RuntimeException e) {
             return this;
         }
-        context.getStatus().replaced().incrementAndGet();
-        return new OutputFormatFragment(reduced, format);
     }
 
     @Override
