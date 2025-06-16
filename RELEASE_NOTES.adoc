@@ -6,7 +6,8 @@
 
 - add string-built-ins `strip`, `stripLeading` and `stripTrailing`
 - add `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES` to allow non-primitive values in hash literals
-
+- the value for `IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL` can be configured
+- optimize switch directive for constant expressions
 
 === Deprecations
 
