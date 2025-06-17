@@ -281,14 +281,38 @@ the template can be preprocessed.
 [source,java]
 ----
 TemplateBuilder templateBuilder = configuration.builder();
-Template template = templateBuilder.getTemplate("test", """"
-   <#list employee as e>${e.firstname}.${e.lastname}@${company.domain}</#list>
+Template template = templateBuilder.getTemplate("test", """
+   <#list employees as e>${e.firstname}.${e.lastname}@${company.domain}</#list>
    """);
-Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+Map<String, Object> reductionMap = Map.of("company", new Company("schegge.de"));
+Template reducedTemplate = template.reduce(reductionMap);
 ----
 
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
+
+
+[TIP]
+====
+Although the replaced variables do not have to be passed to the `process` method later, it is recommended to make them available anyway.
+If a variable could not be replaced completely by _Partial Reduction_, there will otherwise be errors.
+
+.Best Practices with Partial Reduction Data
+[source,java]
+----
+Map<String, Object> reductionMap = Map.of("company", new Company("schegge.de"));
+
+Template reducedTemplate = template.reduce(reductionMap);
+
+List<Employee> employees = List.of(new Employee("Jens", "Kaiser"));
+
+Map<String, Object> processMap = new HashMap<>();
+processMap.put("employees", employees);
+processMap.putAll(reductionMap);
+
+String content = reducedTemplate.process(processMap);
+----
+====
 
 _Partial Reduction_ works at the level of directives and interpolations. The reduction is performed differently depending on the type of directive.
 
