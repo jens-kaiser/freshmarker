@@ -1,6 +1,7 @@
 package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.ReductionFeature;
@@ -37,7 +38,7 @@ public class BlockFragment implements Fragment {
             return Fragments.optimize(list, false);
         } catch (ReduceException e) {
             throw e;
-        } catch (RuntimeException e) {
+        } catch (ProcessException e) {
             return this;
         }
     }

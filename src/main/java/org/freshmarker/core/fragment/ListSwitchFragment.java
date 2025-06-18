@@ -5,6 +5,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
@@ -46,14 +47,17 @@ public class ListSwitchFragment extends AbstractConditionalFragment implements S
             return endFragment.reduce(context);
         } catch (ReduceException e) {
             throw e;
-        } catch (RuntimeException e) {
-            try {
-                return new ListSwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
-            } catch (ReduceException f) {
-                throw e;
-            } catch (RuntimeException f) {
-                return this;
-            }
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), node, e);
+        } catch (ProcessException ignored) {
+
+        }
+        try {
+            return new ListSwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), node, e);
+        } catch (ProcessException e) {
+            return this;
         }
     }
 

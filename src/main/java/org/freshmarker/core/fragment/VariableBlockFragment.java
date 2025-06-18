@@ -2,8 +2,10 @@ package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.environment.VariableEnvironment;
 
@@ -36,9 +38,9 @@ public class VariableBlockFragment extends BlockFragment{
                 reduced.add(fragment.reduce(context));
             }
             return new VariableBlockFragment(Fragments.optimizeReduction(reduced));
-        } catch (ReduceException e) {
-            throw e;
-        } catch (RuntimeException e) {
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), e);
+        } catch (ProcessException e) {
             return this;
         } finally {
             context.setEnvironment(environment);

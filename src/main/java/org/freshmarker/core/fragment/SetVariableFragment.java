@@ -3,8 +3,10 @@ package org.freshmarker.core.fragment;
 import ftl.Node;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 
 public record SetVariableFragment(String name, TemplateObject expression, Node node) implements Fragment {
@@ -29,9 +31,9 @@ public record SetVariableFragment(String name, TemplateObject expression, Node n
             environment.setVariable(name, value);
             context.getStatus().replaced().incrementAndGet();
             return new SetVariableFragment(name, value, node);
-        } catch (ReduceException e) {
-            throw e;
-        } catch (RuntimeException e) {
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), node, e);
+        } catch (ProcessException e) {
             return this;
         }
     }

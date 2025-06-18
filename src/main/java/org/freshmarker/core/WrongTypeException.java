@@ -2,7 +2,7 @@ package org.freshmarker.core;
 
 import ftl.Node;
 
-public class WrongTypeException extends ReduceException {
+public class WrongTypeException extends ProcessException {
 
   public WrongTypeException(String message) {
     super(message);

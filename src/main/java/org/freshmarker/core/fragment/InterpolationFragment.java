@@ -4,6 +4,7 @@ import ftl.ast.Interpolation;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateMarkup;
@@ -41,7 +42,7 @@ public class InterpolationFragment implements Fragment {
             context.getStatus().replaced().incrementAndGet();
             return new ConstantFragment(templateObject.getValue());
         } catch (WrongTypeException e) {
-            throw new WrongTypeException(e.getMessage(), ftl, e);
+            throw new ReduceException(e.getMessage(), ftl, e);
         } catch (ProcessException e) {
             return this;
         }
