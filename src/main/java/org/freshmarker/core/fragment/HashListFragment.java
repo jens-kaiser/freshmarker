@@ -7,6 +7,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.ReductionFeature;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
 import org.freshmarker.core.environment.ListEnvironment;
 import org.freshmarker.core.environment.ReducingLoopVariableEnvironment;
@@ -75,11 +76,11 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
             TemplateHashLooper looper = new TemplateHashLooper(objectList);
             HashListStrategy strategy = new HashListStrategy(keyIdentifier, valueIdentifier, this);
             return reduceLoop(context, new ListEnvironment(context.getEnvironment(), keyIdentifier, valueIdentifier, looperIdentifier, looper), strategy);
-        } catch (ReduceException e) {
-            throw e;
-        } catch (RuntimeException e) {
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), e);
+        } catch (ProcessException e) {
            return this;
-        } finally{
+        } finally {
             context.setEnvironment(environment);
         }
     }

@@ -32,4 +32,19 @@ class HashInterpolationTest {
                 .getTemplate("test", "${{'hash': { 'a': 'A', 'b': 'B'}}.hash.b}");
         assertEquals("B", template.process(Map.of()));
     }
+
+    @Test
+    void hashWithStaticHashOperator(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)
+                .getTemplate("test", "${hash['key']!'eulav'}");
+        assertEquals("value", template.process(Map.of("hash", Map.of("key", "value"))));
+        assertEquals("eulav", template.process(Map.of("hash", Map.of("yek", "value"))));
+    }
+
+    @Test
+    void hashWithVariableHashOperator(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)
+                .getTemplate("test", "${hash[key]}");
+        assertEquals("value", template.process(Map.of("hash", Map.of("KEY", "value"), "key", "KEY")));
+    }
 }

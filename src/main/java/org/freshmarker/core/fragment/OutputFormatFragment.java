@@ -1,8 +1,10 @@
 package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
+import org.freshmarker.core.WrongTypeException;
 
 public class OutputFormatFragment implements Fragment {
 
@@ -33,9 +35,9 @@ public class OutputFormatFragment implements Fragment {
             }
             context.getStatus().replaced().incrementAndGet();
             return new OutputFormatFragment(reduced, format);
-        } catch (ReduceException e) {
-            throw e;
-        } catch (RuntimeException e) {
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), e);
+        } catch (ProcessException e) {
             return this;
         }
     }

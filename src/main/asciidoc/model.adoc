@@ -89,6 +89,7 @@ The elements of sequences can be accessed via the _hash operator_ `sequence[_ind
 [source,subs="verbatim,quotes"]
 ----
 sequence[42]
+sequence[index] //  index is a variable coatining the number 42
 ----
 
 The expression index can be a value between `0` and the length of the sequence. Other values lead to an error.
@@ -106,12 +107,14 @@ It is possible to use literals of sequences in templates, whereby the elements a
 
 _Hashes_ represent data structures in which a data element is accessed via a `String` key. This includes all implementations of `java.util.Map` that define a `String` key.
 _FreshMarker_ also supports _Java Beans_ and _Records_ as _Hash_. In this case, the data elements are accessed via the attribute names.
-The elements can be accessed via the _dot operator_ `hash._name_`.
+The elements can be accessed via the _dot operator_ `hash._name_` or the _hash operator_ `hash['_name_']`.
 
 .Example Hash dot operator
 [source,subs="verbatim,quotes"]
 ----
 hash.value
+hash['value']
+hash[key]      // key is a variable coatining the string 'value'
 ----
 
 It is possible to use literals of hashes in templates, whereby the key-value pairs are written comma-separated between curly brackets.

@@ -2,8 +2,10 @@ package org.freshmarker.core.fragment;
 
 import ftl.Node;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
+import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Objects;
@@ -30,9 +32,9 @@ public record ConditionalFragment(TemplateObject conditional, Fragment content, 
             }
             context.getStatus().replaced().incrementAndGet();
             return new ConditionalFragment(conditional, reduce, node);
-        } catch (ReduceException e) {
-            throw e;
-        } catch (RuntimeException e) {
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), node, e);
+        } catch (ProcessException e) {
             return this;
         }
     }

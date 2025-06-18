@@ -8,17 +8,17 @@ import org.freshmarker.core.model.primitive.TemplateString;
 
 public class TemplateDynamicKey implements TemplateExpression {
 
-    private final TemplateObject sequence;
+    private final TemplateObject sequenceOrMap;
     private final TemplateObject dynamicKey;
 
-    public TemplateDynamicKey(TemplateObject sequence, TemplateObject dynamicKey) {
-        this.sequence = sequence;
+    public TemplateDynamicKey(TemplateObject sequenceOrMap, TemplateObject dynamicKey) {
+        this.sequenceOrMap = sequenceOrMap;
         this.dynamicKey = dynamicKey;
     }
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
-        TemplateObject templateObject = sequence.evaluateToObject(context);
+        TemplateObject templateObject = sequenceOrMap.evaluateToObject(context);
         if (templateObject == TemplateNull.NULL) {
             return TemplateNull.NULL;
         }
@@ -26,8 +26,16 @@ public class TemplateDynamicKey implements TemplateExpression {
         return switch (key) {
             case TemplateNumber number -> handleIndex(context, templateObject, number);
             case TemplateRange range -> handleRange(context, templateObject, range);
+            case TemplateString name -> handleHash(context, templateObject, name);
             default -> throw new ProcessException("unsupported type: " + key.getModelType());
         };
+    }
+
+    private TemplateObject handleHash(ProcessContext context, TemplateObject templateObject, TemplateString name) {
+        if (templateObject instanceof TemplateMap templateMap) {
+            return templateMap.get(context, name.getValue());
+        }
+        throw new ProcessException("unsupported type: " + templateObject.getModelType());
     }
 
     private TemplateObject handleRange(ProcessContext context, TemplateObject templateObject, TemplateRange range) {
@@ -36,22 +44,22 @@ public class TemplateDynamicKey implements TemplateExpression {
 
     private TemplateObject handleIndex(ProcessContext context, TemplateObject templateObject, TemplateNumber index) {
         int beginIndex = index.asInt();
-        if (templateObject instanceof TemplateString templateString) {
-            return getStringIndexResult(templateString, beginIndex);
-        }
-        if (templateObject instanceof TemplateRange range) {
-            TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
-            if (range.isRightUnlimited()) {
-                return lower.add(index);
+        return  switch (templateObject) {
+            case TemplateRange range -> {
+                TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
+                if (range.isRightUnlimited()) {
+                    yield lower.add(index);
+                }
+                TemplateNumber upper = range.getUpper(context).evaluate(context, TemplateNumber.class);
+                if (Math.abs(lower.asInt() - upper.asInt()) <= index.asInt()) {
+                    throw new ProcessException("index out of range: " + index);
+                }
+                yield lower.add(lower.asInt() < upper.asInt() ? index : index.negate());
             }
-            TemplateNumber upper = range.getUpper(context).evaluate(context, TemplateNumber.class);
-            if (Math.abs(lower.asInt() - upper.asInt()) <= index.asInt()) {
-                throw new ProcessException("index out of range: " + index);
-            }
-            return lower.add(lower.asInt() < upper.asInt() ? index : index.negate());
-        }
-        TemplateSequence<?> list = (TemplateSequence<?>) templateObject;
-        return context.mapObject(list.sequence().get(beginIndex));
+            case TemplateString templateString -> getStringIndexResult(templateString, beginIndex);
+            case TemplateSequence<?> sequence -> context.mapObject(sequence.sequence().get(beginIndex));
+            default -> throw new ProcessException("unsupported type: " + templateObject.getModelType());
+        };
     }
 
     protected TemplateObject getStringIndexResult(TemplateString templateString, int beginIndex) {
@@ -60,6 +68,6 @@ public class TemplateDynamicKey implements TemplateExpression {
 
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
-        return visitor.visit(this, sequence, dynamicKey);
+        return visitor.visit(this, sequenceOrMap, dynamicKey);
     }
 }
