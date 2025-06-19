@@ -267,7 +267,7 @@ To imitate the behavior of a Java substring with an exclusive upper bound, a rig
 .Example `String` slice with exclusive upper bound
 [source,subs="verbatim,quotes"]
 ----
-${'abraxas'[1..<5>]} // => brax
+${'abraxas'[1..<5]} // => brax
 ----
 ====
 
