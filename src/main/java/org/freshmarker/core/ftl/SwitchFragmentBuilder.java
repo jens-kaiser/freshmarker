@@ -66,7 +66,6 @@ class SwitchFragmentBuilder implements FtlVisitor<SwitchFragment, SwitchFragment
 
     @Override
     public SwitchFragment visit(SwitchInstruction ftl, SwitchFragment input) {
-        logger.debug("children: {}", ftl.children());
         Node expression = ftl.get(3);
         TemplateObject switchExpression = expression.accept(interpolationBuilder, null);
         Map<NodeType, List<CaseInstruction>> parts = ftl.childrenOfType(CaseInstruction.class).stream().collect(groupingBy(p -> p.get(1).getType()));
