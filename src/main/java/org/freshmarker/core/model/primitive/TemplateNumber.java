@@ -403,7 +403,9 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
 
             @Override
             public TemplateNumber mod(TemplateNumber first, TemplateNumber second) {
-                throw new ProcessException("cannot calculate modulo on BigDecimal");
+                BigDecimal firstBig = getBigDecimal(first);
+                BigDecimal secondBig = getBigDecimal(second);
+                return new TemplateNumber(firstBig.subtract(firstBig.divideToIntegralValue(secondBig).multiply(secondBig)).abs());
             }
 
             @Override

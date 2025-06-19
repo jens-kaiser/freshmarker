@@ -12,6 +12,7 @@
 - add `log` built-in
 - add `is_empty` built-ins for `String`, `Sequence` and `Range`
 - support slicing with empty slices
+- support modulo for `BigDecimal`
 
 === Deprecations
 

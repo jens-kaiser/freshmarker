@@ -117,9 +117,21 @@ class NumberInterpolationTest {
             "test: ${l%l};test: 0",
             "test: ${f%f};test: 0",
             "test: ${d%d};test: 0",
+            "test: ${bd%bd};test: 0",
             "test: ${bi%bi};test: 0",
             "test: ${ai%ai};test: 0",
             "test: ${al%al};test: 0",
+
+            "test: ${b%5};test: 2",
+            "test: ${s%5};test: 2",
+            "test: ${i%5};test: 2",
+            "test: ${l%5};test: 2",
+            "test: ${f%5};test: 2",
+            "test: ${d%5};test: 2",
+            "test: ${bd%5};test: 2",
+            "test: ${bi%5};test: 2",
+            "test: ${ai%5};test: 2",
+            "test: ${al%5};test: 2",
 
             "test: ${+b};test: 42",
             "test: ${+s};test: 42",
@@ -395,13 +407,6 @@ class NumberInterpolationTest {
     void interpolationBigDecimalExpression(String templateSource, String expected) throws ParseException {
         Template template = templateBuilder.getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("x", new BigDecimal("42"), "z", new BigDecimal("-42"))));
-    }
-
-    @Test
-    void unsupportedBigDecimalExpression() throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "${z % 2}");
-        Map<String, Object> model = Map.of("z", new BigDecimal("42"));
-        assertThrows(ProcessException.class, () -> template.process(model));
     }
 
     @ParameterizedTest
