@@ -189,10 +189,16 @@ a..*b   // lower bound in variable _a_ and an range size in variable _c_
 === Slices
 
 `Slices` define slice operators on other data types.
-These operators can be applied to `Range`, `List`, and `String` values.
+These operators can be applied to `Range`, `Sequence`, `String` and `Number`  values.
 The slices are described by range expressions in square brackets.
 The range specifies the lower and upper limits of the `Slice`.
 With _inverted ranges_, the slice operation produces an inverted result.
+
+==== Empty Slices
+
+Slices based on empty ranges can also be used for slicing.
+However, they only ever generate an empty object of the respective target type.
+This means an empty `Range`, an empty `Sequence`, an empty `String` and `NULL` as an empty `Number`.
 
 ==== List Slices
 
@@ -284,7 +290,6 @@ An optional can therefore be checked with the existence operator and the default
 |`optional.orElse(42)`
 |${optional!42}
 |===
-
 
 === Lazy Values
 

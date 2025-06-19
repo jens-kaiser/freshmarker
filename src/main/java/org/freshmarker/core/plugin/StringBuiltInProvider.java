@@ -224,6 +224,7 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("mask", (x, y, e) -> mask((TemplateString) x, e, y, false));
         register.add("mask_full", (x, y, e) -> mask((TemplateString) x, e, y, true));
         register.add( "is_string", BuiltInHelper.alwaysTrue());
+        register.add("is_empty", (x, y, e) -> TemplateBoolean.from(((TemplateString)x).getValue().isEmpty()));
         return register;
     }
 
