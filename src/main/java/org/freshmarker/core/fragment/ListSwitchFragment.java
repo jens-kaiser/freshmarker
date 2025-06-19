@@ -41,23 +41,14 @@ public class ListSwitchFragment extends AbstractConditionalFragment implements S
             for (ConditionalFragment fragment : fragments) {
                 TemplateObject evaluated = evaluateConditional(fragment.conditional(), context, fragment.node());
                 if (isFound(evaluated, switchValue, fragment.node())) {
-                    return fragment.content().reduce(context);
+                    return reduceConditional(context, fragment).content();
                 }
             }
-            return endFragment.reduce(context);
-        } catch (ReduceException e) {
-            throw e;
+            return reduceFragment(context, endFragment);
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
-
-        }
-        try {
-            return new ListSwitchFragment(switchExpression, node, fragments.stream().map(f -> f.reduce(context)).toList(), endFragment.reduce(context));
-        } catch (WrongTypeException e) {
-            throw new ReduceException(e.getMessage(), node, e);
-        } catch (ProcessException e) {
-            return this;
+            return new ListSwitchFragment(switchExpression, node, reduceConditionals(context, fragments), reduceFragment(context, endFragment));
         }
     }
 

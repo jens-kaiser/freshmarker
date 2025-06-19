@@ -1,19 +1,20 @@
 package org.freshmarker.core.fragment;
 
+import ftl.ast.OutputFormatBlock;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.ReduceException;
-import org.freshmarker.core.WrongTypeException;
 
 public class OutputFormatFragment implements Fragment {
 
     private final Fragment content;
     private final String format;
+    private final OutputFormatBlock ftl;
 
-    public OutputFormatFragment(Fragment content, String format) {
+    public OutputFormatFragment(Fragment content, String format, OutputFormatBlock ftl) {
         this.content = content;
         this.format = format;
+        this.ftl = ftl;
     }
 
     @Override
@@ -34,9 +35,7 @@ public class OutputFormatFragment implements Fragment {
                 return this;
             }
             context.getStatus().replaced().incrementAndGet();
-            return new OutputFormatFragment(reduced, format);
-        } catch (WrongTypeException e) {
-            throw new ReduceException(e.getMessage(), e);
+            return new OutputFormatFragment(reduced, format, ftl);
         } catch (ProcessException e) {
             return this;
         }

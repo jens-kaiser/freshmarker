@@ -22,7 +22,7 @@ class TemplateVisitorTest {
         assertNull(new IfFragment(null, null, null).accept(visitor));
         assertNull(new InterpolationFragment(null, null).accept(visitor));
         assertNull(new NestedInstructionFragment().accept(visitor));
-        assertNull(new OutputFormatFragment(null, null).accept(visitor));
+        assertNull(new OutputFormatFragment(null, null, null).accept(visitor));
         assertNull(new ReturnInstructionFragment().accept(visitor));
         assertNull(new SequenceListFragment(null, null, null, null, null, null, null, null).accept(visitor));
         assertNull(new SettingFragment(null, null, null).accept(visitor));

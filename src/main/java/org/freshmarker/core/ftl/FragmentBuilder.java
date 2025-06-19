@@ -202,7 +202,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     public List<Fragment> visit(OutputFormatBlock ftl, List<Fragment> input) {
         Fragment block = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), isAllBlockEnabled());
         String image = ftl.get(3).toString();
-        input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1)));
+        input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1), ftl));
         return input;
     }
 

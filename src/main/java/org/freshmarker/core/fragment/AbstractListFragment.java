@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import ftl.ast.ListInstruction;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
@@ -107,6 +108,8 @@ public abstract class AbstractListFragment<T> implements Fragment {
             try {
                 context.setEnvironment(hashEnvironment);
                 loopFragments.add(block.reduce(context));
+            } catch (ProcessException e) {
+                loopFragments.add(block);
             } finally {
                 context.setEnvironment(environment);
             }
