@@ -4,12 +4,14 @@ import org.freshmarker.core.ProcessContext;
 
 public final class TemplateNull implements TemplateObject {
 
-    public static final TemplateNull NULL = new TemplateNull();
-    public static final TemplateNull NULL_LITERAL = new TemplateNull();
-    public static final TemplateNull NULL_OPTIONAL = new TemplateNull();
+    public static final TemplateNull NULL = new TemplateNull("NULL");
+    public static final TemplateNull NULL_LITERAL = new TemplateNull("NULL_LITERAL");
+    public static final TemplateNull NULL_OPTIONAL = new TemplateNull("NULL_OPTIONAL");
 
-    private TemplateNull() {
-        super();
+    private final String name;
+
+    private TemplateNull(String name) {
+        this.name = name;
     }
 
     @Override
@@ -30,5 +32,9 @@ public final class TemplateNull implements TemplateObject {
     @Override
     public boolean isNull() {
         return true;
+    }
+
+    public String toString() {
+        return name;
     }
 }

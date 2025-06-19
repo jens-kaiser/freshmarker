@@ -9,6 +9,7 @@
 - the limit value for `IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL` can be configured
 - optimize switch directive for constant expressions
 - add hash operator for hashes
+- add `log` built-in
 
 === Deprecations
 

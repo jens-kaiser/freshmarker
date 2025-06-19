@@ -64,6 +64,25 @@ assertEquals("Hello World", template.process(Map.of()));
 ----
 ====
 
+=== Log Built-In
+
+The special built-in `log` can be used to inspect the current value in an expression. The built-in logs the current content of the expression to the logger `builtin.logging` and returns the current value.
+
+.Example log built-in
+[source,freshmarker]
+----
+example?log?upper_case?log?lower_case?log
+----
+
+This expression produces the following log.
+
+.Example log output
+[source,freshmarker]
+----
+20:25:05 [main] DEBUG builtin.logging -- input:1:3 'example' => World
+20:25:05 [main] DEBUG builtin.logging -- input:1:3 'example?log?upper_case' => WORLD
+20:25:05 [main] DEBUG builtin.logging -- input:1:3 'example?log?upper_case?log?lower_case' => world
+----
 
 include::builtins-string.adoc[]
 

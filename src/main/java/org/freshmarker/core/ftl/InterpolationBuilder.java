@@ -78,6 +78,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         argsListBuilder = new PositionalArgsListBuilder(this);
     }
 
+    private record TemplateObjectAndNode(TemplateObject templateObject, String node) { }
+
     @Override
     public TemplateObject visit(Token expression, Object input) {
         String image = expression.toString();
@@ -88,7 +90,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
             case IDENTIFIER -> new TemplateVariable(expression.toString());
-            case EXISTS_OPERATOR -> new TemplateExists((TemplateObject) input);
+            case EXISTS_OPERATOR -> new TemplateExists(((TemplateObjectAndNode) input).templateObject());
             case NULL -> TemplateNull.NULL_LITERAL;
             default -> throw new IllegalArgumentException(
                     "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
@@ -97,34 +99,36 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateDefault visit(DefaultToExpression expression, Object input) {
-        TemplateObject base = expression.children().get(0).accept(this, input);
+        TemplateObject base = expression.children().get(0).accept(this, null);
         if (expression.size() == 2) {
             return new TemplateDefault(base, TemplateString.EMPTY);
         }
-        return new TemplateDefault(base, expression.children().get(2).accept(this, input));
+        return new TemplateDefault(base, expression.children().get(2).accept(this, null));
     }
 
     @Override
     public TemplateObject visit(PrimaryExpression expression, Object input) {
-        return handlePrimaryAndBase(input, expression.children());
+        return handlePrimaryAndBase(expression, expression.children());
     }
 
     @Override
     public TemplateObject visit(BaseExpression expression, Object input) {
-        return handlePrimaryAndBase(input, expression.children());
+        return handlePrimaryAndBase(expression, expression.children());
     }
 
-    private TemplateObject handlePrimaryAndBase(Object input, List<Node> children) {
-        TemplateObject base = children.getFirst().accept(this, input);
+    private TemplateObject handlePrimaryAndBase(Node node, List<Node> children) {
+        TemplateObject base = children.getFirst().accept(this, null);
+        StringBuilder builder = new StringBuilder(node.getLocation() + " '" + children.getFirst().toString());
         for (int i = 1; i < children.size(); i++) {
-            base = children.get(i).accept(this, base);
+            base = children.get(i).accept(this, new TemplateObjectAndNode(base, builder + "'"));
+            builder.append(children.get(i));
         }
         return base;
     }
 
     @Override
     public TemplateObject visit(BooleanLiteral expression, Object input) {
-        return expression.getFirst().accept(this, input);
+        return expression.getFirst().accept(this, null);
     }
 
     @Override
@@ -138,8 +142,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         boolean ignoreOptionalEmpty = pipe || featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY);
         boolean ignoreNull = pipe || featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_NULL);
         Token buildInName = (Token) expression.get(1);
+        TemplateObjectAndNode templateObjectAndNode = (TemplateObjectAndNode) input;
         if (expression.size() < 3) {
-            return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, List.of(), ignoreOptionalEmpty, ignoreNull);
+            return new TemplateBuiltIn(buildInName.toString(), templateObjectAndNode.templateObject(), List.of(), ignoreOptionalEmpty, ignoreNull,
+                    templateObjectAndNode.node());
         }
         List<TemplateObject> parameter = new ArrayList<>();
         Node child = expression.get(3);
@@ -148,19 +154,20 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         } else {
             parameter.add(child.accept(this, null));
         }
-        return new TemplateBuiltIn(buildInName.toString(), (TemplateObject) input, parameter, ignoreOptionalEmpty, ignoreNull);
+        return new TemplateBuiltIn(buildInName.toString(), templateObjectAndNode.templateObject(), parameter, ignoreOptionalEmpty, ignoreNull,
+                templateObjectAndNode.node());
     }
 
     @Override
     public TemplateObject visit(DynamicKey expression, Object input) {
         TemplateObject dynamicKey = expression.get(1).accept(this, null);
         if (dynamicKey instanceof TemplateRange) {
-            return new TemplateSlice((TemplateObject) input, dynamicKey);
+            return new TemplateSlice( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
         }
         if (featureSet.isEnabled(SystemFeature.STRING_INDEX_RETURNS_CHARACTER)) {
-            return new TemplateDynamicKey((TemplateObject) input, dynamicKey);
+            return new TemplateDynamicKey( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
         }
-        return new TemplateDynamicKey((TemplateObject) input, dynamicKey) {
+        return new TemplateDynamicKey( ((TemplateObjectAndNode)input).templateObject(), dynamicKey) {
             @Override
             protected TemplateObject getStringIndexResult(TemplateString templateString, int beginIndex) {
                 return new TemplateString(String.valueOf(templateString.getValue().charAt(beginIndex)));
@@ -171,12 +178,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateDotKey visit(DotKey expression, Object input) {
         Token lastToken = (Token) expression.getLast();
-        return new TemplateDotKey((TemplateObject) input, lastToken.toString());
+        return new TemplateDotKey( ((TemplateObjectAndNode)input).templateObject(), lastToken.toString());
     }
 
     @Override
     public TemplateExists visit(Exists expression, Object input) {
-        return new TemplateExists((TemplateObject) input);
+        return new TemplateExists( ((TemplateObjectAndNode)input).templateObject());
     }
 
     @Override
@@ -363,7 +370,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateMethodCall visit(MethodInvoke expression, Object input) {
-        String name = ((TemplateVariable) input).name();
+        String name = ((TemplateVariable) ((TemplateObjectAndNode)input).templateObject()).name();
         logger.debug("method invoke: {}", name);
         if (expression.get(1).getType() == TokenType.CLOSE_PAREN) {
             return new TemplateMethodCall(name, null);
