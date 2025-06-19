@@ -9,8 +9,8 @@ import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.api.OutputFormat;
-import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.output.StandardOutputFormats;
+import org.freshmarker.core.plugin.BuiltInHelper;
 
 import java.io.Writer;
 import java.time.Clock;
@@ -108,7 +108,7 @@ public class ProcessContext {
             return result;
         }
         if (TYPE_CHECK_BUILT_INS.contains(name)) {
-            return BuiltIn.value(TemplateBoolean.FALSE);
+            return BuiltInHelper.alwaysFalse();
         }
         throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
     }

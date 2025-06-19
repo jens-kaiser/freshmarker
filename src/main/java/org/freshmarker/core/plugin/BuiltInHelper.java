@@ -10,6 +10,7 @@ import java.util.List;
 public final class BuiltInHelper {
 
     private static final BuiltIn ALWAYS_TRUE = BuiltIn.value(TemplateBoolean.TRUE);
+    private static final BuiltIn ALWAYS_FALSE = BuiltIn.value(TemplateBoolean.FALSE);
 
     private BuiltInHelper() {
         super();
@@ -29,5 +30,9 @@ public final class BuiltInHelper {
 
     public static BuiltIn alwaysTrue() {
         return ALWAYS_TRUE;
+    }
+
+    public static BuiltIn alwaysFalse() {
+        return ALWAYS_FALSE;
     }
 }
