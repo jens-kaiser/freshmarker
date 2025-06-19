@@ -3,9 +3,9 @@ package org.freshmarker.core.fragment;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.ReductionFeature;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,17 +30,26 @@ public class BlockFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        try {
-            List<Fragment> list = fragments.stream().map(f -> f.reduce(context)).filter(f -> f != ConstantFragment.EMPTY).toList();
-            if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {
-                list = Fragments.optimizeReduction(list);
+        return reduce(context, false);
+    }
+
+    protected Fragment reduce(ReduceContext context, boolean enabledVariableContext) {
+        List<Fragment> list = new ArrayList<>(fragments.size());
+        for (Fragment fragment : fragments) {
+            try {
+                Fragment reducedFragment = fragment.reduce(context);
+                if (!reducedFragment.equals(ConstantFragment.EMPTY)) {
+                    list.add(reducedFragment);
+                }
+            } catch (ProcessException e) {
+                list.add(fragment);
             }
-            return Fragments.optimize(list, false);
-        } catch (ReduceException e) {
-            throw e;
-        } catch (ProcessException e) {
-            return this;
         }
+        if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {
+            list = Fragments.optimizeReduction(list);
+        }
+        context.getStatus().replaced().incrementAndGet();
+        return Fragments.optimize(list, enabledVariableContext);
     }
 
     @Override

@@ -3,10 +3,13 @@ package org.freshmarker.core.fragment;
 import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
+
+import java.util.List;
 
 public abstract class AbstractConditionalFragment implements Fragment {
     protected Fragment endFragment;
@@ -38,4 +41,25 @@ public abstract class AbstractConditionalFragment implements Fragment {
             throw new ProcessException(e.getMessage(), node, e);
         }
     }
+
+    protected List<ConditionalFragment> reduceConditionals(ReduceContext context, List<ConditionalFragment> fragments) {
+        return fragments.stream().map(fragment -> reduceConditional(context, fragment)).toList();
+    }
+
+    protected ConditionalFragment reduceConditional(ReduceContext context, ConditionalFragment fragment) {
+        try {
+            return fragment.reduce(context);
+        } catch (ProcessException ignored) {
+            return fragment;
+        }
+    }
+
+    protected Fragment reduceFragment(ReduceContext context, Fragment fragment) {
+        try {
+            return fragment.reduce(context);
+        } catch (ProcessException ignored) {
+            return fragment;
+        }
+    }
+
 }
