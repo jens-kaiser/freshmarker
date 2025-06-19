@@ -65,3 +65,31 @@ m|2:3:4:5:6
 m|${(2..6)?join(', ', ' and ')}
 m|2, 3, 4, 5 and 6
 |===
+
+==== `size` Built-In
+
+This built-in return the size of the text.
+
+|===
+|Interpolation | Output
+
+m|${(0..<0)?size}
+m|0
+
+m|${(0..6)?length}
+m|5
+|===
+
+==== `is_empty` Built-In (since 1.11.0)
+
+This built-in return `true` for an empty range and `false` otherwise.
+
+|===
+|Interpolation | Output
+
+m|${(0..<0)?is_empty}
+m|true
+
+m|${(0..1)?is_empty}
+m|false
+|===

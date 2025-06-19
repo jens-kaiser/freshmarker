@@ -10,6 +10,8 @@
 - optimize switch directive for constant expressions
 - add hash operator for hashes
 - add `log` built-in
+- add `is_empty` built-ins for `String`, `Sequence` and `Range`
+- support slicing with empty slices
 
 === Deprecations
 

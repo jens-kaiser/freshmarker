@@ -317,8 +317,19 @@ class SliceAndRangeInterpolationTest {
     })
     void sliceNumber(String input, String result, TemplateBuilder builder) {
         Template template = builder.getTemplate("numbers", input);
-        Map<String, Object> model = Map.of();
-        assertEquals(result, template.process(model));
+        assertEquals(result, template.process(Map.of()));
+    }
+
+    @Test
+    void sliceWithEmptySlices(TemplateBuilder builder) {
+        Template template = builder.getTemplate("empty slices",
+                "${'test'[0..<0]?is_empty} ${[1, 2, 3][0..<0]?is_empty} ${42[0..<0] == null} ${(1..3)[0..<0]?is_empty}");
+        assertEquals("yes yes yes yes", template.process(Map.of()));
+    }
+
+    @Test
+    void is_empty(TemplateBuilder builder) {
+        assertEquals("yes no no", builder.getTemplate("test", "${(0..<0)?is_empty} ${(1..2)?is_empty} ${(1..)?is_empty}").process(Map.of()));
     }
 
 }

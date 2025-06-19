@@ -348,4 +348,9 @@ class StringInterpolationTest {
         Template template = templateBuilder.getTemplate("mask_full", input);
         assertEquals(expected, template.process(Map.of()));
     }
+
+    @Test
+    void is_empty(TemplateBuilder builder) {
+        assertEquals("yes no", builder.getTemplate("test", "${''?is_empty} ${'test'?is_empty}").process(Map.of()));
+    }
 }

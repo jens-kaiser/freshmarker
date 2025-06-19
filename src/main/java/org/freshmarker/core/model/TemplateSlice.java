@@ -6,6 +6,8 @@ import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 
+import java.util.List;
+
 public class TemplateSlice implements TemplateObject {
 
     private final TemplateObject sequence;
@@ -31,7 +33,9 @@ public class TemplateSlice implements TemplateObject {
     }
 
     private TemplateObject handleNumber(ProcessContext context, TemplateRange templateRange, TemplateNumber templateNumberValue) {
-        checkRanges(context, templateRange);
+        if (templateRange.isEmpty(context)) {
+            return TemplateNull.NULL;
+        }
         int numberValue = templateNumberValue.getValue().intValue();
         if (templateRange instanceof TemplateRightUnlimitedRange unlimitedRange) {
             int value = ((TemplateNumber) unlimitedRange.getLower()).getValue().intValue();
@@ -52,7 +56,9 @@ public class TemplateSlice implements TemplateObject {
     }
 
     private TemplateObject handleSequence(ProcessContext context, TemplateRange templateRange, TemplateRange templateRangeValue) {
-        checkRanges(context, templateRange);
+        if (templateRange.isEmpty(context)) {
+            return templateRange;
+        }
         int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
             return templateRangeValue.slice(min);
@@ -65,7 +71,9 @@ public class TemplateSlice implements TemplateObject {
     }
 
     private TemplateListSequence handleSequence(ProcessContext context, TemplateRange templateRange, TemplateListSequence templateListSequence) {
-        checkRanges(context, templateRange);
+        if (templateRange.isEmpty(context)) {
+            return new TemplateListSequence(List.of());
+        }
         int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
             return templateListSequence.slice(min);
@@ -78,7 +86,9 @@ public class TemplateSlice implements TemplateObject {
     }
 
     private TemplateString handleSequence(ProcessContext context, TemplateRange templateRange, TemplateString templateString) {
-        checkRanges(context, templateRange);
+        if (templateRange.isEmpty(context)) {
+            return new TemplateString("");
+        }
         int min = getInt(templateRange.getLower(), context);
         if (templateRange.isRightUnlimited()) {
             return new TemplateString(templateString.getValue().substring(min));
@@ -88,12 +98,6 @@ public class TemplateSlice implements TemplateObject {
             return templateString.substring(min, Math.min(templateString.getValue().length(), max));
         }
         return templateString.substring(min, max);
-    }
-
-    private static void checkRanges(ProcessContext context, TemplateRange templateRange) {
-        if (templateRange.isEmpty(context)) {
-            throw new ProcessException("cannot slice with empty range");
-        }
     }
 
     @Override

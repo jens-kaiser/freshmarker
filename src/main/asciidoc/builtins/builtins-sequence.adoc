@@ -64,3 +64,32 @@ m|2:3:4:5:6
 m|${list?join(', ', ' and ')}
 m|2, 3, 4, 5 and 6
 |===
+
+
+==== `size` Built-In
+
+This built-in return the size of the text.
+
+|===
+|Interpolation | Output
+
+m|${[]?size}
+m|0
+
+m|${list?size}
+m|5
+|===
+
+==== `is_empty` Built-In (since 1.11.0)
+
+This built-in return `true` for an empty sequence and `false` otherwise.
+
+|===
+|Interpolation | Output
+
+m|${[]?is_empty}
+m|true
+
+m|${list?is_empty}
+m|false
+|===

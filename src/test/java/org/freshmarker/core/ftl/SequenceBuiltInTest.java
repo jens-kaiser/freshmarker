@@ -28,6 +28,11 @@ class SequenceBuiltInTest {
     }
 
     @Test
+    void is_empty(TemplateBuilder builder) {
+        assertEquals("yes no", builder.getTemplate("test", "${[]?is_empty} ${[1]?is_empty}").process(Map.of()));
+    }
+
+    @Test
     void reverse(TemplateBuilder builder) {
         assertEquals("1", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?reverse?last}").process(Map.of()));
         assertEquals("64", builder.getTemplate("test", "${[1,2,4,8,16,32,64]?reverse?first}").process(Map.of()));
