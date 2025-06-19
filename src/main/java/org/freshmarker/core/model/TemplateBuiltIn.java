@@ -3,14 +3,38 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedBuiltInException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public record TemplateBuiltIn(String name, TemplateObject expression, List<TemplateObject> parameter, boolean ignoreOptionalNull,
-                              boolean ignoreNull) implements TemplateExpression {
+public final class TemplateBuiltIn implements TemplateExpression {
+    private static final Logger logger = LoggerFactory.getLogger("builtin.logging");
+
+    private final String name;
+    private final TemplateObject expression;
+    private final List<TemplateObject> parameter;
+    private final boolean ignoreOptionalNull;
+    private final boolean ignoreNull;
+    private final String node;
+
+    public TemplateBuiltIn(String name, TemplateObject expression, List<TemplateObject> parameter, boolean ignoreOptionalNull,
+                           boolean ignoreNull, String node) {
+        this.name = name;
+        this.expression = expression;
+        this.parameter = parameter;
+        this.ignoreOptionalNull = ignoreOptionalNull;
+        this.ignoreNull = ignoreNull;
+        this.node = node;
+    }
+
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateObject result = expression.evaluateToObject(context);
+        if ("log".equals(name)) {
+            logger.debug("{} => {}", node, result);
+            return result;
+        }
         if (result == TemplateNull.NULL_OPTIONAL && ignoreOptionalNull) {
             return result;
         }

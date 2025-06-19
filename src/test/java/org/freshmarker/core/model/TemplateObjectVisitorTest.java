@@ -13,7 +13,7 @@ class TemplateObjectVisitorTest {
         };
 
         assertNull(TemplateString.EMPTY.accept(visitor));
-        assertNull(new TemplateBuiltIn(null, null, null, false, false).accept(visitor));
+        assertNull(new TemplateBuiltIn(null, null, null, false, false, null).accept(visitor));
         assertNull(new TemplateBuiltInVariable(null).accept(visitor));
         assertNull(new TemplateDefault(null, null).accept(visitor));
         assertNull(new TemplateMarkup(null).accept(visitor));
