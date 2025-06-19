@@ -2,7 +2,6 @@ package org.freshmarker.core.model.primitive;
 
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.math.BigDecimal;
