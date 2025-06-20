@@ -132,11 +132,11 @@ Constants in the `SwitchDirectiveFeature` class control these features.
 | `false`
 
 | *OPTIMIZE_CONSTANT_SWITCH*
-| Feature that determines whether the switch optimized with a map (since 1.10.1).
+| Feature that determines whether the switch optimized with a map (since 1.11.0).
 | `false`
 
 | *ERROR_ON_DUPLICATE_CASE_EXPRESSION*
-| Feature that determines whether a duplicate case expression results in an error (since 1.10.1).
+| Feature that determines whether a duplicate case expression results in an error (since 1.11.0).
 | `false`
 |===
 
@@ -224,7 +224,7 @@ CAUTION: These features will be removed in the version 2.0.0, and the default en
 | `false`
 
 | *NON_PRIMITIVE_HASH_LITERAL_VALUES*
-| Feature that determines whether the hash literal could contain non-primitive values. Prior version 1.10.1 only primitive values are allowed.
+| Feature that determines whether the hash literal could contain non-primitive values. Prior version 1.11.0 only primitive values are allowed.
 | `false`
 
 |===
