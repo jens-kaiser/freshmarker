@@ -12,7 +12,6 @@ import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -29,15 +28,14 @@ public class MapSwitchFragment extends AbstractConditionalFragment implements Sw
 
     public void process(ProcessContext context) {
         TemplatePrimitive<?> switchValue = evaluatePrimitive(this.switchExpression, context, node);
-        Fragment fragment = Objects.requireNonNullElse(fragmentMap.get(switchValue), endFragment);
-        fragment.process(context);
+        fragmentMap.getOrDefault(switchValue, endFragment).process(context);
     }
 
     @Override
     public Fragment reduce(ReduceContext context) {
         try {
             TemplatePrimitive<?> switchValue = evaluatePrimitive(switchExpression, context, node);
-            return Objects.requireNonNullElse(fragmentMap.get(switchValue), endFragment).reduce(context);
+            return fragmentMap.getOrDefault(switchValue, endFragment).reduce(context);
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
@@ -46,6 +44,7 @@ public class MapSwitchFragment extends AbstractConditionalFragment implements Sw
 
         try {
             Map<TemplatePrimitive<?>, Fragment> reduced = fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> reduceFragment(context, f.getValue())));
+            context.getStatus().replaced().incrementAndGet();
             return new MapSwitchFragment(switchExpression, node, reduced, reduceFragment(context,endFragment));
         } catch (ProcessException e) {
             return this;
