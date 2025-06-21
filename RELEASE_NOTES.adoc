@@ -7,7 +7,7 @@
 - add string built-ins `strip`, `stripLeading`, `stripTrailing` and `strip_to_null`
 - add `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES` to allow non-primitive values in hash literals
 - the limit value for `IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL` can be configured
-- optimize switch directive for constant expressions
+- add `SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH` to optimize switch directive for constant expressions
 - add hash operator for hashes
 - add `log` built-in
 - add `is_empty` built-ins for `String`, `Sequence` and `Range`
