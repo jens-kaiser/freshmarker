@@ -136,7 +136,7 @@ Constants in the `SwitchDirectiveFeature` class control these features.
 | `false`
 
 | *ERROR_ON_DUPLICATE_CASE_EXPRESSION*
-| Feature that determines whether a duplicate case expression results in an error (since 1.11.0).
+| Feature that determines whether a duplicate case expression results in an error (since 1.11.0) on optimized constant switch directives.
 | `false`
 |===
 
