@@ -136,10 +136,27 @@ Without escaping, there is a security risk known as template injection.
 With template injection, dangerous fragments are injected into the output.
 
 .Example Template Injection
-[source,freshmarker]
+[source,freshmarker,role="primary"]
 ----
-<!-- title = "<script>alert("hallo")</script>"; -->
 <h1>${title}</h1>
+----
+
+.Model with Javascript Injection
+[source,freshmarker,role="secondary"]
+----
+Map<String, Object> model = Map.of("title", "<script>alert("hallo")</script>");
+----
+
+.HTML Output
+[source,freshmarker,role="secondary"]
+----
+<h1>&lt;script&gt;alert(&quot;hallo&quot;)&lt;/script&gt;</h1>
+----
+
+.Plain Text Output
+[source,freshmarker,role="secondary"]
+----
+<h1><script>alert("hallo")</script></h1>
 ----
 
 The example shows an _HTML_ fragment in which the text for a heading is to be inserted.
