@@ -95,4 +95,16 @@ TBD
 
 The `OutputFormatProviders` defines the API for `Extensions` that wish to add new output formats.
 
-TBD
+.Example OutputFormatProviders
+[source,java]
+----
+public final class OwaspOutputFormatProvider {
+  return Map.of("OWASP", new OutputFormat() {
+      @Override
+      public TemplateString escape(TemplateString value) {
+        return new TemplateString(Sanitizers.FORMATTING.sanitize(value.getValue()));
+      }
+  });
+}
+----
+
