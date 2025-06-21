@@ -580,12 +580,12 @@ class ReduceTemplateTest {
 
         @Test
         void reduceListSwitch() {
-            Template template = templateBuilder.with(SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH)
+            Template template = templateBuilder
                     .getTemplate("test", "<#switch flag><#case 1>1<#case 2>2</#switch>");
             Template reducedTemplate = template.reduce(Map.of("flag", 1), reductionStatus);
             assertNotNull(reducedTemplate);
             assertEquals("1", reducedTemplate.process(Map.of()));
-            assertEquals(new ReductionStatus(5, 2, 1), reductionStatus);
+            assertEquals(new ReductionStatus(7, 2, 1), reductionStatus);
         }
     }
 
