@@ -4,8 +4,6 @@ import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
-import org.freshmarker.core.ReduceException;
-import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Objects;

@@ -2,7 +2,6 @@ package org.freshmarker.core.fragment;
 
 import ftl.ast.OutputFormatBlock;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 
 public class OutputFormatFragment implements Fragment {

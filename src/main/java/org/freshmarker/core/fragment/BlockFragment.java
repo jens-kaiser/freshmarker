@@ -1,7 +1,6 @@
 package org.freshmarker.core.fragment;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReductionFeature;
 
