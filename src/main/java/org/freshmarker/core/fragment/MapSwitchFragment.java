@@ -40,12 +40,12 @@ public class MapSwitchFragment extends AbstractConditionalFragment implements Sw
             throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
             context.getStatus().replaced().incrementAndGet();
-            return new MapSwitchFragment(switchExpression, node, reduceMap(context), reduceFragment(context,endFragment));
+            return new MapSwitchFragment(switchExpression, node, reduceMap(context), endFragment.reduce(context));
         }
     }
 
     private Map<TemplatePrimitive<?>, Fragment> reduceMap(ReduceContext context) {
-        return fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> reduceFragment(context, f.getValue())));
+        return fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> f.getValue().reduce(context)));
     }
 
     @Override

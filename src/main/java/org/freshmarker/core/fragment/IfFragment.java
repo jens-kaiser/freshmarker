@@ -55,14 +55,14 @@ public class IfFragment extends AbstractConditionalFragment {
         try {
             for (ConditionalFragment fragment : fragments) {
                 if (filterByConditional(context, fragment)) {
-                    return reduceConditional(context, fragment).content();
+                    return fragment.reduce(context).content();
                 }
             }
-            return reduceFragment(context, endFragment);
+            return endFragment.reduce(context);
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
-            return new IfFragment(reduceConditionals(context, fragments), reduceFragment(context, endFragment), node);
+            return new IfFragment(reduceConditionals(context, fragments), endFragment.reduce(context), node);
         }
     }
 
