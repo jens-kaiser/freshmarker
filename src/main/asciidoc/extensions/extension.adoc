@@ -93,12 +93,12 @@ TBD
 
 === Additional Output Formats
 
-The `OutputFormatProviders` defines the API for `Extensions` that wish to add new output formats.
+The `OutputFormatProvider` defines the API for `Extensions` that wish to add new output formats.
 
-.Example OutputFormatProviders
+.Example OutputFormatProvider
 [source,java]
 ----
-public final class OwaspOutputFormatProvider {
+public final class OwaspOutputFormatProvider implements OutputFormatProvider {
   return Map.of("OWASP", new OutputFormat() {
       @Override
       public TemplateString escape(TemplateString value) {

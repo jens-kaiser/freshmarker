@@ -39,16 +39,13 @@ public class MapSwitchFragment extends AbstractConditionalFragment implements Sw
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
-
-        }
-
-        try {
-            Map<TemplatePrimitive<?>, Fragment> reduced = fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> reduceFragment(context, f.getValue())));
             context.getStatus().replaced().incrementAndGet();
-            return new MapSwitchFragment(switchExpression, node, reduced, reduceFragment(context,endFragment));
-        } catch (ProcessException e) {
-            return this;
+            return new MapSwitchFragment(switchExpression, node, reduceMap(context), reduceFragment(context,endFragment));
         }
+    }
+
+    private Map<TemplatePrimitive<?>, Fragment> reduceMap(ReduceContext context) {
+        return fragmentMap.entrySet().stream().collect(toMap(Entry::getKey, f -> reduceFragment(context, f.getValue())));
     }
 
     @Override

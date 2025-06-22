@@ -76,10 +76,6 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
             TemplateHashLooper looper = new TemplateHashLooper(objectList);
             HashListStrategy strategy = new HashListStrategy(keyIdentifier, valueIdentifier, this);
             return reduceLoop(context, new ListEnvironment(context.getEnvironment(), keyIdentifier, valueIdentifier, looperIdentifier, looper), strategy);
-        } catch (WrongTypeException e) {
-            throw new ReduceException(e.getMessage(), e);
-        } catch (ProcessException e) {
-           return this;
         } finally {
             context.setEnvironment(environment);
         }

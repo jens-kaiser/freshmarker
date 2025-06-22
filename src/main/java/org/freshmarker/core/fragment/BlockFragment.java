@@ -36,13 +36,9 @@ public class BlockFragment implements Fragment {
     protected Fragment reduce(ReduceContext context, boolean enabledVariableContext) {
         List<Fragment> list = new ArrayList<>(fragments.size());
         for (Fragment fragment : fragments) {
-            try {
-                Fragment reducedFragment = fragment.reduce(context);
-                if (!reducedFragment.equals(ConstantFragment.EMPTY)) {
-                    list.add(reducedFragment);
-                }
-            } catch (ProcessException e) {
-                list.add(fragment);
+            Fragment reducedFragment = fragment.reduce(context);
+            if (!reducedFragment.equals(ConstantFragment.EMPTY)) {
+                list.add(reducedFragment);
             }
         }
         if (context.getFeatureSet().isEnabled(ReductionFeature.MERGE_CONSTANT_FRAGMENTS)) {

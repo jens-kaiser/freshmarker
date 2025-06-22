@@ -4,6 +4,7 @@ import ftl.Node;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateObject;
@@ -49,6 +50,8 @@ public abstract class AbstractConditionalFragment implements Fragment {
     protected ConditionalFragment reduceConditional(ReduceContext context, ConditionalFragment fragment) {
         try {
             return fragment.reduce(context);
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
             return fragment;
         }
@@ -57,6 +60,8 @@ public abstract class AbstractConditionalFragment implements Fragment {
     protected Fragment reduceFragment(ReduceContext context, Fragment fragment) {
         try {
             return fragment.reduce(context);
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
             return fragment;
         }

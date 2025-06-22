@@ -543,7 +543,7 @@ class ReduceTemplateTest {
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
             assertNotNull(reducedTemplate);
             assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-            assertEquals(new ReductionStatus(9, 9, 3), reductionStatus);
+            assertEquals(new ReductionStatus(9, 9, 4), reductionStatus);
         }
 
         @Test
@@ -565,7 +565,7 @@ class ReduceTemplateTest {
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
             assertNotNull(reducedTemplate);
             assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
-            assertEquals(new ReductionStatus(9, 9, 3), reductionStatus);
+            assertEquals(new ReductionStatus(9, 9, 4), reductionStatus);
         }
 
         @Test

@@ -48,6 +48,7 @@ public class ListSwitchFragment extends AbstractConditionalFragment implements S
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException ignored) {
+            context.getStatus().replaced().incrementAndGet();
             return new ListSwitchFragment(switchExpression, node, reduceConditionals(context, fragments), reduceFragment(context, endFragment));
         }
     }

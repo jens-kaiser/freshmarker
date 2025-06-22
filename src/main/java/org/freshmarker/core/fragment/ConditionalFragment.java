@@ -32,8 +32,6 @@ public record ConditionalFragment(TemplateObject conditional, Fragment content, 
             }
             context.getStatus().replaced().incrementAndGet();
             return new ConditionalFragment(conditional, reduce, node);
-        } catch (WrongTypeException e) {
-            throw new ReduceException(e.getMessage(), node, e);
         } catch (ProcessException e) {
             return this;
         }

@@ -108,8 +108,6 @@ public abstract class AbstractListFragment<T> implements Fragment {
             try {
                 context.setEnvironment(hashEnvironment);
                 loopFragments.add(block.reduce(context));
-            } catch (ProcessException e) {
-                loopFragments.add(block);
             } finally {
                 context.setEnvironment(environment);
             }

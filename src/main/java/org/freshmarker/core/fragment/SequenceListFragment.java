@@ -59,10 +59,6 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
             SequenceListStrategy strategy = new SequenceListStrategy(identifier, list);
             return reduceLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper), strategy);
-        } catch (WrongTypeException e) {
-            throw new ReduceException(e.getMessage(), ftl, e);
-        } catch (ProcessException e) {
-            return this;
         } finally {
             context.setEnvironment(environment);
         }
