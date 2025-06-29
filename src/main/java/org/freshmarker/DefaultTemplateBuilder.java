@@ -3,6 +3,7 @@ package org.freshmarker;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
+import org.freshmarker.api.FeatureSet;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFeature;
 import org.freshmarker.api.UserDirective;
@@ -205,10 +206,10 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     }
 
     @Override
-    public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives) {
+    public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet) {
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), context.builtInVariableProviders(), clock);
         Map<Class<? extends TemplateObject>, Formatter> combinedFormatters = context.registry().getFormatterRegistry();
         combinedFormatters.putAll(this.formatter);
-        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, combinedFormatters);
+        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, combinedFormatters, featureSet);
     }
 }

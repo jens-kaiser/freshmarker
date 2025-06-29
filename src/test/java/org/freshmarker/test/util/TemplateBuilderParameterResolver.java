@@ -18,7 +18,7 @@ public class TemplateBuilderParameterResolver implements ParameterResolver {
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public TemplateBuilder resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         ExtensionContext.Store store = extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL);
         Configuration configuration = store.getOrComputeIfAbsent(Configuration.class, k -> new Configuration(), Configuration.class);
         return configuration.builder().withLocale(Locale.GERMANY).withZoneId(ZoneId.of("CET"));

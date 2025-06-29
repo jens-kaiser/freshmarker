@@ -1,6 +1,7 @@
 package org.freshmarker.core;
 
 import org.freshmarker.api.BuiltIn;
+import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFunction;
@@ -29,6 +30,7 @@ public class ProcessContext {
 
     private Writer writer;
     protected Environment environment;
+    protected final FeatureSet featureSet;
     protected final BaseEnvironment baseEnvironment;
     protected final Map<Object, Map<Object, Object>> stores = new HashMap<>();
     protected final Map<BuiltInKey, BuiltIn> builtIns;
@@ -54,12 +56,14 @@ public class ProcessContext {
         this.formatters.addFirst(context.formatters.getFirst());
         this.outputFormats.addFirst(context.getOutputFormat());
         this.resourceBundleName = context.resourceBundleName;
+        this.featureSet = context.featureSet;
     }
 
-    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet) {
         this.baseEnvironment = baseEnvironment;
         this.environment = baseEnvironment;
         this.writer = writer;
+        this.featureSet = featureSet;
         this.userDirectives = List.of(userDirectives, context.userDirectives());
         this.builtIns = context.builtIns();
         this.outputs = context.outputs();
@@ -187,5 +191,9 @@ public class ProcessContext {
 
     public Clock getClock() {
         return baseEnvironment.getClock().withZone(getZoneId());
+    }
+
+    public FeatureSet getFeatureSet() {
+        return featureSet;
     }
 }

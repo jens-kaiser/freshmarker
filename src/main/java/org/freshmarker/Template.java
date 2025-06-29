@@ -70,7 +70,7 @@ public final class Template {
     }
 
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
-        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, writer, userDirectives);
+        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, writer, userDirectives, featureSet);
         processContext.setResourceBundle(resourceBundleName);
         try {
             brickFragment.process(processContext);
@@ -99,7 +99,7 @@ public final class Template {
 
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.before().set(rootFragment.getSize());
-        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives);
+        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives, featureSet);
         processContext.setEnvironment(new ReducingVariableEnvironment(processContext.getEnvironment()));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status, featureSet)));
