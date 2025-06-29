@@ -13,6 +13,7 @@
 - add `is_empty` built-ins for `String`, `Sequence` and `Range`
 - support slicing with empty slices
 - support modulo for `BigDecimal`
+- add features to process context
 
 === Deprecations
 
