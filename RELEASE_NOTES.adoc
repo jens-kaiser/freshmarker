@@ -4,7 +4,7 @@
 
 === Improvements
 
-- add string built-ins `strip`, `stripLeading`, `stripTrailing` and `strip_to_null`
+- add string built-ins `strip`, `strip_leading`, `strip_trailing` and `strip_to_null`
 - add `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES` to allow non-primitive values in hash literals
 - the limit value for `IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL` can be configured
 - add `SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH` to optimize switch directive for constant expressions
