@@ -327,9 +327,14 @@ class SliceAndRangeInterpolationTest {
         assertEquals("yes yes yes yes", template.process(Map.of()));
     }
 
-    @Test
-    void is_empty(TemplateBuilder builder) {
-        assertEquals("yes no no", builder.getTemplate("test", "${(0..<0)?is_empty} ${(1..2)?is_empty} ${(1..)?is_empty}").process(Map.of()));
+    @ParameterizedTest
+    @CsvSource({
+            "${(0..<0)?is_empty} ${(1..2)?is_empty} ${(1..*2)?is_empty} ${(1..*0)?is_empty} ${(1..)?is_empty},yes no no yes no",
+            "${(0..<0)?is_limited} ${(1..2)?is_limited} ${(1..*2)?is_limited} ${(1..*0)?is_limited} ${(1..)?is_limited},yes yes yes yes no",
+            "${(0..<0)?is_unlimited} ${(1..2)?is_unlimited} ${(1..*2)?is_unlimited} ${(1..*0)?is_unlimited} ${(1..)?is_unlimited},no no no no yes"
+    })
+    void predicates(String input, String expected, TemplateBuilder builder) {
+        assertEquals(expected, builder.getTemplate("test", input).process(Map.of()));
     }
 
 }

@@ -2,6 +2,10 @@
 
 == Release 2.0.0 (2025-07-XX planned)
 
+=== Improvements
+
+- add range built-ins `is_limited` and `is_unlimited`
+
 === Breaking Changes
 
 - remove the plugin mechanism and all connected deprecations
