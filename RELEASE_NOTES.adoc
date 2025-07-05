@@ -5,6 +5,7 @@
 === Improvements
 
 - add range built-ins `is_limited` and `is_unlimited`
+- add `HOUS`, `MINUTES` and `SECONDS` to temporal `support` built-in
 
 === Breaking Changes
 

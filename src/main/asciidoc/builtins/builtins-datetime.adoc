@@ -129,9 +129,9 @@ m|1968-04-14
 
 ==== `supports` Built-In (since 1.8.2)
 
-This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS` and `DAYS` are all supported.
+This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS`,  `DAYS`, `HOURS`, `MINUTES` and `SECONDS` are all supported.
 
-CAUTION: For `Instant` values only `DAYS` return `true`.
+CAUTION: For `Instant` values only `DAYS`, `HOURS`, `MINUTES` and `SECONDS` return `true`.
 
 |===
 | Interpolation | Output | Type

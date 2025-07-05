@@ -1,5 +1,6 @@
 package org.freshmarker.core.plugin;
 
+import org.freshmarker.Template;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
@@ -46,6 +47,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.EnumSet;
@@ -65,7 +67,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private static final String EASTER = "easter";
     private static final String DATE_TIME = "date_time";
 
-    private static final EnumSet<ChronoUnit> SUPPORTED_TEMPORAL_UNITS = EnumSet.of(ChronoUnit.DAYS, ChronoUnit.MONTHS, ChronoUnit.YEARS);
+    private static final EnumSet<ChronoUnit> SUPPORTED_TEMPORAL_UNITS = EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.MINUTES, ChronoUnit.HOURS, ChronoUnit.DAYS, ChronoUnit.MONTHS, ChronoUnit.YEARS);
 
     private TemplateZonedDateTime to(ZonedDateTime dateTime) {
         return new TemplateZonedDateTime(dateTime);
@@ -170,11 +172,27 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private TemplateBoolean supports(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
         Temporal temporal = (Temporal) ((TemplatePrimitive<?>)value).getValue();
         BuiltInHelper.checkParametersLength(parameters, 1);
-        ChronoUnit unit = ChronoUnit.valueOf(parameters.getFirst().evaluate(context, TemplateString.class).getValue());
-        if (!SUPPORTED_TEMPORAL_UNITS.contains(unit))  {
+        String unit = parameters.getFirst().evaluate(context, TemplateString.class).getValue();
+        ChronoUnit chronoUnit = checkSupportedChronUnits(unit);
+        return TemplateBoolean.from(temporal.isSupported(chronoUnit));
+    }
+
+    private TemplateBoolean supports(List<TemplateObject> parameters, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(parameters, 1);
+        String unit = parameters.getFirst().evaluate(context, TemplateString.class).getValue();
+        checkSupportedChronUnits(unit);
+        return switch (unit) {
+            case "MONTHS", "DAYS" -> TemplateBoolean.TRUE;
+            default -> TemplateBoolean.FALSE;
+        };
+    }
+
+    private static ChronoUnit checkSupportedChronUnits(String unit) {
+        ChronoUnit chronoUnit = ChronoUnit.valueOf(unit);
+        if (!SUPPORTED_TEMPORAL_UNITS.contains(chronoUnit))  {
             throw new ProcessException("unsupported temporal unit");
         }
-        return TemplateBoolean.from(temporal.isSupported(unit));
+        return chronoUnit;
     }
 
     @Override
@@ -253,10 +271,13 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateMonthDay.class, DAY, (x, y, e) -> TemplateNumber.of(((TemplateMonthDay) x).getValue().getDayOfMonth()));
 
         for (Class<? extends TemplateObject> type : List.of(TemplateInstant.class, TemplateZonedDateTime.class, TemplateLocalDateTime.class,
-                TemplateLocalDate.class, TemplateLocalTime.class, TemplateYear.class, TemplateYearMonth.class, TemplateMonthDay.class)) {
+                TemplateLocalDate.class, TemplateLocalTime.class, TemplateYear.class, TemplateYearMonth.class)) {
             register.add(type, "is_temporal", BuiltInHelper.alwaysTrue());
             register.add(type, "supports", this::supports);
         }
+        register.add(TemplateMonthDay.class, "is_temporal", BuiltInHelper.alwaysTrue());
+        register.add(TemplateMonthDay.class, "supports", (x, y, e) -> supports(y, e));
+
         return register;
     }
 
