@@ -96,7 +96,21 @@ m|false
 
 ==== `is_limited` Built-In (since 2.0.0)
 
-This built-in return `true` for an limited range and `false` otherwise.
+This built-in return `true` for a limited range and `false` otherwise.
+
+|===
+|Interpolation | Output
+
+m|${(1..42)?is_limited}
+m|true
+
+m|${(0..)?is_limited}
+m|false
+|===
+
+==== `is_unlimited` Built-In (since 2.0.0)
+
+This built-in return `true` for an unlimited range and `false` otherwise.
 
 |===
 |Interpolation | Output
