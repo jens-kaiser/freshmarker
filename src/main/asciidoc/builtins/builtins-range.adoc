@@ -93,3 +93,17 @@ m|true
 m|${(0..1)?is_empty}
 m|false
 |===
+
+==== `is_limited` Built-In (since 2.0.0)
+
+This built-in return `true` for an limited range and `false` otherwise.
+
+|===
+|Interpolation | Output
+
+m|${(1..42)?is_limited}
+m|true
+
+m|${(0..)?is_limited}
+m|false
+|===
