@@ -102,7 +102,7 @@ public final class Template {
         ProcessContext processContext = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives, featureSet);
         processContext.setEnvironment(new ReducingVariableEnvironment(processContext.getEnvironment()));
         try {
-            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status, featureSet)));
+            BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status)));
             status.after().set(reducedFragment.getSize());
             log.debug("reduced by: {}", status);
             return new Template(contextCreator, this.context, templateLoader, path, reducedFragment, featureSet);

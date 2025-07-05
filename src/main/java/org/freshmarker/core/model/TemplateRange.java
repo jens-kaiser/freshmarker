@@ -2,7 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 
-public interface TemplateRange extends TemplateSequence {
+public interface TemplateRange extends TemplateSequence<Object> {
     default boolean isLengthLimited() {
         return false;
     }
