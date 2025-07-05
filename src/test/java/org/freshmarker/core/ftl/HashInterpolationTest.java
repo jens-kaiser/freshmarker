@@ -2,7 +2,6 @@ package org.freshmarker.core.ftl;
 
 import org.freshmarker.Template;
 import org.freshmarker.TemplateBuilder;
-import org.freshmarker.core.SystemFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,29 +21,26 @@ class HashInterpolationTest {
 
     @Test
     void variableHashValues(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES).getTemplate("test", "${{'a': 'A', 'b': b, 'c': 'C'}.b}");
+        Template template = templateBuilder.getTemplate("test", "${{'a': 'A', 'b': b, 'c': 'C'}.b}");
         assertEquals("BB", template.process(Map.of("b", "BB")));
     }
 
     @Test
     void hashHashValues(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)
-                .getTemplate("test", "${{'hash': { 'a': 'A', 'b': 'B'}}.hash.b}");
+        Template template = templateBuilder.getTemplate("test", "${{'hash': { 'a': 'A', 'b': 'B'}}.hash.b}");
         assertEquals("B", template.process(Map.of()));
     }
 
     @Test
     void hashWithStaticHashOperator(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)
-                .getTemplate("test", "${hash['key']!'eulav'}");
+        Template template = templateBuilder.getTemplate("test", "${hash['key']!'eulav'}");
         assertEquals("value", template.process(Map.of("hash", Map.of("key", "value"))));
         assertEquals("eulav", template.process(Map.of("hash", Map.of("yek", "value"))));
     }
 
     @Test
     void hashWithVariableHashOperator(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.with(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)
-                .getTemplate("test", "${hash[key]}");
+        Template template = templateBuilder.getTemplate("test", "${hash[key]}");
         assertEquals("value", template.process(Map.of("hash", Map.of("KEY", "value"), "key", "KEY")));
     }
 }

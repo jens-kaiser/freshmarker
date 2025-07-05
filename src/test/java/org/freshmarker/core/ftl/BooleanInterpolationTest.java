@@ -46,8 +46,6 @@ class BooleanInterpolationTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "test: ${true?string('ja','nein')};test: ja",
-            "test: ${false?string('ja','nein')};test: nein",
             "test: ${true?then(text,'nein')};test: test",
             "test: ${false?then('ja',text)};test: test",
             "test: ${var?then(text,'nein')};test: test",

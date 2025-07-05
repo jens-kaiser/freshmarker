@@ -30,7 +30,6 @@ import ftl.ast.RelationalExpression;
 import ftl.ast.UnaryPlusMinusExpression;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.BuiltinHandlingFeature;
-import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
@@ -164,15 +163,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (dynamicKey instanceof TemplateRange) {
             return new TemplateSlice( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
         }
-        if (featureSet.isEnabled(SystemFeature.STRING_INDEX_RETURNS_CHARACTER)) {
-            return new TemplateDynamicKey( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
-        }
-        return new TemplateDynamicKey( ((TemplateObjectAndNode)input).templateObject(), dynamicKey) {
-            @Override
-            protected TemplateObject getStringIndexResult(TemplateString templateString, int beginIndex) {
-                return new TemplateString(String.valueOf(templateString.getValue().charAt(beginIndex)));
-            }
-        };
+        return new TemplateDynamicKey( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
     }
 
     @Override
@@ -183,7 +174,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateExists visit(Exists expression, Object input) {
-        return new TemplateExists( ((TemplateObjectAndNode)input).templateObject());
+        return new TemplateExists( ((InterpolationBuilder.TemplateObjectAndNode)input).templateObject());
     }
 
     @Override
@@ -394,11 +385,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             if (!(key instanceof TemplateString string)) {
                 throw new IllegalArgumentException("key is not a string");
             }
-            TemplateObject value = expression.get(i + 3).accept(this, null);
-            if (!value.isPrimitive() && featureSet.isDisabled(SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES)) {
-                throw new IllegalArgumentException("value is not a primitive");
-            }
-            hash.put(string.getValue(), value);
+            hash.put(string.getValue(), expression.get(i + 3).accept(this, null));
         }
         return new TemplateBean(hash, null);
     }

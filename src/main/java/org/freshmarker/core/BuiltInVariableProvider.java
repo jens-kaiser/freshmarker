@@ -19,10 +19,6 @@ public class BuiltInVariableProvider {
         providers = new HashMap<>();
     }
 
-    public BuiltInVariableProvider(BuiltInVariableProvider builtInVariableProvider) {
-        providers = new HashMap<>(builtInVariableProvider.providers);
-    }
-
     public TemplateObject provide(String name, ProcessContext context) {
         return switch (name) {
             case "now" -> new TemplateZonedDateTime(ZonedDateTime.now(context.getClock()));
@@ -48,15 +44,5 @@ public class BuiltInVariableProvider {
 
     public void register(Map<String, BuiltInVariable> providers) {
         this.providers.putAll(providers);
-    }
-
-    public void registerOld(Map<String, Function<ProcessContext, TemplateObject>> providers) {
-        this.providers.putAll(providers);
-    }
-
-    public BuiltInVariableProvider copy() {
-        BuiltInVariableProvider provider = new BuiltInVariableProvider();
-        provider.providers.putAll(providers);
-        return provider;
     }
 }

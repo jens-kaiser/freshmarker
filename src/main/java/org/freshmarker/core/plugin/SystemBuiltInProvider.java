@@ -46,11 +46,6 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluateToObject(context) : parameters.get(1).evaluateToObject(context);
     }
 
-    private static TemplateString stringBuiltIn(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
-        BuiltInHelper.checkParametersLength(parameters, 2);
-        return value == TemplateBoolean.TRUE ? parameters.getFirst().evaluate(context, TemplateString.class) : parameters.get(1).evaluate(context, TemplateString.class);
-    }
-
     private static TemplateString humanBuiltIn(TemplateObject value, ProcessContext context) {
         return new TemplateString(ResourceBundle.getBundle("freshmarker", context.getLocale()).getString("boolean." + value));
     }
@@ -78,7 +73,6 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         register.add(TemplateNull.class, "is_null", BuiltInHelper.alwaysTrue());
         register.add(TemplateBoolean.class, "c", BuiltIn.string());
         register.add(TemplateBoolean.class, "then", SystemBuiltInProvider::thenBuildIn);
-        register.add(TemplateBoolean.class, "string", SystemBuiltInProvider::stringBuiltIn);
         register.add(TemplateBoolean.class, "h", (x, y, e) ->  SystemBuiltInProvider.humanBuiltIn(x, e));
         register.add(TemplateBoolean.class, "is_boolean", BuiltInHelper.alwaysTrue());
         register.add(TemplateEnum.class, "c", (x, y, e) -> new TemplateString(((TemplateEnum<?>) x).getValue().name()));

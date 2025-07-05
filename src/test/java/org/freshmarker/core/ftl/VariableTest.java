@@ -4,8 +4,6 @@ import ftl.ParseException;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.SystemFeature;
-import org.freshmarker.core.VariableScopeFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,38 +90,8 @@ class VariableTest {
     }
 
     @Test
-    void nestedWithBrickDirectiveDisabledVariableContext(TemplateBuilder builder) {
-        Template template = builder.getTemplate("test", """
-                <#var v="eins">
-                ${v}
-                <#brick 'signature'>
-                  <#var v="zwei">
-                ${v}
-                </#brick>
-                ${v}
-                """);
-        Map<String, Object> dataModel = Map.of();
-        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
-        assertEquals("variable v must not exist at test:4:3 '<#var v=\"zwei\">'", exception.getMessage());
-    }
-
-    @Test
     void nestedWithBrickDirectiveEnabledVariableContext(TemplateBuilder builder) {
-        Template template = builder.with(SystemFeature.ALL_BLOCKS).getTemplate("test", """
-                <#var v="eins">
-                ${v}
-                <#brick 'signature'>
-                  <#var v="zwei">
-                ${v}
-                </#brick>
-                ${v}
-                """);
-        assertEquals("eins\nzwei\neins\n", template.process(Map.of()));
-    }
-
-    @Test
-    void nestedWithBrickDirectiveEnabledVariableContextLegacy(TemplateBuilder builder) {
-        Template template = builder.with(VariableScopeFeature.ALL_BLOCKS).getTemplate("test", """
+        Template template = builder.getTemplate("test", """
                 <#var v="eins">
                 ${v}
                 <#brick 'signature'>

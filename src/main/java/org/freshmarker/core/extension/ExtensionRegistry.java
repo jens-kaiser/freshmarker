@@ -6,7 +6,6 @@ import org.freshmarker.api.Formatter;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.UserDirective;
-import org.freshmarker.core.ModelSecurityGateway.ModelSecurityHandler;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Extension;
@@ -22,7 +21,6 @@ import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.model.TemplateObject;
-import org.freshmarker.core.plugin.PluginProvider;
 import org.freshmarker.core.providers.BeanTemplateObjectProvider;
 import org.freshmarker.core.providers.CompoundTemplateObjectProvider;
 import org.freshmarker.core.providers.EnumTemplateObjectProvider;
@@ -50,8 +48,6 @@ public class ExtensionRegistry {
 
     private final TemplateFeatures templateFeatures;
 
-    private final PluginProviderRegistry pluginProviderRegistry;
-
     private final List<Extension> extensions;
 
     private final FeatureSet featureSet;
@@ -59,10 +55,8 @@ public class ExtensionRegistry {
     public ExtensionRegistry(TemplateFeature[] enabledFeatures) {
         templateFeatures = new TemplateFeatures();
         featureSet = templateFeatures;
-        pluginProviderRegistry = new PluginProviderRegistry();
         extensions = new ArrayList<>(DEFAULT_EXTENSIONS);
         Stream.of(enabledFeatures).forEach(enabledFeature -> templateFeatures.addFeature(enabledFeature, true));
-        ServiceLoader.load(PluginProvider.class).forEach(this::registerPlugin);
         ServiceLoader.load(Extension.class).forEach(extensions::add);
         stream(TemplateFeatureProvider.class).map(TemplateFeatureProvider::provideFeatures).flatMap(Set::stream).forEach(templateFeatures::addFeatures);
     }
@@ -70,12 +64,7 @@ public class ExtensionRegistry {
     public ExtensionRegistry(ExtensionRegistry registry, FeatureSet featureSet) {
         templateFeatures = registry.templateFeatures;
         this.featureSet = featureSet;
-        pluginProviderRegistry = new PluginProviderRegistry(registry.pluginProviderRegistry);
         extensions = List.copyOf(registry.extensions);
-    }
-
-    public void registerPlugin(PluginProvider provider) {
-        pluginProviderRegistry.registerPlugin(provider, templateFeatures);
     }
 
     public void register(Extension extension) {
@@ -96,7 +85,7 @@ public class ExtensionRegistry {
     }
 
     public Map<BuiltInKey, BuiltIn> getBuiltIns() {
-        Map<org.freshmarker.core.buildin.BuiltInKey, BuiltIn> map = new HashMap<>(pluginProviderRegistry.getBuiltIns());
+        Map<org.freshmarker.core.buildin.BuiltInKey, BuiltIn> map = new HashMap<>();
         stream(BuiltInProvider.class).map(BuiltInProvider::provideBuiltInRegister).filter(Objects::nonNull).forEach(r -> {
             for (Entry<Class<? extends TemplateObject>, Map<String, BuiltIn>> entry : r.asMap().entrySet()) {
                 for (Entry<String, BuiltIn> builtInEntry : entry.getValue().entrySet()) {
@@ -107,46 +96,42 @@ public class ExtensionRegistry {
         return map;
     }
 
-    public MappingTemplateObjectProvider getMappingTemplateObjectProvider() {
-        return pluginProviderRegistry.getMappingTemplateObjectProvider();
-    }
-
-    public List<TemplateObjectProvider> getProviders(ModelSecurityHandler modelSecurityHandler) {
-        List<TemplateObjectProvider> templateObjectProviders = new ArrayList<>(pluginProviderRegistry.getProviders());
+    public List<TemplateObjectProvider> getProviders() {
+        List<TemplateObjectProvider> templateObjectProviders = new ArrayList<>();
         stream(TemplateObjectProviders.class).map(TemplateObjectProviders::provideProviders).forEach(templateObjectProviders::addAll);
-        MappingTemplateObjectProvider newMappingTemplateObjectProvider = pluginProviderRegistry.getMappingTemplateObjectProvider().copy();
+        MappingTemplateObjectProvider newMappingTemplateObjectProvider = new MappingTemplateObjectProvider();
         stream(TypeMapperProvider.class).map(TypeMapperProvider::providerTypeMapper).forEach(newMappingTemplateObjectProvider::register);
         List<TemplateObjectProvider> copy = new ArrayList<>();
         copy.add(newMappingTemplateObjectProvider);
-        copy.add(new RecordTemplateObjectProvider(modelSecurityHandler));
+        copy.add(new RecordTemplateObjectProvider());
         copy.add(new EnumTemplateObjectProvider());
         copy.addAll(templateObjectProviders);
         copy.add(new CompoundTemplateObjectProvider());
-        copy.add(new BeanTemplateObjectProvider(modelSecurityHandler));
+        copy.add(new BeanTemplateObjectProvider());
         return copy;
     }
 
     public Map<NameSpaced, UserDirective> getUserDirectives() {
-        Map<NameSpaced, UserDirective> map = new HashMap<>(pluginProviderRegistry.getUserDirectives());
+        Map<NameSpaced, UserDirective> map = new HashMap<>();
         stream(UserDirectiveProvider.class).map(UserDirectiveProvider::provideUserDirectives).map(Map::entrySet)
                 .flatMap(Set::stream).forEach(e -> map.put(new NameSpaced(e.getKey()), e.getValue()));
         return map;
     }
 
     public Map<String, TemplateFunction> getFunctions() {
-        Map<String, TemplateFunction> map = new HashMap<>(pluginProviderRegistry.getFunctions());
+        Map<String, TemplateFunction> map = new HashMap<>();
         stream(FunctionProvider.class).map(FunctionProvider::provideFunctions).forEach(map::putAll);
         return map;
     }
 
     public Map<Class<? extends TemplateObject>, Formatter> getFormatterRegistry() {
-        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>(pluginProviderRegistry.getFormatterRegistry());
+        Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
         stream(FormatterProvider.class).map(FormatterProvider::providerFormatter).forEach(formatter::putAll);
         return formatter;
     }
 
     public BuiltInVariableProvider getBuiltInVariableProviders() {
-        BuiltInVariableProvider copy = pluginProviderRegistry.getBuiltInVariableProviders().copy();
+        BuiltInVariableProvider copy = new BuiltInVariableProvider();
         stream(org.freshmarker.api.extension.BuiltInVariableProvider.class).map(org.freshmarker.api.extension.BuiltInVariableProvider::provideBuiltInVariables).forEach(copy::register);
         return copy;
     }
