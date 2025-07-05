@@ -27,8 +27,6 @@ import ftl.ast.VarInstruction;
 import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.api.FeatureSet;
-import org.freshmarker.core.SystemFeature;
-import org.freshmarker.core.VariableScopeFeature;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.environment.NameSpaced;
@@ -200,7 +198,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(OutputFormatBlock ftl, List<Fragment> input) {
-        Fragment block = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), isAllBlockEnabled());
+        Fragment block = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), true);
         String image = ftl.get(3).toString();
         input.add(new OutputFormatFragment(block, image.substring(1, image.length() - 1), ftl));
         return input;
@@ -226,7 +224,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
                 .skip(1).findFirst().orElse(null);
         Fragment body = null;
         if (node != null) {
-            body = Fragments.optimize(node.accept(this, new ArrayList<>()), isAllBlockEnabled());
+            body = Fragments.optimize(node.accept(this, new ArrayList<>()), true);
         }
         logger.debug("user directive: {} {}", node, body);
         input.add(new UserDirectiveFragment(name, currentNameSpace, namedArgs, Objects.requireNonNullElse(body, ConstantFragment.EMPTY)));
@@ -404,13 +402,9 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(BrickInstruction ftl, List<Fragment> input) {
         String name = ftl.get(3).toString();
-        Fragment optimize = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), isAllBlockEnabled());
+        Fragment optimize = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), true);
         template.addBrick(name.substring(1, name.length() - 1), optimize);
         input.add(optimize);
         return input;
-    }
-
-    private boolean isAllBlockEnabled() {
-        return featureSet.isEnabled(SystemFeature.ALL_BLOCKS) || featureSet.isEnabled(VariableScopeFeature.ALL_BLOCKS);
     }
 }

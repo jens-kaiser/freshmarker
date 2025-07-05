@@ -246,13 +246,6 @@ class ExpressionTest {
     }
 
     @Test
-    void invalidValueInHashLiteral() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> builder.getTemplate("test", "${{ 'key1': { 'key2' : 42 } } }.key1.key2}"));
-        assertEquals("value is not a primitive", exception.getMessage());
-    }
-
-    @Test
     void invalidListLiteral() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.getTemplate("test", "${[1,2,'3',4,[true]][2]}"));
         assertEquals("value is not a primitive", exception.getMessage());

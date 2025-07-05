@@ -106,7 +106,6 @@ TemplateBuilder builder = new Configuration().builder()
     .with(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, 2);
 ----
 
-
 ===== Switch Directive Features
 
 Constants in the `SwitchDirectiveFeature` class control these features.
@@ -157,22 +156,6 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 | `false`
 |===
 
-[#variable-scope-feature]
-===== Variable Scope Feature
-
-CAUTION: This feature is deprecated and the feature `SystemFeature.ALL_BLOCKS` should be used. See <<system-feature>>
-
-This feature is controlled by a constant in the `VariableScopeFeature` class.
-
-[cols="2,4,1"]
-|===
-|Feature | Description | Initial enabled
-
-| *ALL_BLOCKS*
-| Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
-| `false`
-|===
-
 [#partial-reduction-feature,reftext=Partial Reduction Features]
 ===== Partial Reduction Features (since 1.10.0)
 
@@ -199,35 +182,6 @@ Only list directives that do not exceed a configurable number of elements are un
 TemplateBuilder builder = new Configuration().builder()
     .with(ReductionFeature.UNFOLD_LIST, 7);
 ----
-
-[#system-feature,reftext=System Features]
-===== System Features (since 1.10.0)
-
-A constant controls this feature in the `SystemFeature` class.
-
-CAUTION: These features will be removed in the version 2.0.0, and the default enabled implementation is removed too.
-
-[cols="2,4,1"]
-|===
-|Feature | Description | Initial enabled
-
-| *MODEL_SECURITY*
-| Feature that determines whether the model classes are checked.
-| `true`
-
-| *STRING_INDEX_RETURNS_CHARACTER*
-| Feature that determines whether the index operator on string return a character or a string.
-| `false`
-
-| *ALL_BLOCKS*
-| Feature that allows variable contexts at every directive. Prior version 1.9.0 only list, macro and conditional directives span a variable context.
-| `false`
-
-| *NON_PRIMITIVE_HASH_LITERAL_VALUES*
-| Feature that determines whether the hash literal could contain non-primitive values. Prior version 1.11.0 only primitive values are allowed.
-| `false`
-
-|===
 
 ==== With Clock (since 1.6.9)
 
@@ -306,22 +260,3 @@ TBD
 Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormats.ADOC);
 ----
-
-=== Custom Plug-Ins
-
-WARNING: Since _FreshMarker 1.8.0_ the _Plug-in_ mechanism is deprecated in favor of the _Extension API_.
-
-The _Plug-in_ mechanism is the core of _FreshMarker_'s modular extension concept. _Plug-ins_ can be used to add new types, formatters, functions, user directives, built-ins and mappers.
-
-It is possible to create completely new template types or to add further features to existing ones.
-
-In addition to the existing plug-ins for the _FreshMarker_ basic types, you can also develop your own _Plug-ins_.
-
-Plug-ins can be registered with _FreshMarker_ via the `ServiceLoader` mechanism or via the `Configuration#registerPlugin` method.
-
-[source,java]
-----
-include::../java/org/freshmarker/core/plugin/PluginProvider.java[lines="17..-1"]
-----
-
-TBD

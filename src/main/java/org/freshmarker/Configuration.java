@@ -12,7 +12,6 @@ import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.extension.TypeMapperProvider;
 import org.freshmarker.api.UserDirective;
 import org.freshmarker.api.extension.UserDirectiveProvider;
-import org.freshmarker.core.ModelSecurityGateway;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.formatter.DateFormatter;
@@ -29,7 +28,6 @@ import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 import org.freshmarker.core.model.temporal.TemplateLocalTime;
 import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
-import org.freshmarker.core.plugin.PluginProvider;
 
 import java.time.ZoneId;
 import java.util.Map;
@@ -37,14 +35,11 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public final class Configuration {
-    private final ModelSecurityGateway modelSecurityGateway = new ModelSecurityGateway();
-
     private org.freshmarker.api.TemplateLoader templateLoader;
 
     private final ExtensionRegistry extensionRegistry;
 
     public Configuration(TemplateFeature... enabledFeatures) {
-        modelSecurityGateway.addForbiddenPackages("java", "javax", "sun", "com.sun");
         templateLoader = new DefaultFileSystemTemplateLoader();
         extensionRegistry = new ExtensionRegistry(enabledFeatures);
     }
@@ -61,10 +56,10 @@ public final class Configuration {
 
     public void registerSimpleMapping(Class<?> type, Function<Object, String> mapping) {
         Objects.requireNonNull(mapping);
-        extensionRegistry.getMappingTemplateObjectProvider().addMapper(type, x -> {
+        extensionRegistry.register((TypeMapperProvider) () -> Map.of(type, x -> {
             String apply = mapping.apply(x);
             return apply == null ? TemplateNull.NULL : new TemplateString(apply);
-        });
+        }));
     }
 
     public void registerUserDirective(String name, UserDirective directive) {
@@ -73,10 +68,6 @@ public final class Configuration {
 
     public void registerFunction(String name, TemplateFunction function) {
         extensionRegistry.register((FunctionProvider) () -> Map.of(name, function));
-    }
-
-    public void registerPlugin(PluginProvider provider) {
-        extensionRegistry.registerPlugin(provider);
     }
 
     public void register(Extension extension) {
@@ -90,16 +81,12 @@ public final class Configuration {
      */
     public TemplateBuilder builder() {
         ExtensionRegistry copy = new ExtensionRegistry(extensionRegistry, extensionRegistry.getTemplateFeatures().create());
-        StaticContext context = new StaticContext(copy, modelSecurityGateway.build(), templateLoader);
+        StaticContext context = new StaticContext(copy, templateLoader);
         return new DefaultTemplateBuilder(context, copy.getTemplateFeatures().create());
     }
 
     public void setTemplateLoader(TemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
-    }
-
-    public ModelSecurityGateway getSecurity() {
-        return modelSecurityGateway;
     }
 
     public void registerFormatter(Class<? extends TemplateObject> type, Formatter formatter) {

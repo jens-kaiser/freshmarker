@@ -1,5 +1,13 @@
 = Release Notes
 
+== Release 2.0.0 (2025-07-XX planned)
+
+=== Breaking Changes
+
+- remove the plugin mechanism and all connected deprecations
+- remove all deprecated features
+- remove all deprecated built-ins
+
 == Release 1.11.0 (2025-07-01)
 
 === Improvements

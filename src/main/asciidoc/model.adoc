@@ -126,9 +126,6 @@ It is possible to use literals of hashes in templates, whereby the key-value pai
 { 'boolean': true, 'integer': 42 }
 ----
 
-NOTE: Up to version 1.11.0, only primitive values could be specified in hash literals.
-This can be configured now via `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES`. See <<system-feature>>.
-
 === Ranges
 
 Ranges are data structures that represent an interval with a lower limit and an optional upper limit.
@@ -310,23 +307,3 @@ template.process(model);
 ----
 
 In the example above, the `familyTree` value is lazy evaluated, when the variable is accessed during template processing.
-
-=== Forbidden Types (deprecated since 1.10.0)
-
-CAUTION: As FreshMarker does not execute any methods on model classes, there is no risk of injection. This mechanism will therefore be removed with version 2.0.0.
-
-Although many Java types are supported directly or as a Java Bean, some classes cannot be used. For security reasons, all classes from the `java`, `javax`, `sun` and `com.sun` packages are ignored.
-
-if you desperately need one of these classes, you can declare it as an exception.
-
-.Example allowed system classes
-[source,java]
-----
-configuration.getSecurity().addAllowedClass(Runtime.class);
-configuration.getSecurity().addAllowedPackages(java.lang.annotation.Annotation.class);
-configuration.getSecurity().addAllowedPackages("java.io");
-----
-
-NOTE: Of course, it only makes sense to allow classes that can also be interpreted by _FreshMarker_. Alternatively, a class can also be integrated via _Custom String Types_ or a _Plug-in_.
-
-In the example above, the class `java.lang.Runtime` and all classes in the packages `java.lang.annotation` and `java.io` and all of their subpackages are allowed.

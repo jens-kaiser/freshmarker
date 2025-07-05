@@ -7,10 +7,8 @@ import org.freshmarker.api.FeatureSet;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFeature;
 import org.freshmarker.api.UserDirective;
-import org.freshmarker.core.ModelSecurityGateway.ModelSecurityHandler;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.ExtensionRegistry;
@@ -55,7 +53,6 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     private final SimpleFeatureSet featureSet;
     private final Map<Class<? extends TemplateObject>, Formatter> formatter;
     private final ExtensionRegistry registry;
-    private final ModelSecurityHandler modelSecurityHandler;
     private final org.freshmarker.api.TemplateLoader templateLoader;
 
     DefaultTemplateBuilder(StaticContext context, SimpleFeatureSet featureSet) {
@@ -66,7 +63,6 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         this.featureSet = featureSet;
         this.formatter = new HashMap<>();
         registry = context.registry();
-        modelSecurityHandler = context.modelSecurityHandler();
         templateLoader = context.templateLoader();
     }
 
@@ -78,7 +74,6 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         this.featureSet = featureSet;
         this.formatter = new HashMap<>();
         this.registry = builder.registry;
-        this.modelSecurityHandler = builder.modelSecurityHandler;
         this.templateLoader = builder.templateLoader;
     }
 
@@ -196,8 +191,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
         ExtensionRegistry extensionRegistry = new ExtensionRegistry(registry, featureSet);
-        ModelSecurityHandler handler = featureSet.isEnabled(SystemFeature.MODEL_SECURITY) ? modelSecurityHandler : type -> {};
-        StaticContext templateContext = new StaticContext(extensionRegistry, handler, templateLoader);
+        StaticContext templateContext = new StaticContext(extensionRegistry, templateLoader);
         SimpleFeatureSet featureSetCopy = new SimpleFeatureSet(featureSet);
         Template template = new Template(this, templateContext, templateLoader, importPath, featureSetCopy);
         List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, featureSetCopy, 0), new ArrayList<>());

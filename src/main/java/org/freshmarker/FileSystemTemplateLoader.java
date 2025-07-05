@@ -6,7 +6,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileSystemTemplateLoader implements TemplateLoader {
+public class FileSystemTemplateLoader implements org.freshmarker.api.TemplateLoader {
     private final FileSystem fileSystem;
 
     public FileSystemTemplateLoader(FileSystem fileSystem) {

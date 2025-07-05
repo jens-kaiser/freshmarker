@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.freshmarker.api.TemplateFeature;
 
-public class SimpleFeatureSet implements FeatureSet {
+public class SimpleFeatureSet implements org.freshmarker.api.FeatureSet {
     private final BitSet bitSet;
     private final TemplateFeatures templateFeatures;
     private final Map<TemplateFeature, Object> parameters;
