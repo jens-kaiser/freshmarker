@@ -19,7 +19,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.MonthDay;
 import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -221,34 +224,84 @@ class TemporalInterpolationTest {
             "test: ${localdate?supports('YEARS')}",
             "test: ${localdate?supports('MONTHS')}",
             "test: ${localdate?supports('DAYS')}",
+            "test: ${year?supports('YEARS')}",
+            "test: ${yearmonth?supports('YEARS')}",
+            "test: ${yearmonth?supports('MONTHS')}",
+            "test: ${yearmonth?supports('MONTHS')}",
     })
-    void supports(String input, TemplateBuilder templateBuilder) throws ParseException {
+    void supportsDate(String input, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of(
                 "localdatetime", LocalDateTime.now(),
                 "localdate", LocalDate.now(),
                 "zoneddatetime", ZonedDateTime.now(),
-                "instant", Instant.now()
+                "instant", Instant.now(),
+                "year", Year.now(),
+                "yearmonth", YearMonth.now()
                 );
         assertEquals("test: yes", template.process(model));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {
+            "test: ${zoneddatetime?supports('HOURS')}",
+            "test: ${zoneddatetime?supports('MINUTES')}",
+            "test: ${zoneddatetime?supports('SECONDS')}",
+            "test: ${instant?supports('HOURS')}",
+            "test: ${instant?supports('MINUTES')}",
+            "test: ${instant?supports('SECONDS')}",
+            "test: ${localdatetime?supports('HOURS')}",
+            "test: ${localdatetime?supports('MINUTES')}",
+            "test: ${localdatetime?supports('SECONDS')}",
+            "test: ${localtime?supports('HOURS')}",
+            "test: ${localtime?supports('MINUTES')}",
+            "test: ${localtime?supports('SECONDS')}",
+    })
+    void supportsTime(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of(
+                "localdatetime", LocalDateTime.now(),
+                "localtime", LocalTime.now(),
+                "zoneddatetime", ZonedDateTime.now(),
+                "instant", Instant.now()
+        );
+        assertEquals("test: yes", template.process(model));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "test: ${localdate?supports('HOURS')}",
+            "test: ${localdate?supports('MINUTES')}",
+            "test: ${localdate?supports('SECONDS')}",
             "test: ${localtime?supports('YEARS')}",
             "test: ${localtime?supports('MONTHS')}",
             "test: ${localtime?supports('DAYS')}",
             "test: ${instant?supports('YEARS')}",
             "test: ${instant?supports('MONTHS')}",
+            "test: ${year?supports('HOURS')}",
+            "test: ${year?supports('MINUTES')}",
+            "test: ${year?supports('SECONDS')}",
+            "test: ${year?supports('MONTHS')}",
+            "test: ${year?supports('DAYS')}",
+            "test: ${yearmonth?supports('HOURS')}",
+            "test: ${yearmonth?supports('MINUTES')}",
+            "test: ${yearmonth?supports('SECONDS')}",
+            "test: ${yearmonth?supports('DAYS')}",
     })
     void supportsNot(String input, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
-        Map<String, Object> model = Map.of("localtime", LocalTime.now(), "instant", Instant.now());
+        Map<String, Object> model = Map.of(
+                "localdate", LocalDate.now(),
+                "localtime", LocalTime.now(),
+                "instant", Instant.now(),
+                "year", Year.now(),
+                "yearmonth", YearMonth.now()
+        );
         assertEquals("test: no", template.process(model));
     }
 
     @ParameterizedTest
-    @EnumSource(value = ChronoUnit.class, mode = Mode.EXCLUDE, names = { "YEARS", "MONTHS", "DAYS"})
+    @EnumSource(value = ChronoUnit.class, mode = Mode.EXCLUDE, names = { "YEARS", "MONTHS", "DAYS", "HOURS", "MINUTES", "SECONDS"})
     void unsupported(ChronoUnit unit, TemplateBuilder templateBuilder) throws ParseException {
         String name = unit.name();
         Template template = templateBuilder.getTemplate("test", "test: ${temporal?supports('" + name + "')}");

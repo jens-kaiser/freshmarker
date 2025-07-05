@@ -53,7 +53,7 @@ m|2025-04-20
 
 ==== `supports` Built-In (since 1.8.2)
 
-This built-in returns `true` for the supported temporal units, `false` otherwise. The temporal units `YEARS`, `MONTHS` and `DAYS` are currently available. For this type only `YEARS` is supported.
+This built-in returns `true` for the supported temporal units, `false` otherwise. From the currently available temporal units only `YEARS` is supported.
 
 |===
 | Interpolation | Output | Type
@@ -137,7 +137,7 @@ m|2025-04-20
 
 ==== `supports` Built-In (since 1.8.2)
 
-This built-in returns `true` for the supported temporal units, `false` otherwise. The temporal units `YEARS`, `MONTHS` and `DAYS` are currently available. For this type only `YEARS` and `MONTHS` are supported.
+This built-in returns `true` for the supported temporal units, `false` otherwise. From the currently available temporal units only `YEARS` and `MONTHS` are supported.
 
 |===
 | Interpolation | Output | Type
@@ -197,16 +197,16 @@ m|24
 
 ==== `supports` Built-In (since 1.8.2)
 
-This built-in returns `true` for the supported temporal units, `false` otherwise. The temporal units `YEARS`, `MONTHS` and `DAYS` are currently available. For this type only `MONTHS` and `DAYS` are supported.
+This built-in returns `true` for the supported temporal unit, `false` otherwise. For this type only `MONTHS` and `DAYS` are supported.
 
 |===
 | Interpolation | Output | Type
 
-m|${temporal?supports('YEARS'}
+m|${temporal?supports('YEAR'}
 m|false
 |boolean
 
-m|${temporal?supports('MONTHS'}
+m|${temporal?supports('MONTH'}
 m|true
 |boolean
 

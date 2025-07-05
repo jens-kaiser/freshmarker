@@ -155,7 +155,7 @@ m|1968-04-14
 
 ==== `supports` Built-In (since 1.8.2)
 
-This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS` and `DAYS` are all supported.
+This built-in returns `true` for the supported temporal units, `false` otherwise. From the currently available temporal units only `YEARS`, `MONTHS` and `DAYS` are supported.
 
 |===
 | Interpolation | Output | Type

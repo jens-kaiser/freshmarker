@@ -43,7 +43,7 @@ m|24. August 1968
 
 ==== `supports` Built-In (since 1.8.2)
 
-This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS` and `DAYS` are not supported. The built-in returns always false for time values.
+This built-in returns `true` for the supported temporal units, `false` otherwise. From the currently available temporal units only `HOURS`, `MINUTES` and `SECONDS` are supported.
 
 NOTE: This built-in exists for time values so that all temporal types can be checked for temporal units.
 
