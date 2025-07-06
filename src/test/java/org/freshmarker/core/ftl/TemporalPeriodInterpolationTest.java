@@ -100,7 +100,7 @@ class TemporalPeriodInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "duration1 < duration2", "duration1 <= period2",
+            "duration1 < duration2", "duration1 <= duration2",
             "duration2 > duration1", "duration2 >= duration1",
     })
     void relationDuration(String input, TemplateBuilder templateBuilder) throws ParseException {
