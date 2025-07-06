@@ -7,6 +7,7 @@ import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Month;
 import java.time.YearMonth;
@@ -41,5 +42,30 @@ class TemporalYearMonthInterpolationTest {
     void interpolationYear(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.withLocale(Locale.GERMANY).getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("year_month", YearMonth.of(2025, Month.AUGUST), "leap_year_month", YearMonth.of(2004, Month.APRIL))));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "test: ${yearmonth?supports('YEARS')}",
+            "test: ${yearmonth?supports('MONTHS')}",
+            "test: ${yearmonth?supports('MONTHS')}",
+    })
+    void supportsDate(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of("yearmonth", YearMonth.now());
+        assertEquals("test: yes", template.process(model));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "test: ${yearmonth?supports('HOURS')}",
+            "test: ${yearmonth?supports('MINUTES')}",
+            "test: ${yearmonth?supports('SECONDS')}",
+            "test: ${yearmonth?supports('DAYS')}",
+    })
+    void supportsNot(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of("yearmonth", YearMonth.now());
+        assertEquals("test: no", template.process(model));
     }
 }

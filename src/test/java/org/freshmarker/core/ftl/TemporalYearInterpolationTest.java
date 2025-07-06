@@ -63,4 +63,26 @@ class TemporalYearInterpolationTest {
         Map<String, Object> model = Map.of("year", YEAR_2025);
         assertThrows(ProcessException.class, () -> template.process(model));
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = "test: ${year?supports('YEARS')}")
+    void supportsDate(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of("year", Year.now());
+        assertEquals("test: yes", template.process(model));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "test: ${year?supports('HOURS')}",
+            "test: ${year?supports('MINUTES')}",
+            "test: ${year?supports('SECONDS')}",
+            "test: ${year?supports('MONTHS')}",
+            "test: ${year?supports('DAYS')}",
+    })
+    void supportsNot(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        Map<String, Object> model = Map.of("year", Year.now());
+        assertEquals("test: no", template.process(model));
+    }
 }
