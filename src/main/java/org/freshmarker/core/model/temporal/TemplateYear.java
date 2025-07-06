@@ -1,5 +1,6 @@
 package org.freshmarker.core.model.temporal;
 
+import ftl.Token;
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
@@ -42,5 +43,17 @@ public class TemplateYear extends TemplatePrimitive<Year> {
             return Period.of(number.getValue().intValue(), 0, 0);
         }
         throw new ProcessException("wrong type: " + object.getModelType());
+    }
+
+    @Override
+    public boolean relation(Token.TokenType operator, TemplateObject operand, ProcessContext context) {
+        TemplateYear rightValue = operand.evaluate(context, TemplateYear.class);
+        return switch (operator) {
+            case LT -> getValue().isBefore(rightValue.getValue());
+            case GT -> getValue().isAfter(rightValue.getValue());
+            case LTE -> getValue().isBefore(rightValue.getValue()) || getValue().equals(rightValue.getValue());
+            case GTE, UNICODE_GTE -> getValue().isAfter(rightValue.getValue()) || getValue().equals(rightValue.getValue());
+            default -> super.relation(operator, operand, context);
+        };
     }
 }

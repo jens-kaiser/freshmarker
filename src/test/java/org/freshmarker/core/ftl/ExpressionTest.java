@@ -298,13 +298,13 @@ class ExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "${null.value}",
-            "${true > false}",
+            "${truth > false}",
             "${-.now}",
             "${list != list}"
     })
     void invalidUsages(String input) {
         Template template = builder.getTemplate("test", input);
-        Map<String, Object> model = Map.of();
+        Map<String, Object> model = Map.of("truth", true);
         assertThrows(ProcessException.class, () -> template.process(model));
     }
 

@@ -103,7 +103,9 @@ m|x ≠ 3
 
 === Relational Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators. 
+WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
+
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators. Therefore, they are not only available for numeric types, but also for the version and the temporal types and custom types can _overload_ them too.
 
 ==== Numerical Comparison Operators
 
@@ -124,7 +126,7 @@ m|x ≤ 6
 
 m|>
 |Greater Operator
-m|x < 7
+m|x > 7
 
 m|>=
 |Greater Equals Operator
@@ -135,11 +137,41 @@ m|≥
 m|x ≥ 9
 |===
 
-WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by  parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
+==== Temporal Comparison Operators
+
+Two temporal values of the same type can be compared with each other. An exception to this is the type `MonthDay`, as the year would be required as a context for correct comparison.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|yesterday < today
+
+m|\<=
+|Less Equals Operator
+m|yesterday \<= today
+
+m|≤
+|Unicode Less Equals Operator
+m|yesterday ≤ today
+
+m|>
+|Greater Operator
+m|tomorrow > today
+
+m|>=
+|Greater Equals Operator
+m|tomorrow >= today
+
+m|≥
+|Unicode Greater Equals Operator
+m|tomorrow ≥ today
+|===
 
 ==== Version Comparison Operators
 
-NOTE: These operators are in experimental stage.
+Two versions are compared with each other according to the _Semantic Versioning_ schema.
 
 |===
 |Operator | Name | Example
@@ -158,7 +190,7 @@ m|'1.0.0'?version ≤ .version
 
 m|>
 |Greater Operator
-m|'1.0.0'?version < .version
+m|'1.0.0'?version > .version
 
 m|>=
 |Greater Equals Operator
@@ -199,7 +231,7 @@ m|x % 4
 
 === Additive Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
 In addition to the additive operators for the numeric types and the string concatenation, there are some overloaded operators for date and period.
 
 |===
