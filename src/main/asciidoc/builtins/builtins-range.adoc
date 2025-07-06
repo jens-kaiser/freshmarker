@@ -68,7 +68,7 @@ m|2, 3, 4, 5 and 6
 
 ==== `size` Built-In
 
-This built-in return the size of the text.
+This built-in return the size of a limited range.
 
 |===
 |Interpolation | Output
