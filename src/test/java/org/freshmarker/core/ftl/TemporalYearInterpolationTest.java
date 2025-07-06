@@ -85,4 +85,15 @@ class TemporalYearInterpolationTest {
         Map<String, Object> model = Map.of("year", Year.now());
         assertEquals("test: no", template.process(model));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "value1 < value2", "value1 <= value2",
+            "value2 > value1", "value2 >= value1",
+    })
+    void relation(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
+        Map<String, Object> model = Map.of("value1", Year.of(1968), "value2", Year.of(2025));
+        assertEquals("test: yes", template.process(model));
+    }
 }

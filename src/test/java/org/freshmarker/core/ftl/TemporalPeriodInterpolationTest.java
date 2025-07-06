@@ -86,4 +86,26 @@ class TemporalPeriodInterpolationTest {
         Map<String, Object> model = Map.of("period1", Period.of(0, 0, 1), "period2", Period.of(0, 0, 2));
         assertEquals(expected, template.process(model));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "period1 < period2", "period1 <= period2",
+            "period2 > period1", "period2 >= period1",
+    })
+    void relationPeriod(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
+        Map<String, Object> model = Map.of("period1", Period.of(0, 0, 1), "period2", Period.of(0, 0, 2));
+        assertEquals("test: yes", template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "duration1 < duration2", "duration1 <= period2",
+            "duration2 > duration1", "duration2 >= duration1",
+    })
+    void relationDuration(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
+        Map<String, Object> model = Map.of("duration1", Duration.ofMinutes(23), "duration2", Duration.ofMinutes(42));
+        assertEquals("test: yes", template.process(model));
+    }
 }

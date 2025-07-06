@@ -137,7 +137,7 @@ m|≥
 m|x ≥ 9
 |===
 
-==== Temporal Comparison Operators
+==== Temporal Comparison Operators (since 2.0.0)
 
 Two temporal values of the same type can be compared with each other.footnote:legacyTemporal[]
 An exception to this is the type `MonthDay`, as the year would be required as a context for correct comparison.
@@ -168,6 +168,38 @@ m|tomorrow >= today
 m|≥
 |Unicode Greater Equals Operator
 m|tomorrow ≥ today
+|===
+
+==== Duration and Period Comparison Operators (since 2.0.0)
+
+`Duration` and `Period` can be compared with each other values of the same type.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|one_week < two_weeks
+
+m|\<=
+|Less Equals Operator
+m|one_minute \<= two_minutes_warning
+
+m|≤
+|Unicode Less Equals Operator
+m|one_second ≤ two_minutes_warning
+
+m|>
+|Greater Operator
+m|one_year > half_year
+
+m|>=
+|Greater Equals Operator
+m|one_week >= one_wek
+
+m|≥
+|Unicode Greater Equals Operator
+m|thirty_seconds ≥ thirty_seconds
 |===
 
 ==== Version Comparison Operators

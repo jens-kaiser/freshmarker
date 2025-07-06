@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Month;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.Locale;
 import java.util.Map;
@@ -67,5 +68,16 @@ class TemporalYearMonthInterpolationTest {
         Template template = templateBuilder.getTemplate("test", input);
         Map<String, Object> model = Map.of("yearmonth", YearMonth.now());
         assertEquals("test: no", template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "value1 < value2", "value1 <= value2",
+            "value2 > value1", "value2 >= value1",
+    })
+    void relation(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
+        Map<String, Object> model = Map.of("value1", YearMonth.of(1968, Month.AUGUST), "value2", YearMonth.of(1968, Month.DECEMBER));
+        assertEquals("test: yes", template.process(model));
     }
 }
