@@ -246,4 +246,34 @@ class TemporalInterpolationTest {
         ProcessException exception = assertThrows(ProcessException.class, () ->template.process(model));
         assertEquals("unsupported temporal unit at test:1:7 '${temporal?supports('" + name + "')}'", exception.getMessage());
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "localdatetime1 > localdatetime2", "localdatetime1 >= localdatetime2",
+            "localdatetime2 < localdatetime1", "localdatetime2 <= localdatetime1",
+            "localdate1 > localdate2", "localdate1 >= localdate2",
+            "localdate2 < localdate1", "localdate2 <= localdate1",
+            "localtime1 > localtime2", "localtime1 >= localtime2",
+            "localtime2 < localtime1", "localtime2 <= localtime1",
+            "zoneddatetime1 > zoneddatetime2", "zoneddatetime1 >= zoneddatetime2",
+            "zoneddatetime2 < zoneddatetime1", "zoneddatetime2 <= zoneddatetime1",
+            "instant1 > instant2", "instant1 >= instant2",
+            "instant2 < instant1", "instant2 <= instant1",
+    })
+    void relation(String input, TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("relation", "test: ${" + input + "}");
+        Map<String, Object> model = Map.of(
+                "localdatetime1", LocalDateTime.now(),
+                "localtime1", LocalTime.now(),
+                "localdate1", LocalDate.now(),
+                "zoneddatetime1", ZonedDateTime.now(),
+                "instant1", Instant.now(),
+                "localdatetime2", LocalDateTime.now().minusDays(1),
+                "localtime2", LocalTime.now().minusSeconds(42),
+                "localdate2", LocalDate.now().minusDays(1),
+                "zoneddatetime2", ZonedDateTime.now().minusDays(1),
+                "instant2", Instant.now().minusSeconds(42)
+        );
+        assertEquals("test: yes", template.process(model));
+    }
 }

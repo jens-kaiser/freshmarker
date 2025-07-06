@@ -22,4 +22,17 @@ public class TemplatePeriod extends TemplatePrimitive<Period> {
       default ->  super.operation(operator, operand, context);
     };
   }
+
+  @Override
+  public boolean relation(Token.TokenType operator, TemplateObject operand, ProcessContext context) {
+    TemplatePeriod rightValue = operand.evaluate(context, TemplatePeriod.class);
+    Period period = getValue().minus(rightValue.getValue());
+    return switch (operator) {
+      case LT -> period.isNegative();
+      case GT -> !period.isNegative();
+      case LTE -> period.isNegative() || period.isZero();
+      case GTE, UNICODE_GTE -> !period.isNegative() || period.isZero();
+      default -> super.relation(operator, operand, context);
+    };
+  }
 }

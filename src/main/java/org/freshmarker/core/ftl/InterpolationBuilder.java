@@ -161,20 +161,20 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     public TemplateObject visit(DynamicKey expression, Object input) {
         TemplateObject dynamicKey = expression.get(1).accept(this, null);
         if (dynamicKey instanceof TemplateRange) {
-            return new TemplateSlice( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
+            return new TemplateSlice(((TemplateObjectAndNode)input).templateObject(), dynamicKey);
         }
-        return new TemplateDynamicKey( ((TemplateObjectAndNode)input).templateObject(), dynamicKey);
+        return new TemplateDynamicKey(((TemplateObjectAndNode)input).templateObject(), dynamicKey);
     }
 
     @Override
     public TemplateDotKey visit(DotKey expression, Object input) {
         Token lastToken = (Token) expression.getLast();
-        return new TemplateDotKey( ((TemplateObjectAndNode)input).templateObject(), lastToken.toString());
+        return new TemplateDotKey(((TemplateObjectAndNode)input).templateObject(), lastToken.toString());
     }
 
     @Override
     public TemplateExists visit(Exists expression, Object input) {
-        return new TemplateExists( ((InterpolationBuilder.TemplateObjectAndNode)input).templateObject());
+        return new TemplateExists(((InterpolationBuilder.TemplateObjectAndNode)input).templateObject());
     }
 
     @Override
@@ -246,7 +246,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         TemplateObject right = expression.get(2).accept(this, null);
         TokenType type = ((Token) expression.get(1)).getType();
         TemplateRelational relational = new TemplateRelational(type, left, right);
-        if (left instanceof TemplateNumber && right instanceof TemplateNumber) {
+        if (left.isPrimitive() && right.isPrimitive()) {
             return relational.evaluateToObject(null);
         }
         return relational;
