@@ -139,7 +139,8 @@ m|x ≥ 9
 
 ==== Temporal Comparison Operators
 
-Two temporal values of the same type can be compared with each other. An exception to this is the type `MonthDay`, as the year would be required as a context for correct comparison.
+Two temporal values of the same type can be compared with each other.footnote:legacyTemporal[]
+An exception to this is the type `MonthDay`, as the year would be required as a context for correct comparison.
 
 |===
 |Operator | Name | Example
