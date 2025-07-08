@@ -365,13 +365,15 @@ class StringInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "text1 < text2", "text1 <= text2", "text1 ≤ text2",
-            "text2 > text1", "text2 >= text1", "text2 ≥ text1"
+            "text1 < text2,test: yes", "text1 <= text2,test: yes", "text1 ≤ text2,test: yes",
+            "text2 > text1,test: yes", "text2 >= text1,test: yes", "text2 ≥ text1,test: yes",
+            "text2 < text1,test: no", "text2 <= text1,test: no", "text2 ≤ text1,test: no",
+            "text1 > text2,test: no", "text1 >= text2,test: no", "text1 ≥ text2,test: no"
     })
-    void relation(String input, TemplateBuilder templateBuilder) throws ParseException {
+    void relation(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
         Map<String, Object> model = Map.of("text1", "Jens", "text2", "Kaiser");
-        assertEquals("test: yes", template.process(model));
+        assertEquals(expected, template.process(model));
     }
 
 }
