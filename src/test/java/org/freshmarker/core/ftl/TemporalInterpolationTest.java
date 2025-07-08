@@ -280,5 +280,20 @@ class TemporalInterpolationTest {
                 Map.entry("instant2", Instant.now().minusSeconds(42))
         );
         assertEquals("test: yes", template.process(model));
+        Map<String, Object> model2 = Map.ofEntries(
+                Map.entry("localdatetime2", LocalDateTime.now()),
+                Map.entry("localtime2", LocalTime.now()),
+                Map.entry("localdate2", LocalDate.now()),
+                Map.entry("zoneddatetime2", ZonedDateTime.now()),
+                Map.entry("offsetdatetime2", OffsetDateTime.now()),
+                Map.entry("instant2", Instant.now()),
+                Map.entry("localdatetime1", LocalDateTime.now().minusDays(1)),
+                Map.entry("localtime1", LocalTime.now().minusSeconds(42)),
+                Map.entry("localdate1", LocalDate.now().minusDays(1)),
+                Map.entry("zoneddatetime1", ZonedDateTime.now().minusDays(1)),
+                Map.entry("offsetdatetime1", OffsetDateTime.now()),
+                Map.entry("instant1", Instant.now().minusSeconds(42))
+        );
+        assertEquals("test: no", template.process(model2));
     }
 }
