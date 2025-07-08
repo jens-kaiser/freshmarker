@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -21,9 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
 class TemporalPeriodInterpolationTest {
-
-    private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(1968, Month.AUGUST, 24, 12, 30, 45);
-    private static final Map<String, Object> TEMPORAL = Map.of("temporal", LOCAL_DATE_TIME);
 
     @Test
     void interpolationDuration(TemplateBuilder templateBuilder) throws ParseException {
