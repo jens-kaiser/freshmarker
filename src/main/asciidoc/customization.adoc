@@ -148,11 +148,11 @@ These features are controlled by constants in the `BuiltinHandlingFeature` class
 |Feature | Description | Initial enabled
 
 | *IGNORE_OPTIONAL_EMPTY*
-| Feature that ignores errors due empty optionals on built-ins.
+| Feature that ignores errors due to empty optionals on built-ins.
 | `false`
 
 | *IGNORE_NULL*
-| Feature that ignores errors due `NULL` values on built-ins.
+| Feature that ignores errors due to `NULL` values on built-ins.
 | `false`
 |===
 

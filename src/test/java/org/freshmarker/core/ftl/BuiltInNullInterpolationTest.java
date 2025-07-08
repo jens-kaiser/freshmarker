@@ -34,15 +34,11 @@ class BuiltInNullInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "${value!!upper_case!'-'}",
-            "${value->upper_case!'-'}",
-            "${value→upper_case!'-'}",
-            "${value!!upper_case!!lower_case!'-'}",
-            "${value->upper_case->lower_case!'-'}",
-            "${value→upper_case→lower_case!'-'}"
+            "${value?!upper_case!'-'}",
+            "${value?!upper_case?!lower_case!'-'}"
     })
     void interpolateBuiltPipeSyntax(String input, TemplateBuilder builder) {
-        Template template = builder.getTemplate("empty", "${value!!upper_case!'-'}");
+        Template template = builder.getTemplate("empty", input);
         Map<String, Object> model = Map.of();
         assertEquals("-",  template.process(model));
     }

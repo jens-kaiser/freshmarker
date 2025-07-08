@@ -52,14 +52,12 @@ The example does not generate an exception if `example` contains the value `NULL
 because both build-ins pass on the value instead of throwing an exception.
 A _default operator_ must be added at the end so that the interpolation as a whole does not throw an exception.
 
-[NOTE]
-====
-Instead of setting both features, an _experimental_ alternative built-in operator can also be used (`!!`, `\->`, `→`).
+Instead of setting both features, the nul-safe built-in operator `?!` can be used.
 
 [source,java]
 ----
 TemplateBuilder builder = new Configuration().builder();
-Template template = builder.getTemplate("test", "Hello ${example->upper_case->lower_case!'World'}!");
+Template template = builder.getTemplate("test", "Hello ${example?!upper_case?!lower_case!'World'}!");
 assertEquals("Hello World", template.process(Map.of()));
 ----
 ====

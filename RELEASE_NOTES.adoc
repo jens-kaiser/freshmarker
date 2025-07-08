@@ -7,12 +7,14 @@
 - add range built-ins `is_limited` and `is_unlimited`
 - add `HOUS`, `MINUTES` and `SECONDS` to temporal `support` built-in
 - relational operators for temporal types
+- add alternative null-safe built-in operators `?!`
 
 === Breaking Changes
 
 - remove the plugin mechanism and all connected deprecations
 - remove all deprecated features
 - remove all deprecated built-ins
+- remove alternative null-safe built-in operators `!!`, `\->`, `→`
 
 == Release 1.11.0 (2025-07-01)
 

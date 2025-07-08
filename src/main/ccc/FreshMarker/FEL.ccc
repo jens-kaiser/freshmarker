@@ -116,7 +116,7 @@ TOKEN :
     |
     <BUILT_IN : "?">
     |
-    <BUILT_IN2 : "!!" | "->" | "→">
+    <BUILT_IN2 : "?!">
     |
     <DOUBLE_EQUALS : "==">
     |

@@ -399,7 +399,27 @@ TBD
 
 === Built-In Operator
 
-TBD
+The Built-In operator calls type-specific functions, so-called Built-Is, on an expression. If the specified operator does not exist for the specific type, processing is terminated with an error.
+
+The built-in operator is available in the default `?` and a null-safe variant `?!`.
+
+With the null-safe variant, the processing of `NULL` and `Optional` values is less restrictive. Instead of an error, the built-ins return their input value here.
+
+This processing can also be configured for the default variant using a <<_builtin_handling_features_since_1_7_4, Feature>>.
+
+|===
+|Operator | Description |Example
+
+m|?
+|Built-In Operator
+m|?upper_case
+
+m|?!
+|Null-aware Built-In Operator
+m|?!lower_case
+
+|===
+
 
 ==== Existence Operator
 
