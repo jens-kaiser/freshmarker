@@ -71,12 +71,14 @@ class TemporalYearMonthInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "value1 < value2", "value1 <= value2",
-            "value2 > value1", "value2 >= value1",
+            "value1 < value2,test: yes", "value1 <= value2,test: yes",
+            "value2 > value1,test: yes", "value2 >= value1,test: yes",
+            "value2 < value1,test: no", "value2 <= value1,test: no",
+            "value1 > value2,test: no", "value1 >= value2,test: no",
     })
-    void relation(String input, TemplateBuilder templateBuilder) throws ParseException {
+    void relation(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
         Map<String, Object> model = Map.of("value1", YearMonth.of(1968, Month.AUGUST), "value2", YearMonth.of(1968, Month.DECEMBER));
-        assertEquals("test: yes", template.process(model));
+        assertEquals(expected, template.process(model));
     }
 }
