@@ -105,7 +105,9 @@ m|x ≠ 3
 
 WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
 
-Since _FreshMarker 1.6.3_ model types can _overload_ these operators. Therefore, they are not only available for numeric types, but also for the version and the temporal types and custom types can _overload_ them too.
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Therefore, they are not only available for numeric types, but also for  `Version`, `String`, `Duration`, `Period` and the temporal types.
+Custom types can also _overload_ all relational operators.
 
 ==== Numerical Comparison Operators
 
@@ -135,6 +137,38 @@ m|x >= 8
 m|≥
 |Unicode Greater Equals Operator
 m|x ≥ 9
+|===
+
+==== String Comparison Operators (since 2.0.0)
+
+Two `String` values can be compared lexicographic with each other.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|'Jens' < 'Kaiser'
+
+m|\<=
+|Less Equals Operator
+m|'Jens' \<= 'Jens'
+
+m|≤
+|Unicode Less Equals Operator
+m|'Fix' ≤ 'Foxy'
+
+m|>
+|Greater Operator
+m|'Kaiser' > 'Jens'
+
+m|>=
+|Greater Equals Operator
+m|'Jens' >= 'Jens'
+
+m|≥
+|Unicode Greater Equals Operator
+m|'Simon' ≥ 'Garfunkel'
 |===
 
 ==== Temporal Comparison Operators (since 2.0.0)

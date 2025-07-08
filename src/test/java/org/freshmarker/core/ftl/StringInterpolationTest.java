@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -345,4 +346,28 @@ class StringInterpolationTest {
     void is_empty(TemplateBuilder builder) {
         assertEquals("yes no", builder.getTemplate("test", "${''?is_empty} ${'test'?is_empty}").process(Map.of()));
     }
+
+    @Test
+    void validOperation(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("valid operation", "${'Jens' + ' ' + 'Kaiser'}");
+        assertEquals("Jens Kaiser", template.process(Map.of()));
+    }
+
+    @Test
+    void invalidOperation(TemplateBuilder templateBuilder) {
+        ParsingException exception = assertThrows(ParsingException.class, () -> templateBuilder.getTemplate("valid operation", "${'Jens' - ' ' - 'Kaiser'}"));
+        assertEquals("unsupported operation: MINUS at valid operation:1:3 ''Jens' - ' ' - 'Kaiser''", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "text1 < text2", "text1 <= text2", "text1 ≤ text2",
+            "text2 > text1", "text2 >= text1", "text2 ≥ text1"
+    })
+    void relation(String input, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
+        Map<String, Object> model = Map.of("text1", "Jens", "text2", "Kaiser");
+        assertEquals("test: yes", template.process(model));
+    }
+
 }

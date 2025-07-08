@@ -30,6 +30,7 @@ import ftl.ast.RelationalExpression;
 import ftl.ast.UnaryPlusMinusExpression;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.BuiltinHandlingFeature;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
@@ -212,7 +213,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             TemplateObject second = expression.get(i + 1).accept(this, null);
             TemplateOperation operation = new TemplateOperation(token.getType(), result, second);
             if (result.isPrimitive() && second.isPrimitive()) {
-                result = operation.evaluateToObject(null);
+                try {
+                    result = operation.evaluateToObject(null);
+                } catch (ProcessException e) {
+                    throw new ParsingException(e.getMessage(), expression);
+                }
             } else {
                 result = operation;
             }
@@ -246,9 +251,14 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         TemplateObject right = expression.get(2).accept(this, null);
         TokenType type = ((Token) expression.get(1)).getType();
         TemplateRelational relational = new TemplateRelational(type, left, right);
-        if (left.isPrimitive() && right.isPrimitive()) {
-            return relational.evaluateToObject(null);
+        try {
+            if (left.isPrimitive() && right.isPrimitive()) {
+                return relational.evaluateToObject(null);
+            }
+        } catch (ProcessException e) {
+            throw new ParsingException(e.getMessage(), expression);
         }
+
         return relational;
     }
 

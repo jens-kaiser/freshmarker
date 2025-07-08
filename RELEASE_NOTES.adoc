@@ -7,6 +7,7 @@
 - add range built-ins `is_limited` and `is_unlimited`
 - add `HOUS`, `MINUTES` and `SECONDS` to temporal `support` built-in
 - relational operators for temporal types
+- relational operators for `String` type
 - add alternative null-safe built-in operators `?!`
 
 === Breaking Changes

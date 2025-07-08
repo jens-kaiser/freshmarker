@@ -46,6 +46,19 @@ public class TemplateString extends TemplatePrimitive<String> {
     }
 
     @Override
+    public boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
+        TemplateString rightValue = operand.evaluate(context, TemplateString.class);
+        int compare = getValue().compareTo(rightValue.getValue());
+        return switch (operator) {
+            case LT -> compare < 0;
+            case GT -> compare > 0;
+            case LTE -> compare <= 0;
+            case GTE, UNICODE_GTE -> compare >= 0;
+            default -> super.relation(operator, operand, context);
+        };
+    }
+
+    @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, "'" + this + "'");
     }
