@@ -250,18 +250,18 @@ class TemporalInterpolationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "localdatetime1 > localdatetime2", "localdatetime1 >= localdatetime2",
-            "localdatetime2 < localdatetime1", "localdatetime2 <= localdatetime1",
-            "localdate1 > localdate2", "localdate1 >= localdate2",
-            "localdate2 < localdate1", "localdate2 <= localdate1",
-            "localtime1 > localtime2", "localtime1 >= localtime2",
-            "localtime2 < localtime1", "localtime2 <= localtime1",
-            "zoneddatetime1 > zoneddatetime2", "zoneddatetime1 >= zoneddatetime2",
-            "zoneddatetime2 < zoneddatetime1", "zoneddatetime2 <= zoneddatetime1",
-            "instant1 > instant2", "instant1 >= instant2",
-            "instant2 < instant1", "instant2 <= instant1",
-            "offsetdatetime1 > offsetdatetime2", "offsetdatetime1 >= offsetdatetime2",
-            "offsetdatetime2 < offsetdatetime1", "offsetdatetime2 <= offsetdatetime1",
+            "localdatetime1 > localdatetime2", "localdatetime1 >= localdatetime2", "localdatetime1 >= localdatetime1",
+            "localdatetime2 < localdatetime1", "localdatetime2 <= localdatetime1", "localdatetime2 <= localdatetime2",
+            "localdate1 > localdate2", "localdate1 >= localdate2", "localdate1 >= localdate1",
+            "localdate2 < localdate1", "localdate2 <= localdate1", "localdate2 <= localdate2",
+            "localtime1 > localtime2", "localtime1 >= localtime2", "localtime1 >= localtime1",
+            "localtime2 < localtime1", "localtime2 <= localtime1", "localtime2 <= localtime2",
+            "zoneddatetime1 > zoneddatetime2", "zoneddatetime1 >= zoneddatetime2", "zoneddatetime1 >= zoneddatetime1",
+            "zoneddatetime2 < zoneddatetime1", "zoneddatetime2 <= zoneddatetime1", "zoneddatetime2 <= zoneddatetime2",
+            "instant1 > instant2", "instant1 >= instant2", "instant1 >= instant1",
+            "instant2 < instant1", "instant2 <= instant1", "instant2 <= instant2",
+            "offsetdatetime1 > offsetdatetime2", "offsetdatetime1 >= offsetdatetime2", "offsetdatetime1 >= offsetdatetime1",
+            "offsetdatetime2 < offsetdatetime1", "offsetdatetime2 <= offsetdatetime1", "offsetdatetime2 <= offsetdatetime2",
     })
     void relation(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("relation", "test: ${" + input + "}");
