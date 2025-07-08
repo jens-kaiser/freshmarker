@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Period;
 import java.util.HashMap;
@@ -349,14 +350,17 @@ class StringInterpolationTest {
 
     @Test
     void validOperation(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("valid operation", "${'Jens' + ' ' + 'Kaiser'}");
+        Template template = templateBuilder.getTemplate("valid", "${'Jens' + ' ' + 'Kaiser'}");
         assertEquals("Jens Kaiser", template.process(Map.of()));
     }
 
-    @Test
-    void invalidOperation(TemplateBuilder templateBuilder) {
-        ParsingException exception = assertThrows(ParsingException.class, () -> templateBuilder.getTemplate("valid operation", "${'Jens' - ' ' - 'Kaiser'}"));
-        assertEquals("unsupported operation: MINUS at valid operation:1:3 ''Jens' - ' ' - 'Kaiser''", exception.getMessage());
+    @ParameterizedTest
+    @CsvSource({
+            "'Jens' - ' ' - 'Kaiser',unsupported operation: MINUS at invalid:1:3",
+            "'Jens' * ' ' * 'Kaiser',unsupported operation: TIMES at invalid:1:3"})
+    void invalidOperation(String input, String message, TemplateBuilder templateBuilder) {
+        ParsingException exception = assertThrows(ParsingException.class, () -> templateBuilder.getTemplate("invalid", "${" +  input + "}"));
+        assertEquals(message + " '" + input + "'", exception.getMessage());
     }
 
     @ParameterizedTest

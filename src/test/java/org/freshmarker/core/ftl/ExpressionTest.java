@@ -313,4 +313,10 @@ class ExpressionTest {
         Template template = builder.getTemplate("test", "${([0,1,2,3,4] + [5,6,7,8,9])?join}");
         assertEquals("0, 1, 2, 3, 4, 5, 6, 7, 8, 9", template.process(Map.of()));
     }
+
+    @Test
+    void invalidRelation() {
+        ParsingException exception = assertThrows(ParsingException.class, () -> builder.getTemplate("test", "${true < false}"));
+        assertEquals("unsupported operation: LT at test:1:3 'true < false'", exception.getMessage());
+    }
 }
