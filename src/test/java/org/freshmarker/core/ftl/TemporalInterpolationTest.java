@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -262,17 +263,19 @@ class TemporalInterpolationTest {
     })
     void relation(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("relation", "test: ${" + input + "}");
-        Map<String, Object> model = Map.of(
-                "localdatetime1", LocalDateTime.now(),
-                "localtime1", LocalTime.now(),
-                "localdate1", LocalDate.now(),
-                "zoneddatetime1", ZonedDateTime.now(),
-                "instant1", Instant.now(),
-                "localdatetime2", LocalDateTime.now().minusDays(1),
-                "localtime2", LocalTime.now().minusSeconds(42),
-                "localdate2", LocalDate.now().minusDays(1),
-                "zoneddatetime2", ZonedDateTime.now().minusDays(1),
-                "instant2", Instant.now().minusSeconds(42)
+        Map<String, Object> model = Map.ofEntries(
+                Map.entry("localdatetime1", LocalDateTime.now()),
+                Map.entry("localtime1", LocalTime.now()),
+                Map.entry("localdate1", LocalDate.now()),
+                Map.entry("zoneddatetime1", ZonedDateTime.now()),
+                Map.entry("offsetdatetime1", OffsetDateTime.now()),
+                Map.entry("instant1", Instant.now()),
+                Map.entry("localdatetime2", LocalDateTime.now().minusDays(1)),
+                Map.entry("localtime2", LocalTime.now().minusSeconds(42)),
+                Map.entry("localdate2", LocalDate.now().minusDays(1)),
+                Map.entry("zoneddatetime2", ZonedDateTime.now().minusDays(1)),
+                Map.entry("offsetdatetime2", OffsetDateTime.now()),
+                Map.entry("instant2", Instant.now().minusSeconds(42))
         );
         assertEquals("test: yes", template.process(model));
     }
