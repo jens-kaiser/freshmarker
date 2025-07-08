@@ -260,6 +260,8 @@ class TemporalInterpolationTest {
             "zoneddatetime2 < zoneddatetime1", "zoneddatetime2 <= zoneddatetime1",
             "instant1 > instant2", "instant1 >= instant2",
             "instant2 < instant1", "instant2 <= instant1",
+            "offsetdatetime1 > offsetdatetime2", "offsetdatetime1 >= offsetdatetime2",
+            "offsetdatetime2 < offsetdatetime1", "offsetdatetime2 <= offsetdatetime1",
     })
     void relation(String input, TemplateBuilder templateBuilder) {
         Template template = templateBuilder.getTemplate("relation", "test: ${" + input + "}");
