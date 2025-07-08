@@ -86,8 +86,8 @@ class TemporalPeriodInterpolationTest {
     @CsvSource({
             "period1 < period2,test: yes", "period1 <= period2,test: yes", "period1 <= period1,test: yes",
             "period2 > period1,test: yes", "period2 >= period1,test: yes", "period2 >= period2,test: yes",
-            "period2 < period1,test: no", "period2 <= period1,test: no", "period2 <= period2,test: no",
-            "period1 > period2,test: no", "period1 >= period2,test: no", "period1 >= period1,test: no",
+            "period2 < period1,test: no", "period2 <= period1,test: no",
+            "period1 > period2,test: no", "period1 >= period2,test: no",
     })
     void relationPeriod(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
@@ -99,8 +99,8 @@ class TemporalPeriodInterpolationTest {
     @CsvSource({
             "duration1 < duration2,test: yes", "duration1 <= duration2,test: yes", "duration1 <= duration1,test: yes",
             "duration2 > duration1,test: yes", "duration2 >= duration1,test: yes", "duration2 >= duration2,test: yes",
-            "duration2 < duration1,test: no", "duration2 <= duration1,test: no", "duration2 <= duration2,test: no",
-            "duration1 > duration2,test: no", "duration1 >= duration2,test: no", "duration1 >= duration1,test: no",
+            "duration2 < duration1,test: no", "duration2 <= duration1,test: no",
+            "duration1 > duration2,test: no", "duration1 >= duration2,test: no",
     })
     void relationDuration(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
