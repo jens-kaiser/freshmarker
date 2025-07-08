@@ -1,6 +1,5 @@
 package org.freshmarker.core.plugin;
 
-import org.freshmarker.Template;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
@@ -47,7 +46,6 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.EnumSet;
