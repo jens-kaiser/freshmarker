@@ -13,10 +13,6 @@ Variables are assigned values within the template via the _Var_ and _Set Directi
 
 TBD
 
-=== Inline Sequences
-
-TBD
-
 === Variables
 
 TBD
@@ -109,6 +105,9 @@ Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
 Therefore, they are not only available for numeric types, but also for  `Version`, `String`, `Duration`, `Period` and the temporal types.
 Custom types can also _overload_ all relational operators.
 
+Since  _FreshMarker 2.0.0_ the spaceship operator `+<=>+` can be used.
+This operator return -1 if the left operand is smaller, 0 if both operands are equals and 1 otherwise.
+
 ==== Numerical Comparison Operators
 
 |===
@@ -137,6 +136,10 @@ m|x >= 8
 m|≥
 |Unicode Greater Equals Operator
 m|x ≥ 9
+
+m|+<=>+
+|Spaceship Operator
+|12 +<=>+ 24
 |===
 
 ==== String Comparison Operators (since 2.0.0)

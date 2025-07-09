@@ -118,6 +118,8 @@ TOKEN :
     |
     <BUILT_IN2 : "?!">
     |
+    <COMPARE : "<=>">
+    |
     <DOUBLE_EQUALS : "==">
     |
     <NOT_EQUALS : "≠" | "!=">
@@ -222,7 +224,7 @@ EqualityExpression :
 RelationalExpression :
     RangeExpression
     [
-        (<GT>|<GTE>|<UNICODE_GTE>|<LT>|<LTE>)
+        (<GT>|<GTE>|<UNICODE_GTE>|<LT>|<LTE>|<COMPARE>)
         RangeExpression
     ]
 ;

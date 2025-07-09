@@ -1,7 +1,6 @@
 package org.freshmarker.core.model.primitive;
 import ftl.Token;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.version.Version;
 
 public class TemplateVersion extends TemplatePrimitive<Version> {
@@ -39,14 +38,8 @@ public class TemplateVersion extends TemplatePrimitive<Version> {
     }
 
     @Override
-    public boolean relation(Token.TokenType operator, TemplateObject operand, ProcessContext context) {
-        TemplateVersion rightValue = operand.evaluate(context, TemplateVersion.class);
-        return switch (operator) {
-            case LT -> getValue().compareTo(rightValue.getValue()) < 0;
-            case GT -> getValue().compareTo(rightValue.getValue()) > 0;
-            case LTE -> getValue().compareTo(rightValue.getValue()) <= 0;
-            case GTE, UNICODE_GTE -> getValue().compareTo(rightValue.getValue()) >= 0;
-            default -> super.relation(operator, operand, context);
-        };
+    public TemplatePrimitive<?> relational(Token.TokenType operator, TemplatePrimitive<?>  operand, ProcessContext context) {
+        TemplateVersion rightValue = (TemplateVersion)operand;
+        return compareValues(operator, getValue().compareTo(rightValue.getValue()));
     }
 }

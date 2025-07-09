@@ -1,6 +1,8 @@
 package org.freshmarker.core.model.primitive;
 
+import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateObjectVisitor;
 
@@ -54,5 +56,22 @@ public class TemplatePrimitive<P> implements TemplateObject {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, this.toString());
+    }
+
+    public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        return TemplateBoolean.from(relation(operator, operand, context));
+    }
+
+    protected TemplatePrimitive<?> compareValues(TokenType operator, int compare) {
+        if (TokenType.COMPARE == operator) {
+            return TemplateNumber.of(Integer.signum(compare));
+        }
+        return TemplateBoolean.from(switch (operator) {
+            case LT -> compare < 0;
+            case GT -> compare > 0;
+            case LTE -> compare <= 0;
+            case GTE, UNICODE_GTE -> compare >= 0;
+            default -> throw new ProcessException("unsupported operation: " + operator);
+        });
     }
 }

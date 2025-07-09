@@ -8,7 +8,8 @@
 - add `HOUS`, `MINUTES` and `SECONDS` to temporal `support` built-in
 - relational operators for temporal types
 - relational operators for `String` type
-- add alternative null-safe built-in operators `?!`
+- add null-safe built-in operators `?!`
+- add spaceship operator `+<=>+`
 
 === Breaking Changes
 
