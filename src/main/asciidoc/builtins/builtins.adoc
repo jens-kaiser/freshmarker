@@ -60,7 +60,6 @@ TemplateBuilder builder = new Configuration().builder();
 Template template = builder.getTemplate("test", "Hello ${example?!upper_case?!lower_case!'World'}!");
 assertEquals("Hello World", template.process(Map.of()));
 ----
-====
 
 === Log Built-In
 
