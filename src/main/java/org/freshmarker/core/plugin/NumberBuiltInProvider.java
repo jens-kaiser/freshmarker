@@ -1,6 +1,5 @@
 package org.freshmarker.core.plugin;
 
-import ftl.Token.TokenType;
 import org.freshmarker.api.BuiltIn;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Register;
@@ -74,7 +73,7 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         BuiltInHelper.checkParametersLength(parameter, 2);
         TemplateNumber min = parameter.getFirst().evaluate(context, TemplateNumber.class);
         TemplateNumber max = parameter.get(1).evaluate(context, TemplateNumber.class);
-        if (min.relation(TokenType.GT, max, context)) {
+        if (min.compare(max).asInt() > 0) {
             throw new ProcessException(min + " > " + max);
         }
         TemplateNumber result = value.max(min).min(max);

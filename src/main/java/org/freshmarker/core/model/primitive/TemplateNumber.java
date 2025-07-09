@@ -589,15 +589,9 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     }
 
     @Override
-    public boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        TemplateNumber rightValue = operand.evaluate(context, TemplateNumber.class);
-        return switch (operator) {
-            case LT -> compare(rightValue).sign().asInt() < 0;
-            case GT -> compare(rightValue).sign().asInt() > 0;
-            case LTE -> compare(rightValue).sign().asInt() <= 0;
-            case GTE, UNICODE_GTE -> compare(rightValue).sign().asInt() >= 0;
-            default -> super.relation(operator, operand, context);
-        };
+    public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        TemplateNumber rightValue = (TemplateNumber)operand;
+        return compareValues(operator, compare(rightValue).sign().asInt());
     }
 
     @Override

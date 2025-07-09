@@ -46,14 +46,8 @@ public class TemplateYear extends TemplatePrimitive<Year> {
     }
 
     @Override
-    public boolean relation(Token.TokenType operator, TemplateObject operand, ProcessContext context) {
-        TemplateYear rightValue = operand.evaluate(context, TemplateYear.class);
-        return switch (operator) {
-            case LT -> getValue().isBefore(rightValue.getValue());
-            case GT -> getValue().isAfter(rightValue.getValue());
-            case LTE -> getValue().isBefore(rightValue.getValue()) || getValue().equals(rightValue.getValue());
-            case GTE, UNICODE_GTE -> getValue().isAfter(rightValue.getValue()) || getValue().equals(rightValue.getValue());
-            default -> super.relation(operator, operand, context);
-        };
+    public TemplatePrimitive<?> relational(Token.TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        TemplateYear rightValue = (TemplateYear)operand;
+        return compareValues(operator, getValue().compareTo(rightValue.getValue()));
     }
 }

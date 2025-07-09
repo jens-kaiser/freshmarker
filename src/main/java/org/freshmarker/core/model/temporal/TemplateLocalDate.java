@@ -39,14 +39,8 @@ public class TemplateLocalDate extends TemplatePrimitive<LocalDate> implements T
     }
 
     @Override
-    public boolean relation(Token.TokenType operator, TemplateObject operand, ProcessContext context) {
-        TemplateLocalDate rightValue = operand.evaluate(context, TemplateLocalDate.class);
-        return switch (operator) {
-            case LT -> getValue().isBefore(rightValue.getValue());
-            case GT -> getValue().isAfter(rightValue.getValue());
-            case LTE -> getValue().isBefore(rightValue.getValue()) || getValue().equals(rightValue.getValue());
-            case GTE, UNICODE_GTE -> getValue().isAfter(rightValue.getValue()) || getValue().equals(rightValue.getValue());
-            default -> super.relation(operator, operand, context);
-        };
+    public TemplatePrimitive<?> relational(Token.TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        TemplateLocalDate rightValue = (TemplateLocalDate)operand;
+        return compareValues(operator, getValue().compareTo(rightValue.getValue()));
     }
 }

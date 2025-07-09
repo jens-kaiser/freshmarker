@@ -12,6 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -318,5 +320,30 @@ class ExpressionTest {
     void invalidRelation() {
         ParsingException exception = assertThrows(ParsingException.class, () -> builder.getTemplate("test", "${true < false}"));
         assertEquals("unsupported operation: LT at test:1:3 'true < false'", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${42 <=> 0},1",
+            "${42 <=> 42},0",
+            "${42 <=> 128},-1",
+            "${'Tom' <=> 'Jerry'},1",
+            "${'Jens' <=> 'Jens'},0",
+            "${'Fix' <=> 'Foxy'},-1",
+            "${yesterday <=> today},-1",
+            "${today <=> today},0",
+            "${today <=> yesterday},1",
+            "${one_day <=> one_week},-1",
+            "${one_day <=> one_day},0",
+            "${one_week <=> one_day},1"
+    })
+    void spaceshipOperator(String input, String expected) {
+        Template template = builder.getTemplate("spaceship", input);
+        Map<String, Object> dataModel = Map.of(
+                "today", LocalDate.now(),
+                "yesterday", LocalDate.now().minusDays(1),
+                "one_day", Period.ofDays(1),
+                "one_week", Period.ofDays(7));
+        assertEquals(expected, template.process(dataModel));
     }
 }
