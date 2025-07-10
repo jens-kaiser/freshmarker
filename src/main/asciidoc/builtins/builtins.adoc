@@ -39,7 +39,7 @@ Normally, the processing of built-ins ends with an exception if no suitable buil
 In the case of `NULL` values and empty optionals, this behavior can now be changed using the flags `BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY` and `BuiltinHandlingFeature.IGNORE_NULL` flags.
 In both cases, the actual built-in is ignored and the input value is returned.
 
-.Example with null-aware built-in handling
+.Example with null-safe built-in handling
 [source,java]
 ----
 Configuration configuration = new Configuration();
