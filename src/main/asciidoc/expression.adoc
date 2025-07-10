@@ -309,8 +309,13 @@ In addition to the additive operators for the numeric types and the string conca
 
 m|+
 |String Concatenation Operator
-m|x + ' '
+m|'x' + ' ' + 'y'
 |
+
+m|~
+|String Concatenation Operator
+m|'x' ~ 'y'
+|This operator concatenates to String values with a whitespace character as separator.
 
 m|+
 |Numerical Addition Operator

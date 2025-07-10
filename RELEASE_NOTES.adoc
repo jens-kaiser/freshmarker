@@ -10,6 +10,7 @@
 - relational operators for `String` type
 - add null-safe built-in operators `?!`
 - add spaceship operator `+<=>+`
+- add concat operator `~`
 
 === Breaking Changes
 

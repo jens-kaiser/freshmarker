@@ -7,6 +7,7 @@ import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.WrongTypeException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -34,22 +35,46 @@ class ExpressionTest {
         assertEquals("test: dies ist einfach nur ein text", template.process(Map.of()));
     }
 
-    @Test
-    void stringConcat() throws ParseException {
-        Template template = builder.getTemplate("test", "test: ${('abcdefg' + 'hijklmnop' + 'qrstuvwxyz')?upper_case}");
-        assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of()));
+    @Nested
+    class ConcatWithPlusOperator {
+        @Test
+        void stringConcat() throws ParseException {
+            Template template = builder.getTemplate("test", "test: ${('abcdefg' + 'hijklmnop' + 'qrstuvwxyz')?upper_case}");
+            assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of()));
+        }
+
+        @Test
+        void stringConcatWithVars() throws ParseException {
+            Template template = builder.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
+            assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of("prefix", "abcdefg", "suffix", "qrstuvwxyz")));
+        }
+
+        @Test
+        void stringConcatWithEmptyVars() throws ParseException {
+            Template template = builder.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
+            assertEquals("test: HIJKLMNOP", template.process(Map.of("prefix", "", "suffix", "")));
+        }
     }
 
-    @Test
-    void stringConcatWithVars() throws ParseException {
-        Template template = builder.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
-        assertEquals("test: ABCDEFGHIJKLMNOPQRSTUVWXYZ", template.process(Map.of("prefix", "abcdefg", "suffix", "qrstuvwxyz")));
-    }
+    @Nested
+    class ConcatWithTildeOperator {
+        @Test
+        void stringConcat() throws ParseException {
+            Template template = builder.getTemplate("test", "test: ${('abcdefg' ~ 'hijklmnop' ~ 'qrstuvwxyz')?upper_case}");
+            assertEquals("test: ABCDEFG HIJKLMNOP QRSTUVWXYZ", template.process(Map.of()));
+        }
 
-    @Test
-    void stringConcatWithEmptyVars() throws ParseException {
-        Template template = builder.getTemplate("test", "test: ${(prefix + 'hijklmnop' + suffix)?upper_case}");
-        assertEquals("test: HIJKLMNOP", template.process(Map.of("prefix", "", "suffix", "")));
+        @Test
+        void stringConcatWithVars() throws ParseException {
+            Template template = builder.getTemplate("test", "test: ${(prefix ~ 'hijklmnop' ~ suffix)?upper_case}");
+            assertEquals("test: ABCDEFG HIJKLMNOP QRSTUVWXYZ", template.process(Map.of("prefix", "abcdefg", "suffix", "qrstuvwxyz")));
+        }
+
+        @Test
+        void stringConcatWithEmptyVars() throws ParseException {
+            Template template = builder.getTemplate("test", "test: ${(prefix ~ 'hijklmnop' ~ suffix)?upper_case}");
+            assertEquals("test: HIJKLMNOP", template.process(Map.of("prefix", "", "suffix", "")));
+        }
     }
 
     @ParameterizedTest

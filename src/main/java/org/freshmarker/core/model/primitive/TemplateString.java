@@ -13,22 +13,23 @@ public class TemplateString extends TemplatePrimitive<String> {
         super(value);
     }
 
-    public TemplateString concat(TemplateString other) {
+    public TemplateString concat(TemplateString other, String seperator) {
         if (getValue().isEmpty()) {
             return other;
         }
         if (other.getValue().isEmpty()) {
             return this;
         }
-        return new TemplateString(getValue() + other.getValue());
+        return new TemplateString(getValue() + seperator + other.getValue());
     }
 
     @Override
     public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        if (operator != TokenType.PLUS) {
-            super.operation(operator, operand, context);
-        }
-        return concat(operand.evaluate(context, TemplateString.class));
+        return switch (operator) {
+            case PLUS -> concat(operand.evaluate(context, TemplateString.class), "");
+            case CONCAT -> concat(operand.evaluate(context, TemplateString.class), " ");
+            default -> super.operation(operator, operand, context);
+        };
     }
 
     private int checkLowerBound(int lowerBound) {
