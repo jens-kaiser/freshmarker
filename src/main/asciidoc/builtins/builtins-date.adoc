@@ -42,11 +42,11 @@ include::localization_tip.adoc[]
 |===
 | Interpolation | Output | Type
 
-m|${.now?h}
+m|${.now?date?h}
 m|today
 |string
 
-m|${temporal?h(.now)}
+m|${temporal?h(.now?date)}
 m|1968-08-24
 |date
 

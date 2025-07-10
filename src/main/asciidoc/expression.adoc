@@ -218,9 +218,9 @@ m|<
 |Less Operator
 m|one_week < two_weeks
 
-m|\<=
+m|+<=+
 |Less Equals Operator
-m|one_minute \<= two_minutes_warning
+m|one_minute +<=+ two_minutes_warning
 
 m|≤
 |Unicode Less Equals Operator
@@ -250,9 +250,9 @@ m|<
 |Less Operator
 m|'1.0.0'?version < .version
 
-m|\<=
+m|+<=+
 |Less Equals Operator
-m|'1.0.0'?version \<= .version
+m|'1.0.0'?version +<=+ .version
 
 m|≤
 |Unicode Less Equals Operator

@@ -14,7 +14,7 @@ public class ExampleFunction implements TemplateFunction {
 }
 ----
 
-.Example UserDirective as Lambda
+.Example TemplateFunction as Lambda
 [source,java,role="secondary"]
 ----
 (context, args) -> TemplateNumber.of(args.size());

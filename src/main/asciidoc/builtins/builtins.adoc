@@ -33,7 +33,7 @@ In the example above the `upper_case` built-in is called on the current value `W
 The second built-in `lower_case` is called on the current value `WORLD`, which is the result of `upper_case`.
 the result of the interpolation is the result `world` of the second built-in.
 
-=== Null Aware Built-In Handling (since 1.7.4)
+=== Null Safe Built-In Handling (since 1.7.4)
 
 Normally, the processing of built-ins ends with an exception if no suitable built-in is found.
 In the case of `NULL` values and empty optionals, this behavior can now be changed using the flags `BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY` and `BuiltinHandlingFeature.IGNORE_NULL` flags.
@@ -61,7 +61,7 @@ Template template = builder.getTemplate("test", "Hello ${example?!upper_case?!lo
 assertEquals("Hello World", template.process(Map.of()));
 ----
 
-=== Log Built-In
+=== Log Built-In (since 1.11.0)
 
 The special built-in `log` can be used to inspect the current value in an expression. The built-in logs the current content of the expression to the logger `builtin.logging` and returns the current value.
 

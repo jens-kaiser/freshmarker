@@ -343,7 +343,7 @@ The default and exist operators have a special quality. Their mode of operation 
 
 Partial reduction replaces interpolations with text fragments if the expression can be fully evaluated within the interpolation.
 
-.Example Template with reduction on If Direktive
+.Example Template with reduction on an Interpolation
 [source,java]
 ----
 TemplateBuilder templateBuilder = configuration.builder();
