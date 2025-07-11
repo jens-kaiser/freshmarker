@@ -40,8 +40,11 @@ class BuiltInVariableTest {
     @CsvSource({
             "test: ${'1.0.2'?version},test: 1.0.2",
             "test: ${'1.0.2'?version?major},test: 1",
+            "test: ${'1.0.2'?version.major},test: 1",
             "test: ${'1.0.2'?version?minor},test: 0",
+            "test: ${'1.0.2'?version.minor},test: 0",
             "test: ${'1.0.2'?version?patch},test: 2",
+            "test: ${'1.0.2'?version.patch},test: 2",
             "test: ${'1.0.2'?version?is_before('1.0.3')},test: yes",
             "test: ${'1.0.2'?version?is_before('1.1.0')},test: yes",
             "test: ${'1.0.2'?version?is_before('2.0.0')},test: yes",
@@ -97,5 +100,12 @@ class BuiltInVariableTest {
         Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version?is_before}");
         Map<String, Object> model = Map.of();
         assertThrows(ProcessException.class, () -> template.process(model));
+    }
+
+    @Test
+    void unknownAttribute(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version.micro}");
+        Map<String, Object> dataModel = Map.of();
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 }

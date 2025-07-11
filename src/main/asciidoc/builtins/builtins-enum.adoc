@@ -2,7 +2,7 @@
 
 The Built-Ins in the examples operate on the enum value `java.nio.file.StandardCopyOption.ATOMIC_MOVE`.
 
-==== `ordinal` Built-In
+==== `ordinal` Built-In (deprecated)
 
 This built-in returns the ordinal of the value.
 

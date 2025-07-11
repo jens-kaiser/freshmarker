@@ -2,7 +2,7 @@
 
 The Built-Ins in the examples operate on the version value `1.0.2`.
 
-==== `major` Built-In
+==== `major` Built-In (deprecated)
 
 This built-in returns the major part of the version value.
 
@@ -15,7 +15,7 @@ m|number
 
 |===
 
-==== `minor` Built-In
+==== `minor` Built-In (deprecated)
 
 This built-in returns the minor part of the version value.
 
@@ -28,7 +28,7 @@ m|number
 
 |===
 
-==== `patch` Built-In
+==== `patch` Built-In (deprecated)
 
 This built-in returns the patch part of the version value.
 
