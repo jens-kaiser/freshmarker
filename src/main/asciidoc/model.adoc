@@ -24,6 +24,7 @@ footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `
 Without a package specification, the class names refer to the classes of the same name from the JDK.
 
 .Supported Model Types
+[cols="1,3,1"]
 |===
 |Type | _Java_ Type(s) | _FreshMarker_ primitive type
 
@@ -35,7 +36,7 @@ Without a package specification, the class names refer to the classes of the sam
 |Number|`AtomicLong`, `AtomicInteger`|yes
 |Boolean|`Boolean`, `boolean`, `AtomicBoolean`|yes
 |Character|`Character`, `char`|yes
-|DateTime|`Instant`, `ZonedDateTime`, `OffsetDateTime`, LocalDateTime`, `Date`|yes
+|DateTime|`Instant`, `ZonedDateTime`, `OffsetDateTime`, `LocalDateTime`, `Date`|yes
 |Date|`LocalDate`, `java.sql.Date`|yes
 |Time|`LocalTime`, `java.sql.Time`|yes
 |Year|`Year`|yes
@@ -53,7 +54,7 @@ Without a package specification, the class names refer to the classes of the sam
 |Record|Top-Level Records|no
 |Enum|Enums|yes
 |Null|-|yes
-|Locale|`Locale`|yes
+|Locale| `Locale`|yes
 |Version|-|yes
 |Random|`Random`, `SecureRandom`| yes
 |===
@@ -73,10 +74,30 @@ Literals of primitive types can be used for Null, String, Boolean, Integer and D
 
 |===
 | Type | Examples
+
 | Null | null
 | String | 'test', '', "test", ""
 | Integer | 1234, 42
 | Double | 12.34, 42.0
+|===
+
+==== Structured Primitives
+
+Some primitive data types have an internal structure that can be queried using the _Dot Operator_. Unlike beans, structured primitives cannot be used in _List Directives_.
+
+[cols="1,2"]
+|===
+|Type|Attributes
+
+m|TemplateVersion
+|`major`, `minor`, `patch`
+
+m|TemplateEnum
+|`ordinal`, `name`
+
+m|TemplateLocale
+|`language`, `country`, `language_name`, `country_name`
+
 |===
 
 === Sequences

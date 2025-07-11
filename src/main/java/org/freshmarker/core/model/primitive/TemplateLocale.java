@@ -1,8 +1,13 @@
 package org.freshmarker.core.model.primitive;
 
+import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.model.DotAddressable;
+import org.freshmarker.core.model.TemplateObject;
+
 import java.util.Locale;
 
-public class TemplateLocale extends TemplatePrimitive<Locale> {
+public class TemplateLocale extends TemplatePrimitive<Locale> implements DotAddressable {
     public TemplateLocale(Locale value) {
         super(value);
     }
@@ -39,5 +44,15 @@ public class TemplateLocale extends TemplatePrimitive<Locale> {
     @Override
     public String toString() {
         return getValue().toString();
+    }
+
+    public TemplateObject get(ProcessContext context, String name) {
+        return new TemplateString(switch (name) {
+            case "country" -> getValue().getCountry();
+            case "language" -> getValue().getLanguage();
+            case "country_name" -> getValue().getDisplayCountry(context.getLocale());
+            case "language_name" -> getValue().getDisplayLanguage(context.getLocale());
+            default -> throw new ProcessException("unknown attribute: " + name);
+        });
     }
 }

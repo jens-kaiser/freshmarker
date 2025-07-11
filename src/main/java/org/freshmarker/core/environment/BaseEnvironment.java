@@ -13,11 +13,9 @@ import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.time.Clock;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public class BaseEnvironment implements Environment, TemplateObjectMapper {
 
@@ -25,7 +23,6 @@ public class BaseEnvironment implements Environment, TemplateObjectMapper {
     private final Map<String, TemplateObject> cached;
     private final BuiltInVariableProvider builtInVariableProviders;
     private final List<TemplateObjectProvider> providers;
-    private final Set<Class<?>> checks = new HashSet<>();
     private final Clock clock;
 
     public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, BuiltInVariableProvider builtInVariableProviders, Clock clock) {
@@ -99,11 +96,6 @@ public class BaseEnvironment implements Environment, TemplateObjectMapper {
     @Override
     public TemplateObject getVariable(String name) {
         throw new ProcessException("variable " + name + " not found");
-    }
-
-    @Override
-    public Set<Class<?>> getChecks() {
-        return checks;
     }
 
     public Clock getClock() {

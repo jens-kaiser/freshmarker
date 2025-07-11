@@ -3,7 +3,9 @@ package org.freshmarker.core.ftl;
 import ftl.ParseException;
 import org.freshmarker.Configuration;
 import org.freshmarker.Template;
+import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -12,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EnumInterpolationTest {
     private Configuration configuration;
@@ -43,7 +46,9 @@ class EnumInterpolationTest {
     @CsvSource({
             "test: ${test},test: CREATE",
             "test: ${test?c},test: CREATE",
+            "test: ${test.name},test: CREATE",
             "test: ${test?ordinal},test: 4",
+            "test: ${test.ordinal},test: 4",
     })
     void interpolationExpression(String templateSource, String expected) throws ParseException {
         Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", templateSource);
@@ -54,19 +59,34 @@ class EnumInterpolationTest {
     @CsvSource({
             "test: ${test},ALPHA,test: Α",
             "test: ${test?c},ALPHA,test: ALPHA",
+            "test: ${test.name},ALPHA,test: ALPHA",
             "test: ${test?ordinal},ALPHA,test: 0",
+            "test: ${test.ordinal},ALPHA,test: 0",
             "test: ${test},BETA,test: Β",
             "test: ${test?c},BETA,test: BETA",
+            "test: ${test.name},BETA,test: BETA",
             "test: ${test?ordinal},BETA,test: 1",
+            "test: ${test.ordinal},BETA,test: 1",
             "test: ${test},GAMMA,test: Γ",
             "test: ${test?c},GAMMA,test: GAMMA",
+            "test: ${test.name},GAMMA,test: GAMMA",
             "test: ${test?ordinal},GAMMA,test: 2",
+            "test: ${test.ordinal},GAMMA,test: 2",
             "test: ${test},DELTA,test: Δ",
             "test: ${test?c},DELTA,test: DELTA",
+            "test: ${test.name},DELTA,test: DELTA",
             "test: ${test?ordinal},DELTA,test: 3",
+            "test: ${test.ordinal},DELTA,test: 3",
     })
     void interpolationExpressionWithCustomToString(String templateSource, TestEnum value, String expected) throws ParseException {
         Template template = configuration.builder().withLocale(Locale.GERMANY).getTemplate("test", templateSource);
         assertEquals(expected, template.process(Map.of("test", value)));
+    }
+
+    @Test
+    void unknownAttribute() {
+        Template template = configuration.builder().getTemplate("test", "${enum?value}");
+        Map<String, Object> dataModel = Map.of("enum", StandardOpenOption.CREATE);
+        assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 }
