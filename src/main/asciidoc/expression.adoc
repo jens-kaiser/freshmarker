@@ -17,7 +17,7 @@ TBD
 
 TBD
 
-=== Method Invocation
+=== Function Invocation
 
 TBD
 
@@ -414,7 +414,7 @@ m|-4
 
 === Default Operator
 
-Returns `true` if the operant is not `NULL`.
+Returns its parameter if the operant is `NULL`. If the argument is missing, the default operator returns an empty string.
 
 |===
 |Operator | Description |Example
@@ -431,11 +431,21 @@ m|value!"default"
 
 === Dot Key Operator
 
-TBD
+The dot key operator returns the attribute with the specified name from a hash type or a structured primitive.
 
 === Dynamic Key Operator
 
-==== Slicing
+TBD
+
+==== Slice
+
+TBD
+
+==== Index
+
+TBD
+
+==== Hash
 
 TBD
 
@@ -461,7 +471,6 @@ m|?!
 m|?!lower_case
 
 |===
-
 
 ==== Existence Operator
 
