@@ -2,12 +2,12 @@ package org.freshmarker.core.model.primitive;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.model.DotAddressable;
+import org.freshmarker.core.model.DotHashAddressable;
 import org.freshmarker.core.model.TemplateObject;
 
 import java.util.Locale;
 
-public class TemplateLocale extends TemplatePrimitive<Locale> implements DotAddressable {
+public class TemplateLocale extends TemplatePrimitive<Locale> implements DotHashAddressable {
     public TemplateLocale(Locale value) {
         super(value);
     }
@@ -23,22 +23,6 @@ public class TemplateLocale extends TemplatePrimitive<Locale> implements DotAddr
             case 2 -> Locale.of(parts[0], parts[1]);
             default -> Locale.of(parts[0], parts[0], parts[0]);
         };
-    }
-
-    public TemplateString getLanguage() {
-        return new TemplateString(getValue().getLanguage());
-    }
-
-    public TemplateString getDisplayLanguage(Locale locale) {
-        return new TemplateString(getValue().getDisplayLanguage(locale));
-    }
-
-    public TemplateString getCountry() {
-        return new TemplateString(getValue().getCountry());
-    }
-
-    public TemplateString getDisplayCountry(Locale locale) {
-        return new TemplateString(getValue().getDisplayCountry(locale));
     }
 
     @Override

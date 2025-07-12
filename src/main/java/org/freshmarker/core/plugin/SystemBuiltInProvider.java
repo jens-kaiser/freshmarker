@@ -21,12 +21,14 @@ import java.util.ResourceBundle;
 
 public final class SystemBuiltInProvider implements BuiltInProvider {
 
+    private static final String LANGUAGE = "language";
+
     private static TemplateVersion version(TemplateObject x, ProcessContext e) {
         return x.evaluate(e, TemplateVersion.class);
     }
 
-    private static TemplateLocale locale(TemplateObject x, ProcessContext e) {
-        return x.evaluate(e, TemplateLocale.class);
+    private static TemplateObject locale(TemplateObject x, ProcessContext e, String name) {
+        return x.evaluate(e, TemplateLocale.class).get(e, name);
     }
 
     private static TemplateVersion parameter(List<TemplateObject> objects, ProcessContext context) {
@@ -56,16 +58,16 @@ public final class SystemBuiltInProvider implements BuiltInProvider {
         register.add(TemplateVersion.class, "is_before", (x, y, e) -> version(x, e).isBefore(parameter(y, e)));
         register.add(TemplateVersion.class, "is_after", (x, y, e) -> version(x, e).isAfter(parameter(y, e)));
         register.add(TemplateVersion.class, "is_equal", (x, y, e) -> version(x, e).isEqual(parameter(y, e)));
-        register.add(TemplateVersion.class, "major", (x, y, e) -> version(x, e).major());
-        register.add(TemplateVersion.class, "minor", (x, y, e) -> version(x, e).minor());
-        register.add(TemplateVersion.class, "patch", (x, y, e) -> version(x, e).patch());
+        register.add(TemplateVersion.class, "major", (x, y, e) -> version(x, e).get(e, "major"));
+        register.add(TemplateVersion.class, "minor", (x, y, e) -> version(x, e).get(e, "minor"));
+        register.add(TemplateVersion.class, "patch", (x, y, e) -> version(x, e).get(e, "patch"));
         register.add(TemplateString.class, "version", (x, y, e) -> new TemplateVersion(x.evaluate(e, TemplateString.class).toString()));
         register.add(TemplateString.class, "locale", (x, y, e) -> new TemplateLocale(x.evaluate(e, TemplateString.class).toString()));
-        register.add(TemplateLocale.class, "lang", (x, y, e) -> locale(x, e).getLanguage());
-        register.add(TemplateLocale.class, "language", (x, y, e) -> locale(x, e).getLanguage());
-        register.add(TemplateLocale.class, "language_name", (x, y, e) -> locale(x, e).getDisplayLanguage(e.getLocale()));
-        register.add(TemplateLocale.class, "country", (x, y, e) -> locale(x, e).getCountry());
-        register.add(TemplateLocale.class, "country_name", (x, y, e) -> locale(x, e).getDisplayCountry(e.getLocale()));
+        register.add(TemplateLocale.class, "lang", (x, y, e) -> locale(x, e, LANGUAGE));
+        register.add(TemplateLocale.class, LANGUAGE, (x, y, e) -> locale(x, e, LANGUAGE));
+        register.add(TemplateLocale.class, "language_name", (x, y, e) -> locale(x, e, "language_name"));
+        register.add(TemplateLocale.class, "country", (x, y, e) -> locale(x, e, "country"));
+        register.add(TemplateLocale.class, "country_name", (x, y, e) -> locale(x, e, "country_name"));
         register.add(TemplateNull.class, "empty_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "blank_to_null", BuiltIn.identity());
         register.add(TemplateNull.class, "trim_to_null", BuiltIn.identity());

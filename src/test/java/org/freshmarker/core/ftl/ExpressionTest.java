@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -295,17 +296,26 @@ class ExpressionTest {
             "${(1..10)[5]}, 6",
             "${(-1..-10)[5]}, -6"
     })
-    void dotKeys(String input, String expected) {
+    void hash(String input, String expected) {
         Template template = builder.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of()));
     }
 
 
     @Test
-    void invalidDotKey() {
+    void outOfBoundsIndex() {
         Template template = builder.getTemplate("test", "${seq[5]}");
+        Map<String, Object> model = Map.of("seq", List.of());
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(model));
+        assertEquals("Index 5 out of bounds for length 0 at test:1:1 '${seq[5]}'", exception.getMessage());
+    }
+
+    @Test
+    void unsupportedHash() {
+        Template template = builder.getTemplate("test", "${42[1]}");
         Map<String, Object> model = Map.of();
-        assertThrows(ProcessException.class, () -> template.process(model));
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process(model));
+        assertEquals("unsupported type: class java.lang.Integer at test:1:1 '${42[1]}'", exception.getMessage());
     }
 
     @Test

@@ -91,6 +91,41 @@ class LocaleInterpolationTest {
         }
     }
 
+    @Nested
+    class WithHashOperator {
+        @ParameterizedTest
+        @MethodSource("localeProvider")
+        void interpolateLanguage(Locale locale, TemplateBuilder builder) throws ParseException {
+            Template template = builder.getTemplate("language", "${locale['language']}");
+            assertEquals(locale.getLanguage(), template.process(Map.of("locale", locale)));
+        }
+
+        @ParameterizedTest
+        @MethodSource("localeProvider")
+        void interpolateDisplayLanguage(Locale locale, TemplateBuilder builder) throws ParseException {
+            Template template = builder.getTemplate("language", "${locale['language_name']}");
+            assertEquals(locale.getDisplayLanguage(Locale.GERMANY), template.process(Map.of("locale", locale)));
+        }
+
+        @ParameterizedTest
+        @MethodSource("localeProvider")
+        void interpolateCountry(Locale locale, TemplateBuilder builder) throws ParseException {
+            Template template = builder.getTemplate("language", "${locale['country']}");
+            assertEquals(locale.getCountry(), template.process(Map.of("locale", locale)));
+        }
+
+        @ParameterizedTest
+        @MethodSource("localeProvider")
+        void interpolateDisplayCountry(Locale locale, TemplateBuilder builder) throws ParseException {
+            Template template = builder.getTemplate("language", "${locale['country_name']}");
+            assertEquals(locale.getDisplayCountry(Locale.GERMANY), template.process(Map.of("locale", locale)));
+        }
+
+        static Stream<Locale> localeProvider() {
+            return Stream.of(Locale.GERMANY, Locale.UK, Locale.JAPAN);
+        }
+    }
+
     @Test
     void unknownAttribute(TemplateBuilder builder) {
         Template template = builder.getTemplate("test", "${locale?value}");

@@ -81,9 +81,9 @@ Literals of primitive types can be used for Null, String, Boolean, Integer and D
 | Double | 12.34, 42.0
 |===
 
-==== Structured Primitives
+=== Structured Primitives
 
-Some primitive data types have an internal structure that can be queried using the _Dot Operator_. Unlike beans, structured primitives cannot be used in _List Directives_.
+Some primitive data types have an internal structure that can be queried using the _Dot Operator_ and the _Hash Operator_. Unlike beans, structured primitives cannot be used in _List Directives_.
 
 [cols="1,2"]
 |===

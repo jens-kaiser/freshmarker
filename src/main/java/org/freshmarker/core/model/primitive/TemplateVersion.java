@@ -2,26 +2,14 @@ package org.freshmarker.core.model.primitive;
 import ftl.Token;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.model.DotAddressable;
+import org.freshmarker.core.model.DotHashAddressable;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.version.Version;
 
-public class TemplateVersion extends TemplatePrimitive<Version> implements DotAddressable {
+public class TemplateVersion extends TemplatePrimitive<Version> implements DotHashAddressable {
 
     public TemplateVersion(String value) {
         super(Version.byString(value));
-    }
-
-    public TemplateNumber major() {
-        return TemplateNumber.of(getValue().major());
-    }
-
-    public TemplateNumber minor() {
-        return TemplateNumber.of(getValue().minor());
-    }
-
-    public TemplateNumber patch() {
-        return TemplateNumber.of(getValue().patch());
     }
 
     public TemplateBoolean isBefore(TemplateVersion value) {
