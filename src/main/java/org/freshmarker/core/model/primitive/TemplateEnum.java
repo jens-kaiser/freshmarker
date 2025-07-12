@@ -2,10 +2,10 @@ package org.freshmarker.core.model.primitive;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.model.DotAddressable;
+import org.freshmarker.core.model.DotHashAddressable;
 import org.freshmarker.core.model.TemplateObject;
 
-public class TemplateEnum<E extends Enum<E>> extends TemplatePrimitive<E> implements DotAddressable {
+public class TemplateEnum<E extends Enum<E>> extends TemplatePrimitive<E> implements DotHashAddressable {
 
   public TemplateEnum(E value) {
     super(value);

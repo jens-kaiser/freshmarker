@@ -23,17 +23,23 @@ public class TemplateDynamicKey implements TemplateExpression {
             return TemplateNull.NULL;
         }
         TemplateObject key = dynamicKey.evaluateToObject(context);
-        return switch (key) {
-            case TemplateNumber number -> handleIndex(context, templateObject, number);
-            case TemplateRange range -> handleRange(context, templateObject, range);
-            case TemplateString name -> handleHash(context, templateObject, name);
-            default -> throw new ProcessException("unsupported type: " + key.getModelType());
-        };
+        try {
+            return switch (key) {
+                case TemplateNumber number -> handleIndex(context, templateObject, number);
+                case TemplateRange range -> handleRange(context, templateObject, range);
+                case TemplateString name -> handleHash(context, templateObject, name);
+                default -> throw new ProcessException("unsupported type: " + key.getModelType());
+            };
+        } catch (ProcessException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw new ProcessException(e.getMessage());
+        }
     }
 
     private TemplateObject handleHash(ProcessContext context, TemplateObject templateObject, TemplateString name) {
-        if (templateObject instanceof TemplateMap templateMap) {
-            return templateMap.get(context, name.getValue());
+        if (templateObject instanceof DotHashAddressable dotHashAddressable) {
+            return dotHashAddressable.get(context, name.getValue());
         }
         throw new ProcessException("unsupported type: " + templateObject.getModelType());
     }
@@ -44,7 +50,7 @@ public class TemplateDynamicKey implements TemplateExpression {
 
     private TemplateObject handleIndex(ProcessContext context, TemplateObject templateObject, TemplateNumber index) {
         int beginIndex = index.asInt();
-        return  switch (templateObject) {
+        return switch (templateObject) {
             case TemplateRange range -> {
                 TemplateNumber lower = range.getLower().evaluate(context, TemplateNumber.class);
                 if (range.isRightUnlimited()) {

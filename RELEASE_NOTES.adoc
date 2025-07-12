@@ -11,6 +11,7 @@
 - add null-safe built-in operators `?!`
 - add spaceship operator `+<=>+`
 - add concat operator `~`
+- add structured primitives
 
 === Breaking Changes
 
@@ -18,6 +19,12 @@
 - remove all deprecated features
 - remove all deprecated built-ins
 - remove alternative null-safe built-in operators `!!`, `\->`, `→`
+
+=== Deprecation
+
+- deprecate version built-ins `major`, `minor`and `patch`
+- deprecate enum built-in `ordinal`
+- deprecate locale built-ins `lang`, `language`, `language_name`, `country` and `country_name`
 
 == Release 1.11.0 (2025-07-01)
 

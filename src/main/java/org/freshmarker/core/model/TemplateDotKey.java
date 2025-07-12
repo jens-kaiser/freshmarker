@@ -18,7 +18,7 @@ public class TemplateDotKey implements TemplateExpression {
         TemplateObject templateObject = map.evaluateToObject(context);
         return switch (templateObject) {
             case TemplateNull templateNull -> templateNull;
-            case DotAddressable addressable -> addressable.get(context, dotKey);
+            case DotHashAddressable addressable -> addressable.get(context, dotKey);
             case null, default -> throw new WrongTypeException("wrong map type: " + dotKey + " " + templateObject);
         };
     }
