@@ -427,6 +427,27 @@ m|!
 |Default Operator with parameter
 m|value!"default"
 
+m|!!
+|Default Operator
+m|value!!
+
+m|!!
+|Default Operator with parameter
+m|value!!"default"
+
+|===
+
+=== Elvis Operator (since 2.0.0)
+
+Returns its parameter if the operant is `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|?:
+|Elvis Operator
+m|value?:"default"
+
 |===
 
 === Dot Key Operator

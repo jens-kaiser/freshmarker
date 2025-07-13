@@ -114,11 +114,15 @@ TOKEN :
     |
     <EXCLAM : "!">
     |
+    <DEFAULT : "!!">
+    |
     <NOT : "¬">
     |
     <BUILT_IN : "?">
     |
     <BUILT_IN2 : "?!">
+    |
+    <ELVIS : "?:">
     |
     <COMPARE : "<=>">
     |
@@ -198,7 +202,12 @@ Node Input #void :
 ;
 
 Expression :
+    ConditionalExpression
+;
+
+ConditionalExpression :
     OrExpression
+    [ <ELVIS> OrExpression ]
 ;
 
 OrExpression :
@@ -285,9 +294,11 @@ DefaultToExpression :
     // A bit ugly, REVISIT
         SCAN {getToken(2).getType() != IDENTIFIER || getToken(3).getType() != EQUALS}
         => <EXCLAM>PrimaryExpression =>||
+    | <DEFAULT>
     )*
     [
        <EXCLAM>
+    |  <DEFAULT>
     ]
 ;
 

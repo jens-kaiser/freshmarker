@@ -8,6 +8,7 @@ import ftl.ast.BaseExpression;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
+import ftl.ast.ConditionalExpression;
 import ftl.ast.DefaultToExpression;
 import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
@@ -197,5 +198,10 @@ class ExpressionVisitorTest {
     @Test
     void visitParameterList() {
         assertEquals("", visitor.visit((ParameterList) null, ""));
+    }
+
+    @Test
+    void visitElvis() {
+        assertEquals("", visitor.visit((ConditionalExpression) null, ""));
     }
 }
