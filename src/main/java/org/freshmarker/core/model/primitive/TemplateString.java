@@ -13,14 +13,14 @@ public class TemplateString extends TemplatePrimitive<String> {
         super(value);
     }
 
-    public TemplateString concat(TemplateString other, String seperator) {
+    public TemplateString concat(TemplateString other, String separator) {
         if (getValue().isEmpty()) {
             return other;
         }
         if (other.getValue().isEmpty()) {
             return this;
         }
-        return new TemplateString(getValue() + seperator + other.getValue());
+        return new TemplateString(getValue() + separator + other.getValue());
     }
 
     @Override

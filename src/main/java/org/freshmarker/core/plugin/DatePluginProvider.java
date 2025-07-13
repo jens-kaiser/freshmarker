@@ -43,15 +43,15 @@ public final class DatePluginProvider implements BuiltInProvider, TypeMapperProv
         builtInRegister.add(TemplateClassicDateTime.class, "c",
                 (x, y, c) -> new TemplateString(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").format(((TemplateClassicDateTime) x).getValue())));
         builtInRegister.add(TemplateClassicDate.class, "date", BuiltIn.identity());
-        builtInRegister.add(TemplateClassicDate.class, "c", (x, y, c) -> new TemplateString(String.valueOf(x)));
+        builtInRegister.add(TemplateClassicDate.class, "c", BuiltIn.string());
         builtInRegister.add(TemplateClassicTime.class, "time", BuiltIn.identity());
-        builtInRegister.add(TemplateClassicTime.class, "c", (x, y, c) -> new TemplateString(String.valueOf(x)));
+        builtInRegister.add(TemplateClassicTime.class, "c", BuiltIn.string());
         builtInRegister.add(TemplateClassicDateTime.class, IS_TEMPORAL, BuiltInHelper.alwaysTrue());
         builtInRegister.add(TemplateClassicDate.class, IS_TEMPORAL, BuiltInHelper.alwaysTrue());
         builtInRegister.add(TemplateClassicTime.class, IS_TEMPORAL, BuiltInHelper.alwaysTrue());
         builtInRegister.add(TemplateClassicDateTime.class, SUPPORTS, this::supports);
         builtInRegister.add(TemplateClassicDate.class, SUPPORTS, this::supports);
-        builtInRegister.add(TemplateClassicTime.class, SUPPORTS, (x, y, c) -> TemplateBoolean.FALSE);
+        builtInRegister.add(TemplateClassicTime.class, SUPPORTS, BuiltInHelper.alwaysFalse());
         return builtInRegister;
     }
 
