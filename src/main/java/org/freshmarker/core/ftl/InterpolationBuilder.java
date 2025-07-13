@@ -10,6 +10,7 @@ import ftl.ast.BaseNode;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
+import ftl.ast.ConditionalExpression;
 import ftl.ast.DefaultToExpression;
 import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
@@ -103,6 +104,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (expression.size() == 2) {
             return new TemplateDefault(base, TemplateString.EMPTY);
         }
+        return new TemplateDefault(base, expression.children().get(2).accept(this, null));
+    }
+
+    @Override
+    public TemplateDefault visit(ConditionalExpression expression, Object input) {
+        TemplateObject base = expression.children().get(0).accept(this, null);
         return new TemplateDefault(base, expression.children().get(2).accept(this, null));
     }
 

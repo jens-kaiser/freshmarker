@@ -381,4 +381,19 @@ class ExpressionTest {
                 "one_week", Period.ofDays(7));
         assertEquals(expected, template.process(dataModel));
     }
+
+    @Nested
+    class Elvis {
+        @Test
+        void simple() {
+            Template template = builder.getTemplate("test", "${value?:42}");
+            assertEquals("42", template.process(Map.of()));
+        }
+
+        @Test
+        void withBuiltIn() {
+            Template template = builder.getTemplate("test", "${'value'?upper_case?:42}");
+            assertEquals("VALUE", template.process(Map.of()));
+        }
+    }
 }

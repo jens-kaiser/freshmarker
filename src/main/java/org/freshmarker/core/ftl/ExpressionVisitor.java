@@ -8,6 +8,7 @@ import ftl.ast.BaseExpression;
 import ftl.ast.BooleanLiteral;
 import ftl.ast.BuiltIn;
 import ftl.ast.BuiltinVariable;
+import ftl.ast.ConditionalExpression;
 import ftl.ast.DefaultToExpression;
 import ftl.ast.DotKey;
 import ftl.ast.DynamicKey;
@@ -48,6 +49,10 @@ public interface ExpressionVisitor<I, O> {
   }
 
   default O visit(Expression expression, I input) {
+    return handleWithException(expression);
+  }
+
+  default O visit(ConditionalExpression expression, I input) {
     return handleWithException(expression);
   }
 

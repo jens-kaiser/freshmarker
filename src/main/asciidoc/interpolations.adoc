@@ -20,18 +20,19 @@ System.out.println(template.process(Map.of()));
 
 The example above produces an ProcessException, because the interpolation `${example}` is evaluated to `NULL`.
 
-To deal with missing values, _FreshMarker_ provides two operations.
-The _default_ operator `!` and the _exists_ operator `??`.
+To deal with missing values, _FreshMarker_ provides three operations.
+The _default_ operator `!` and `!!`, the _elvis_ operator `?:` and the _exists_ operator `??`.
 
-The _default_ operator replaces a `NULL` value with the specified parameter.
-If the parameter is missing, the value is replaced with an empty text.
+The _default_ and the _elvis_  operator replace a `NULL` value with the specified parameter.
+If the parameter is missing, the _default_ operator replaces the value with an empty text.
+
 
 .Example with _default_ operator
 [source,java]
 ----
 Configuration configuration = new Configuration();
 TemplateBuilder templateBuilder = configuration.builder();
-Template template = templateBuilder.getTemplate("test", "Hello ${example!'World'}!");
+Template template = templateBuilder.getTemplate("test", "Hello ${example!!'World'}!");
 System.out.println(template.process(Map.of()));
 ----
 
