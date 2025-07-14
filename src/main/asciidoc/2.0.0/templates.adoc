@@ -74,7 +74,7 @@ _User directives_ can be defined via _Macro directives_ or by implementing the `
 .UserDirective Interface
 [source,java]
 ----
-include::../java/org/freshmarker/api/UserDirective.java[lines="9.."]
+include::../../java/org/freshmarker/api/UserDirective.java[lines="9.."]
 ----
 
 It can be registered to the `Configuration` by the `registerUserDirective` method or by the <<extension_api>>.
@@ -95,7 +95,7 @@ Additional functionality can be added to the template-engine interpolations by _
 .Function Interface
 [source,java]
 ----
-include::../java/org/freshmarker/api/TemplateFunction.java[lines="7..-1"]
+include::../../java/org/freshmarker/api/TemplateFunction.java[lines="7..-1"]
 ----
 
 A _Function_ is a Java class implementing the functional interface `TemplateFunction`.

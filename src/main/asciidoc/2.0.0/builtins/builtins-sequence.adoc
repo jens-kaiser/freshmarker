@@ -1,0 +1,95 @@
+=== Sequence Built-Ins
+
+The Built-Ins in the examples operate on a sequence with the values `2`, `3`, `4`, `5` and `6`.
+
+==== `first` Built-In
+
+This built-in returns the first element of a sequence.
+
+|===
+|Template |Output
+
+m|${list?first}
+m|2
+|===
+
+==== `last` Built-In
+
+This built-in returns the last element of a sequence.
+
+|===
+|Template |Output
+
+m|${list?last}
+m|6
+|===
+
+==== `reverse` Built-In
+
+This built-in returns a reversed sequence of a sequence.
+
+|===
+|Template |Output
+
+m|${list?reverse?first}
+m|6
+|===
+
+==== `size` Built-In
+
+This built-in returns the size of a sequence as a number.
+
+|===
+|Template |Output
+
+m|${list?size}
+m|5
+|===
+
+==== `join` Built-In (since 1.5.1)
+
+This built-in returns the elements of a sequence as a string.
+The default limiter is ", " but can be changed with the first optional parameter of the built-in.
+The second optional parameter is an alternative parameter for the last element in the sequence.
+
+|===
+|Template |Output
+
+m|${list?join}
+m|2, 3, 4, 5, 6
+
+m|${list?join(':')}
+m|2:3:4:5:6
+
+m|${list?join(', ', ' and ')}
+m|2, 3, 4, 5 and 6
+|===
+
+
+==== `size` Built-In
+
+This built-in return the size of the text.
+
+|===
+|Interpolation | Output
+
+m|${[]?size}
+m|0
+
+m|${list?size}
+m|5
+|===
+
+==== `is_empty` Built-In (since 1.11.0)
+
+This built-in return `true` for an empty sequence and `false` otherwise.
+
+|===
+|Interpolation | Output
+
+m|${[]?is_empty}
+m|true
+
+m|${list?is_empty}
+m|false
+|===

@@ -1,0 +1,586 @@
+=== String Built-Ins
+
+==== `upper_case` Built-In
+
+This built-in converts a text in its uppercase form.
+
+|===
+|Input | Output
+
+|${'The quick brown Fox jumps over the lazy Dog'?upper_case}
+|THE QUICK BROWN FOX JUMPS OVER THE LAYZ DOG
+|===
+
+==== `lower_case` Built-In
+
+This built-in converts a text in its lowercase form.
+
+|===
+|Input | Output
+
+|${'The quick brown Fox jumps over the lazy Dog'?lower_case}
+|the quick brown fox jumps over the lazy dog
+|===
+
+==== `capitalize` Built-In
+
+This built-in converts the first letter of each word to uppercase.
+A word with a first lowercase letter means `\b(\p{javaLowerCase})(\p{IsAlphabetic}*)\b`
+
+|===
+|Input | Output
+
+|${'The quick brown Fox jumps over the lazy Dog'?capitalize}
+|The Quick Brown Fox Jumps Over The Lazy Dog
+|===
+
+==== `uncapitalize` Built-In
+
+This built-in converts the first letter of each word to lowercase.
+A word with a first uppercase letter means `\b(\p{javaUpperCase})(\p{IsAlphabetic}*)\b`
+
+|===
+|Input | Output
+
+|${'The quick BROWN Fox jumps over the lazy Dog'?uncapitalize}
+|the quick bROWN fox jumps over the lazy dog
+|===
+
+==== `camelCase` Built-In
+
+This built-in converts a text from _snake_case_, _screaming_snake_case_ or _kebab-case_ to _camelCase_.
+The result may look strange if the input is in some other format.
+
+|===
+|Input | Output
+
+m|${'The-quick-brown-Fox-jumps-over-the-lazy-Dog'?camelCase}
+m|theQuickBrownFoxJumpsOverTheLazyDog
+
+m|${'The_quick_brown_Fox_jumps_over_the_lazy_Dog'?camelCase}
+m|theQuickBrownFoxJumpsOverTheLazyDog
+|===
+
+==== `snake_case` Built-In
+
+This built-in converts a text from _camelCase_ to _snake_case_.
+The result may look strange if the input is in some other format.
+
+|===
+|Input | Output
+
+m|${'theQuickBrownFoxJumpsOverTheLazyDog'?snake_case}
+m|The_quick_brown_Fox_jumps_over_the_lazy_Dog
+|===
+
+==== `screaming_snake_case` Built-In
+
+This built-in converts a text from _camelCase_ to _screaming_snake_case_.
+The result may look strange if the input is in some other format.
+
+|===
+|Input | Output
+
+m|${'theQuickBrownFoxJumpsOverTheLazyDog'?screaming_snake_case}
+m|THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG
+|===
+
+==== `kebab_case` Built-In
+
+This built-in converts a text from _camelCase_ to _kebab-case_.
+The result may look strange if the input is in some other format.
+
+|===
+|Input | Output
+
+m|${'theQuickBrownFoxJumpsOverTheLazyDog'?kebab_case}
+m|The-quick-brown-Fox-jumps-over-the-lazy-Dog
+|===
+
+==== `slugify` Built-In (since 1.4.6)
+
+This built-in converts a text to a _slug_.
+
+|===
+|Input | Output
+
+m|${'the short summer'?slugify}
+m|the-short-summer
+
+m|${'Die heiße Wüste'?slugify}
+m|die-heie-wste
+
+m|${'Die heisse Wueste'?slugify}
+m|die-heisse-wueste
+|===
+
+==== `strip` Built-In (since 1.11.0)
+
+This built-in removes leading and trailing Unicode whitespacesfootnote:whitespace[The _Java_ definition of whitespace, which does not include the non-breakable space, for example.] from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `strip_leading` Built-In (since 1.11.0)
+
+This built-in removes leading Unicode whitespacesfootnote:whitespace[] from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip_leading}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣
+|===
+
+==== `strip_trailing` Built-In (1.11.0)
+
+This built-in removes trailing Unicode whitespacesfootnote:whitespace[] from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?strip_trailing}
+m|␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `strip_to_null` Built-In (since 1.11.0)
+
+This built-in removes leading and trailing Unicode whitespacesfootnote:whitespace[] from the text.
+The examples use `␣` as a replacement for the whitespace.
+If the result is an empty string, `NULL` is returned.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[But you have to handle the null value, of course]
+
+|===
+|Input | Output | Type
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim_to_null}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${'␣␣␣␣␣'?trim_to_null}
+m|NULL
+m|NULL
+
+m|${null?trim_to_null}
+m|NULL
+m|NULL
+|===
+
+==== `trim` Built-In
+
+This built-in removes leading and trailing whitespaces from the text.
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Input | Output
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+|===
+
+==== `trim_to_null` Built-In (since 1.7.1)
+
+This built-in removes leading and trailing whitespaces from the text.
+The examples use `␣` as a replacement for the whitespace.
+If the result is an empty string, `NULL` is returned.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[]
+
+|===
+|Input | Output | Type
+
+m|${'␣␣␣The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog␣␣'?trim_to_null}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${'␣␣␣␣␣'?trim_to_null}
+m|NULL
+m|NULL
+
+m|${null?trim_to_null}
+m|NULL
+m|NULL
+|===
+
+==== `empty_to_null` Built-In (since 1.7.1)
+
+This built-in returns `NULL` if the text is empty.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[]
+
+|===
+|Input | Output | Type
+
+m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?empty_to_null}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${''?empty_to_null}
+m|NULL
+m|NULL
+
+m|${null?empty_to_empty}
+m|NULL
+m|NULL
+|===
+
+==== `blank_to_null` Built-In (since 1.7.1)
+
+This built-in returns `NULL` if the text is blank.
+The examples use `␣` as a replacement for the whitespace.
+If the text is `NULL`, then `NULL` is returned instead of throwing an exception.footnote:null[]
+
+|===
+|Input | Output | Type
+
+m|${'The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog'?blank_to_null}
+m|The␣quick␣brown␣Fox␣jumps␣over␣the␣lazy␣Dog
+m|string
+
+m|${'␣␣␣␣'?blank_to_null}
+m|NULL
+m|NULL
+
+m|${null?blank_to_null}
+m|NULL
+m|NULL
+|===
+
+==== `contains` Built-In
+
+This built-in return `true` if the text contains the specified parameter, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|'The quick brown Fox jumps over the lazy Dog'?contains('Fox')
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?contains('Cat')}
+m|false
+|===
+
+==== `startsWith` Built-In
+
+This built-in return `true` if the text starts with the specified parameter, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|${'The quick brown Fox jumps over the lazy Dog'?startsWith('Dog')}
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?starts_with('Cat')}
+m|false
+|===
+
+==== `endsWith` Built-In
+
+This built-in return `true` if the text ends with the specified parameter, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|${'The quick brown Fox jumps over the lazy Dog'?endsWith('Fox')}
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?ends_with('Cat')}
+m|false
+|===
+
+==== `toBoolean` Built-In
+
+This built-in return `true` if the text is `true` and `false` if it is `false`.
+
+|===
+|Interpolation | Output
+
+m|${'true'?toBoolean}
+m|true
+
+m|${'false'?to_boolean}
+m|false
+
+m|${'gonzo'?toBoolean}
+| This is an error.
+|===
+
+==== `length` Built-In
+
+This built-in return the length of the text.
+
+|===
+|Interpolation | Output
+
+m|${'Supercalifragilisticexpialidocious'?length}
+m|34
+
+m|${''?length}
+m|0
+|===
+
+==== `is_empty` Built-In (since 1.11.0)
+
+This built-in return `true` for an empty text and `false` otherwise.
+
+|===
+|Interpolation | Output
+
+m|${''?is_empty}
+m|true
+
+m|${'text'?is_empty}
+m|false
+|===
+
+==== `esc`, `escape` Built-In
+
+This built-in convert the text into markup with the specified output format.
+It cannot be processed further because there are no built-ins for markup.
+
+|===
+|Interpolation | Output
+
+m|${'<>'?esc('HTML')}
+m|\&lt;\&gt;
+
+m|${'<>'?esc('plainText')}
+m|<>
+|===
+
+==== `noEsc`, `no_esc`, `no_escape` Built-In
+
+This built-in convert the text into markup without an output format.
+This can be useful if the current value should not escape with the current output format.
+It cannot be processed further because there are no built-ins for markup.
+
+|===
+|Interpolation | Output
+
+m|${'<>'?no_esc}
+m|<>
+
+|===
+
+==== `locale` Built-In
+
+This built-in converts a string value into a locale value.
+
+|===
+|Interpolation | Output | Type
+
+m|${'de_DE'?locale}
+m|de_DE
+m|locale
+
+m|${'de_DE'?locale?language}
+m|de
+m|string
+
+m|${'de'?locale}
+m|de
+m|locale
+
+|===
+
+==== `version` Built-In
+
+This built-in converts a string value into a version value.
+
+|===
+|Interpolation | Output | Type
+
+m|${'1.0.2'?version}
+m|1.0.2
+m|version
+
+m|${'1.0.2'?version?patch}
+m|2
+m|number
+
+|===
+
+==== `i18n` Built-In (experimental, since 1.6.7)
+
+This built-in returns a string from a resource bundle based on the key in the value.
+
+NOTE: the resource bundle name must be added to the template via the `Template#addResourceBundle` method or used as the parameter of the built-in.
+
+|===
+|Interpolation | Output | Resource Bundle
+
+m|${'key'?i18n}
+m|value
+m|key=value
+
+m|${'key'?i18n('name')}
+m|value
+m|key=value
+
+m|${missingKey?i18n!'-'}
+m|-
+m|
+
+|===
+
+==== `left_pad` Built-In (since 1.8.1)
+
+This built-in returns a string with the minimum length that was specified as the first parameter. If the original string is already this long or longer, the return value is equal to the original string.
+
+The string is padded on the left with whitespaces or a character from the optional padding parameter. If the padding parameter is longer than one character, then the padding is applied cyclically.
+
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Interpolation | Output
+
+m|${'apple'?left_pad(8)}
+m|␣␣␣apple
+
+m|${'orange'?left_pad(8)}
+m|␣␣orange
+
+m|${'pineapple'?left_pad(8)}
+m|pineapple
+
+m|${'apple'?left_pad(8, '●')}
+m|●●●apple
+
+m|${'apple'?left_pad(8, '●○')}
+m|●○●apple
+
+m|${''?left_pad(40, '▲▼')}
+m|▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼
+
+m|${''?left_pad(40, '•●⬤●')}
+m|•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤
+|===
+
+==== `right_pad` Built-In (since 1.8.1)
+
+This built-in returns a string with the minimum length that was specified as the first parameter. If the original string is already this long or longer, the return value is equal to the original string.
+
+The string is padded on the right with whitespaces or a character from the optional padding parameter. If the padding parameter is longer than one character, then the padding is applied cyclically.
+
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Interpolation | Output
+
+m|${'apple'?right_pad(8)}
+m|apple␣␣␣
+
+m|${'orange'?right_pad(8)}
+m|orange␣␣
+
+m|${'pineapple'?right_pad(8)}
+m|pineapple
+
+m|${'apple'?right_pad(8, '●')}
+m|apple●●●
+
+m|${'apple'?right_pad(8, '●○')}
+m|apple●○●
+
+m|${''?right_pad(40, '▲▼')}
+m|▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼
+
+m|${''?right_pad(40, '•●⬤●')}
+m|•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤●•●⬤
+
+|===
+
+==== `center_pad` Built-In (since 1.9.0)
+
+This built-in returns a string with the minimum length that was specified as the first parameter. If the original string is already this long or longer, the return value is equal to the original string.
+
+The string is padded on both sides with whitespaces or a character from the optional padding parameter. If the padding parameter is longer than one character, then the padding is applied cyclically.
+
+The examples use `␣` as a replacement for the whitespace.
+
+|===
+|Interpolation | Output
+
+m|${'apple'?center_pad(8)}
+m|␣␣apple␣␣
+
+m|${'orange'?center_pad(8)}
+m|␣orange␣
+
+m|${'pineapple'?center_pad(8)}
+m|pineapple
+
+m|${'apple'?center_pad(8, '●')}
+m|●●apple●
+
+m|${'apple'?center_pad(8, '●○')}
+m|●○apple○
+
+|===
+
+==== `mask` Built-In (since 1.9.0)
+
+This built-in returns a masked string with the length of the original string.
+Every none space character is replaced by characters from the mask pattern.
+
+If the first parameter is a string, then it is the mask pattern.
+Otherwise, it is the asterisk character.
+If the mask pattern is longer than one character, then the mask pattern is applied cyclically.
+
+A first number parameter is the number of unmasked characters at the end of the masked string.
+
+|===
+|Interpolation | Output
+
+m|${'secret'?mask}
+m|+******+
+
+m|${'+49 176 04069042'?mask}
+m|+*** *** ********+
+
+m|${'+49 176 04069042'?mask('●')}
+m|●●● ●●● ●●●●●●●●
+
+m|${'+49 176 04069042'?mask(2)}
+m|+*** *** ******42+
+
+m|${'+49 176 04069042'?mask('●○', 2)}
+m|●○● ●○● ●○●○●○42
+
+|===
+
+==== `mask_full` Built-In (since 1.9.0)
+
+This built-in returns a masked string with the length of the original string.
+Every character is replaced by characters from the mask pattern.
+
+If the first parameter is a string, then it is the mask pattern.
+Otherwise, it is the asterisk character.
+If the mask pattern is longer than one character, then the mask pattern is applied cyclically.
+
+A first number parameter is the number of unmasked characters at the end of the masked string.
+
+|===
+|Interpolation | Output
+
+m|${'secret'?mask}
+m|+******+
+
+m|${'+49 176 04069042'?mask_full}
+m|+****************+
+
+m|${'+49 176 04069042'?mask_full('✱')}
+m|✱✱✱✱✱✱✱✱✱✱✱✱✱✱✱✱
+
+m|${'+49 176 04069042'?mask_full(2)}
+m|+**************42+
+
+m|${'+49 176 04069042'?mask_full('●○', 2)}
+m|●○●○●○●○●○●○●○42
+
+|===

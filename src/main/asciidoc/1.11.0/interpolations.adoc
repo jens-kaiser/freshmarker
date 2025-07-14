@@ -1,0 +1,59 @@
+== Interpolations
+
+Interpolations produce output for the values in the model.
+
+When processing an interpolation, there are two mandatory constraints that must be met.
+
+An interpolation must evaluate to a _FreshMarker_ primitive type.
+For example, if the result is a list, an exception is thrown.
+If the result of the evaluation is the special value `NULL`, then an exception is also thrown.
+An interpolation must always return a result.
+
+.Example with Processing Exception
+[source,java]
+----
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
+System.out.println(template.process(Map.of()));
+----
+
+The example above produces an ProcessException, because the interpolation `${example}` is evaluated to `NULL`.
+
+To deal with missing values, _FreshMarker_ provides two operations.
+The _default_ operator `!` and the _exists_ operator `??`.
+
+The _default_ operator replaces a `NULL` value with the specified parameter.
+If the parameter is missing, the value is replaced with an empty text.
+
+.Example with _default_ operator
+[source,java]
+----
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example!'World'}!");
+System.out.println(template.process(Map.of()));
+----
+
+The example above produces the output `Hello World!`, because the interpolation `${example!'World'}` evaluates to `World`
+if no value for `example` is given.
+
+The _exists_ operator evaluates to `true` if the value exists, and it evaluates to `false` if the value is missing.
+
+.Example with _exists_ operator
+[source,java]
+----
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example???then(example, 'World')}!");
+System.out.println(template.process(Map.of()));
+----
+
+The _exists_ example is a bit more complicated because the operator is commonly used in directives.
+
+Since there are enough examples for the _exists_ operator in the directives section, this unusual variant is presented here.
+
+The interpolation consists of the variable `example`, the _exists_ operator `??` and the boolean build-in `?then(example, 'World')`.
+The _exists_ operator is called on the missing value `example` and the result is `false`.
+The boolean built-in returns the first parameter on `true` and the second parameter on `false`.
+In this example the second parameter `'World'` is returned and the result of the whole interpolation is `World`.

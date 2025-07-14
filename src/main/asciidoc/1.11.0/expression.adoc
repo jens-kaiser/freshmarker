@@ -1,0 +1,354 @@
+== Expressions
+
+Expressions are an important part of template evaluation. They are evaluated within _Conditional Directives_ and _Interpolations_.
+
+The expressions are based on _Java_ expressions, but have some differences. The majority of the deviations result from the basic implementation decisions for _FreshMarker_ as a template engine.
+
+As far as practicable, calculations should not take place within the template engine but in the external application. Basically, expressions should be used to make decisions in the _Conditional Directives_ and to influence the output of _Interpolations_.
+
+For this reason, _FreshMarker_ does not have any bit shift operators, for example.
+Variables are assigned values within the template via the _Var_ and _Set Directives_, so _FreshMarker_ does not have an assignment operator or compound operators like _Java_.
+
+=== Literal Expressions
+
+TBD
+
+=== Inline Sequences
+
+TBD
+
+=== Variables
+
+TBD
+
+=== Method Invocation
+
+TBD
+
+=== Conjunctions
+
+|===
+|Operator | Name | Description |Example
+
+m|&
+|Logical And Operator
+|evaluates both operands
+m|true & true
+
+m|∧
+|Unicode Logical And Operator
+|evaluates both operands
+m|true ∧ true
+
+m|&&
+|Conditional And Operator
+|evaluates only the first operand, if it evaluates to false
+m|false && true
+|===
+
+=== Disjunctions
+
+|===
+|Operator | Name | Description |Example
+
+m|\|
+|Logical Or Operator
+|evaluates both operands
+m|true \| true
+
+m|∨
+|Unicode Logical Or Operator
+|evaluates both operands
+m|true ∨ true
+
+m|\|\|
+|Conditional Or Operator
+|evaluates only the first operand, if it evaluates to true
+m|false \|\| true
+
+m|^
+|Logical XOR Operator
+|evaluates both operands
+m|false ^ true
+
+m|⊻
+|Unicode Logical XOR Operator
+|evaluates both operands
+m|false ⊻ true
+|===
+
+=== Range Operator
+
+TBD
+
+=== Equality Operators
+
+This operator works only on _FreshMarkers_ primitive types. There is no Equality defined on _Hashes_, _Sequences_ or _Ranges_.
+
+|===
+|Operator | Name |Example
+
+m|=
+|Equals Operator
+m|x == 1
+
+m|!=
+|Not Equals Operator
+m|x != 2
+
+m|≠
+|Unicode Not Equals Operator
+m|x ≠ 3
+|===
+
+=== Relational Operators
+
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators. 
+
+==== Numerical Comparison Operators
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|x < 4
+
+m|\<=
+|Less Equals Operator
+m|x \<= 5
+
+m|≤
+|Unicode Less Equals Operator
+m|x ≤ 6
+
+m|>
+|Greater Operator
+m|x < 7
+
+m|>=
+|Greater Equals Operator
+m|x >= 8
+
+m|≥
+|Unicode Greater Equals Operator
+m|x ≥ 9
+|===
+
+WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by  parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
+
+==== Version Comparison Operators
+
+NOTE: These operators are in experimental stage.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|'1.0.0'?version < .version
+
+m|\<=
+|Less Equals Operator
+m|'1.0.0'?version \<= .version
+
+m|≤
+|Unicode Less Equals Operator
+m|'1.0.0'?version ≤ .version
+
+m|>
+|Greater Operator
+m|'1.0.0'?version < .version
+
+m|>=
+|Greater Equals Operator
+m|'1.0.0'?version >= .version
+
+m|≥
+|Unicode Greater Equals Operator
+m|'1.0.0'?version ≥ .version
+|===
+
+=== Multiplicative Operators
+
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+
+|===
+|Operator |Name |Example
+
+m|*
+|Multiplication Operator
+m|x * 2
+
+m|×
+|Unicode Multiplication Operator
+m|x × 2
+
+m|/
+|Division Operator
+m|x / 3
+
+m|÷
+|Unicode Division Operator
+m|x ÷ 3
+
+m|%
+|Remainder Operator
+m|x % 4
+|===
+
+=== Additive Operators
+
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+In addition to the additive operators for the numeric types and the string concatenation, there are some overloaded operators for date and period.
+
+|===
+|Operator | Name |Example | Description
+
+m|+
+|String Concatenation Operator
+m|x + ' '
+|
+
+m|+
+|Numerical Addition Operator
+m|x + 3
+|
+
+m|-
+|Numerical Subtraction Operator
+m|x - 4
+|
+
+m|+
+|Temporal Addition Operator
+m|date + period
+|add the period to the given date. This operation is not a commutativity. (experimental)
+
+m|-
+|Temporal Subtraction Operator
+m|date - period
+|subtract the period from the given date. This operation is not a commutativity. (experimental)
+
+m|+
+|Temporal Addition Operator
+m|date + 3
+|add the amount of days to the given date. This operation is not a commutativity. (experimental)
+
+m|-
+|Temporal Subtraction Operator
+m|date - 7
+|subtract the amount of days from the given date. This operation is not a commutativity. (experimental)
+
+m|+
+|Period Addition Operator
+m|period + period
+|add the period to the given period. (experimental)
+
+m|-
+|Period Subtraction Operator
+m|period - period
+|subtract the period from the given period. (experimental)
+
+m|+
+|Period Addition Operator
+m|period + 3
+|add the amount of days to the given period. This operation is not a commutativity. (experimental)
+
+m|-
+|Period Subtraction Operator
+m|period - 7
+|subtract the amount of days from the given period. This operation is not a commutativity. (experimental)
+
+m|+
+|Year Addition Operator
+m|year + 3
+|add the amount of years to the given year. This operation is not a commutativity. (experimental)
+
+m|-
+|Year Subtraction Operator
+m|year - 7
+|subtract the amount of years from the given year. This operation is not a commutativity. (experimental)
+
+m|+
+|List Concatenation Operator
+m|list + list
+|Concatenate the lists to a new list. (experimental)
+|===
+
+=== Negation
+
+|===
+|Operator | Description |Example
+
+m|!
+|Logical Not Operator
+m|!false
+
+m|¬
+|Unicode Logical Not Operator
+m|¬true
+
+|===
+
+=== Unary Numerical Operators
+
+|===
+|Operator | Name |Example
+
+m|+
+|Unary Plus Operator
+m|+4
+
+m|-
+|Unary Minus Operator
+m|-4
+|===
+
+=== Default Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|!
+|Default Operator
+m|value!
+
+m|!
+|Default Operator with parameter
+m|value!"default"
+
+|===
+
+=== Dot Key Operator
+
+TBD
+
+=== Dynamic Key Operator
+
+==== Slicing
+
+TBD
+
+=== Built-In Operator
+
+TBD
+
+==== Existence Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|??
+|Existence Operator
+m|value??
+
+m|∃
+|Unicode Existence Operator
+m|value∃
+
+|===

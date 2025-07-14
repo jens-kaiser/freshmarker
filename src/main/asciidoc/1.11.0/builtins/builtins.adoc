@@ -1,0 +1,119 @@
+== Built-Ins
+
+Built-Ins are interpolation operations which are called on the current value of the interpolation.
+
+.Example with `upper_case` built-in
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder();
+Template template = builder.getTemplate("test", "HELLO ${example?upper_case}!");
+System.out.println(template.process(Map.of("example", "world")));
+----
+
+In the above example the built-in `upper_case` is called on the current value `world` of the interpolation.
+The built-in converts a text to its uppercase form.
+
+Since the capitalization can only be changed for text, the execution of this built-in on other types such as numbers or dates is forbidden. In general, all built-ins are assigned to a type and an exception is thrown if a wrong type is used.
+
+if a built-in seems to apply to multiple types, it's because each type has a built-in with the same name.
+
+It is possible to use more than one built-in in an interpolation.
+The built-ins are called from left to right on the current value of the interpolation.
+This means a built-in is called on the result of a previous built-in or the initial value.
+
+.Example with two built-ins
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder();
+Template template = builder.getTemplate("test", "HELLO ${example?upper_case?lower_case}!");
+System.out.println(template.process(Map.of("example", "WorlD")));
+----
+
+In the example above the `upper_case` built-in is called on the current value `WorlD`.
+The second built-in `lower_case` is called on the current value `WORLD`, which is the result of `upper_case`.
+the result of the interpolation is the result `world` of the second built-in.
+
+=== Null Aware Built-In Handling (since 1.7.4)
+
+Normally, the processing of built-ins ends with an exception if no suitable built-in is found.
+In the case of `NULL` values and empty optionals, this behavior can now be changed using the flags `BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY` and `BuiltinHandlingFeature.IGNORE_NULL` flags.
+In both cases, the actual built-in is ignored and the input value is returned.
+
+.Example with null-aware built-in handling
+[source,java]
+----
+Configuration configuration = new Configuration();
+TemplateBuilder builder = configuration.builder().with(BuiltinHandlingFeature.IGNORE_NULL);
+Template template = builder.getTemplate("test", "Hello ${example?upper_case?lower_case!'World'}!");
+assertEquals("Hello World", template.process(Map.of()));
+----
+
+The example does not generate an exception if `example` contains the value `NULL`,
+because both build-ins pass on the value instead of throwing an exception.
+A _default operator_ must be added at the end so that the interpolation as a whole does not throw an exception.
+
+[NOTE]
+====
+Instead of setting both features, an _experimental_ alternative built-in operator can also be used (`!!`, `\->`, `→`).
+
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder();
+Template template = builder.getTemplate("test", "Hello ${example->upper_case->lower_case!'World'}!");
+assertEquals("Hello World", template.process(Map.of()));
+----
+====
+
+=== Log Built-In
+
+The special built-in `log` can be used to inspect the current value in an expression. The built-in logs the current content of the expression to the logger `builtin.logging` and returns the current value.
+
+.Example log built-in
+[source,freshmarker]
+----
+example?log?upper_case?log?lower_case?log
+----
+
+This expression produces the following log.
+
+.Example log output
+[source,freshmarker]
+----
+20:25:05 [main] DEBUG builtin.logging -- input:1:3 'example' => World
+20:25:05 [main] DEBUG builtin.logging -- input:1:3 'example?log?upper_case' => WORLD
+20:25:05 [main] DEBUG builtin.logging -- input:1:3 'example?log?upper_case?log?lower_case' => world
+----
+
+include::builtins-string.adoc[]
+
+include::builtins-boolean.adoc[]
+
+include::builtins-number.adoc[]
+
+include::builtins-character.adoc[]
+
+include::builtins-datetime.adoc[]
+
+include::builtins-date.adoc[]
+
+include::builtins-time.adoc[]
+
+include::builtins-temporals.adoc[]
+
+include::builtins-sequence.adoc[]
+
+include::builtins-range.adoc[]
+
+include::builtins-looper.adoc[]
+
+include::builtins-enum.adoc[]
+
+include::builtins-filepath.adoc[]
+
+include::builtins-locale.adoc[]
+
+include::builtins-version.adoc[]
+
+include::builtins-random.adoc[]
+
+include::builtins-types.adoc[]

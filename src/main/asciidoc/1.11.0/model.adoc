@@ -1,0 +1,332 @@
+== Model
+
+The template engine needs data to fill the interpolations.
+Because it is an embedded _Java_ engine, normal _Java_ classes are used.
+A map is always used as the model for calling the engine.
+
+=== Types
+
+By default, the template engine supports `String`, Number like `Integer`, `Long`, `Double` and `Float`, `Boolean` and Date Types as base types.
+In addition, the engine also knows `List`, `Map`, Sequences, Records and Beans.
+
+The top level model is a `Map<String, Object>`, which contains the top level values by their names.
+
+.Example Model
+[source,java]
+----
+Map<String, Object> model = Map.of("father", father, "mother", mother);
+----
+
+The following tables show all model types supported by _FreshMarker_.
+Because _FreshMarker_ can be extended, there are more types available
+footnote:[The library https://gitlab.com/schegge/telephone[Telephone] adds the `InternationalPhoneNumber` support.].
+
+Without a package specification, the class names refer to the classes of the same name from the JDK.
+
+.Supported Model Types
+|===
+|Type | _Java_ Type(s) | _FreshMarker_ primitive type
+
+|String|`String`, `StringBuilder`, `StringBuffer`|yes
+|String|`UUID`, `URI`, `URL`|yes
+|Number|`BigInteger`, `Long`, `Integer`, `Short`, `Byte`|yes
+|Number|`long`, `int`, `short`, `byte`, `double`, `float`|yes
+|Number|`BigDecimal`, `Double`, `Float`|yes
+|Number|`AtomicLong`, `AtomicInteger`|yes
+|Boolean|`Boolean`, `boolean`, `AtomicBoolean`|yes
+|Character|`Character`, `char`|yes
+|DateTime|`Instant`, `ZonedDateTime`, `OffsetDateTime`, LocalDateTime`, `Date`|yes
+|Date|`LocalDate`, `java.sql.Date`|yes
+|Time|`LocalTime`, `java.sql.Time`|yes
+|Year|`Year`|yes
+|YearMonth|`YearMonth`|yes
+|MonthDay|`MonthDay`|yes
+|Duration|`Duration`|yes
+|File|`File`|yes
+|Path|`Path`|yes
+|Period|`Period`|yes
+|Sequence|Lists|no
+|Range|-|no
+|Slice|-|no
+|Map|Maps|no
+|Bean|Beans|no
+|Record|Top-Level Records|no
+|Enum|Enums|yes
+|Null|-|yes
+|Locale|`Locale`|yes
+|Version|-|yes
+|Random|`Random`, `SecureRandom`| yes
+|===
+
+CAUTION: The types _File_, _Path_ and _Random_ are part of the _FreshMarker File_ respectively _FreshMarker Random_
+
+=== Primitive Types
+
+_FreshMarker_ distinguishes between primitive and non-primitive types.
+All primitive types, except _Null_, have a default representation via their `toString` method.
+
+NOTE: This must be considered with the enums, because the `toString` method can be overridden.
+
+Other types, such as ranges, slices, sequences and hashes are only permitted in expressions.
+
+Literals of primitive types can be used for Null, String, Boolean, Integer and Double in the templates.
+
+|===
+| Type | Examples
+| Null | null
+| String | 'test', '', "test", ""
+| Integer | 1234, 42
+| Double | 12.34, 42.0
+|===
+
+=== Sequences
+
+_Sequences_ represent all data structures that implement `java.util.List`.
+
+The elements of sequences can be accessed via the _hash operator_ `sequence[_index_]` or the <<_list_slices,slice>> operator.
+
+.Example Sequence hash operator
+[source,subs="verbatim,quotes"]
+----
+sequence[42]
+sequence[index] //  index is a variable coatining the number 42
+----
+
+The expression index can be a value between `0` and the length of the sequence. Other values lead to an error.
+
+It is possible to use literals of sequences in templates, whereby the elements are written comma-separated between square brackets.
+
+.Example Sequence literals
+[source,subs="verbatim,quotes"]
+----
+['a','b','c']
+[1,3,5,7,9]
+----
+
+=== Hashes
+
+_Hashes_ represent data structures in which a data element is accessed via a `String` key. This includes all implementations of `java.util.Map` that define a `String` key.
+_FreshMarker_ also supports _Java Beans_ and _Records_ as _Hash_. In this case, the data elements are accessed via the attribute names.
+The elements can be accessed via the _dot operator_ `hash._name_` or the _hash operator_ `hash['_name_']`.
+
+.Example Hash dot operator
+[source,subs="verbatim,quotes"]
+----
+hash.value
+hash['value']
+hash[key]      // key is a variable coatining the string 'value'
+----
+
+It is possible to use literals of hashes in templates, whereby the key-value pairs are written comma-separated between curly brackets.
+
+.Example Hash literals
+[source,subs="verbatim,quotes"]
+----
+{ 'firstname': 'Jens', 'lastname': 'Kaiser' }
+{ 'boolean': true, 'integer': 42 }
+----
+
+NOTE: Up to version 1.11.0, only primitive values could be specified in hash literals.
+This can be configured now via `SystemFeature.NON_PRIMITIVE_HASH_LITERAL_VALUES`. See <<system-feature>>.
+
+=== Ranges
+
+Ranges are data structures that represent an interval with a lower limit and an optional upper limit.
+
+Ranges without an upper limit are called _right-unlimited ranges_, ranges with an upper limit are called _right-limited ranges_.
+If the size of the interval is specified instead of the upper limit, then this range is called a _length-limited range_.
+
+Ranges differ from other types because they only exist as literals in the templates. Ranges cannot be injected via the model.
+
+==== Right-unlimited Range
+
+In principle, a right-unlimited range has no upper limit and can therefore only be used in a few places.
+
+The main area of application is slicing, where a part is cut out of a list, `String` or range.
+3
+A right unlimited range has the form `_x_..` where `_x_` can be any numerical expression.
+
+.Example right-unlimited ranges
+[source,subs="verbatim,quotes"]
+----
+1..   // lower bound 1
+-10.. // lower bound -10
+a..   // lower bound in the variable _a_ (must be a numeric value)
+----
+
+==== Right-limited Range
+
+A _right-limited range_ has a lower and an upper limit. It also represents a sequence of numbers and can be used in this way in a list directive. A _right-limited range_ has the form `_x_.._y_` or  `_x_..+++<+++_y_` where `_x_` and `_y_` can be any numeric expression. The second form describes a range with an exclusive upper limit. This form is called a _right-limited exclusive range_.
+
+.Example right-limited ranges
+[source,subs="verbatim,quotes"]
+----
+1..10   // lower bound 1 and upper bound 10
+-10..<0 // lower bound -10 and upper bound -1
+a..b    // lower bound in variable _a_ and upper bound in variable _b_
+10..0   // lower bound 1 and upper bound 10
+a..<b   // lower bound in variable _a_ and an exclusive upper bound in variable _b_
+----
+
+As can be seen in the examples, the lower limit may be greater than the upper limit. This means that the representation as a sequence cannot be monotonically increasing, but can be monotonically decreasing. In the case of a monotonically increasing sequence, we speak of a _legal range_, otherwise of an _inverse range_.
+
+==== Length-limited Range (since 1.6.4)
+
+A _length-limited range_ is a _right-limited range_ with a different syntax `_a_..*_c_`. 
+Where `a` again corresponds to the lower limit of the range and `c` indicates the size of the range.
+
+If the size of the range is positive, then the upper limit is greater than the lower limit. This results in a _legal right-limited range_. If the size of the range is negative, then the upper limit is smaller than the lower limit. This results in an _inverted right-limited range_.
+
+.Example length-limited ranges
+[source,subs="verbatim,quotes"]
+----
+1..\*10  // lower bound 1 and upper bound 10
+5..*5   // lower bound 5 and upper bound 9
+4..*-5  // lower bound 4 and upper bound 0
+a..*b   // lower bound in variable _a_ and an range size in variable _c_
+----
+
+=== Slices
+
+`Slices` define slice operators on other data types.
+These operators can be applied to `Range`, `Sequence`, `String` and `Number`  values.
+The slices are described by range expressions in square brackets.
+The range specifies the lower and upper limits of the `Slice`.
+With _inverted ranges_, the slice operation produces an inverted result.
+
+==== Empty Slices
+
+Slices based on empty ranges can also be used for slicing.
+However, they only ever generate an empty object of the respective target type.
+This means an empty `Range`, an empty `Sequence`, an empty `String` and `NULL` as an empty `Number`.
+
+==== List Slices
+
+The slice operator on `List` values extracts a sublist from a given list.
+The lower and upper bounds are the index in the source list for the first and last entry of the new list.
+For slices without an upper bound, the last entry of the source list is the last entry of the new list.
+
+Because the first entry of a list is zero in the Java Universe, a slice with a lower bound below zero is forbidden.
+
+In the case of a right-limited range, the upper bound must exist in the source list. Otherwise, a processing error will occur.
+
+.Example `List` slices
+[source,subs="verbatim,quotes"]
+----
+${['a','b','c','d','e','f','g'][1..4]?join(';')} // => b:c:d:e
+${['a','b','c','d','e','f','g'][1..]?join(';')}  // => b;c;d;e;f;g
+${['a','b','c','d','e','f','g'][4..1]?join(';')} // => e;d;c;b
+----
+
+[TIP]
+====
+To imitate the behavior of a Java sublist with an exclusive upper bound, a right-limited range with an exclusive upper bound can be used.
+
+.Example `List` slice with exclusive upper bound
+[source,subs="verbatim,quotes"]
+----
+${['a','b','c','d','e','f','g'][1..<5]?join(';')} // => b:c:d:e
+----
+====
+
+==== Range Slices
+
+The slice operator on `Range` values extracts a range form a given range.
+For slices without an upper bound, the upper bound of a limited source range is the upper bound of the new range.
+
+.Example `Range` slices
+[source,subs="verbatim,quotes"]
+----
+${(1..10)[1..4]?join(';')} // => 2;3;4;5
+${(1..10)[1..]?join(';')}  // => 2;3;4;5;6;7;8;9;10
+${(1..10)[4..1]?join(';')} // => 5;4;3;2
+----
+
+==== String Slices
+
+The slice operator on `String` values extracts a substring from a given string.
+The lower and upper bounds are the index in the source string for the first and last character of the new string.
+For slices without an upper bound, the last character of the source string is the last character of the new string.
+
+Because the first index of a string is zero in the Java Universe, a slice with a lower bound below zero is forbidden.
+
+In the case of a right-limited slice, the upper bound must exist in the source string. Otherwise, a processing error will occur.
+
+.Example `String` slices
+[source,subs="verbatim,quotes"]
+----
+${'abraxas'[1..4]} // => brax
+${'abraxas'[1..]}  // => braxas
+${'abraxas'[4..1]} // => xarb
+----
+
+[TIP]
+====
+To imitate the behavior of a Java substring with an exclusive upper bound, a right-limited range with an exclusive upper bound can be used.
+
+.Example `String` slice with exclusive upper bound
+[source,subs="verbatim,quotes"]
+----
+${'abraxas'[1..<5]} // => brax
+----
+====
+
+=== Optional Values
+
+Optional values of type `java.util.Optional` are also supported in the model.
+Empty optionals are interpreted as `NULL` and all other values are interpreted as instances of the generic type.
+
+An optional can therefore be checked with the existence operator and the default operator can be used to determine a replacement value for empty optionals.
+
+|===
+| Java | FreshMarker
+
+|`optional.isPresent()`
+|${optional??}
+
+|`optional.isEmpty()`
+|${optional == null}
+
+|`optional.orElse(42)`
+|${optional!42}
+|===
+
+=== Lazy Values
+
+Normally, the values are written directly into the model.
+Sometimes the cost of creating optional values is quite high.
+In that case, it would be a waste to calculate the values if they are not used.
+However, since _FreshMarker_ needs the values in the model, a compromise is made.
+Instead of calculating the values immediately and placing them in the map, the calculation is inserted into the model as a `TemplateObjectSupplier`.
+Their actual values are lazy evaluated only when accessed during processing.
+
+.Example lazy values
+[source,java]
+----
+Map<String, Object> model = Map.of(
+  "familyTree", TemplateObjectSupplier.of(() -> fetchTreeFromDataBase(name)),
+  "name", "Kayser");
+template.process(model);
+----
+
+In the example above, the `familyTree` value is lazy evaluated, when the variable is accessed during template processing.
+
+=== Forbidden Types (deprecated since 1.10.0)
+
+CAUTION: As FreshMarker does not execute any methods on model classes, there is no risk of injection. This mechanism will therefore be removed with version 2.0.0.
+
+Although many Java types are supported directly or as a Java Bean, some classes cannot be used. For security reasons, all classes from the `java`, `javax`, `sun` and `com.sun` packages are ignored.
+
+if you desperately need one of these classes, you can declare it as an exception.
+
+.Example allowed system classes
+[source,java]
+----
+configuration.getSecurity().addAllowedClass(Runtime.class);
+configuration.getSecurity().addAllowedPackages(java.lang.annotation.Annotation.class);
+configuration.getSecurity().addAllowedPackages("java.io");
+----
+
+NOTE: Of course, it only makes sense to allow classes that can also be interpreted by _FreshMarker_. Alternatively, a class can also be integrated via _Custom String Types_ or a _Plug-in_.
+
+In the example above, the class `java.lang.Runtime` and all classes in the packages `java.lang.annotation` and `java.io` and all of their subpackages are allowed.

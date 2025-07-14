@@ -1,0 +1,38 @@
+=== Additional Built-Ins
+
+`BuiltInProvider` defines the API for `Extensions` that wish to add new built-ins.
+
+Each built-in must implement the `BuiltIn` interface.
+
+.Example BuiltIn
+[source,java,role="primary"]
+----
+public class ExampleBuiltIn implements BuiltIn {
+    public TemplateObject apply(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
+        new TemplateString("EXAMPLE: " + string);
+    }
+}
+----
+
+.Example BuiltIn as Lambda
+[source,java,role="secondary"]
+----
+(value, parameters, context) -> new TemplateString("EXAMPLE: " + value);
+----
+
+Since each `BuiltIn` is assigned to a model type and has a name, the `BuiltInProvider` returns the built-ins as `Register<Class<? extends TemplateObject>, String, BuiltIn>`.
+
+The `BuiltInRegister` is a `Register` implementation and can be used in a custom `BuiltInProvider`.
+
+.Usage of BuiltInRegister
+[source,java]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    @Override
+    public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
+        BuiltInRegister register = new BuiltInRegister();
+        register.add(TemplateString.class, "example", new ExampleBuiltIn());
+        return register;
+    }
+}
+----

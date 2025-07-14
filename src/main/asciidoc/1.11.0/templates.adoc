@@ -1,0 +1,384 @@
+== Templates
+
+A template engine generates output by creating a representation of a model using instructions in a template.
+
+This complicated sentence can be better explained with a small example.
+
+.Example Template
+[source,freshmarker]
+----
+Hello ${example}!
+----
+
+The example template contains three parts.
+A first literal text fragment ``Hello ``, an interpolation fragment `${name}` and a second literal text fragment `!`.
+Literal text means the fragment is not interpreted in any particular way
+footnote:[This is an example in the introduction, sometimes it's different, of course.].
+
+=== Interpolations
+
+The interpolation is a fragment, which is filled with data from the model.
+The name `example` in the curly brackets is the name by which a value in the model can be identified.
+
+.Example Model
+[source,java]
+----
+Map<String, Object> model = Map.of("example", "World");
+----
+
+The example model contains a value `World` with the name `example`.
+
+When the example template is processed, the template engine produces the output `Hello World!` based on the example model.
+
+=== Directives
+
+In addition, there is the possibility of hiding fragments in the template or repeating them several times.
+There are special constructs for this, called directives.
+
+.Example Template with directive
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#if example=='World'>*
+Hello ${example}!
+*<#else>*
+Hallo ${example}!
+*</#if>*
+----
+
+Directives look like _HTML_ tags with a # before the tag name.
+In this example, the English `Hello` is only written if the value is `World`.
+In all other cases the German `Hallo` is written.
+
+=== Built-Ins
+
+Another important template concept is the built-in.
+The result of an interpolation is changed by the built-ins.
+The interpolation from the last example produces the output `World` from the value `World`.
+If the interpolation is extended to `${example?upper_case}` then the interpolation produces `WORLD`.
+In this case the built-in `upper_case` has been added.
+Depending on the type of value, a wide variety of built-ins can be used.
+footnote:[The library https://gitlab.com/schegge/holidays[Holidays] adds Built-Ins for Holidays].
+
+=== User Directive
+
+In addition to the standard directives, _FreshMarker_ also supports _User Directives_.
+
+.Log User Directive
+[source,freshmarker]
+----
+<@log level='info' message='test'/>
+----
+
+_User directives_ can be defined via _Macro directives_ or by implementing the `UserDirective` Interface.
+
+.UserDirective Interface
+[source,java]
+----
+include::../../java/org/freshmarker/api/UserDirective.java[lines="9.."]
+----
+
+It can be registered to the `Configuration` by the `registerUserDirective` method or by the <<extension_api>>.
+
+.Example _User Directive_ `doubles`
+[source,java]
+----
+configuration = new Configuration();
+configuration.registerFunction("doubles",
+    (context, args, body) -> { body.process(context); body.process(context); }
+);
+----
+
+=== Functions
+
+Additional functionality can be added to the template-engine interpolations by _Functions_.
+
+.Function Interface
+[source,java]
+----
+include::../../java/org/freshmarker/api/TemplateFunction.java[lines="7..-1"]
+----
+
+A _Function_ is a Java class implementing the functional interface `TemplateFunction`.
+It can be registered to the `Configuration` by the `registerFunction` method or by the <<extension_api>>.
+
+.Example Custom Function `abs` and `avg`
+[source,java]
+----
+configuration = new Configuration();
+
+configuration.registerFunction("abs", (context, args) ->
+    args.get(0).evaluateToObject(context).asNumber().map(TemplateNumber::abs).orElseThrow());
+
+configuration.registerFunction("avg", (context, args) ->
+    args.stream().map(o -> o.evaluate(context, TemplateNumber.class)).reduce(TemplateNumber::add).orElseThrow().divide(new TemplateNumber(args.size())));
+----
+
+Each registered _Function_ can be called via a function call with its name as the function name.
+
+.Example Usage of Custom Function
+[source,freshmarker]
+----
+<#-- result 15 -->
+${avg(10, 20)}
+
+<#-- result 25 -->
+${avg(10, 20, 30, 40)}
+
+<#!-- result 10 -->
+${abs(-10)}
+----
+
+=== Output Format and Escaping
+
+Every Template is associated with an Output Format.
+The Output Format defines the escaping rule for dynamically generated output.
+Without escaping, there is a security risk known as template injection.
+With template injection, dangerous fragments are injected into the output.
+
+.Example Template Injection
+[source,freshmarker,role="primary"]
+----
+<h1>${title}</h1>
+----
+
+.Model with Javascript Injection
+[source,freshmarker,role="secondary"]
+----
+Map<String, Object> model = Map.of("title", "<script>alert("hallo")</script>");
+----
+
+.HTML Output
+[source,freshmarker,role="secondary"]
+----
+<h1>&lt;script&gt;alert(&quot;hallo&quot;)&lt;/script&gt;</h1>
+----
+
+.Plain Text Output
+[source,freshmarker,role="secondary"]
+----
+<h1><script>alert("hallo")</script></h1>
+----
+
+The example shows an _HTML_ fragment in which the text for a heading is to be inserted.
+Without escaping, the script fragment is inserted and a more or less dangerous _Javascript_ is executed instead of displaying a title.
+
+_FreshMarker_'s escape mechanism replaces the necessary meta characters of an output format to neutralize them.
+The following table lists the supported output formats and their meta character replacements.
+the last two lines indicate how comments can be inserted into the output using the @log directive. The `␣` character is used to indicate whitespaces in prefixes and suffixes.
+
+.Output Formate
+|===
+| Name | Meta Characters | Replacements | Comment Prefix | Comment Suffix
+
+m| HTML
+| `<`, `>`, `&`, `"`, `'`
+| `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
+| `<!--␣`
+| `␣-\->`
+
+m| XHTML
+| `<`, `>`, `&`, `"`, `'`
+| `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `&#39`;
+| `<!--␣`
+| `␣-\->`
+
+m| XML
+| `<`, `>`, `&`, `"`, `'`
+| `\&lt;`, `\&gt;`, `\&amp;`,`\&quot;`, `\&apos;`;
+| `<!--␣`
+| `␣-\->`
+
+m| ADOC
+2+| no escaping
+| `////\n`
+| `\n////\n`
+
+m| plainText
+2+| no escaping
+2+| no comments
+
+m| Script
+2+| no escaping
+| `/*␣`
+| `␣*/`
+
+m| JavaScript
+2+| no escaping
+| `/*␣`
+| `␣*/`
+
+m| CSS
+2+| no escaping
+| `/*␣`
+| `␣*/`
+
+m| JSON
+2+| no escaping
+2+| no comments
+|===
+
+Custom output formats can be registered to the `Configuration` by the `registerOutputFormat` method or by the <<extension_api>>.
+
+=== Template Loading
+
+The `Configuration` (`DefaultTemplateBuilder` since 1.5.0) class offers four methods for loading templates.
+
+.Template Loading Methods
+|===
+| Method | Description
+
+| `Template getTemplate(Path path);`
+| Load template from path with default charset
+
+| `Template getTemplate(Path path, Charset charset);`
+| Load template from path with the given charset
+
+| `Template getTemplate(String name, Reader reader);`
+| Read template from the given reader
+
+| `Template getTemplate(String name, String content);`
+| Read template from the given string
+
+| `Template getTemplate(Path importPath, String name, Reader reader);`
+| Read template from the given reader
+
+| `Template getTemplate(Path importPath, String name, String content);`
+| Read template from the given string
+|===
+
+Regardless of the method selected for loading the template, the imports are loaded by the configured `TemplateLoader`.
+
+By default, the `DefaultFileSystemTemplateLoader` is configured.
+This loads all imports from the file system.
+
+The `FileSystemTemplateLoader` can also be used with other file system implementations.
+
+.`TemplateLoader` with the `ZipFileSystem`
+[source,java]
+----
+FileSystem fs = FileSystems.newFileSystem(Paths.get("imports.zip"));
+configuration.setTemplateLoader(new FileSystemTemplateLoader(fs));
+----
+
+In this example, the imports are loaded from the zip archive `imports.zip`.
+
+Custom template loaders can also be used instead of the `DefaultFileSystemTemplateLoader`.
+They have to implement the `TemplateLoader` interface.
+
+[source,java]
+----
+public interface TemplateLoader {
+    String getImport(Path path, String filename, Charset charset) throws IOException;
+
+    default String getImport(Path path, String filename) throws IOException {
+        return getImport(path, filename, Charset.defaultCharset());
+    }
+}
+----
+
+The `filename` parameter is the name of the import file and `path` is the parent directory of the template.
+The parent directory can be used to load import files located relative to the template.
+
+NOTE: For templates loaded by `String` or `Reader` the path is the current directory.
+
+=== Template Caching
+
+_FreshMarker_ does not know any caching mechanism, but you can store and reuse templates with any technology (_Maps_, _Singletons_, _Caches_) you like.
+
+=== Partial Reduction
+
+NOTE: This feature is in an experimental stage and should be used with care.
+
+When processing a template, all necessary data must be available in the model.
+Otherwise, an exception is thrown if data is missing during processing.
+If the template contains values that remain the same for a large number of evaluations,
+the template can be preprocessed.
+
+.Example Template with reduction on company
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """
+   <#list employees as e>${e.firstname}.${e.lastname}@${company.domain}</#list>
+   """);
+Map<String, Object> reductionMap = Map.of("company", new Company("schegge.de"));
+Template reducedTemplate = template.reduce(reductionMap);
+----
+
+The reduce method receives some of the necessary data and partially evaluates the template.
+As a result, it delivers a new template in which part of the structure has been simplified.
+
+
+[TIP]
+====
+Although the replaced variables do not have to be passed to the `process` method later, it is recommended to make them available anyway.
+If a variable could not be replaced completely by _Partial Reduction_, there will otherwise be errors.
+
+.Best Practices with Partial Reduction Data
+[source,java]
+----
+Map<String, Object> reductionMap = Map.of("company", new Company("schegge.de"));
+
+Template reducedTemplate = template.reduce(reductionMap);
+
+List<Employee> employees = List.of(new Employee("Jens", "Kaiser"));
+
+Map<String, Object> processMap = new HashMap<>();
+processMap.put("employees", employees);
+processMap.putAll(reductionMap);
+
+String content = reducedTemplate.process(processMap);
+----
+====
+
+_Partial Reduction_ works at the level of directives and interpolations. The reduction is performed differently depending on the type of directive.
+
+==== The special nature of the Default and Exist Operators
+
+_Partial Reduction_ evaluates all expressions based on the available data. Where the evaluation can be carried out in full, a reduction is possible; where the evaluation runs into an error because data is missing, no reduction can take place.
+
+The default and exist operators have a special quality. Their mode of operation includes the reaction to non-existent data. Therefore, only their reactions to existing data can be taken into account in the reduction. The missing values are only not specified in the reduction, the normal evaluation can provide these values later. Therefore, evaluating NULL values during reduction is considered an error.
+
+==== Reducing Interpolations
+
+Partial reduction replaces interpolations with text fragments if the expression can be fully evaluated within the interpolation.
+
+.Example Template with reduction on If Direktive
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
+   ${company.domain?upper_case}
+   """);
+Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+----
+
+In this example, the interpolation is replaced by the text `SCHEGGE.DE`.
+
+==== Reducing Conditionals
+
+The conditional directives _If_ and _Switch_ are reduced by replacing their fragment with the block whose condition is fulfilled.
+If an error occurs during the evaluation of a condition because data is missing, the conditional directive is not replaced.
+
+.Example Template with reduction on If Direktive
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
+   <#if company.domain??>
+   ${e.firstname}.${e.lastname}@${company.domain}
+   <#else>
+   No email address
+   </#if>
+   """);
+Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+----
+
+In this example, the _If Directive_ can be replaced by `${e.firstname}.${e.lastname}@schegge.de` because the expression `company.domain??` could be evaluated.
+
+==== List Unrolling (since 1.10.0)
+
+_Partial Reduction_ on _List Directives_ is executed by unrolling the loops.
+Unrolling is used by default only if there is a maximum of five entries in the list.
+
+This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.

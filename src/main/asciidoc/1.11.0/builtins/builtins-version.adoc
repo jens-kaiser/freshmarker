@@ -1,0 +1,90 @@
+=== Version Built-Ins
+
+The Built-Ins in the examples operate on the version value `1.0.2`.
+
+==== `major` Built-In
+
+This built-in returns the major part of the version value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.version?major}
+m|1
+m|number
+
+|===
+
+==== `minor` Built-In
+
+This built-in returns the minor part of the version value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.version?minor}
+m|0
+m|number
+
+|===
+
+==== `patch` Built-In
+
+This built-in returns the patch part of the version value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.version?patch}
+m|2
+m|number
+
+|===
+
+==== `is_before` Built-In
+
+This built-in return `true` if the version is before the specified parameter, otherwise `false`. The type of the parameter is string or version.
+
+|===
+|Interpolation | Output | Type
+
+m|${.version?is_before('2.0.0')}
+m|yes
+m|boolean
+
+m|${.version?is_before(.version)}
+m|no
+m|boolean
+|===
+
+==== `is_equal` Built-In
+
+This built-in return `true` if the version is equal the specified parameter, otherwise `false`. The type of the parameter is string or version.
+
+|===
+|Interpolation | Output | Type
+
+m|${.version?is_equal('1.0.2')}
+m|yes
+m|boolean
+
+m|${.version?is_equal('1.2.3')}
+m|no
+m|boolean
+|===
+
+==== `is_after` Built-In
+
+This built-in return `true` if the version is after the specified parameter, otherwise `false`. The type of the parameter is string or version.
+
+|===
+|Interpolation | Output | Type
+
+m|${.version?is_after('1.0.0')}
+m|yes
+m|boolean
+
+m|${.version?is_after(.version)}
+m|no
+m|boolean
+|===

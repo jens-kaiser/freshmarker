@@ -1,0 +1,114 @@
+=== Random Built-Ins
+
+[NOTE]
+====
+The Random built-ins are included via an additional artefact.
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+  <groupId>de.schegge</groupId>
+  <artifactId>{plugin-random-version}</artifactId>
+  <version>1.0.1</version>
+</dependency>
+----
+====
+
+The examples uses the `.random` built-in variable containing a `SecureRandom` value and variable `abraxas` containing a `Random` value.
+
+==== `boolean` Built-In
+
+This built-in returns a random boolean value.
+
+|===
+| Interpolation | Output | Type
+
+m|${.random?boolean}
+m|true
+|boolean
+
+m|${abraxas?boolean}
+m|false
+|boolean
+|===
+
+==== `int` Built-In
+
+This built-in returns a random int value.
+If a parameter is specified, the built-in returns a number between 0 and the parameter.
+
+|===
+| Interpolation | Output | Type
+
+m|${.random?int}
+m|42
+|int
+
+m|${abraxas?int(23)}
+m|5
+|int
+|===
+
+==== `double` Built-In (since 1.2.0)
+
+This built-in returns a random double value.
+If a parameter is specified, the built-in returns a number between 0 and the parameter.
+
+|===
+| Interpolation | Output | Type
+
+m|${.random?double}
+m|-34.56
+|double
+
+m|${abraxas?double(1)}
+m|0.5
+|double
+|===
+
+==== `item` Built-In
+
+This built-in returns a random item from a sequence.
+
+|===
+| Interpolation | Output
+
+m|${.random?item([2, 3, 4, 5, 6])}
+m|6
+|===
+
+==== `uuid` Built-In
+
+This built-in returns a random UUID as string.
+
+|===
+| Interpolation | Output | Type
+
+m|${abraxas?uuid)}
+m|696a2615-ef21-40f3-b42b-905a8097927a
+m|string
+|===
+
+==== `sentence` Built-In (since 1.2.0)
+
+This built-in returns a random sentence as string.
+
+|===
+| Interpolation | Output | Type
+
+m|${abraxas?sentence}
+m|Quibusdam distinctio sed vitae minus non error.
+m|string
+|===
+
+==== `paragraph` Built-In (since 1.2.0)
+
+This built-in returns a random paragraph as string.
+
+|===
+| Interpolation | Output | Type
+
+m|${abraxas?paragraph}
+m|Ex quis ut ut voluptatem autem officia. Occaecati non mollitia ipsum dignissimos eligendi tempore. Dolor tenetur illo in inventore.
+m|string
+|===

@@ -1,0 +1,55 @@
+=== Locale Built-Ins
+
+The Built-Ins in the examples operate on the locale value `Locale.GERMANY`.
+
+==== `lang`, `language` Built-In
+
+This built-in returns the language part of the locale value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.locale?lang}
+m|de
+m|string
+
+m|${.locale?language}
+m|de
+m|string
+|===
+
+==== `language_name` Built-In (since 1.7.5)
+
+This built-in returns the language name of the locale value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.locale?language_name}
+m|Deutsch
+m|string
+|===
+
+==== `country` Built-In
+
+This built-in returns the country part of the locale value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.locale?country}
+m|DE
+m|string
+|===
+
+==== `country_name` Built-In (since 1.7.5)
+
+This built-in returns the country name of the locale value.
+
+|===
+|Interpolation | Output | Type
+
+m|${.locale?country_name}
+m|Deutschland
+m|string
+|===

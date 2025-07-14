@@ -365,7 +365,7 @@
                 <version>${asciidoctor-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>output-html</id>
+                        <id>output-html-1.11.0</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
@@ -374,18 +374,42 @@
                         <configuration>
                             <sourceDocumentName>manual.adoc</sourceDocumentName>
                             <backend>html5</backend>
+                            <sourceDirectory>src/main/asciidoc/1.11.0</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-docs/1.11.0</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/asciidoc</directory>
-                                    <excludes>
-                                        <exclude>**/*.adoc</exclude>
-                                    </excludes>
+                                    <directory>src/main/asciidoc/images</directory>
                                 </resource>
                             </resources>
                             <attributes>
-                                <project-version>${project.version}</project-version>
-                                <plugin-file-version>1.6.1</plugin-file-version>
-                                <plugin-random-version>1.5.1</plugin-random-version>
+                                <project-version>1.11.0</project-version>
+                                <plugin-file-version>1.7.0</plugin-file-version>
+                                <plugin-random-version>1.6.0</plugin-random-version>
+                                <source-highlighter>highlight.js</source-highlighter>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>output-html-2.0.0</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                            <goal>zip</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDocumentName>manual.adoc</sourceDocumentName>
+                            <backend>html5</backend>
+                            <sourceDirectory>src/main/asciidoc/2.0.0</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-docs/2.0.0</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/asciidoc/images</directory>
+                                </resource>
+                            </resources>
+                            <attributes>
+                                <project-version>2.0.0</project-version>
+                                <plugin-file-version>2.0.0</plugin-file-version>
+                                <plugin-random-version>2.0.0</plugin-random-version>
                                 <source-highlighter>highlight.js</source-highlighter>
                             </attributes>
                         </configuration>

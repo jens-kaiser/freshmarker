@@ -1,0 +1,58 @@
+=== Switch/Case/Default Directive
+
+This directive generates conditional output.
+Each `case` statement handles a possible outcome of the evaluation.
+With the `switch` directive, the expressions of the `case` statements are compared one after the other with the expression in the `switch` statement. The first `case` statement that matches is used as the output.
+If none of the specified `case` statements match, then the optional `default` statement is used.
+
+NOTE: The _FreshMarker_ _Switch Directive_ does not support fall-through, so `break` statements are unnecessary and therefor not supported.
+
+.Example with different types
+[source,freshmarker]
+----
+<#switch color>
+<#case 'RED'>#FF0000
+<#case 16711680>#FF0000
+<#case 'GREEN'>#00FF00
+<#case 65280>#00FF00
+<#case 'BLUE'>#0000FF
+<#case 255>#0000FF
+<#default>${color}
+</#switch>
+----
+
+.Example with variables
+[source,freshmarker]
+----
+<#switch color>
+<#case foreground>color: ${color}
+<#case background>background-color: ${color}
+</#switch>
+----
+
+The `case` statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES`.footnote:switch-flag[feature for switch directives exists since version 1.7.1]
+
+In addition, the individual `case` statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_CASES` feature. This feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_CASES` is also activated.footnote:switch-flag[]
+
+=== Switch/On/Default Directive (since 1.7.1)
+
+This directive generates conditional output.
+Each `on` statement handles a possible outcome of the evaluation.
+With the `on` directive, the expressions of the `on` statements are compared one after the other with the expression in the `sitch` statement. The first `on` statement that matches is used as the output.
+If none of the specified `on` statements match, then the optional `default` statement is used.
+
+The difference between `on` and `case` statement is that an `on` statement can contain several comparison expressions.
+
+[source,freshmarker]
+----
+<#switch color>
+<#on 'RED', 'Crimson', 'DarkRed'>#FF0000
+<#on 'GREEN'>#00FF00
+<#on 'BLUE', 'Navy'>#0000FF
+<#default>${color}
+</#switch>
+----
+
+The `on` statement expressions do not have to be constants. This means that more complex expressions can also be used. If this is not desired, it can be switched off using the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS`.
+
+In addition, the individual `on` statement expressions do not have to have the same type. If this is desired, it can be activated via the `SwitchDirectiveFeature.ALLOW_ONLY_EQUAL_TYPE_ONS` feature. This feature is only taken into account if the feature `SwitchDirectiveFeature.ALLOW_ONLY_CONSTANT_ONS` is also activated.

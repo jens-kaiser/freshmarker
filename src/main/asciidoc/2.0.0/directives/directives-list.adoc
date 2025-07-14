@@ -1,0 +1,167 @@
+=== List Directive
+
+The _List Directives_ processes its body for each element of a sequence. The sequence can be either a list, a hash or a range. A _List Directive_ defines the sequence and the name of the item variable in the block. In addition, an optional loop variable containing meta information of the current loop iteration can also be specified.
+
+IMPORTANT: Although _FreeMarker_ and _FreshMaker_ are similar, the list directive syntax differs. _FreeMarker_ does not know a separate loop variable. In addition, _FreshMaker_ does not support an _Else_ element in the list. This can be replaced by a separate _If Directive_. _FreeMarker_'s _Items Directive_ is also not supported. there are plenty of ways to get the same result.
+
+==== List Directive with a list
+
+A list is a sequence of values of any model type.
+
+.List Directive example with a list
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list sequence as s>*
+${s} Marx
+*</#list>*
+----
+
+In the above example, each element from the list is simply output followed by the word `Marx`.
+If the list contains `Chico`, `Harpo`, `Groucho`, `Gummo` and `Zeppo` then the result is a five-line listing of the Marx brothers.
+
+The next example the interpolation `${s}` is preceded by the interpolation `${l?counter}`.
+
+.List Directive example with a list and a loop variable
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list sequence as s with l>*
+${l?counter}. ${s} Marx
+*</#list>*
+----
+
+Because `l` is the name of the loop variable, the first interpolation evaluates to the counter of the current item in the list.
+
+....
+1. Chico Marx
+2. Harpo Marx
+3. Groucho Marx
+4. Gummo Marx
+5. Zeppo Marx
+....
+
+==== List Directive with a range
+
+A range is defined by a lower and a non-mandatory upper numerical limit.
+Although _FreshMarker_ also masters _right-unlimited ranges_, _List Directives_ are not allowed to use them.
+
+.List Directive example with a range
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list 1..5 as s>*
+${s} * ${s} = ${s*s}
+*</#list>*
+----
+
+The current item in the above example is any integer value from 1 to 5 inclusive.
+The result is a list of square value equations.
+
+....
+1 * 1 = 1
+2 * 2 = 4
+3 * 3 = 9
+4 * 4 = 16
+5 * 5 = 25
+....
+
+Because the limits of a range do not have to be constants, a List Directive can also be used to mimic a for loop.
+
+.List Directive example with variable range limits
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list a..b as s>*
+${s} * ${s} = ${s*s}
+*</#list>*
+----
+
+This example loops through all values between numeric variable `a` and numeric variable `b`.
+For the value `3` in `a` and `1` in `b` the following result is generated.
+
+....
+3 * 3 = 9
+2 * 2 = 4
+1 * 1 = 1
+....
+
+==== List Directive with a hash
+
+A hash is a sequence of key-value pairs. The key is a string and the value is any model type.
+For a hash the item in the List Directive is a key-value pair.
+
+.List Directive example with a hash
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list map as key, value>*
+${key}->${value}
+*</#list>*
+----
+
+NOTE: In addition to the _Java_ `Map` types, _Java Beans_ and _Records_ are also interpreted as a hash. It is not only possible to iterate over the entries of a `Map`, but also over the attributes of _Java Beans_ and _Records_.
+
+.List Directive example with a hash and a loop variable
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list map as key, value with l>*
+${l?counter}. ${key}->${value}
+*</#list>*
+----
+
+==== List Directive with a hash and sorted keys
+
+Normally the list iterates over the entries without a preferred order.
+With _Java_ `Map` types this can be influenced by the use of `SequencedMap` implementations. However, this is not possible when using a _Java Bean_.
+
+The keys of a hash can also be sorted in ascending and descending order by adding `sorted asc` after the key for ascending sorting and `sorted desc` for descending sorting.
+
+.List Directive example with a hash and a sorted key
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list map as key sorted asc, value>*
+${key}->${value}
+*</#list>*
+----
+
+==== List Directive with a filter (since 1.6.6)
+
+The list directive runs over all elements of a list. An element can be omitted with an if statement.
+If the looper variable is also used, this can lead to jumps. There are two solutions to this problem.
+
+The first solution is to include a filtered list in the model and to use this list in the list directive.
+The second solution is to use a filter expression in the list directive.
+
+The filter expression in the list directive follows directly after the looper part.
+
+.List Directive example with filter expression
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list 1..10 as s filter s % 2 == 0>*
+${s} * ${s} = ${s*s}
+*</#list>*
+----
+
+==== List Directive with an offset (since 1.7.2)
+
+The start offset in the list directive can be increased using an offset expression.
+The offset expression in the list directive follows directly after the filter part.
+If the list ist filtered by a filter expression, the offset is applied to the filtered and not to the original list.
+
+.List Directive example with filter expression
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list 1..10 as s offset 5>*
+${s} * ${s} = ${s*s}
+*</#list>*
+----
+
+==== List Directive with a limit (since 1.6.6)
+
+The number of elements in the list directive can be reduced using a limit expression.
+The limit expression in the list directive follows directly after the offset part.
+If the list ist filtered by a filter expression, the limit is applied to the filtered and not to the original list.
+
+.List Directive example with filter expression
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#list 1..10 as s limit 4>*
+${s} * ${s} = ${s*s}
+*</#list>*
+----

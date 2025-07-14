@@ -1,0 +1,150 @@
+=== Date-Time Built-Ins
+
+The Built-Ins in the examples operate on the `java.time.Instant`, `java.time.ZonedDateTime`, `java.time.OffsetDateTime`,`java.time.LocalDateTime` respectively `java.util.Date` value `1968-08-24 12:34:56`.
+
+==== `date` Built-In
+
+This built-in returns the date part of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?date}
+m|1968-08-24
+|date
+
+|===
+
+==== `time` Built-In
+
+This built-in returns the time part of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?time}
+m|12:34:56
+|time
+|===
+
+==== `c` (computer language) Built-In
+
+This built-in returns a timestamp string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|1968-08-24T12:34:56
+|string
+|===
+
+==== `string` Built-In
+
+This built-in returns a formatted string of the value.
+footnote:legacyTemporal[Not for the legacy temporal types]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?string('dd. MMMM yyyy hh:mm')}
+m|24. August 1968
+|string
+|===
+
+==== `at_zone` Built-In
+
+This built-in returns a temporal at the given time zone of the value.
+footnote:legacyTemporal[Not for the legacy temporal types]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?at_zone('Europe/Berlin')}
+m|1968-08-24 12:30:45 Europe/Berlin
+|date time (TemplateZonedDateTime)
+|===
+
+==== `zone` Built-In
+
+This built-in returns a string for the current time zone of the value.
+It is only available for the `java.time.TemplateZonedDateTime` type.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?zone}
+m|Europe/Berlin
+|string
+|===
+
+
+==== `year` Built-In (since 1.7.0)
+
+This built-in returns the year of the value.footnote:onlyLocalDateTime[Only for `java.time.LocalDateTime`]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?year}
+m|1968
+|year
+|===
+
+==== `month` Built-In (since 1.7.0)
+
+This built-in returns the month of the value.footnote:onlyLocalDateTime[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|AUGUST
+|month
+|===
+
+==== `day` Built-In (since 1.7.0)
+
+This built-in returns the day of month of the value as a number.footnote:onlyLocalDateTime[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|24
+|number
+|===
+
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.footnote:legacyTemporal[]
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|1968-04-14
+|date
+|===
+
+==== `supports` Built-In (since 1.8.2)
+
+This built-in returns `true` for the supported temporal units, `false` otherwise. The currently available temporal units `YEARS`, `MONTHS` and `DAYS` are all supported.
+
+CAUTION: For `Instant` values only `DAYS` return `true`.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?supports('YEARS'}
+m|true
+|boolean
+
+m|${temporal?supports('MONTHS'}
+m|true
+|boolean
+
+m|${temporal?supports('DAYS'}
+m|true
+|boolean
+|===

@@ -1,0 +1,73 @@
+== Adding _FreshMarker_
+
+Add _FreshMarker_ as a dependency from _Maven Central_ to your project.
+
+.Maven
+[source,xml,role="primary",subs="attributes+"]
+----
+<dependency>
+    <groupId>de.schegge</groupId>
+    <artifactId>freshmarker</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+.Gradle
+[source,groovy,role="secondary",subs="attributes+"]
+----
+implementation 'de.schegge:freshmarker:{project-version}'
+----
+
+.Gradle Kotlin
+[source,kotlin,role="secondary",subs="attributes+"]
+----
+implementation("de.schegge:freshmarker:{project-version}")
+----
+
+.Mill
+[source,scala,role="secondary",subs="attributes+"]
+----
+ivy"de.schegge:freshmarker:{project-version}"
+----
+
+== Usage
+
+Using the template engine is very easy.
+First the configuration has to be generated and then a template instance has to be created with its help.
+Finally, the template is processed with the data from the model. The return value of the process method is the result of template processing.
+
+Since version 1.5.0, the `Template` is no longer created directly via the `Configuration`, but via the `DefaultTemplateBuilder`.
+
+.Example Engine Call
+[source,java,role="primary"]
+----
+Configuration configuration = new Configuration();
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", "Hello ${example}!");
+System.out.println(template.process(Map.of("example", "World")));
+----
+
+.Example Engine Call (before 1.5.0)
+[source,java,role="secondary"]
+----
+Configuration configuration = new Configuration();
+Template template = configuration..getTemplate("test", "Hello ${example}!");
+System.out.println(template.process(Map.of("example", "World")));
+----
+
+There are a few design decisions to consider when using the template engine.
+
+The configuration is complex to generate and should therefore not be generated for each template.
+
+There are many ways in your own application to provide the configuration only once. A simple _Spring Boot_ variant is shown in the example.
+
+.Spring Boot Integration
+[source,java]
+----
+@Bean
+public Configuration freshmarker() {
+    return new Configuration();
+}
+----
+
+The model should be static, the values should not change during processing. This can lead to surprising results.
