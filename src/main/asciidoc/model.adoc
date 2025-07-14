@@ -2,7 +2,7 @@
 
 The template engine needs data to fill the interpolations.
 Because it is an embedded _Java_ engine, normal _Java_ classes are used.
-A map is always used as the model for calling the engine.
+A `Map` is always used as the model for calling the engine.
 
 === Types
 
@@ -81,7 +81,7 @@ Literals of primitive types can be used for Null, String, Boolean, Integer and D
 | Double | 12.34, 42.0
 |===
 
-=== Structured Primitives
+=== Structured Primitives (since 2.0.0)
 
 Some primitive data types have an internal structure that can be queried using the _Dot Operator_ and the _Hash Operator_. Unlike beans, structured primitives cannot be used in _List Directives_.
 
