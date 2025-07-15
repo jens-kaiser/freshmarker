@@ -14,7 +14,7 @@ A https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/resources/fmcs.
 == Example Benchmarks
 
 |===
-.8+|image:src/main/asciidoc/benchmark.png[float="right"] |mustache | 0.9.11
+.8+|image:benchmark.png[float="right"] |mustache | 0.9.11
 |freemarker | 2.3.23
 |velocity | 1.7
 |thymeleaf | 2.1.4.RELEASE
