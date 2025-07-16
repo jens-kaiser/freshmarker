@@ -396,4 +396,15 @@ class ExpressionTest {
             assertEquals("VALUE", template.process(Map.of()));
         }
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${sequence?join(',', ' or ')};test: 1,2,3,4 or 5",
+            "test: ${sequence?join(':')};test: 1:2:3:4:5",
+            "test: ${sequence?join};test: 1, 2, 3, 4, 5",
+    }, delimiterString = ";")
+    void join(String input, String expected) throws ParseException {
+        Template template = builder.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+    }
 }

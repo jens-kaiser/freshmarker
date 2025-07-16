@@ -45,7 +45,7 @@ public final class SequenceBuildInProvider implements BuiltInProvider {
     private static TemplateString join(List<TemplateObject> parameter, ProcessContext context, List<Object> list) {
         String delimiter = parameter.isEmpty() ? ", " : parameter.getFirst().evaluate(context, TemplateString.class).getValue();
         String lastDelimiter = parameter.size() == 2 ? parameter.get(1).evaluate(context, TemplateString.class).getValue() : delimiter;
-        String joined = list.stream().map(String::valueOf).collect(enumerated(delimiter, lastDelimiter));
+        String joined = list.stream().map(String::valueOf).collect(enumerated(lastDelimiter, delimiter));
         return new TemplateString(joined);
     }
 
