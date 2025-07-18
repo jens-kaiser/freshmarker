@@ -22,7 +22,7 @@
 
 === Deprecation
 
-- deprecate version built-ins `major`, `minor`and `patch`
+- deprecate version built-ins `major`, `minor` and `patch`
 - deprecate enum built-in `ordinal`
 - deprecate locale built-ins `lang`, `language`, `language_name`, `country` and `country_name`
 
