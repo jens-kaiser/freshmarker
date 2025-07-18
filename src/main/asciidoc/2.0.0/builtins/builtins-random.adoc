@@ -8,8 +8,8 @@ The Random built-ins are included via an additional artefact.
 ----
 <dependency>
   <groupId>de.schegge</groupId>
-  <artifactId>{plugin-random-version}</artifactId>
-  <version>1.0.1</version>
+  <artifactId>freshmarker-random</artifactId>
+  <version>{plugin-random-version}</version>
 </dependency>
 ----
 ====
