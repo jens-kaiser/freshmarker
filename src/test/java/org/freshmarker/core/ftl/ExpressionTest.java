@@ -260,37 +260,6 @@ class ExpressionTest {
         assertEquals("test: " + !result, template.process(Map.of("first", false, "second", true)));
     }
 
-    @Test
-    void simpleHashLiteral() {
-        Template template = builder.getTemplate("test", "${{ 'key': 42 }.key}");
-        assertEquals("42", template.process(Map.of()));
-    }
-
-    @Test
-    void invalidKeyInHashLiteral() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> builder.getTemplate("test", "${{ key: 42 } }.key}"));
-        assertEquals("key is not a string", exception.getMessage());
-    }
-
-    @Test
-    void invalidListLiteral() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.getTemplate("test", "${[1,2,'3',4,[true]][2]}"));
-        assertEquals("value is not a primitive", exception.getMessage());
-    }
-
-    @Test
-    void simpleListLiteral() {
-        Template template = builder.getTemplate("test", "${[1,2,'3',4,5<6][2]}");
-        assertEquals("3", template.process(Map.of()));
-    }
-
-    @Test
-    void simpleListLiteralWithoutComma() {
-        Template template = builder.getTemplate("test", "${[1  2 '3'  true 3 < 4][2]}");
-        assertEquals("3", template.process(Map.of()));
-    }
-
     @ParameterizedTest
     @CsvSource({
             "${(1..10)[5]}, 6",

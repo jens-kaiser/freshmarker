@@ -12,6 +12,7 @@
 - add spaceship operator `+<=>+`
 - add concat operator `~`
 - add structured primitives
+- allow non primitive values in sequence literals
 
 === Breaking Changes
 

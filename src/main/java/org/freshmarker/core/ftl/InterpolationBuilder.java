@@ -413,11 +413,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 1; i < expression.size() - 1; i++) {
             Node node = expression.get(i);
             if (node.getType() != TokenType.COMMA) {
-                TemplateObject templateObject = node.accept(this, null);
-                if (!templateObject.isPrimitive()) {
-                    throw new IllegalArgumentException("value is not a primitive");
-                }
-                list.add(templateObject);
+                list.add(node.accept(this, null));
             }
         }
         return new TemplateListSequence(list);
