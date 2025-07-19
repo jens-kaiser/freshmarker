@@ -11,6 +11,42 @@ Variables are assigned values within the template via the _Var_ and _Set Directi
 
 === Literal Expressions
 
+_FreshMarker_ knows literals for some basic data types. These literals are interpreted by _FreshMarker_ as constants.
+
+The data types `Null`, `Boolean`, `Integer`, `Double`, `String`, `Range`, `Sequence` and `Hash` support literals.
+
+==== Null Literal
+
+The type `Null` supports the literal `null`. This can be used to implement comparisons with the `null` value.
+
+==== Boolean Literals
+
+The `Boolean` type supports the literals `true` and `false`.
+
+==== Integer Literals
+
+The `Integer` type supports integer numeric literals in the range from `-2147483648` to `2147483647`. If the numeric literal contains a decimal point, it is not interpreted as an `Integer`.
+
+WARNING: The parser throws an exception if an integer numeric literal exceeds the value range. Later _FreshMarker_ versions will probably include support for `Long` or `BigInteger`.
+
+==== Double Literals
+
+The type `Double` supports numeric literals in the value range of `java.lang.Double`. Only numeric literals with a decimal point are interpreted as double, the scientific notation is not supported.
+
+==== String Literals
+
+TBD
+
+==== Range Literals
+
+TBD
+
+==== Sequence Literals
+
+TBD
+
+==== Hash Literals
+
 TBD
 
 === Variables

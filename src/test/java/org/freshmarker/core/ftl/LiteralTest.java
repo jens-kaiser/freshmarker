@@ -1,5 +1,6 @@
 package org.freshmarker.core.ftl;
 
+import ftl.ParseException;
 import org.freshmarker.Template;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class LiteralTest {
 
     @Nested
-    class Hash {
+    class Hashes {
         @Test
         void simpleHashLiteral(TemplateBuilder builder) {
             Template template = builder.getTemplate("test", "${{ 'key': 42 }.key}");
@@ -38,9 +39,9 @@ class LiteralTest {
     }
 
     @Nested
-    class Sequence {
+    class Sequences {
         @Test
-        void invalidListLiteral(TemplateBuilder builder) {
+        void listLiteralWithNonPrimitiveEntries(TemplateBuilder builder) {
             Template template = builder.getTemplate("test", "${[1,2,'3',4,[true]][2]}");
             assertEquals("3", template.process(Map.of()));
         }
@@ -56,5 +57,15 @@ class LiteralTest {
             Template template = builder.getTemplate("test", "${[1  2 '3'  true 3 < 4][2]}");
             assertEquals("3", template.process(Map.of()));
         }
+    }
+
+    @Nested
+    class Numbers {
+        @Test
+        void invalidIntegerLiteral(TemplateBuilder builder) {
+            NumberFormatException exception = assertThrows(NumberFormatException.class, () -> builder.getTemplate("test", "${21474836470}"));
+            assertEquals("For input string: \"21474836470\"", exception.getMessage());
+        }
+
     }
 }
