@@ -11,9 +11,41 @@ Variables are assigned values within the template via the _Var_ and _Set Directi
 
 === Literal Expressions
 
+_FreshMarker_ knows literals for some basic data types. These literals are interpreted by _FreshMarker_ as constants.
+
+The data types `Null`, `Boolean`, `Integer`, `Double`, `String`, `Range`, `Sequence` and `Hash` support literals.
+
+==== Null Literal
+
+The type `Null` supports the literal `null`. This can be used to implement comparisons with the `null` value.
+
+==== Boolean Literals
+
+The `Boolean` type supports the literals `true` and `false`.
+
+==== Integer Literals
+
+The `Integer` type supports integer numeric literals in the range from `-2147483648` to `2147483647`. If the numeric literal contains a decimal point, it is not interpreted as an `Integer`.
+
+WARNING: The parser throws an exception if an integer numeric literal exceeds the value range. Later _FreshMarker_ versions will probably include support for `Long` or `BigInteger`.
+
+==== Double Literals
+
+The type `Double` supports numeric literals in the value range of `java.lang.Double`. Only numeric literals with a decimal point are interpreted as double, the scientific notation is not supported.
+
+==== String Literals
+
 TBD
 
-=== Inline Sequences
+==== Range Literals
+
+TBD
+
+==== Sequence Literals
+
+TBD
+
+==== Hash Literals
 
 TBD
 
@@ -21,7 +53,7 @@ TBD
 
 TBD
 
-=== Method Invocation
+=== Function Invocation
 
 TBD
 
@@ -103,7 +135,11 @@ m|x ≠ 3
 
 === Relational Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators. 
+WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
+
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Therefore, they are not only available for numeric types, but also for `Version`, `String` and the temporal types.
+Custom types can also _overload_ all relational operators.
 
 ==== Numerical Comparison Operators
 
@@ -124,7 +160,7 @@ m|x ≤ 6
 
 m|>
 |Greater Operator
-m|x < 7
+m|x > 7
 
 m|>=
 |Greater Equals Operator
@@ -139,7 +175,7 @@ WARNING: The greater `>` and the greater equals `>=` operator must be surrounded
 
 ==== Version Comparison Operators
 
-NOTE: These operators are in experimental stage.
+Two versions are compared with each other according to the _Semantic Versioning_ schema.
 
 |===
 |Operator | Name | Example
@@ -148,9 +184,9 @@ m|<
 |Less Operator
 m|'1.0.0'?version < .version
 
-m|\<=
+m|+<=+
 |Less Equals Operator
-m|'1.0.0'?version \<= .version
+m|'1.0.0'?version +<=+ .version
 
 m|≤
 |Unicode Less Equals Operator
@@ -158,7 +194,7 @@ m|'1.0.0'?version ≤ .version
 
 m|>
 |Greater Operator
-m|'1.0.0'?version < .version
+m|'1.0.0'?version > .version
 
 m|>=
 |Greater Equals Operator
@@ -199,7 +235,7 @@ m|x % 4
 
 === Additive Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
 In addition to the additive operators for the numeric types and the string concatenation, there are some overloaded operators for date and period.
 
 |===
@@ -207,7 +243,7 @@ In addition to the additive operators for the numeric types and the string conca
 
 m|+
 |String Concatenation Operator
-m|x + ' '
+m|'x' + ' ' + 'y'
 |
 
 m|+
@@ -307,7 +343,7 @@ m|-4
 
 === Default Operator
 
-Returns `true` if the operant is not `NULL`.
+Returns its parameter if the operant is `NULL`. If the argument is missing, the default operator returns an empty string.
 
 |===
 |Operator | Description |Example
@@ -324,17 +360,46 @@ m|value!"default"
 
 === Dot Key Operator
 
-TBD
+The dot key operator returns the attribute with the specified name from a hash type or a structured primitive.
 
 === Dynamic Key Operator
 
-==== Slicing
+TBD
+
+==== Slice
+
+TBD
+
+==== Index
+
+TBD
+
+==== Hash
 
 TBD
 
 === Built-In Operator
 
-TBD
+The Built-In operator calls type-specific functions, so-called Built-Is, on an expression. If the specified operator does not exist for the specific type, processing is terminated with an error.
+
+The built-in operator is available in the default `?` and a null-safe variant `?!`.
+
+With the null-safe variant, the processing of `NULL` and `Optional` values is less restrictive. Instead of an error, the built-ins return their input value here.
+
+This processing can also be configured for the default variant using a <<_builtin_handling_features_since_1_7_4, Feature>>.
+
+|===
+|Operator | Description |Example
+
+m|?
+|Built-In Operator
+m|?upper_case
+
+m|?!
+|Null-safe Built-In Operator
+m|?!lower_case
+
+|===
 
 ==== Existence Operator
 

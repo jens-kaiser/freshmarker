@@ -138,7 +138,7 @@ m|x ≠ 3
 WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
 
 Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
-Therefore, they are not only available for numeric types, but also for  `Version`, `String`, `Duration`, `Period` and the temporal types.
+Therefore, they are not only available for numeric types, but also for `Version`, `String`, `Duration`, `Period` and the temporal types.
 Custom types can also _overload_ all relational operators.
 
 Since  _FreshMarker 2.0.0_ the spaceship operator `+<=>+` can be used.
@@ -349,7 +349,7 @@ m|'x' + ' ' + 'y'
 |
 
 m|~
-|String Concatenation Operator
+|String Concatenation Operator (since 2.0.0)
 m|'x' ~ 'y'
 |This operator concatenates to String values with a whitespace character as separator.
 
