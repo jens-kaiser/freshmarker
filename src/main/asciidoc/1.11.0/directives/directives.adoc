@@ -204,7 +204,25 @@ Hello World⏎
 
 ==== `oneliner` User Directive
 
-TBD
+The `oneliner` _User Directive_ replaces newlines by whitespaces in the output. This creates a single line of text from the content of this directive, which can contain consecutive spaces.
+
+TIP: If no consecutive spaces should occur in the output, the `oneliner` _User Directive_ can be nested in a `compress` _User Directive_.
+
+.Template
+[source,role="primary",freshmarker,subs="verbatim,quotes"]
+----
+<@oneliner>
+␣␣⏎
+␣␣Hello␣␣␣World␣␣⏎
+␣␣␣␣⏎
+</@oneliner>
+----
+
+.Output
+[source,role="secondary",text,subs="verbatim,quotes"]
+----
+␣␣␣␣␣Hello␣␣␣World␣␣␣␣␣␣␣␣
+----
 
 === Import Directive (since 1.0.0)
 

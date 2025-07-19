@@ -1,24 +1,36 @@
 == Built-In Variables
 
-=== Now Built-In Variable
+=== Default Built-In Variables
 
-The `.now` built-in variable of Type `TemplateZoneDateTime`  provides the current timestamp.
+|===
+|Name| Description| Example | Output
 
-=== Locale Built-In Variable
+m|.now
+| The `.now` built-in variable of Type `TemplateZoneDateTime`  provides the current timestamp.
+m| ${.now?date}
+| 2025-07-19
 
-The `.locale` built-in variable of Type `TemplateLocale`  provides the current locale.
+m|.locale
+|The `.locale` built-in variable of Type `TemplateLocale`  provides the current locale.
+m|${.locale?country_name}
+|Germany
 
-=== Country Built-In Variable
+m|.country
+|The `.country` built-in variable of Type `TemplateString`  provides the current locales country code.
+m|${.country}
+|DE
 
-The `.country` built-in variable of Type `TemplateString`  provides the current locales country code.
+m|.laguage
+|The `.laguage` built-in variable of Type `TemplateString`  provides the current locales language code.
+m|${.laguage}
+|de
 
-=== Language Built-In Variable
+m|.version
+|The `.version` built-in variable of Type `TemplateVersion`  provides the current _FreshMarker_ version.
+m|${version.major}
+|2
 
-The `.laguage` built-in variable of Type `TemplateString`  provides the current locales language code.
-
-=== Version Built-In Variable
-
-The `.version` built-in variable of Type `TemplateVersion`  provides the current _FreshMarker_ version.
+|===
 
 === Random Built-In Variable
 
