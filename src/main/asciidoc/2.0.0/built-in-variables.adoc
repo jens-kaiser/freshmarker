@@ -37,16 +37,34 @@ m|${version.major}
 
 [NOTE]
 ====
-The  `.random` built-in variable is included via an additional artefact.
+The  `.random` built-in variable is included via an additional artifact.
 
 [source,xml]
 ----
 <dependency>
   <groupId>de.schegge</groupId>
-  <artifactId>{plugin-random-version}</artifactId>
-  <version>1.0.1</version>
+  <artifactId>freshmarker-random</artifactId>
+  <version>{plugin-random-version}</version>
 </dependency>
 ----
 ====
 
 The `.random` built-in variable of Type `TemplateRandom` can be used to generate random value via several built-ins.
+
+=== Hemisphere Built-In Variable
+
+[NOTE]
+====
+The  `.hemisphere` built-in variable is included via an additional artifact.
+
+[source,xml]
+----
+<dependency>
+  <groupId>de.schegge</groupId>
+  <artifactId>freshmarker-astro</artifactId>
+  <version>{plugin-astro-version}</version>
+</dependency>
+----
+====
+
+The `.hemisphere` built-in variable of Type `TemplateEnum` can be used to distinguish between the Northern Hemisphere (NORTH) and the Southern Hemisphere (SOUTH).
