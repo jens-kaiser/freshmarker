@@ -3,6 +3,7 @@
 
 === Default Built-In Variables
 
+[cols="1,4,2,1"]
 |===
 |Name| Description| Example | Output
 
