@@ -17,7 +17,7 @@ The data types `Null`, `Boolean`, `Integer`, `Double`, `String`, `Range`, `Seque
 
 ==== Null Literal
 
-The type `Null` supports the literal `null`. This can be used to implement comparisons with the `null` value.
+The type `Null` supports the literal `null`. This can be used for `null` comparisons.
 
 ==== Boolean Literals
 
