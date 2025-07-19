@@ -1,6 +1,5 @@
 package org.freshmarker.core.ftl;
 
-import ftl.ParseException;
 import org.freshmarker.Template;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
@@ -48,7 +47,7 @@ class LiteralTest {
 
         @Test
         void simpleListLiteral(TemplateBuilder builder) {
-            Template template = builder.getTemplate("test", "${[1,2,'3',4,5<6][2]}");
+            Template template = builder.getTemplate("test", "${[1,2,'3',4,5<6][4]}");
             assertEquals("3", template.process(Map.of()));
         }
 

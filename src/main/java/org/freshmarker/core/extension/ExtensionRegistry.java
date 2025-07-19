@@ -77,7 +77,7 @@ public class ExtensionRegistry {
     }
 
     public <E extends Extension> Stream<E> stream(Class<E> type) {
-        return extensions.stream().filter(type::isInstance).map(type::cast).peek(e -> e.init(featureSet));
+        return extensions.stream().filter(type::isInstance).map(type::cast).map(e -> { e.init(featureSet); return e; });
     }
 
     public TemplateFeatures getTemplateFeatures() {
