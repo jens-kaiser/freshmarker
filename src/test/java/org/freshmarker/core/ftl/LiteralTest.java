@@ -48,7 +48,7 @@ class LiteralTest {
         @Test
         void simpleListLiteral(TemplateBuilder builder) {
             Template template = builder.getTemplate("test", "${[1,2,'3',4,5<6][4]}");
-            assertEquals("3", template.process(Map.of()));
+            assertEquals("yes", template.process(Map.of()));
         }
 
         @Test
