@@ -39,7 +39,7 @@ m|${version.major}
 ====
 The  `.random` built-in variable is included via an additional artifact.
 
-[source,xml]
+[source,xml,subs="attributes+"]
 ----
 <dependency>
   <groupId>de.schegge</groupId>
@@ -57,7 +57,7 @@ The `.random` built-in variable of Type `TemplateRandom` can be used to generate
 ====
 The  `.hemisphere` built-in variable is included via an additional artifact.
 
-[source,xml]
+[source,xml,subs="attributes+"]
 ----
 <dependency>
   <groupId>de.schegge</groupId>
