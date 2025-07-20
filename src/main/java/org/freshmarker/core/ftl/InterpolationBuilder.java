@@ -262,11 +262,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             if (left.isPrimitive() && right.isPrimitive()) {
                 return relational.evaluateToObject(null);
             }
+            return relational;
         } catch (ProcessException e) {
             throw new ParsingException(e.getMessage(), expression);
+        } catch (RuntimeException e) {
+            return relational;
         }
-
-        return relational;
     }
 
     @Override

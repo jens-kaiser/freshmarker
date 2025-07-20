@@ -74,6 +74,26 @@ TBD
 The `with` and `without` methods can be used to modify the behaviour of _FreshMarker_.
 The parameter of the methods is a feature constant to activate or deactivate the corresponding feature.
 
+===== System Features (since 2.0.0)
+
+These features are controlled by constants in the `SystemFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| *LOCALE_SENSITIVE_STRING_COMPARE*
+| Feature that enables locale sensitive String compare by `java.text.Collator`. The strength can be configured via the second parameter.
+| `false`
+|===
+
+.Example with locale sensitive string compare.
+[source,java]
+----
+import org.freshmarker.core.SystemFeature;import java.text.Collator;TemplateBuilder builder = new Configuration().builder()
+    .with(SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE, Collator.PRIMARY);
+----
+
 ===== Include Directive Features
 
 These features are controlled by constants in the `IncludeDirectiveFeature` class.
