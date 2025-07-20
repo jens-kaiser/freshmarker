@@ -6,6 +6,10 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateObjectVisitor;
 
+import java.text.Collator;
+
+import static org.freshmarker.core.SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE;
+
 public class TemplateString extends TemplatePrimitive<String> {
     public static final TemplateString EMPTY = new TemplateString("");
 
@@ -49,13 +53,21 @@ public class TemplateString extends TemplatePrimitive<String> {
     @Override
     public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
         TemplateString rightValue = (TemplateString) operand;
+        if (context.getFeatureSet().isEnabled(LOCALE_SENSITIVE_STRING_COMPARE)) {
+            return compareValues(operator, compareWithCollator(operand, context));
+        }
         return compareValues(operator, getValue().compareTo(rightValue.getValue()));
+    }
 
+    private int compareWithCollator(TemplatePrimitive<?> operand, ProcessContext context) {
+        TemplateString rightValue = (TemplateString) operand;
+        Collator collator = Collator.getInstance(context.getLocale());
+        context.getFeatureSet().getConfigured(LOCALE_SENSITIVE_STRING_COMPARE).map(Integer.class::cast).ifPresent(collator::setStrength);
+        return collator.compare(getValue(), rightValue.getValue());
     }
 
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, "'" + this + "'");
     }
-
 }
