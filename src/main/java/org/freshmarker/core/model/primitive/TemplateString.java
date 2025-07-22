@@ -54,13 +54,12 @@ public class TemplateString extends TemplatePrimitive<String> {
     public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
         TemplateString rightValue = (TemplateString) operand;
         if (context.getFeatureSet().isEnabled(LOCALE_SENSITIVE_STRING_COMPARE)) {
-            return compareValues(operator, compareWithCollator(operand, context));
+            return compareValues(operator, compareWithCollator(rightValue, context));
         }
         return compareValues(operator, getValue().compareTo(rightValue.getValue()));
     }
 
-    private int compareWithCollator(TemplatePrimitive<?> operand, ProcessContext context) {
-        TemplateString rightValue = (TemplateString) operand;
+    private int compareWithCollator(TemplateString rightValue, ProcessContext context) {
         Collator collator = Collator.getInstance(context.getLocale());
         context.getFeatureSet().getConfigured(LOCALE_SENSITIVE_STRING_COMPARE).map(Integer.class::cast).ifPresent(collator::setStrength);
         return collator.compare(getValue(), rightValue.getValue());
