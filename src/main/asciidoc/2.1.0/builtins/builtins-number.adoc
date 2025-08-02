@@ -1,0 +1,243 @@
+=== Number Built-Ins
+
+==== `c` (computer language) Built-In
+
+This built-in converts a number to the string using the `toString()` method of the corresponding base types `BigDecimal`, `BigInteger`, `Double`, `Float`, `Long`, `AtomicLong`, `Integer`, `AtomiInteger`, `Byte` or `Short`.
+
+NOTE: Without this builtin, the number is formatted with the default number formatter for the current locale.
+
+==== `h` (human language) Built-In (since 1.4.6)
+
+This built-in formats the numbers between 1 and 9 as localized strings 'one' to 'nine'. Other numbers are returned as numbers and formatted by default.
+
+include::localization_tip.adoc[]
+
+|===
+|Interpolation | Locale | Output
+
+m|${0?h}
+m|Locale.GERMANY
+m|0
+
+m|${1?h}
+m|Locale.GERMANY
+m|eins
+
+m|${9?h}
+m|Locale.US
+m|nine
+
+m|${10?h}
+m|Locale.US
+m|10
+|===
+
+==== `format` Built-In
+
+This built-in format the number by the given format parameter and the current locale. See `java.util.Formatter` for details.
+
+|===
+|Interpolation | Locale | Output
+
+m|${3.14159?format("%.2f")}
+m|Locale.GERMANY
+m|3.14
+
+m|${3.14159?format("%.4f")}
+m|Locale.US
+m|3.1416
+|===
+
+==== `abs` Built-In
+
+This built-in return the absolute value of the number.
+
+|===
+|Interpolation | Output
+
+m|${-3.14159?abs}
+m|3.142
+
+m|${3.14159?abs}
+m|3.142
+
+m|${-42?abs}
+m|42
+|===
+
+==== `sign` Built-In
+
+This built-in return the sign of the number as an Integer.
+
+|===
+|Interpolation | Output
+
+m|${-3.14159?sign}
+m|-1
+
+m|${3.14159?sign}
+m|1
+
+m|${0?sign}
+m|0
+|===
+
+==== `min` Built-In (since 1.6.0)
+
+This built-in returns the smaller value of the variable and the specified parameter.
+
+|===
+|Interpolation | Output
+
+m|${3.14159?min(3)}
+m|3
+
+m|${3.14159?min(4)}
+m|3.14159
+|===
+
+==== `max` Built-In (since 1.6.0)
+
+This built-in returns the bigger value of the variable and the specified parameter.
+
+|===
+|Interpolation | Output
+
+m|${3.14159?max(3)}
+m|3.14159
+
+m|${3.14159?max(4)}
+m|4
+|===
+
+==== Cast Built-Ins (since 1.0.0)
+
+These built-ins cast the number to a `TemplateNumber` instance in the specified type range.
+
+|===
+|Interpolation | Output | Type
+
+m|${42?byte}
+m|42
+m|Byte
+
+m|${42?short}
+m|42
+m|Short
+
+m|${42?int}
+m|42
+m|Integer
+
+m|${42?long}
+m|42
+m|Long
+
+m|${42.0?float}
+m|42.0
+m|Float
+
+m|${42.0?double}
+m|42.0
+m|Double
+
+m|${42.0?big_integer}
+m|42
+m|BigInteger
+
+m|${42.0?big_decimal}
+m|42.0
+m|BigDecimal
+|===
+
+==== `roman` Built-In (since 1.3.5)
+
+This built-in converts numbers between 1 and 3999 to roman numerals.
+
+|===
+|Interpolation | Output
+
+m|${1?roman}
+m|I
+
+m|${4?roman}
+m|IV
+
+m|${2012?roman}
+m|MMXII
+|===
+
+==== `utf_roman` Built-In (since 1.3.5)
+
+This built-in converts numbers between 1 and 3999 to roman numerals. This built-in
+uses the Unicode Characters `\u2160`, `\u2164`, `\u2169` and `\u216C` to `\u216F`.
+
+|===
+|Interpolation | Output
+
+m|${1?utf_roman}
+m|Ⅰ
+
+m|${4?utf_roman}
+m|ⅠⅤ
+
+m|${2012?utf_roman}
+m|ⅯⅯⅩⅠⅠ
+|===
+
+==== `clock_roman` Built-In (since 1.3.5)
+
+This built-in converts numbers between 1 and 12 to roman numerals. This built-in
+uses the Unicode Characters from `\u2160` to `\u216B`.
+
+|===
+|Interpolation | Output
+
+m|${1?utf_roman}
+m|Ⅰ
+
+m|${4?utf_roman}
+m|Ⅳ
+
+m|${9?utf_roman}
+m|Ⅸ
+|===
+
+==== `clamp` Built-In (since 1.10.0)
+
+Clamps the value to fit between min and max. If the value is less than min, then min is returned. If the value is greater than max, then max is returned. Otherwise, the original value is returned.
+
+|===
+|Interpolation | Output
+
+m|${10?clamp(20, 30)}
+m|20
+
+m|${25?clamp(20, 30)}
+m|25
+
+m|${40?clamp(20, 30)}
+m|30
+|===
+
+==== `unicode` Built-In (since 1.10.0)
+
+Convert value into the corresponding Unicode character.
+If the number is not an integer, it is converted appropriately.
+With an additional parameter, this is added to the value as an offset.
+
+|===
+|Interpolation | Output
+
+m|${48?unicode}
+m|0
+
+m|${9312?unicode}
+m|①
+
+m|${40?unicode(8)}
+m|0
+
+m|${9300?unicode(12)}
+m|①
+|===

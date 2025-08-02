@@ -1,0 +1,290 @@
+== Directives
+
+=== If/ElseIf/Else Directive
+
+This directive generates conditional output. The expression in the `if` and `elseif` statement
+is evaluated to a boolean value. If the value is `true` the corresponding block is evaluated.
+If the expression cannot evaluate to a boolean value an exception is thrown.
+
+.Example with only the `if` part
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#if text??>*
+${text}
+*</#if>*
+----
+
+The `elseif` and `else` part are optional and can be dismissed.
+
+.Example with all parts
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#if number >= 100>*
+greater equal hundred
+*<#elseif number > 10>*
+greater ten
+*<#else>*
+less ten
+*</#if>*
+----
+
+include::directives-switch.adoc[]
+
+include::directives-list.adoc[]
+
+=== Var/Set/Assign Directive
+
+The _Var_, _Set_ and _Assign Directives_ are used to define local variables in the template.
+Unlike the model values, new values can be assigned to variables. 
+
+The first use of a variable is with the _Var Directive_. This defines the variables in the current context. 
+The variable can be assigned later new values with the _Set_ and _Assign Directive_. A variable only exists within its context.
+
+.Example _Var Directive_ without value assignment
+[source,freshmarker]
+----
+<#var test/>
+<#set test='zwei'/>
+<#set test='drei'/>
+----
+
+The  _Var Directive_ allows the assignment of an initial value to the variable.
+
+.Example Var Directive with value assignment
+[source,freshmarker]
+----
+<#var test='eins'/>
+<#set test='zwei'/>
+<#set test='drei'/>
+----
+
+Instead of multiple _Var Directives_ a single _Var Directive_ with several variable definitions can be used.
+The individual definitions can be separated from each other by a space or a comma.
+
+
+.Example Var Directive with multiple variable
+[source,freshmarker]
+----
+<#var test1='eins' test2='zwei'/>
+<#var test3, test4/>
+----
+
+A new context is created within the _List Directive_, _Macro Directive_ and the conditional _If_ and _Switch Directives_.
+Therefore, variables that are created in a _Macro Directive_ can no longer be accessed outside.
+
+IMPORTANT: Since version 1.9.0, it is now possible for all directives to generate a context.
+
+.Example variable context
+[source,freshmarker]
+----
+<#macro copyright>
+  <#var test='test'/>
+</#macro>
+<@copyright/>
+${test!'gonzo'}
+----
+
+In this example the variable `test` cannot accessed outside of the macro.
+The result of the interpolation `${test!'gonzo'}` is therefore `gonzo`.
+
+Variables with an identical name cannot created in the same context.
+Variables in an outer context can be hidden by variables with an identical name.
+
+=== Output-Format Directive
+
+The output-format directive changes the current output format of the template.
+The new output format remains in place until it is changed by another output-format directive.
+
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#outputformat 'HTML'>*
+${text}
+*<#outputformat 'plainText'>*
+${text}
+----
+
+=== Setting Directive
+
+The _Setting Directive_ changes some standard values in the template.
+The settings remains in place until it is changed by another settings directive.
+
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#setting locale="de-DE">*
+${42.23}
+*<#setting locale="en-US">*
+${42.23}
+----
+
+The following list of settings is supported.
+
+[cols="1,2,2"]
+|===
+|Name | Example | Description
+|locale
+m|<#setting locale="de-DE">
+| Set the locale with a language tag.
+
+|date_format
+m|<#setting date_format="dd. MMMM yyyy">
+| Set the format for date values.
+
+|time_format
+m|<#setting time_format="hh:mm">
+| Set the format for time values.
+
+|datetime_format
+m|<#setting datetime_format="dd. MMMM yyyy hh:mm">
+| Set the format for datetime values.
+
+|offset_datetime_format
+m|<#setting offset_datetime_format="dd. MMMM yyyy hh:mm">
+| Set the format for datetime values.
+
+|zoned_datetime_format
+m|<#setting zoned_datetime_format="dd. MMMM yyyy hh:mm">
+| Set the format for datetime values.
+
+|zone_id
+m|<#setting zone-id="Europe/Berlin">
+| Set the zone-id.
+|===
+
+=== Macro Directive
+
+The macro directive can be used to create a macro, which can then be used as a user directive in the template.
+
+[source,freshmarker]
+----
+<#macro copyright from>
+/*
+ * Copyright © ${from}-${.now?string('yyyy')} Jens Kaiser
+ *
+ * All Rights resevered.
+ */
+</#macro from>
+<@copyright/>
+----
+
+=== User Directive
+
+The user directive insert the output of _Macro directives_ or `UserDirective` implementions in the generated content.
+
+[source,freshmarker]
+----
+<@log level='info' message='test'/>
+----
+
+Some _User Directives_ are available as standard. These are currently the `compress` and `oneliner` _User Directives_.
+
+==== `compress` User Directive
+
+The `compress` _User Directive_ reduces whitespaces (`` ``, `\n`, `\r`) in the output.
+Whitespace sequences containing newlines will be replaced by a single newline.
+Whitespace sequences not containing newlines will be replaced by a single space.
+Whitespace prefixes and suffixes not containing newlines will be removed.
+
+.Template
+[source,role="primary",freshmarker,subs="verbatim,quotes"]
+----
+<@compress>
+␣␣⏎
+␣␣Hello␣␣␣World␣␣⏎
+␣␣␣␣⏎
+</@compress>
+----
+
+.Output
+[source,role="secondary",text,subs="verbatim,quotes"]
+----
+⏎
+Hello World⏎
+⏎
+----
+
+==== `oneliner` User Directive
+
+The `oneliner` _User Directive_ replaces newlines by whitespaces in the output. This creates a single line of text from the content of this directive, which can contain consecutive spaces.
+
+TIP: If no consecutive spaces should occur in the output, the `oneliner` _User Directive_ can be nested in a `compress` _User Directive_.
+
+.Template
+[source,role="primary",freshmarker,subs="verbatim,quotes"]
+----
+<@oneliner>
+␣␣⏎
+␣␣Hello␣␣␣World␣␣⏎
+␣␣␣␣⏎
+</@oneliner>
+----
+
+.Output
+[source,role="secondary",text,subs="verbatim,quotes"]
+----
+␣␣␣␣␣Hello␣␣␣World␣␣␣␣␣␣␣␣
+----
+
+=== Import Directive (since 1.0.0)
+
+Macros can be loaded by the `import` directive.
+
+[source,freshmarker]
+----
+<#import 'macros.fmt' as m/>
+----
+
+The file name parameter is the name of the import file and will be loaded by default relative to the template file.
+
+[source,freshmarker]
+----
+<#import 'macros.fmt' as m/>
+<@m.copyright/>
+----
+
+=== Include Directive (experimental, since 1.7.0)
+
+Sub-templates can be loaded by the `include` directive. This feature must be activated with `templateBuilder.with(IncludeDirectiveFeature.ENABLED)`.
+
+[source,freshmarker]
+----
+<#include 'include.fmt'/>
+----
+
+The file name parameter is the name of the include file and will be loaded by default relative to the template file.
+
+[source,freshmarker]
+----
+<#import 'macros.fmt' parse=false/>
+----
+
+If the included content does not need to be processed, this can be turned off using the parse attribute. In this case, the content of the include will be included as simple text.
+
+If all includes do not need to be parsed, automatic parsing can be deactivated centrally using the feature `IncludeDirectiveFeature.PARSE_BY_DEFAULT`. In this case, the parse attribute in the directive is no longer required.
+
+=== Brick Directive (since 1.6.6)
+
+It is clearer if related templates are contained in the same document. The document can be evaluated as a template as a whole or the templates it contains can be evaluated individually.
+
+A part that can be evaluated individually is contained within a brickfootnote:[Usually, this is called a template fragment, but the technical _FreshMarker_ template component classes are already called fragments.] directive.
+
+.Example mail template
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#brick 'salutation'>Hello ${customer.first} ${customer.last},</#brick>*
+*<#brick 'signature'>*
+Best regards
+${employee.first} ${employee.last}
+${employee.title}
+*</#brick>*
+----
+
+A single brick directive is evaluated with the `Template#processBrick(String, Map)` method. The `String` parameter is the name of the directive.
+
+.Example brick rendering
+[source,java]
+----
+Map<String, Object> model = Map.of("customer", customer, "employee", employee);
+Template template = new Configuration().buider().getTemplate("mail", mail);
+String salutation = template.processBrick("salutation", model);
+String signature = template.processBrick("signature", model);
+----

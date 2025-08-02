@@ -1,0 +1,59 @@
+=== Feature Handling
+
+`TemplateFeatureProvider` defines the API for `Extensions` that wish to add new Freshmarker _template features_.
+
+_Template features_ are used to modify the behavior of _FreshMarker_ or third-party `Extensions`.
+
+Each _template feature_ is a constant in an enum implementing the `TemplateFeature` interface. A _template feature_ is enabled by default, this can be changed by overriding the `isEnabledByDefault` method.
+
+.Example TemplateFeature
+[source,java,role="primary"]
+----
+public enum ExampleFeature implements TemplateFeature {
+    FIRST, SECOND
+}
+----
+
+.Example TemplateFeature with a disabled template feature
+[source,java,role="secondary"]
+----
+public enum ExampleFeature implements TemplateFeature {
+    FIRST, SECOND;
+    boolean isEnabledByDefault() {
+        return this == FIRST;
+    }
+}
+----
+
+The enum `ExampleFeature` provides two _template features_. They can be evaluated via a provided `FeatureSet` instance.
+
+.Example TemplateFeature usage
+[source,java]
+----
+private boolean firstEnabled;
+private boolean secondDisabled;
+
+public init(FeatureSet featureSet) {
+    firstEnabled = featureSet.isEnabled(ExampleFeature.FIRST);
+    secondDisabled = featureSet.isDisabled(ExampleFeature.SECOND);
+}
+----
+
+Before a _template feature_ can be used, it must first be registered with _FreshMarker_. There are two ways to do this.
+The `TemplateFeature` can be added to the constructor of the `Configuration` class or a custom `TemplateFeatureProvider` can be registered.
+
+.Example TemplateFeatureProvider
+[source,java]
+----
+public class ExampleFeatureProvider implements TemplateFeatureProvider {
+    @Override
+    public Set<TemplateFeature> provideFeatures() {
+        return EnumSet.allOf(ExampleFeature.class);
+    }
+}
+----
+
+After registration, the features are available for all `Extension`.
+In order for an `Extension` to react to a feature, it must implement the `Extension#init(FeatureSet)` method.
+
+CAUTION: The `TemplateFeatureProviders` are already evaluated during registration, while the other extensions are first evaluated for the template builder and then for the template. All available features are then available for evaluation.

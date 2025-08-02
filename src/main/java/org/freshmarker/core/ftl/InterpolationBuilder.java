@@ -87,7 +87,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         return switch (expression.getType()) {
             case TRUE -> TemplateBoolean.TRUE;
             case FALSE -> TemplateBoolean.FALSE;
-            case INTEGER -> TemplateNumber.of(Integer.parseInt(image));
+            case INTEGER -> getIntegerTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
+            case LONG -> getLongTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
             case IDENTIFIER -> new TemplateVariable(expression.toString());
@@ -96,6 +97,18 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             default -> throw new IllegalArgumentException(
                     "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
         };
+    }
+
+    private static TemplateNumber getLongTemplateNumber(String image) {
+        return new TemplateNumber(Long.parseLong(image.substring(0, image.length() - 1)));
+    }
+
+    private static TemplateNumber getIntegerTemplateNumber(String image) {
+        long number = Long.parseLong(image);
+        if ( number < Integer.MIN_VALUE || number > Integer.MAX_VALUE)  {
+            return new TemplateNumber(number);
+        }
+        return TemplateNumber.of((int)number);
     }
 
     @Override
@@ -367,8 +380,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateObject visit(UnaryPlusMinusExpression expression, Object input) {
         Token token = (Token) expression.getFirst();
-        TemplateObject templateObject = expression.get(1).accept(this, null);
-        if (token.getType() == TokenType.PLUS) {
+        TemplateObject templateObject = expression.get(1).accept(this, token.getType());
+        if (token.getType() == TokenType.PLUS || templateObject.isPrimitive()) {
             return templateObject;
         }
         if (templateObject instanceof TemplateNumber number) {
