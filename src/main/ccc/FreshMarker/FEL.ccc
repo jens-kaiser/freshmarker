@@ -176,7 +176,9 @@ TOKEN :
     |
     <FILTER : "filter">
     |
-    <INTEGER : (["0"-"9"])+>
+    <INTEGER : (["0"-"9"])+ >
+    |
+    <LONG : <INTEGER> ( "L" | "l" )* >
     |
     <DECIMAL : <INTEGER> "." <INTEGER>>
     |
@@ -386,7 +388,7 @@ HashLiteral :
 ;
 
 NumberLiteral :
-    <INTEGER>|<DECIMAL>
+    <INTEGER>|<LONG>|<DECIMAL>
 ;
 
 BooleanLiteral :
