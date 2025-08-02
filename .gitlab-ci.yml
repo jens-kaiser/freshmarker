@@ -53,6 +53,7 @@ pages:
    - mv target/generated-docs/* public
    - mv public/1.11.0/manual.html public/1.11.0/index.html
    - mv public/2.0.0/manual.html public/2.0.0/index.html
+   - mv public/2.1.0/manual.html public/2.1.0/index.html
    - mv target/surefire-reports/* public/reports
    - mv target/site/jacoco/* public/reports
   artifacts:

@@ -1,5 +1,5 @@
 = FreshMarker Manual
-:revnumber: {project-version}
+:revnumber: {project-version} DRAFT
 :source-highlighter: {source-highlighter}
 :icons: font
 :toc: left

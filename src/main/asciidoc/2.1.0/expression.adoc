@@ -27,7 +27,7 @@ The `Boolean` type supports the literals `true` and `false`.
 
 The `Integer` type supports integer numeric literals in the range from `-2,147,483,648` to `2,147,483,647`. If the numeric literal contains a decimal point, it is not interpreted as an `Integer`.
 
-==== Long Literals
+==== Long Literals (since 2.1.0)
 
 The `Long` type supports integer numeric literals in the range from `-9,223,372,036,854,775,808` to `9,223,372,036,854,775,807`. If the numeric literal contains a decimal point, it is not interpreted as an `Long`.
 
