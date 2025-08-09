@@ -121,7 +121,11 @@ TBD
 
 === Equality Operators
 
-This operator works only on _FreshMarkers_ primitive types. There is no Equality defined on _Hashes_, _Sequences_ or _Ranges_.
+This operator works only on _FreshMarkers_ primitive types.
+There is no equality defined on _Hashes_, _Sequences_ or _Ranges_.
+
+TIP: The `String` equality can also be carried out according to language-specific rules using a `Collator`.
+This must be activated by a  <<System Features (since 2.0.0),feature flag>>.
 
 |===
 |Operator | Name |Example
@@ -187,6 +191,9 @@ m|+<=>+
 ==== String Comparison Operators (since 2.0.0)
 
 Two `String` values can be compared lexicographic with each other.
+
+TIP: The `String` comparison can also be carried out according to language-specific rules using a `Collator`.
+This must be activated by a  <<System Features (since 2.0.0),feature flag>>.
 
 |===
 |Operator | Name | Example

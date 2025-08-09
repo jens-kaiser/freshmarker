@@ -58,6 +58,10 @@ public class TemplatePrimitive<P> implements TemplateObject {
         return visitor.visit(this, this.toString());
     }
 
+    public boolean equality(TemplateObject operand, ProcessContext context) {
+        return equals(operand);
+    }
+
     public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
         return TemplateBoolean.from(relation(operator, operand, context));
     }

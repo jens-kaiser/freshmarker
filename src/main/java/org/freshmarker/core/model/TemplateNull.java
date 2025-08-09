@@ -20,6 +20,11 @@ public final class TemplateNull implements TemplateObject {
     }
 
     @Override
+    public boolean equality(TemplateObject operand, ProcessContext context) {
+        return equals(operand);
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof TemplateNull;
     }

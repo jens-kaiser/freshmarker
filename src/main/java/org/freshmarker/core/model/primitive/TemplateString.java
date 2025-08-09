@@ -51,6 +51,17 @@ public class TemplateString extends TemplatePrimitive<String> {
     }
 
     @Override
+    public boolean equality(TemplateObject operand, ProcessContext context) {
+        if (!(operand instanceof TemplateString string)) {
+            return false;
+        }
+        if (context.getFeatureSet().isEnabled(LOCALE_SENSITIVE_STRING_COMPARE)) {
+            return compareWithCollator(string, context) == 0;
+        }
+        return getValue().equals(string.getValue());
+    }
+
+    @Override
     public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
         TemplateString rightValue = (TemplateString) operand;
         if (context.getFeatureSet().isEnabled(LOCALE_SENSITIVE_STRING_COMPARE)) {
