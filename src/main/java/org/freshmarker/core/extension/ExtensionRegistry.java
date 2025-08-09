@@ -6,6 +6,7 @@ import org.freshmarker.api.Formatter;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.UserDirective;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.extension.Extension;
@@ -106,7 +107,9 @@ public class ExtensionRegistry {
         copy.add(new RecordTemplateObjectProvider());
         copy.add(new EnumTemplateObjectProvider());
         copy.addAll(templateObjectProviders);
-        copy.add(new CompoundTemplateObjectProvider());
+        boolean setAsSequence = featureSet.isEnabled(SystemFeature.SET_AS_SEQUENCE);
+        boolean collectionAsSequence = featureSet.isEnabled(SystemFeature.COLLECTION_AS_SEQUENCE);
+        copy.add(new CompoundTemplateObjectProvider(setAsSequence, collectionAsSequence));
         copy.add(new BeanTemplateObjectProvider());
         return copy;
     }
