@@ -1,6 +1,7 @@
 package org.freshmarker.core.ftl;
 
 import org.freshmarker.Configuration;
+import org.freshmarker.Template;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.SystemFeature;
@@ -64,7 +65,8 @@ class SequenceBuiltInTest {
         void withError() {
             TemplateBuilder builder = new Configuration().builder();
             Map<String, Object> dataModel = Map.of("sequence", Set.of());
-            assertThrows(ProcessException.class, () -> builder.getTemplate("test", "${sequence?join}").process(dataModel));
+            Template template = builder.getTemplate("test", "${sequence?join}");
+            assertThrows(ProcessException.class, () -> template.process(dataModel));
         }
 
         @Test
@@ -88,7 +90,8 @@ class SequenceBuiltInTest {
         void withError() {
             TemplateBuilder builder = new Configuration().builder();
             Map<String, Object> dataModel = Map.of("sequence", Collections.unmodifiableCollection(new ArrayList<>()));
-            assertThrows(ProcessException.class, () -> builder.getTemplate("test", "${sequence?join}").process(dataModel));
+            Template template = builder.getTemplate("test", "${sequence?join}");
+            assertThrows(ProcessException.class, () -> template.process(dataModel));
         }
 
         @Test
