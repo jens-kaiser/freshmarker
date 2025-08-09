@@ -281,4 +281,17 @@ class TemporalInterpolationTest {
         );
         assertEquals("test: yes", template.process(model));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "4,nachts",
+            "10,vormittags",
+            "12,mittags",
+            "14,nachmittags",
+            "23,abends"
+    })
+    void interpolationLocalTimeWithFormatB(int input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal?string('B')}");
+        assertEquals("test: " + expected, template.process(Map.of("temporal", LocalTime.of(input, 0, 0))));
+    }
 }
