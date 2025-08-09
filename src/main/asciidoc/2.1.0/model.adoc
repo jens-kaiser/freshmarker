@@ -46,7 +46,7 @@ Without a package specification, the class names refer to the classes of the sam
 |File|`File`|yes
 |Path|`Path`|yes
 |Period|`Period`|yes
-|Sequence|Lists|no
+|Sequence|Lists, Sets, Arrays|no
 |Range|-|no
 |Slice|-|no
 |Map|Maps|no
@@ -102,7 +102,10 @@ m|TemplateLocale
 
 === Sequences
 
-_Sequences_ represent all data structures that implement `java.util.List`.
+_Sequences_ represent all data structures that are Arrays or implement `java.util.SequencedCollection`. These are all `java.util.List` implementations, but also classes such as `LinkedHashMap` and `TreeMap`
+
+TIP: Since *FreshMarker 2.1.0*, other sets or collections can also be used as sequences. However, this must be activated via corresponding <<System Features (since 2.0.0), feature flags>>. Please note that the order of the elements in these sequences is arbitrary.
+
 
 The elements of sequences can be accessed via the _hash operator_ `sequence[_index_]` or the <<_list_slices,slice>> operator.
 
