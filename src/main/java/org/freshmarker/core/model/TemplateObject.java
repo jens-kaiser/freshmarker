@@ -37,6 +37,10 @@ public interface TemplateObject {
         throw new ProcessException("unsupported operation: " + operator);
     }
 
+    default boolean equality(TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported operation: " + TokenType.EQUALS);
+    }
+
     default TemplateObject negate() {
         throw new ProcessException("unsupported operation: negate");
     }

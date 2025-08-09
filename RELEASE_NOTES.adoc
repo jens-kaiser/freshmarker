@@ -9,6 +9,7 @@
 - add arrays as sequences
 - add `SystemFeature.SET_AS_SEQUENCE` to allow `java.util.Set` as sequence
 - add `SystemFeature.COLLECTION_AS_SEQUENCE` to allow `java.util.Collection` as sequence
+- add collator based equality operator for `String` type
 
 === Bugfix
 

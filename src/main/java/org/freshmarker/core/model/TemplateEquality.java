@@ -18,7 +18,7 @@ public record TemplateEquality(TemplateObject left, TemplateObject right) implem
             leftObject != TemplateNull.NULL_LITERAL && isNonLiteralNull(rightObject)) {
             throw new ProcessException("null compare only allowed with null literal");
         }
-        return TemplateBoolean.from(leftObject.equals(rightObject));
+        return TemplateBoolean.from(leftObject.equality(rightObject, context));
     }
 
     private static boolean isNonLiteralNull(TemplateObject object) {

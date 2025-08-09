@@ -384,7 +384,7 @@ class StringInterpolationTest {
             "text1 > text2,test: no", "text1 >= text2,test: no", "text1 ≥ text2,test: no"
     })
     void relationWithoutCollator(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${" + input + "}");
+        Template template = templateBuilder.getTemplate("relation", "test: ${" + input + "}");
         Map<String, Object> model = Map.of("text1", "JENS", "text2", "jens");
         assertEquals(expected, template.process(model));
     }
@@ -398,7 +398,28 @@ class StringInterpolationTest {
     })
     void relationWithCollator(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.with(SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE, Collator.PRIMARY)
-                .getTemplate("test", "test: ${" + input + "}");
+                .getTemplate("relation", "test: ${" + input + "}");
+        Map<String, Object> model = Map.of("text1", "jens", "text2", "JENS");
+        assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "text1 == text1,test: yes", "text1 == text2,test: no", "text1 != text2,test: yes", "text1 != 42,test: yes", "text1 == null,test: no"
+    })
+    void equalityWithoutCollator(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("equality", "test: ${" + input + "}");
+        Map<String, Object> model = Map.of("text1", "jens", "text2", "JENS");
+        assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "text1 == text1,test: yes", "text1 == text2,test: yes", "text1 != text2,test: no", "text1 != 42,test: yes", "text1 == null,test: no"
+    })
+    void equalityWithCollator(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.with(SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE, Collator.PRIMARY)
+                .getTemplate("equality", "test: ${" + input + "}");
         Map<String, Object> model = Map.of("text1", "jens", "text2", "JENS");
         assertEquals(expected, template.process(model));
     }
