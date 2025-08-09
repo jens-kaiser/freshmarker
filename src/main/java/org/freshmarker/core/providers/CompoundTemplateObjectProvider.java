@@ -6,7 +6,6 @@ import org.freshmarker.core.model.TemplateObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -77,12 +76,6 @@ public class CompoundTemplateObjectProvider implements TemplateObjectProvider {
             if (provided != null) {
                 return provided;
             }
-        }
-        if (o instanceof Set<?>) {
-            System.err.println("SET: " + o + " " + o.getClass() + " " + Arrays.toString(o.getClass().getInterfaces()));
-        }
-        if (o instanceof Collection<?>) {
-            System.err.println("COLLECTION: " + o + " " + o.getClass() + " " + Arrays.toString(o.getClass().getInterfaces()));
         }
         return null;
     }
