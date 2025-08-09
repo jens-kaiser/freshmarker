@@ -6,6 +6,7 @@
 
 - add long literals
 - add all `java.util.SequenceCollection` as sequences
+- add arrays as sequences
 - add `SystemFeature.SET_AS_SEQUENCE` to allow `java.util.Set` as sequence
 - add `SystemFeature.COLLECTION_AS_SEQUENCE` to allow `java.util.Collection` as sequence
 
