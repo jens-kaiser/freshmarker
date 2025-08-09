@@ -85,6 +85,14 @@ These features are controlled by constants in the `SystemFeature` class.
 | *LOCALE_SENSITIVE_STRING_COMPARE*
 | Feature that enables locale sensitive String compare by `java.text.Collator`. The strength can be configured via the second parameter.
 | `false`
+
+| *SET_AS_SEQUENCE*
+| Feature that enables Set instances as sequences. This does not affect sets that are recognized as `SequencedCollection`.
+| `false`
+
+| *COLLECTION_AS_SEQUENCE*
+| Feature that enables Collection instances as sequences. This does not affect collections that are recognized as `SequencedCollection`.
+| `false`
 |===
 
 .Example with locale sensitive string compare.
