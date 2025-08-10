@@ -230,6 +230,22 @@ INJECT BrickInstruction :
    }
 }
 
+INJECT TryInstruction :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
+      return visitor.visit(this, input);
+   }
+}
+
+INJECT ExceptBlock :
+  import org.freshmarker.core.ftl.FtlVisitor;
+{
+   public <I, O> O accept(FtlVisitor<I, O> visitor, I input) {
+      return visitor.visit(this, input);
+   }
+}
+
 INJECT Expression :
   import org.freshmarker.core.ftl.ExpressionVisitor;
 {

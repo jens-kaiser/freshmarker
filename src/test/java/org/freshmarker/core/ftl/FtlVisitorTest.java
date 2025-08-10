@@ -9,8 +9,10 @@ import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
+import ftl.ast.ExceptBlock;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
+import ftl.ast.IncludeInstruction;
 import ftl.ast.Interpolation;
 import ftl.ast.ListInstruction;
 import ftl.ast.MacroDefinition;
@@ -22,6 +24,7 @@ import ftl.ast.Root;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
+import ftl.ast.TryInstruction;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
 import org.junit.jupiter.api.BeforeEach;
@@ -161,5 +164,20 @@ class FtlVisitorTest {
     @Test
     void visitBrickInstruction() {
         assertEquals("", visitor.visit((BrickInstruction) null, ""));
+    }
+
+    @Test
+    void visitIncludeInstruction() {
+        assertEquals("", visitor.visit((IncludeInstruction) null, ""));
+    }
+
+    @Test
+    void visitTryInstruction() {
+        assertEquals("", visitor.visit((TryInstruction) null, ""));
+    }
+
+    @Test
+    void visitExeptBlock() {
+        assertEquals("", visitor.visit((ExceptBlock) null, ""));
     }
 }

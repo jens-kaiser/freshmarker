@@ -32,5 +32,6 @@ class TemplateVisitorTest {
         assertNull(new VarVariableFragment(null, null, null).accept(visitor));
         assertNull(new SetVariableFragment(null, null, null).accept(visitor));
         assertNull(new HashListFragment(null, null, null, null, null, null, null, null, null, null).accept(visitor));
+        assertNull(new TryFragment(null, null).accept(visitor));
     }
 }

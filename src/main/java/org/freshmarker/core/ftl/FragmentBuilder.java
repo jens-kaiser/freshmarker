@@ -8,6 +8,7 @@ import ftl.Token;
 import ftl.Token.TokenType;
 import ftl.ast.Assignment;
 import ftl.ast.BrickInstruction;
+import ftl.ast.ExceptBlock;
 import ftl.ast.IDENTIFIER;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
@@ -22,6 +23,7 @@ import ftl.ast.Root;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
+import ftl.ast.TryInstruction;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
 import org.freshmarker.Template;
@@ -41,6 +43,7 @@ import org.freshmarker.core.fragment.ReturnInstructionFragment;
 import org.freshmarker.core.fragment.SequenceListFragment;
 import org.freshmarker.core.fragment.SetVariableFragment;
 import org.freshmarker.core.fragment.SettingFragment;
+import org.freshmarker.core.fragment.TryFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
 import org.freshmarker.core.fragment.VarVariableFragment;
 import org.freshmarker.core.model.TemplateMarkup;
@@ -405,6 +408,21 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         Fragment optimize = Fragments.optimize(ftl.get(5).accept(this, new ArrayList<>()), true);
         template.addBrick(name.substring(1, name.length() - 1), optimize);
         input.add(optimize);
+        return input;
+    }
+
+    @Override
+    public List<Fragment> visit(TryInstruction ftl, List<Fragment> input) {
+        Fragment block = Fragments.optimize(ftl.get(3).accept(this, new ArrayList<>()), true);
+        Fragment except = Fragments.optimize(ftl.get(4).accept(this, new ArrayList<>()), true);
+        input.add(new TryFragment(block, except));
+        return input;
+    }
+
+    @Override
+    public List<Fragment> visit(ExceptBlock ftl, List<Fragment> input) {
+        Fragment block = Fragments.optimize(ftl.get(3).accept(this, new ArrayList<>()), true);
+        input.add(block);
         return input;
     }
 }
