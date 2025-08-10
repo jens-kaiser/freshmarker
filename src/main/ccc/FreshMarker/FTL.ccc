@@ -203,6 +203,10 @@ TOKEN :
     |
     <BRICK : "brick">
     |   
+    <TRY : "try">
+    |
+    <EXCEPT : "except">
+    |
     <_INCLUDE : "include">
     |
     <BLANK : "\n" | "\r" | "\t" | " "> : FTL_EXPRESSION
@@ -447,6 +451,21 @@ ParameterList :
     )*
 ;
 
+Try #TryInstruction :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <TRY>
+    <CLOSE_TAG>
+    Block
+    Except
+    DirectiveEnd("try")
+;
+
+Except #ExceptBlock :
+    (<FTL_DIRECTIVE_OPEN1>|<FTL_DIRECTIVE_OPEN2>)
+    <EXCEPT>
+    <CLOSE_TAG>
+    Block
+;
 
 LooseTagEnd : 
     <CLOSE_TAG>
@@ -493,7 +512,8 @@ TopLevelDirective #void :
      SCAN 2 Return |
      SCAN 2 Nested |
      SCAN 2 OutputFormatBlock |
-     SCAN 2 Brick
+     SCAN 2 Brick |
+     SCAN 2 Try
    )
 ;
 
