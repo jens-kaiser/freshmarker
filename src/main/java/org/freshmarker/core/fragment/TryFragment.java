@@ -4,6 +4,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReduceException;
+import org.freshmarker.core.WrongTypeException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -50,6 +51,8 @@ public class TryFragment implements Fragment {
     private Fragment reduce(Fragment fragment, ReduceContext context) {
         try {
             return fragment.reduce(context);
+        } catch (WrongTypeException e) {
+            throw new ReduceException(e.getMessage(), e);
         } catch (ProcessException e) {
             return fragment;
         }
