@@ -27,6 +27,7 @@ public class TryFragment implements Fragment {
         try {
             block.process(context);
             oldWriter.write(writer.toString());
+            return;
         } catch (RuntimeException ignored) {
         } catch (IOException e) {
             throw new ProcessException(e.getMessage(), e);
