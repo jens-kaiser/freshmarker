@@ -87,11 +87,11 @@ These features are controlled by constants in the `SystemFeature` class.
 | `false`
 
 | *SET_AS_SEQUENCE*
-| Feature that enables Set instances as sequences. This does not affect sets that are recognized as `SequencedCollection`.
+| Feature that enables Set instances as sequences. This does not affect sets that are recognized as `SequencedCollection` (since 2.1.0).
 | `false`
 
 | *COLLECTION_AS_SEQUENCE*
-| Feature that enables Collection instances as sequences. This does not affect collections that are recognized as `SequencedCollection`.
+| Feature that enables Collection instances as sequences. This does not affect collections that are recognized as `SequencedCollection` (since 2.1.0).
 | `false`
 |===
 
