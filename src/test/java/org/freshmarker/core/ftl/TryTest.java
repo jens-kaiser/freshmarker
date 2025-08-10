@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import org.freshmarker.Template;
 import org.freshmarker.TemplateBuilder;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,32 @@ class TryTest {
     }
 
     @Test
-    void reduceTryWithoutException(TemplateBuilder builder) {
+    void tryWithExceptException(TemplateBuilder builder) {
+        Template template = builder.getTemplate("try", """
+                <#try>
+                ${value}
+                <#except>
+                ${value}
+                </#try>
+                """);
+        Assertions.assertThrows(ProcessException.class, () -> template.process(Map.of()));
+    }
+
+    @Test
+    void reduceTryWithoutReductions(TemplateBuilder builder) {
+        Template template = builder.getTemplate("try", """
+                <#try>
+                This is a try test.
+                <#except>
+                This is a except test.
+                </#try>
+                """);
+        Template reduced = template.reduce(Map.of());
+        Assertions.assertEquals("This is a try test.\n", reduced.process(Map.of("value", "value")));
+    }
+
+    @Test
+    void reduceTry(TemplateBuilder builder) {
         Template template = builder.getTemplate("try", """
                 <#try>
                 ${key} ${value}
@@ -49,15 +75,15 @@ class TryTest {
     }
 
     @Test
-    void reduceTryWithException(TemplateBuilder builder) {
+    void reduceTryWithExceptReduction(TemplateBuilder builder) {
         Template template = builder.getTemplate("try", """
                 <#try>
                 ${key} ${value}
                 <#except>
-                This is a except test.
+                ${key} ${value}
                 </#try>
                 """);
         Template reduced = template.reduce(Map.of("key", "key"));
-        Assertions.assertEquals("This is a except test.\n", reduced.process(Map.of()));
+        Assertions.assertEquals("key value\n", reduced.process(Map.of("value", "value")));
     }
 }
