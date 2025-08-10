@@ -50,7 +50,7 @@ public class TryFragment implements Fragment {
     private Fragment reduce(Fragment fragment, ReduceContext context) {
         try {
             return fragment.reduce(context);
-        } catch (ReduceException e) {
+        } catch (ProcessException e) {
             return fragment;
         }
     }

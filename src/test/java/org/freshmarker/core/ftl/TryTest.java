@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import org.freshmarker.Template;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceException;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,18 @@ class TryTest {
                 </#try>
                 """);
         Assertions.assertThrows(ProcessException.class, () -> template.process(Map.of()));
+    }
+
+    @Test
+    void reduceTryWithException(TemplateBuilder builder) {
+        Template template = builder.getTemplate("try", """
+                <#try>
+                ${value.name}
+                <#except>
+                This is a except test.
+                </#try>
+                """);
+        Assertions.assertThrows(ReduceException.class, () -> template.reduce(Map.of("value", "value")));
     }
 
     @Test
