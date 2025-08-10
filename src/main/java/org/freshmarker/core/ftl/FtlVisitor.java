@@ -9,6 +9,7 @@ import ftl.ast.CaseInstruction;
 import ftl.ast.DefaultInstruction;
 import ftl.ast.ElseBlock;
 import ftl.ast.ElseIfBlock;
+import ftl.ast.ExceptBlock;
 import ftl.ast.IfStatement;
 import ftl.ast.ImportInstruction;
 import ftl.ast.IncludeInstruction;
@@ -23,6 +24,7 @@ import ftl.ast.Root;
 import ftl.ast.SettingInstruction;
 import ftl.ast.SwitchInstruction;
 import ftl.ast.Text;
+import ftl.ast.TryInstruction;
 import ftl.ast.UserDirective;
 import ftl.ast.VarInstruction;
 
@@ -116,4 +118,8 @@ public interface FtlVisitor<I, O> {
   default O visit(IncludeInstruction ftl, I input) { return handleWithException(ftl); }
 
   default O visit(BrickInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(TryInstruction ftl, I input) { return handleWithException(ftl); }
+
+  default O visit(ExceptBlock ftl, I input) { return handleWithException(ftl); }
 }

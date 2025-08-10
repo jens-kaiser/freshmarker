@@ -288,3 +288,29 @@ Template template = new Configuration().buider().getTemplate("mail", mail);
 String salutation = template.processBrick("salutation", model);
 String signature = template.processBrick("signature", model);
 ----
+
+=== Try Directive (since 2.1.0)
+
+Some runtime errors during template processing cannot be predicted. Despite this, it would be nice if these errors did not cause processing to be aborted.
+
+Sections of a template that contain potential runtime errors can be saved using the _Try Directive_.
+
+If an error occurs within the _Try Directive_, processing is not terminated, but the content of the _Except Block_ is written.
+
+.Example template
+[source,freshmarker,subs="verbatim,quotes"]
+----
+*<#try>*
+Customer:    ${customer.name}
+Family-Tree: ${tree.name}
+*<#except>*
+Something went wrong with the family tree!
+*</#tr<>*
+----
+
+In the example above, the family tree is queried via a <<Lazy Values>>, which may cause an error when executed.
+If this happens, the text `Something went wrong with the family tree!` is written. Otherwise, the name of the customer and the family tree.
+
+WARNING: The output of the _Try Directive_ is buffered so that no content from the _Try Block_ is written in the event of an error, but only content from the _Except Block_. _Try Blocks_ should therefore not be unnecessarily large.
+
+If an error occurs in the _Except Block_ the template processing is aborted.

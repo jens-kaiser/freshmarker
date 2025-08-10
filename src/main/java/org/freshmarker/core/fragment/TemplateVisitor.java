@@ -66,4 +66,8 @@ public interface TemplateVisitor<R> {
     default R visit(HashListFragment hashListFragment, String keyIdentifier, String valueIdentifier, Comparator<String> comparator, TemplateObject list, String looperIdentifier, Fragment block, TemplateObject filter, TemplateObject offset, TemplateObject limit) {
         return null;
     }
+
+    default R visit(TryFragment fragment) {
+        return null;
+    }
 }
