@@ -61,7 +61,6 @@ The  _Var Directive_ allows the assignment of an initial value to the variable.
 Instead of multiple _Var Directives_ a single _Var Directive_ with several variable definitions can be used.
 The individual definitions can be separated from each other by a space or a comma.
 
-
 .Example Var Directive with multiple variable
 [source,freshmarker]
 ----
@@ -154,15 +153,15 @@ m|<#setting zone-id="Europe/Berlin">
 
 The macro directive can be used to create a macro, which can then be used as a user directive in the template.
 
-[source,freshmarker]
+[source,freshmarker,subs="verbatim,quotes"]
 ----
-<#macro copyright from>
+*<#macro copyright from>*
 /*
  * Copyright © ${from}-${.now?string('yyyy')} Jens Kaiser
  *
  * All Rights resevered.
  */
-</#macro from>
+*</#macro from>*
 <@copyright/>
 ----
 
@@ -187,11 +186,11 @@ Whitespace prefixes and suffixes not containing newlines will be removed.
 .Template
 [source,role="primary",freshmarker,subs="verbatim,quotes"]
 ----
-<@compress>
+*<@compress>*
 ␣␣⏎
 ␣␣Hello␣␣␣World␣␣⏎
 ␣␣␣␣⏎
-</@compress>
+*</@compress>*
 ----
 
 .Output
@@ -211,11 +210,11 @@ TIP: If no consecutive spaces should occur in the output, the `oneliner` _User D
 .Template
 [source,role="primary",freshmarker,subs="verbatim,quotes"]
 ----
-<@oneliner>
+*<@oneliner>*
 ␣␣⏎
 ␣␣Hello␣␣␣World␣␣⏎
 ␣␣␣␣⏎
-</@oneliner>
+*</@oneliner>*
 ----
 
 .Output
@@ -305,7 +304,7 @@ Customer:    ${customer.name}
 Family-Tree: ${tree.name}
 *<#except>*
 Something went wrong with the family tree!
-*</#tr<>*
+*</#tr>*
 ----
 
 In the example above, the family tree is queried via a <<Lazy Values>>, which may cause an error when executed.
