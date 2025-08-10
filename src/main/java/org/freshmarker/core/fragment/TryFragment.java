@@ -27,13 +27,13 @@ public class TryFragment implements Fragment {
         try {
             block.process(context);
             oldWriter.write(writer.toString());
-        } catch (RuntimeException e) {
-            except.process(context);
+        } catch (RuntimeException ignored) {
         } catch (IOException e) {
             throw new ProcessException(e.getMessage(), e);
         } finally {
             context.setWriter(oldWriter);
         }
+        except.process(context);
     }
 
     @Override
