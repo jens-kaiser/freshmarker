@@ -46,7 +46,8 @@ class TryTest {
                 ${value}
                 </#try>
                 """);
-        Assertions.assertThrows(ProcessException.class, () -> template.process(Map.of()));
+        Map<String, Object> dataModel = Map.of();
+        Assertions.assertThrows(ProcessException.class, () -> template.process(dataModel));
     }
 
     @Test
@@ -58,7 +59,8 @@ class TryTest {
                 This is a except test.
                 </#try>
                 """);
-        Assertions.assertThrows(ReduceException.class, () -> template.reduce(Map.of("value", "value")));
+        Map<String, Object> dataModel = Map.of("value", "value");
+        Assertions.assertThrows(ReduceException.class, () -> template.reduce(dataModel));
     }
 
     @Test
