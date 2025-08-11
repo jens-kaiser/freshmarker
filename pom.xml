@@ -369,6 +369,7 @@
                     <resources>
                         <resource>
                             <directory>src/main/asciidoc/images</directory>
+                            <directory>src/main/asciidoc/css</directory>
                         </resource>
                     </resources>
                 </configuration>
