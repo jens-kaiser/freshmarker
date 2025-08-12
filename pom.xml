@@ -370,6 +370,7 @@
                         <resource>
                             <directory>src/main/asciidoc/images</directory>
                             <includes><include>freshmarker-logo3.svg</include></includes>
+                            <includes><include>favicon.png</include></includes>
                         </resource>
                         <resource>
                             <directory>src/main/asciidoc/css</directory>
