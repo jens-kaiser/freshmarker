@@ -12,8 +12,10 @@ In particular, the lack of modern data types such as `java.time.LocalDate` in _F
 
 You can find a detailed description of all _Freshmarker_ features in the manuals for
 https://schegge.gitlab.io/freshmarker/1.11.0[version 1.11.0]
+,
+https://schegge.gitlab.io/freshmarker/2.0.0[version 2.0.0]
 and
-https://schegge.gitlab.io/freshmarker/1.11.0[version 2.0.0].
+https://schegge.gitlab.io/freshmarker/2.1.0[version 2.1.0].
 
 The https://gitlab.com/schegge/freshmarker/-/blob/develop/RELEASE_NOTES.adoc[release notes] contains changes to the template engine since version 1.4.6.
 
