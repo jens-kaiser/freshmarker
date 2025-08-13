@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+          background: #2A7B9B;
+          background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
+          font-size: 28px;
+          font-family: sans-serif;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+        h1 img {
+          max-width: 1200px;
+        }
+
+        .flex-container {
+          border-radius: 10px;
+          display: flex;
+          justify-content: center;
+          background-color: #b3ff80;
+        }
+
+        .flex-container > div {
+          border-radius: 10px;
+          border: 2px solid #ffff00;
+          background-color: #e5ff80;
+          width: 200px;
+          margin: 10px;
+          text-align: center;
+          line-height: 32px;
+          font-size: 24 px;
+        }
+
+        p {
+          font-size: 20 px;
+          outline: "px dotted #8CFFE8;
+          outline-offset: 4px;
+        }
+    </style>
+    <title>FreshMarker</title>
+</head>
+<body>
+
+<h1><img src="images/freshmarker-logo3.svg" alt="FreshMarker" width="100%"/></h1>
+
+<p><b>FreshMarker</b> is open source software distributed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a></p>
+<div class="flex-container">
+    <div><a>Manual 1.1.0</a></div>
+    <div><a>Manual 2.0.0</a></div>
+    <div><a>Manual 2.1.0</a></div>
+</div>
+
+<p><b>FreshMarker</b> is a simple, embedded Java 21 Template-Engine, which is inspired by FreeMarker.
+Most of the basic concepts are the same.</p>
+
+<p>The scope of <b>FreshMarker</b> is the processing of templates at runtime with sufficient programming functions.
+The templates do not need to be precompiled and can therefore be adapted at runtime.
+This is an advantage for use in tools and for large quantities of stored templates in text form.</p>
+
+<p>Despite reduced programming functions, <b>FreshMarker</b> is open to new data types and integrated functions.</p>
+
+<p>In particular, the lack of modern data types such as java.time.LocalDate in FreeMarker was the reason for implementing FreshMarker.</p>
+
+<ul>
+    <li>Gitlab</li>
+    <li>Reddit</li>
+    <li>Schegge.de</li>
+</ul>
+</body>
+</html>

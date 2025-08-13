@@ -14,22 +14,13 @@ import org.freshmarker.api.UserDirective;
 import org.freshmarker.api.extension.UserDirectiveProvider;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.extension.ExtensionRegistry;
-import org.freshmarker.core.formatter.DateFormatter;
-import org.freshmarker.core.formatter.DateTimeFormatter;
+import org.freshmarker.core.extension.PatternBasedFormatterProvider;
 import org.freshmarker.core.formatter.NumberFormatter;
-import org.freshmarker.core.formatter.TimeFormatter;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.freshmarker.core.model.temporal.TemplateInstant;
-import org.freshmarker.core.model.temporal.TemplateLocalDate;
-import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
-import org.freshmarker.core.model.temporal.TemplateLocalTime;
-import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
-import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 
-import java.time.ZoneId;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -98,17 +89,6 @@ public final class Configuration {
     }
 
     public void registerFormatter(String type, String pattern) {
-        extensionRegistry.register((FormatterProvider) () ->
-        switch (type) {
-            case "number" -> Map.of(TemplateNumber.class, new NumberFormatter(pattern));
-            case "zoned-date-time" ->  Map.of(
-                    TemplateZonedDateTime.class, new DateTimeFormatter(pattern),
-                    TemplateInstant.class, new DateTimeFormatter(pattern, ZoneId.systemDefault()));
-            case "offset-date-time" ->  Map.of(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern));
-            case "date-time" ->  Map.of(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
-            case "date" ->  Map.of(TemplateLocalDate.class, new DateFormatter(pattern));
-            case "time" ->  Map.of(TemplateLocalTime.class, new TimeFormatter(pattern, ZoneId.systemDefault()));
-            default -> throw new IllegalStateException("Unexpected value: " + type);
-        });
+        extensionRegistry.register(new PatternBasedFormatterProvider(type, pattern));
     }
 }

@@ -15,6 +15,8 @@ import org.freshmarker.core.utils.RomanNumbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.NumberFormat;
+import java.text.NumberFormat.Style;
 import java.util.Formatter;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -53,14 +55,14 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         if (number > 0 && number < 10) {
             return new TemplateString(ResourceBundle.getBundle("freshmarker", context.getLocale()).getString("number." + value));
         }
-        return value;
+        return new TemplateString(NumberFormat.getCompactNumberInstance(context.getLocale(), Style.LONG).format(getNumber(value).getValue()));
     }
 
     private static TemplateString format(TemplateObject value, List<TemplateObject> parameters, ProcessContext context) {
         BuiltInHelper.checkParametersLength(parameters, 1);
-        TemplateString format = parameters.getFirst().evaluate(context, TemplateString.class);
+        String formatValue = parameters.getFirst().evaluate(context, TemplateString.class).getValue();
         try (Formatter formatter = new Formatter(context.getLocale())) {
-            return new TemplateString(formatter.format(format.getValue(), getNumber(value).getValue()).toString());
+            return new TemplateString(formatter.format(formatValue, getNumber(value).getValue()).toString());
         }
     }
 

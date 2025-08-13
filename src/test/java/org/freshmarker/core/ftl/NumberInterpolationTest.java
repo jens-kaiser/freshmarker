@@ -591,4 +591,13 @@ class NumberInterpolationTest {
         Template template = templateBuilder.getTemplate("test", "<#list 48..57 as c>${c?unicode}</#list>");
         assertEquals("0123456789", template.process(Map.of()));
     }
+
+    @ParameterizedTest
+    @CsvSource({ "1000,1 Tausend", "10000,10 Tausend", "100000,100 Tausend", "1000000,1 Million", "10000000,10 Millionen",
+            "2500,2 Tausend", "3100,3 Tausend", "3501,4 Tausend", "3900,4 Tausend", "3999,4 Tausend",
+            "500,500","999,999", "999999,1 Million"})
+    void interpolateHumanLanguageNumbers(int value, String expected) {
+        Template template = templateBuilder.getTemplate("test", "${value?h}");
+        assertEquals(expected, template.process(Map.of("value", value)));
+    }
 }

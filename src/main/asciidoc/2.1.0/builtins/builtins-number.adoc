@@ -8,7 +8,7 @@ NOTE: Without this builtin, the number is formatted with the default number form
 
 ==== `h` (human language) Built-In (since 1.4.6)
 
-This built-in formats the numbers between 1 and 9 as localized strings 'one' to 'nine'. Other numbers are returned as numbers and formatted by default.
+This built-in formats the numbers between 1 and 9 as localized strings 'one' to 'nine' and values from 1000 are written according to the `CompactNumberFormat` with the style `LONG`.
 
 include::localization_tip.adoc[]
 
@@ -30,6 +30,14 @@ m|nine
 m|${10?h}
 m|Locale.US
 m|10
+
+m|${1000?h}
+m|Locale.GERMANY
+m|1 Tausend
+
+m|${999999?h}
+m|Locale.GERMANY
+m|1 Million
 |===
 
 ==== `format` Built-In
