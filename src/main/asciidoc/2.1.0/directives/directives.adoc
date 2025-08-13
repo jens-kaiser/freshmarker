@@ -304,7 +304,7 @@ Customer:    ${customer.name}
 Family-Tree: ${tree.name}
 *<#except>*
 Something went wrong with the family tree!
-*</#tr>*
+*</#try>*
 ----
 
 In the example above, the family tree is queried via a <<Lazy Values>>, which may cause an error when executed.
