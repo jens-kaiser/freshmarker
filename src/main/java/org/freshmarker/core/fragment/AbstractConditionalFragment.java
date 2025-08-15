@@ -45,21 +45,4 @@ public abstract class AbstractConditionalFragment implements Fragment {
     protected List<ConditionalFragment> reduceConditionals(ReduceContext context, List<ConditionalFragment> fragments) {
         return fragments.stream().map(fragment -> fragment.reduce(context)).toList();
     }
-
-    protected ConditionalFragment reduceConditional(ReduceContext context, ConditionalFragment fragment) {
-        try {
-            return fragment.reduce(context);
-        } catch (ProcessException ignored) {
-            return fragment;
-        }
-    }
-
-    protected Fragment reduceFragment(ReduceContext context, Fragment fragment) {
-        try {
-            return fragment.reduce(context);
-        } catch (ProcessException ignored) {
-            return fragment;
-        }
-    }
-
 }
