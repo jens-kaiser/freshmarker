@@ -56,6 +56,7 @@ import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.TemplateSign;
 import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
+import org.freshmarker.core.model.builtin.LogBuiltIn;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -158,10 +159,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     @Override
     public TemplateBuiltIn visit(BuiltIn expression, Object input) {
+        String buildInName = ((Token) expression.get(1)).toString();
+        if ("log".equals(buildInName)) {
+            return new LogBuiltIn(templateObjectAndNode.templateObject(), templateObjectAndNode.node());
+        }
         boolean pipe = expression.getFirst().getType() == TokenType.BUILT_IN2;
         boolean ignoreOptionalEmpty = pipe || featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_OPTIONAL_EMPTY);
         boolean ignoreNull = pipe || featureSet.isEnabled(BuiltinHandlingFeature.IGNORE_NULL);
-        Token buildInName = (Token) expression.get(1);
         TemplateObjectAndNode templateObjectAndNode = (TemplateObjectAndNode) input;
         if (expression.size() < 3) {
             return new TemplateBuiltIn(buildInName.toString(), templateObjectAndNode.templateObject(), List.of(), ignoreOptionalEmpty, ignoreNull,
