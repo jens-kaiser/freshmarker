@@ -183,12 +183,18 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         } else {
             parameter.add(child.accept(this, null));
         }
-        return new TemplateBuiltIn(buildInName.toString(), templateObjectAndNode.templateObject(), parameter, ignoreOptionalEmpty, ignoreNull,
-                templateObjectAndNode.node());
         return parameter;
     }
 
     private TemplateObject createBuiltIn(String buildInName, TemplateObjectAndNode templateObjectAndNode, List<TemplateObject> parameter, boolean ignoreOptionalEmpty, boolean ignoreNull) {
+        if (!TYPE_CHECK_BUILT_INS.contains(buildInName)) {
+            List<Entry<BuiltInKey, org.freshmarker.api.BuiltIn>> list = templateContext.builtIns().entrySet().stream()
+                    .filter(b -> buildInName.equals(b.getKey().getName()))
+                    .toList();
+            if (list.size() == 1) {
+                return new HookedBuiltIn(templateObjectAndNode.templateObject(), list.getFirst().getKey(), list.getFirst().getValue(), parameter, ignoreOptionalEmpty, ignoreNull);
+            }
+        }
         return new TemplateBuiltIn(buildInName, templateObjectAndNode.templateObject(), parameter, ignoreOptionalEmpty, ignoreNull);
     }
 
