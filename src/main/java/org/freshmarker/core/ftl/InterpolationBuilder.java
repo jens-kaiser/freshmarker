@@ -173,8 +173,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     private List<TemplateObject> collectParameters(BuiltIn expression) {
         if (expression.size() < 3) {
-            return new TemplateBuiltIn(buildInName.toString(), templateObjectAndNode.templateObject(), List.of(), ignoreOptionalEmpty, ignoreNull,
-                    templateObjectAndNode.node());
+            return List.of();
         }
         List<TemplateObject> parameter = new ArrayList<>();
         Node child = expression.get(3);
