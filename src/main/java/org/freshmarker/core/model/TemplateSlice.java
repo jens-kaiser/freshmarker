@@ -43,7 +43,6 @@ public class TemplateSlice implements TemplateObject {
         }
         if (templateRange instanceof AbstractLimitedRange limitedRange) {
             AbstractLimitedRange newRange = (AbstractLimitedRange) limitedRange.evaluateToObject(context);
-
             int left = ((TemplateNumber) newRange.getLower()).getValue().intValue();
             int right = ((TemplateNumber) newRange.getUpper(context)).getValue().intValue();
             return TemplateNumber.of(Math.clamp(numberValue, left, right));
