@@ -3,14 +3,10 @@ package org.freshmarker.core.model;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.UnsupportedBuiltInException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public final class TemplateBuiltIn implements TemplateExpression {
-    private static final Logger logger = LoggerFactory.getLogger("builtin.logging");
-
     private final String name;
     private final TemplateObject expression;
     private final List<TemplateObject> parameter;
@@ -31,10 +27,6 @@ public final class TemplateBuiltIn implements TemplateExpression {
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateObject result = expression.evaluateToObject(context);
-        if ("log".equals(name)) {
-            logger.debug("{} => {}", node, result);
-            return result;
-        }
         if (result == TemplateNull.NULL_OPTIONAL && ignoreOptionalNull) {
             return result;
         }
