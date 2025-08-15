@@ -185,6 +185,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         }
         return new TemplateBuiltIn(buildInName.toString(), templateObjectAndNode.templateObject(), parameter, ignoreOptionalEmpty, ignoreNull,
                 templateObjectAndNode.node());
+        return parameter;
+    }
+
+    private TemplateObject createBuiltIn(String buildInName, TemplateObjectAndNode templateObjectAndNode, List<TemplateObject> parameter, boolean ignoreOptionalEmpty, boolean ignoreNull) {
+        return new TemplateBuiltIn(buildInName, templateObjectAndNode.templateObject(), parameter, ignoreOptionalEmpty, ignoreNull);
     }
 
     @Override
