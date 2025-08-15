@@ -56,7 +56,6 @@ import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.TemplateSign;
 import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
-import org.freshmarker.core.model.builtin.HookedBuiltIn;
 import org.freshmarker.core.model.builtin.LogBuiltIn;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
