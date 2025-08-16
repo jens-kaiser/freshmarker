@@ -29,6 +29,14 @@ public class BuiltInKey {
         return false;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Class<? extends TemplateObject> getType() {
+        return type;
+    }
+
     @Override
     public int hashCode() {
         return hash;

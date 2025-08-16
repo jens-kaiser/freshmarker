@@ -2,16 +2,15 @@ package org.freshmarker.core;
 
 import org.freshmarker.api.BuiltIn;
 import org.freshmarker.api.FeatureSet;
-import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
 import org.freshmarker.core.environment.NameSpaced;
+import org.freshmarker.core.extension.BuiltInRepository;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
-import org.freshmarker.core.plugin.BuiltInHelper;
 
 import java.io.Writer;
 import java.time.Clock;
@@ -25,15 +24,12 @@ import java.util.Map;
 public class ProcessContext {
     private static final Formatter SIMPLE = (object, locale) -> object.toString();
 
-    private static final List<String> TYPE_CHECK_BUILT_INS = List.of("is_null", "is_string", "is_boolean", "is_number", "is_hash", "is_sequence",
-            "is_enum", "is_range", "is_temporal", "is_character");
-
     private Writer writer;
     protected Environment environment;
     protected final FeatureSet featureSet;
     protected final BaseEnvironment baseEnvironment;
     protected final Map<Object, Map<Object, Object>> stores = new HashMap<>();
-    protected final Map<BuiltInKey, BuiltIn> builtIns;
+    protected final BuiltInRepository builtIns;
     protected final Map<String, OutputFormat> outputs;
     protected final Map<String, TemplateFunction> functions;
     protected final List<Locale> locals = new LinkedList<>();
@@ -107,14 +103,7 @@ public class ProcessContext {
     }
 
     public BuiltIn getBuiltIn(Class<? extends TemplateObject> type, String name) {
-        BuiltIn result = builtIns.get(new BuiltInKey(type, name));
-        if (result != null) {
-            return result;
-        }
-        if (TYPE_CHECK_BUILT_INS.contains(name)) {
-            return BuiltInHelper.alwaysFalse();
-        }
-        throw new UnsupportedBuiltInException("unsupported builtin '" + name + "' for " + type.getSimpleName());
+        return builtIns.byKey(type, name);
     }
 
     public OutputFormat getOutputFormat(String name) {
