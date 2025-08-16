@@ -12,16 +12,14 @@ public final class TemplateBuiltIn implements TemplateExpression {
     private final List<TemplateObject> parameter;
     private final boolean ignoreOptionalNull;
     private final boolean ignoreNull;
-    private final String node;
 
     public TemplateBuiltIn(String name, TemplateObject expression, List<TemplateObject> parameter, boolean ignoreOptionalNull,
-                           boolean ignoreNull, String node) {
+                           boolean ignoreNull) {
         this.name = name;
         this.expression = expression;
         this.parameter = parameter;
         this.ignoreOptionalNull = ignoreOptionalNull;
         this.ignoreNull = ignoreNull;
-        this.node = node;
     }
 
     @Override
