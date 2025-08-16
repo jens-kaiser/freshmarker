@@ -194,7 +194,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         StaticContext templateContext = new StaticContext(extensionRegistry, templateLoader);
         SimpleFeatureSet featureSetCopy = new SimpleFeatureSet(featureSet);
         Template template = new Template(this, templateContext, templateLoader, importPath, featureSetCopy);
-        List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, featureSetCopy, 0), new ArrayList<>());
+        List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, featureSetCopy, 0, templateContext), new ArrayList<>());
         Fragments.withVariableContext(fragments).forEach(template.getRootFragment()::addFragment);
         return template;
     }

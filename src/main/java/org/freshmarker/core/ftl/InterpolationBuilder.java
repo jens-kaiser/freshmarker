@@ -32,6 +32,8 @@ import ftl.ast.UnaryPlusMinusExpression;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.StaticContext;
+import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
@@ -56,6 +58,7 @@ import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.TemplateSign;
 import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
+import org.freshmarker.core.model.builtin.HookedBuiltIn;
 import org.freshmarker.core.model.builtin.LogBuiltIn;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
@@ -66,6 +69,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateObject> {
 
@@ -74,9 +79,11 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     private final PositionalArgsListBuilder argsListBuilder;
 
     private final FeatureSet featureSet;
+    private final StaticContext templateContext;
 
-    public InterpolationBuilder(FeatureSet featureSet) {
+    public InterpolationBuilder(FeatureSet featureSet, StaticContext templateContext) {
         this.featureSet = featureSet;
+        this.templateContext = templateContext;
         argsListBuilder = new PositionalArgsListBuilder(this);
     }
 
@@ -186,6 +193,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     }
 
     private TemplateObject createBuiltIn(String buildInName, TemplateObjectAndNode templateObjectAndNode, List<TemplateObject> parameter, boolean ignoreOptionalEmpty, boolean ignoreNull) {
+        Optional<Entry<BuiltInKey, org.freshmarker.api.BuiltIn>> builtIn = templateContext.builtIns().byName(buildInName);
+        if (builtIn.isPresent()) {
+            return new HookedBuiltIn(templateObjectAndNode.templateObject(), builtIn.get().getKey(), builtIn.get().getValue(), parameter, ignoreOptionalEmpty, ignoreNull);
+        }
         return new TemplateBuiltIn(buildInName, templateObjectAndNode.templateObject(), parameter, ignoreOptionalEmpty, ignoreNull);
     }
 

@@ -85,7 +85,7 @@ public class ExtensionRegistry {
         return templateFeatures;
     }
 
-    public Map<BuiltInKey, BuiltIn> getBuiltIns() {
+    public BuiltInRepository getBuiltIns() {
         Map<org.freshmarker.core.buildin.BuiltInKey, BuiltIn> map = new HashMap<>();
         stream(BuiltInProvider.class).map(BuiltInProvider::provideBuiltInRegister).filter(Objects::nonNull).forEach(r -> {
             for (Entry<Class<? extends TemplateObject>, Map<String, BuiltIn>> entry : r.asMap().entrySet()) {
@@ -94,7 +94,7 @@ public class ExtensionRegistry {
                 }
             }
         });
-        return map;
+        return new BuiltInRepository(map);
     }
 
     public List<TemplateObjectProvider> getProviders() {

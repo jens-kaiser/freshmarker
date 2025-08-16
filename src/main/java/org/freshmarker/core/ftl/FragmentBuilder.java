@@ -30,6 +30,7 @@ import org.freshmarker.Template;
 import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.IncludeDirectiveFeature;
+import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.directive.MacroUserDirective;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.fragment.ConstantFragment;
@@ -80,15 +81,17 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final FeatureSet featureSet;
     private final int includeLevel;
     private final InterpolationBuilder interpolationBuilder;
+    private final StaticContext templateContext;
     private final NamedArgsBuilder namedArgsBuilder;
     private final ParameterListBuilder parameterListBuilder;
 
-    public FragmentBuilder(Template template, String nameSpace, FeatureSet featureSet, int includeLevel) {
+    public FragmentBuilder(Template template, String nameSpace, FeatureSet featureSet, int includeLevel, StaticContext templateContext) {
         this.template = template;
         this.nameSpace = nameSpace;
         this.featureSet = featureSet;
         this.includeLevel = includeLevel;
-        interpolationBuilder = new InterpolationBuilder(featureSet);
+        this.templateContext = templateContext;
+        interpolationBuilder = new InterpolationBuilder(featureSet, templateContext);
         namedArgsBuilder = new NamedArgsBuilder(interpolationBuilder);
         parameterListBuilder = new ParameterListBuilder(interpolationBuilder);
     }
@@ -340,7 +343,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            root.accept(new ImportBuilder(template, namespace, featureSet, includeLevel + 1), new ArrayList<>());
+            root.accept(new ImportBuilder(template, namespace, featureSet, includeLevel + 1, templateContext), new ArrayList<>());
             return input;
         } catch (IOException e) {
             throw new ParsingException("cannot read import: " + path, ftl);
@@ -373,7 +376,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            List<Fragment> fragments = root.accept(new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1), new ArrayList<>());
+            List<Fragment> fragments = root.accept(new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1, templateContext), new ArrayList<>());
             Fragments.withVariableContext(fragments).forEach(template.getRootFragment()::addFragment);
             return input;
         } catch (IOException e) {
