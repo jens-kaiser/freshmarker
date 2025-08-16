@@ -41,8 +41,6 @@ public class HookedBuiltIn implements TemplateObject {
         }
         try {
             return builtIn.apply(result, parameter, context);
-        } catch (UnsupportedBuiltInException e) {
-            throw e;
         } catch (RuntimeException e) {
             throw new ProcessException(e.getMessage(), e);
         }
