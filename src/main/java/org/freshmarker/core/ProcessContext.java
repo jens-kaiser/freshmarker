@@ -24,9 +24,6 @@ import java.util.Map;
 public class ProcessContext {
     private static final Formatter SIMPLE = (object, locale) -> object.toString();
 
-    private static final List<String> TYPE_CHECK_BUILT_INS = List.of("is_null", "is_string", "is_boolean", "is_number", "is_hash", "is_sequence",
-            "is_enum", "is_range", "is_temporal", "is_character");
-
     private Writer writer;
     protected Environment environment;
     protected final FeatureSet featureSet;

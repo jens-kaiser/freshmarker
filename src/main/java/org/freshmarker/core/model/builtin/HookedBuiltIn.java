@@ -15,14 +15,16 @@ public class HookedBuiltIn implements TemplateObject {
     private final TemplateObject expression;
     private final BuiltIn builtIn;
     private final BuiltInKey builtInKey;
-    boolean ignoreOptionalEmpty;
-    boolean ignoreNull;
+    final boolean ignoreOptionalEmpty;
+    final boolean ignoreNull;
 
     public HookedBuiltIn(TemplateObject expression, BuiltInKey builtInKey, BuiltIn builtIn, List<TemplateObject> parameter, boolean ignoreOptionalEmpty, boolean ignoreNull) {
         this.builtInKey = builtInKey;
         this.builtIn = builtIn;
         this.parameter = parameter;
         this.expression = expression;
+        this.ignoreOptionalEmpty = ignoreOptionalEmpty;
+        this.ignoreNull = ignoreNull;
     }
 
     @Override
