@@ -346,6 +346,10 @@ m|x ÷ 3
 m|%
 |Remainder Operator
 m|x % 4
+
+m|*
+|String Repeat Operator (since 2.2.0)
+m|"▲▼" * 3
 |===
 
 === Additive Operators
