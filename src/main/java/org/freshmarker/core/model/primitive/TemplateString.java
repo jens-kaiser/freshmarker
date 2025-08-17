@@ -32,6 +32,10 @@ public class TemplateString extends TemplatePrimitive<String> {
         return switch (operator) {
             case PLUS -> concat(operand.evaluate(context, TemplateString.class), "");
             case CONCAT -> concat(operand.evaluate(context, TemplateString.class), " ");
+            case TIMES -> {
+                int repeat = operand.evaluate(context, TemplateNumber.class).asInt();
+                yield new TemplateString(getValue().repeat(repeat));
+            }
             default -> super.operation(operator, operand, context);
         };
     }
