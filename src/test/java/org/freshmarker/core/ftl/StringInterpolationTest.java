@@ -357,7 +357,7 @@ class StringInterpolationTest {
     @ParameterizedTest
     @CsvSource({
             "'Jens' - ' ' - 'Kaiser',unsupported operation: MINUS at invalid:1:3",
-            "'Jens' / ' ' / 'Kaiser',unsupported operation: TIMES at invalid:1:3"})
+            "'Jens' / ' ' / 'Kaiser',unsupported operation: DIVIDE at invalid:1:3"})
     void invalidOperation(String input, String message, TemplateBuilder templateBuilder) {
         ParsingException exception = assertThrows(ParsingException.class, () -> templateBuilder.getTemplate("invalid", "${" +  input + "}"));
         assertEquals(message + " '" + input + "'", exception.getMessage());
