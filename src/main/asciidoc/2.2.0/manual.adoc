@@ -1,0 +1,43 @@
+= FreshMarker Manual
+:revnumber: {project-version}
+:source-highlighter: {source-highlighter}
+:icons: font
+:toc: left
+:author: Jens Kaiser
+:email: schegge42@gmail.com
+:favicon: favicon.png
+:stylesheet: freshmarker.css
+:linkcss:
+
+image::freshmarker-logo3.svg[width=1000,align="left"]
+
+== Introduction
+
+_FreshMarker_ is an embedded _Java 21_ Template-Engine, which is inspired by _FreeMarker_.
+Most of the basic concepts are the same.
+
+The scope of _FreshMarker_ is the processing of templates at runtime with sufficient programming functions. The templates do not need to be precompiled and can therefore be adapted at runtime. This is an advantage for use in tools and for large quantities of stored templates in text form.
+
+Despite reduced programming functions, _FreshMarker_ is open to new data types and integrated functions.
+
+In particular, the lack of modern data types such as `java.time.LocalDate` in _FreeMarker_ was the reason for implementing _FreshMarker_.
+
+include::usage.adoc[]
+
+include::templates.adoc[]
+
+include::model.adoc[]
+
+include::interpolations.adoc[]
+
+include::builtins/builtins.adoc[]
+
+include::directives/directives.adoc[]
+
+include::built-in-variables.adoc[]
+
+include::expression.adoc[]
+
+include::customization.adoc[]
+
+include::extensions/extension.adoc[]

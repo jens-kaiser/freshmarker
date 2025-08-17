@@ -1,0 +1,290 @@
+== Customization
+
+=== Customization by `Configuration`
+
+==== Register Simple Mapping
+
+Unknown _Java_ classes are usually treated like beans. However, this is not desired in many cases. If the _ToString_ representation of an object is to be used in the output, its class can be registered via `registerSimpleMapping(Class<?> type)` for this purpose.
+
+.Example with Leitweg-ID and `toString` method
+[source,java,role="primary"]
+----
+Configuration config = new Configuration();
+config.registerSimpleMapping(LeitwegId.class);
+TemplateBuilder templateBuilder = config.builder();
+Template template = templateBuilder.getTemplate("id", "ID: ${id}!");
+LeitwegId leitwegId = LeitwegId.parse("04011000-1234512345-06");
+String resullt = template.process(Map.of("id", leitwegId));
+----
+
+.Result
+[source,plain,role="secondary"]
+----
+ID: 04011000-1234512345-06!
+----
+
+Alternatively, the method `registerSimpleMapping(Function<Object, String> mapping)` can be used if further adjustments are to be made.
+
+.Example with `java.util.BitSet`
+[source,java,role="primary"]
+----
+Configuration config = new Configuration();
+configuration.registerSimpleMapping(BitSet.class, x -> {
+  BitSet bitSet = (BitSet)x;
+  StringBuilder builder = new StringBuilder();
+  for (int i = 0, n = bitSet.length(); i < n; i++) {
+    builder.append(bitSet.get(i) ? "●" : "○").append("\u2009");
+  }
+  return builder.toString();
+});
+----
+
+.Result for the BitSet `010110011`
+[source,plain,role="secondary"]
+----
+○ ● ○ ● ● ○ ○ ● ●
+----
+
+=== Custom Formatter
+
+The default formatting for number and temporal values can be changed with the
+`Configuration#registerFormatter(String, String)` method.
+
+The first parameter `type` specifies the value type `number`, `zoned-date-time` (for `Instant` and `ZonedDateTime`), `offset-date-time` (for `OffsetDateTime`), `date-time` (for `LocalDateTime`), `date` (for `LocalDate`) and `time` (for `LocalTime`). The second parameter is a pattern of `DecimalFormatter` or `DateTimeFormatter`.
+
+.Example with custom number and temporal formatting
+[source,java]
+----
+Configuration config = new Configuration();
+config.registerFormatter("number", "#.00");
+TemplateBuilder templateBuilderWithNumber = config.builder();
+config.registerFormatter("date", "dd. MM. yyyy");
+config.registerFormatter("time", "HH:mm");
+TemplateBuilder templateBuilderWithNumberAndTemporal = config.builder();
+----
+
+TBD
+
+=== Customization by `TemplateBuilder`
+
+TBD
+
+==== With Features (since 1.7.0)
+
+The `with` and `without` methods can be used to modify the behaviour of _FreshMarker_.
+The parameter of the methods is a feature constant to activate or deactivate the corresponding feature.
+
+===== System Features (since 2.0.0)
+
+These features are controlled by constants in the `SystemFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| *LOCALE_SENSITIVE_STRING_COMPARE*
+| Feature that enables locale sensitive String compare by `java.text.Collator`. The strength can be configured via the second parameter.
+| `false`
+
+| *SET_AS_SEQUENCE*
+| Feature that enables Set instances as sequences. This does not affect sets that are recognized as `SequencedCollection` (since 2.1.0).
+| `false`
+
+| *COLLECTION_AS_SEQUENCE*
+| Feature that enables Collection instances as sequences. This does not affect collections that are recognized as `SequencedCollection` (since 2.1.0).
+| `false`
+|===
+
+.Example with locale sensitive string compare.
+[source,java]
+----
+import org.freshmarker.core.SystemFeature;import java.text.Collator;TemplateBuilder builder = new Configuration().builder()
+    .with(SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE, Collator.PRIMARY);
+----
+
+===== Include Directive Features
+
+These features are controlled by constants in the `IncludeDirectiveFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| *ENABLED*
+| Feature that determines whether include directives are evaluated.
+| `false`
+
+| *LIMIT_INCLUDE_LEVEL*
+| Feature that determines whether the level of includes is limited.
+| `true`
+
+| *IGNORE_LIMIT_EXCEEDED_ERROR*
+| Feature that determines whether the exceeded level of includes is an error.
+| `false`
+
+| *PARSE_BY_DEFAULT*
+| Feature that determines whether the content of include directives is parsed by default.
+| `true`
+|===
+
+.Example change limit for the include level
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder()
+    .with(IncludeDirectiveFeature.LIMIT_INCLUDE_LEVEL, 2);
+----
+
+===== Switch Directive Features
+
+Constants in the `SwitchDirectiveFeature` class control these features.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| *ALLOW_ONLY_CONSTANT_CASES*
+| Feature that determines whether case expressions must be constants.
+| `false`
+
+| *ALLOW_ONLY_CONSTANT_ONS*
+| Feature that determines whether on expressions must be constants.
+| `false`
+
+| *ALLOW_ONLY_EQUAL_TYPE_CASES*
+| Feature that determines whether all case expressions must contain constants from the same type.
+| `false`
+
+| *ALLOW_ONLY_EQUAL_TYPE_ONS*
+| Feature that determines whether all on expressions must contain constants from the same type.
+| `false`
+
+| *OPTIMIZE_CONSTANT_SWITCH*
+| Feature that determines whether the switch optimized with a map (since 1.11.0).
+| `false`
+
+| *ERROR_ON_DUPLICATE_CASE_EXPRESSION*
+| Feature that determines whether a duplicate case expression results in an error (since 1.11.0) on optimized constant switch directives.
+| `false`
+|===
+
+===== Builtin Handling Features (since 1.7.4)
+
+These features are controlled by constants in the `BuiltinHandlingFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| *IGNORE_OPTIONAL_EMPTY*
+| Feature that ignores errors due to empty optionals on built-ins.
+| `false`
+
+| *IGNORE_NULL*
+| Feature that ignores errors due to `NULL` values on built-ins.
+| `false`
+|===
+
+[#partial-reduction-feature,reftext=Partial Reduction Features]
+===== Partial Reduction Features (since 1.10.0)
+
+These features are controlled by constants in the `ReductionFeature` class.
+
+[cols="2,4,1"]
+|===
+|Feature | Description | Initial enabled
+
+| *UNFOLD_LIST*
+| Feature that allows template reduction by unrolling list directives.
+Feature that determines whether list directives are unrolled.
+Only list directives that do not exceed a configurable number of elements are unrolled. The default value is 5.
+| `false`
+
+| *MERGE_CONSTANT_FRAGMENTS*
+| Feature that determines whether constant fragments are merged.
+| `false`
+|===
+
+.Example change maximum element number for unrolling lists
+[source,java]
+----
+TemplateBuilder builder = new Configuration().builder()
+    .with(ReductionFeature.UNFOLD_LIST, 7);
+----
+
+==== With Clock (since 1.6.9)
+
+The `withClock` method can be used to create a `DefaultTemplateBuilder` that generates templates with a modified clock. This allows templates to generate an output as it would have looked at a different time. This applies in particular to the built-in variable `.now`.
+
+.Example builder with fixed clock in the past
+[source,java]
+----
+Configuration config = new Configuration();
+Instant instant = ZonedDateTime.of(1968, 8, 24, 12, 30, 0, 0,ZoneOffset.UTC).toInstant();
+TemplateBuilder builder = config.builder().withClock(Clock.fixed(instant, ZoneOffset.UTC));
+----
+
+==== With Locale
+
+TBD
+
+.Example builder with german locale
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withLocale(Locale.GERMANY);
+----
+
+==== With Zone-ID
+
+TBD
+
+.Example builder with "Europe/Berlin" Zone-ID
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withZoneId(ZoneId.of("Europe/Berlin"));
+----
+
+==== With Date-Time Format
+
+TBD
+
+.Example builder with custom date-time format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withDateTimeFormat("short");
+----
+
+==== With Date Format
+
+TBD
+
+.Example builder with custom date format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withDateFormat("dd. MMMM yyyy");
+----
+
+==== With Time Format
+
+TBD
+
+.Example builder with custom time format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withTimeFormat("medium");
+----
+
+==== With Output-Format
+
+TBD
+
+.Example builder with AsciiDoctor Output-Format
+[source,java]
+----
+Configuration config = new Configuration();
+TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormats.ADOC);
+----

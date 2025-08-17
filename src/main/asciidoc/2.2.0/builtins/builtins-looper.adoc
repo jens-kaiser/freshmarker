@@ -1,0 +1,175 @@
+=== Looper Built-Ins
+
+==== `index` Built-In
+
+This built-in returns the index (starting with zero) of the current loop value as a number value.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?index}, </#list>
+m|0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+|===
+
+==== `counter` Built-In
+
+This built-in returns the counter (starting with one) of the current loop value as a number value.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?counter}, </#list>
+m|1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+|===
+
+==== `roman` Built-In (since 1.3.5)
+
+This built-in returns the counter (starting with one) of the current loop value as a roman number value.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?roman}, </#list>
+m|I, II, III, IV, V, VI, VII, VIII, IX, X,
+|===
+
+==== `utf_roman` Built-In (since 1.3.5)
+
+This built-in returns the counter (starting with one) of the current loop value as a roman number value.
+This built-in uses the Unicode Characters `\u2160`, `\u2164`, `\u2169` and `\u216C` to `\u216F`.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?utf_roman}, </#list>
+m|Ⅰ, ⅠⅠ, ⅠⅠⅠ, ⅠⅤ, Ⅴ, ⅤⅠ, ⅤⅠⅠ, ⅤⅠⅠⅠ, ⅠⅩ, Ⅹ,
+|===
+
+==== `clock_roman` Built-In (since 1.3.5)
+
+This built-in returns the counter (starting with one up to twelve) of the current loop value as a roman number value.
+This built-in uses the Unicode Characters from `\u2160` to `\u216B`.
+
+|===
+|Template |Output
+m|<#list (1..12) as s with l>${l?clock_roman}, </#list>
+m|Ⅰ, Ⅱ, Ⅲ, Ⅳ, Ⅴ, Ⅵ, Ⅶ, Ⅷ, Ⅸ, Ⅹ, Ⅺ, Ⅻ, 
+|===
+
+==== `is_first` Built-In
+
+This built-in returns the boolean value `true`, if the current loop value is the first one and `false` otherwise.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?is_first}, </#list>
+m|true, false, false, false, false, false, false, false, false, false,
+|===
+
+This built-in useful, if the first item in a sequence should look different.
+
+.Loop with special first element
+|===
+|Template |Output
+
+a|
+[source,freshmarker]
+----
+<#list (1..10) as s with l>
+<#if l?is_first>Sequence: </#if>${s}
+</#list>
+----
+m|Sequence: 1 2 3 4 5 6 7 8 9 10
+|===
+
+==== `is_last` Built-In
+
+This built-in returns the boolean value `true`, if the current loop value is the last one and `false` otherwise.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?is_last}, </#list>
+m|false, false, false, false, false, false, false, false, false, true,
+|===
+
+This built-in useful, if the last item in a sequence should look different.
+
+.Loop with special last element
+|===
+|Template |Output
+
+a|
+[source,freshmarker]
+----
+<#list (1..10) as s with l>
+${s} <##if l?is_last>QED</#if>
+</#list>
+----
+m|1 2 3 4 5 6 7 8 9 10 QED
+|===
+
+==== `item_parity` Built-In
+
+This built-in returns the string value `even`, if the current loop counter is even and `odd` otherwise.
+It is useful for CSS class names.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?item_parity}, </#list>
+m|odd, even, odd, even, odd, even, odd, even, odd, even,
+|===
+
+==== `item_parity_cap` Built-In
+
+This built-in returns the string value `Even`, if the current loop counter is even and `Odd` otherwise.
+It is useful for CSS class names.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?item_parity_cap}, </#list>
+m|Odd, Even, Odd, Even, Odd, Even, Odd, Even, Odd, Even,
+|===
+
+==== `item_cycle` Built-In
+
+This built-in cycles throw the parameters for the current loop counter.
+It is useful for CSS class names.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?item_cycle('one', 'two', 'three'}, </#list>
+m|one, two, three, one, two, three, one, two, three, one,
+|===
+
+==== `has_next` Built-In
+
+This built-in returns `false`, if the current loop value is the last one and `true` otherwise.
+
+|===
+|Template |Output
+
+m|<#list (1..10) as s with l>${l?has_next}, </#list>
+m|true, true, true, true, true, true, true, true, true, false,
+|===
+
+This built-in useful, if the last item in a sequence should look different.
+
+.Loop with special last element
+|===
+|Template |Output
+
+a|
+[source,freshmarker]
+----
+<#list (1..10) as s with l>
+${s}<#if l?has_next>, </#if>
+</#list>
+----
+m|1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+|===
+

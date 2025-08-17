@@ -13,6 +13,11 @@
   background-color: #f8ffdf;
 }
 
+p.tableblock>code:only-child {
+  background-color: #f8ffdf;
+  padding: 0;
+}
+
 .listingblock>.content {
   border-color: #7c7c7c;
   border-width: 1px;

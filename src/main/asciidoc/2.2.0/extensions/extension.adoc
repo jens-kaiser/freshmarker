@@ -1,0 +1,110 @@
+[#extension_api,reftext=Extension API]
+== Extension API (since 1.8.0)
+
+=== Overview
+
+The `Extension` mechanism replaces the previous `PlugInProvider` mechanism. Although the previous plug-in mechanism worked well, it shows some weaknesses when extending _FreshMarker_.
+
+=== Registering Extensions
+
+`Extensions` can be registered _automatically_ via the Java `ServiceLoader` mechanism or _programmatically_.
+
+==== Automatic Extension Registration
+
+`Extensions` can be registered _automatically_ via the
+Java `ServiceLoader` mechanism. This allows third-party `Extensions` to be automatically recognized and registered, depending on what is available in the classpath.
+
+Specifically, a custom `Extension` can be registered by specifying its fully qualified class name in a file named `org.freshmarker.api.extension.Extension` in the `/META-INF/services` folder in the associated JAR file.
+
+==== Programmatic Extension Registration
+
+Developers can register `Extension` programmatically by calling the `Configuration#register(Extension)` method.
+
+When an `Extension` is registered automatically, it can only be configured via template features. In contrast, when an `Extension` is registered programmatically, it can be modified via constructor arguments or setter methods.
+
+==== Extension Order
+
+The `Extension` are registered in a deterministic order. The default `Extension` are registered first, followed by the _automatic_ `Extension` and then the _programmatic_ `Extension`.
+
+include::features.adoc[]
+
+include::built-ins.adoc[]
+
+include::built-in-variables.adoc[]
+
+include::user-directives.adoc[]
+
+include::functions.adoc[]
+
+=== Additional Formatter
+
+The `FormatterProvider` defines the API for `Extensions` that wish to add new formatter.
+
+TBD
+
+=== Additional Type Mapper
+
+The `TypeMapperProvider` defines the API for `Extensions` that wish to add new type mapper.
+The _type mappers_ are used in the `MappingTemplateObjectProvider` to create _template-model objects_ from _Java_ objects.
+
+The `MappingTemplateObjectProvider` ist the first `TemplateObjectProvider` in the chain of template-object providers.
+Its task is to create corresponding template-model objects for the registered primitive types.
+Other `TemplateObjectProviders` that follow in the chain are used to process _records_, _beans_ and _collection_ and _custom_ types.
+
+.Example TypeMapper
+[source,java,role="primary"]
+----
+public class ExampleTypeMapper implements TypeMapper {
+    public TemplateObject apply(Object o) {
+        Dimension d = (Dimension) o;
+        return new TemplateString(d.width + "x" + d.height);
+    }
+}
+----
+
+.Example TypeMapper als Lambda
+[source,java,role="secondary"]
+----
+value -> {
+    Dimension d = (Dimension) o;
+    return new TemplateString(d.width + "x" + d.height);
+};
+----
+
+The parameter can be cast to the desired type in the `apply` method, as the `TypeMapper` is only called exactly for this type.
+
+Since each `TypeMapper` has a type, the `TypeMapperProvider` returns the type-mappers as `Map<Class<?>, TypeMapper>`.
+
+.Example TypeMapperProvider
+[source,java]
+----
+public final class ExampleBuiltInProvider implements BuilInProvider {
+    public Map<String,BuiltInVariable> provideBuiltIns() {
+        Map.of(Dimension.class, new ExampleTypeMapper());
+    }
+}
+----
+
+=== Additional Template-Object Provider
+
+The `TemplateObjectProviders` defines the API for `Extensions` that wish to add new template-object providers.
+
+TBD
+
+=== Additional Output Formats
+
+The `OutputFormatProvider` defines the API for `Extensions` that wish to add new output formats.
+
+.Example OutputFormatProvider
+[source,java]
+----
+public final class OwaspOutputFormatProvider implements OutputFormatProvider {
+  return Map.of("OWASP", new OutputFormat() {
+      @Override
+      public TemplateString escape(TemplateString value) {
+        return new TemplateString(Sanitizers.FORMATTING.sanitize(value.getValue()));
+      }
+  });
+}
+----
+

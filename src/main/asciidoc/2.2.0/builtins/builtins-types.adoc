@@ -1,0 +1,185 @@
+=== Type checking Built-Ins (since 1.8.1)
+
+Normally, the type of a variable does not need to be checked because the data model has been modeled correctly.
+
+Nevertheless, it may occasionally be necessary to check the type of a variable so that it receives special treatment.
+
+IMPORTANT: This built-ins available on all _FreshMarker_ types (this includes your custom types too).
+
+==== `is_null` Built-In
+
+This built-in returns the `true` is the variable is `NULL` and `false` otherwise.
+
+It only exists to complete the type checks, normally you use the existence operator.
+
+|===
+|Interpolation | Output | Type
+
+m|${null?is_null}
+m|yes
+m|boolean
+
+m|${42?is_null}
+m|no
+m|boolean
+
+|===
+
+==== `is_string` Built-In
+
+This built-in returns the `true` is the variable contains a string value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${'text'?is_string}
+m|yes
+m|boolean
+
+m|${42?is_string}
+m|no
+m|boolean
+
+|===
+
+==== `is_character` Built-In
+
+This built-in returns the `true` is the variable contains a character value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${character?is_character}
+m|yes
+m|boolean
+
+m|${42?is_character}
+m|no
+m|boolean
+
+|===
+
+==== `is_boolean` Built-In
+
+This built-in returns the `true` is the variable contains a boolean value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${false?is_boolean}
+m|yes
+m|boolean
+
+m|${42?is_boolean}
+m|no
+m|boolean
+
+|===
+
+==== `is_number` Built-In
+
+This built-in returns the `true` is the variable contains a number value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${42?is_number}
+m|yes
+m|boolean
+
+m|${true?is_number}
+m|no
+m|boolean
+
+|===
+
+==== `is_sequence` Built-In
+
+This built-in returns the `true` is the variable contains a sequence value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${sequence?is_sequence}
+m|yes
+m|boolean
+
+m|${true?is_sequence}
+m|no
+m|boolean
+
+|===
+
+==== `is_hash` Built-In
+
+This built-in returns the `true` is the variable contains a hash value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${bean?is_hash}
+m|yes
+m|boolean
+
+m|${42?is_hash}
+m|no
+m|boolean
+
+|===
+
+==== `is_enum` Built-In
+
+This built-in returns the `true` is the variable contains an enum value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${enum?is_enum}
+m|yes
+m|boolean
+
+m|${'text'?is_enum}
+m|no
+m|boolean
+
+|===
+
+==== `is_range` Built-In
+
+This built-in returns the `true` is the variable contains a range value and `false` otherwise.
+
+|===
+|Interpolation | Output | Type
+
+m|${(1..3)?is_range}
+m|yes
+m|boolean
+
+m|${true?is_range}
+m|no
+m|boolean
+
+|===
+
+==== `is_temporal` Built-In (since 1.8.2)
+
+This built-in returns the `true` is the variable contains a temporal value and `false` otherwise.
+
+A temporal value is one of the types
+`java.util.Date`, `java.sql.Time`, `java.sql.Date`,
+`java.time.Instant`,
+`java.time.ZonedDateTime`,
+`java.time.LocalDateTime`, `java.time.LocalDate`, `java.time.LocalTime`,
+`java.time.Year`,`java.time.YearMonth` and `java.time.MonthDay`.
+
+|===
+|Interpolation | Output | Type
+
+m|${.now?is_temporal}
+m|yes
+m|boolean
+
+m|${42?is_temporal}
+m|no
+m|boolean
+|===

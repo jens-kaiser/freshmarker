@@ -1,0 +1,33 @@
+=== Additional Functions
+
+The `FunctionProvider` defines the API for `Extensions` that wish to add new template functions.
+
+Each custom template function hast to implement the `TemplateFunction` interface.
+
+.Example TemplateFunction
+[source,java,role="primary"]
+----
+public class ExampleFunction implements TemplateFunction {
+    public TemplateObject execute(ProcessContext context, List<TemplateObject> args) {
+        return TemplateNumber.of(args.size());
+    }
+}
+----
+
+.Example TemplateFunction as Lambda
+[source,java,role="secondary"]
+----
+(context, args) -> TemplateNumber.of(args.size());
+----
+
+Since each `TemplateFunction` has a name, the `FunctionProvider` returns the user directives as `Map<String,TemplateFunction>`.
+
+.Example FunctionProvider
+[source,java]
+----
+public final class ExampleFunctionProvider implements UserDirectiveProvider {
+    public Map<String,TemplateFunction> provideFunctions() {
+        Map.of("example", (context, args) -> TemplateNumber.of(args.size()));
+    }
+}
+----
