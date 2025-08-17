@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.text.Collator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -422,5 +423,16 @@ class StringInterpolationTest {
                 .getTemplate("equality", "test: ${" + input + "}");
         Map<String, Object> model = Map.of("text1", "jens", "text2", "JENS");
         assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${'+' * 10 + '!'};test: ++++++++++!",
+            "test: ${'*' * 1};test: *",
+            "test: ${'=' * 0};test: "
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    void repeat(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("sequence", List.of(1,2,3,4,5))));
     }
 }
