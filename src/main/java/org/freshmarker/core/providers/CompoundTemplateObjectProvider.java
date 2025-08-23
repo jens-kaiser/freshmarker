@@ -14,69 +14,33 @@ import java.util.Set;
 
 public class CompoundTemplateObjectProvider implements TemplateObjectProvider {
 
-    public interface CompoundHandler {
-        TemplateObject provide(Object o);
+    private final boolean setAsSequence;
+    private final boolean collectionAsSequence;
+
+    public CompoundTemplateObjectProvider(boolean setAsSequence, boolean collectionAsSequence) {
+        this.setAsSequence = setAsSequence;
+        this.collectionAsSequence = collectionAsSequence;
     }
 
-    private final List<CompoundHandler> handlers = new ArrayList<>();
-
-    @SuppressWarnings("unchecked")
-    public CompoundTemplateObjectProvider(boolean setAsSequence, boolean collectionAsSequence) {
-        handlers.add(o -> {
-            if (o instanceof List<?> list) {
-                return new TemplateListSequence((List<Object>) list);
-            }
-            return null;
-        });
-        handlers.add(o -> {
-            if (o instanceof Map<?,?> map) {
-                return new TemplateBean((Map<String, Object>) map, null);
-            }
-            return null;
-        });
-        handlers.add(o -> {
-            if (o instanceof SequencedCollection<?> sequenced) {
-                return new TemplateListSequence(new ArrayList<>(sequenced));
-            }
-            return null;
-        });
-        handlers.add(o -> {
-            if (o.getClass().isArray()) {
-                int length = Array.getLength(o);
-                Object[] array = (Object[])Array.newInstance(Object.class, length);
-                for (int i = 0; i < length; i++) {
-                    array[i] = Array.get(o, i);
-                }
-                return new TemplateListSequence((List.of(array)));
-            }
-            return null;
-        });
-        if (setAsSequence) {
-            handlers.add(o -> {
-                if (o instanceof Set<?> set) {
-                    return new TemplateListSequence(new ArrayList<>(set));
-                }
-                return null;
-            });
+    private static TemplateListSequence provideArray(Object o) {
+        int length = Array.getLength(o);
+        Object[] array = (Object[])Array.newInstance(Object.class, length);
+        for (int i = 0; i < length; i++) {
+            array[i] = Array.get(o, i);
         }
-        if (collectionAsSequence) {
-            handlers.add(o -> {
-                if (o instanceof Collection<?> collection) {
-                    return new TemplateListSequence(new ArrayList<>(collection));
-                }
-                return null;
-            });
-        }
+        return new TemplateListSequence((List.of(array)));
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public TemplateObject provide(TemplateObjectMapper environment, Object o) {
-        for (CompoundTemplateObjectProvider.CompoundHandler handler : handlers) {
-            TemplateObject provided = handler.provide(o);
-            if (provided != null) {
-                return provided;
-            }
-        }
-        return null;
+        return switch (o) {
+            case List<?> list -> new TemplateListSequence((List<Object>) list);
+            case Map<?, ?> map -> new TemplateBean((Map<String, Object>) map, null);
+            case SequencedCollection<?> sequenced -> new TemplateListSequence(new ArrayList<>(sequenced));
+            case Set<?> set when setAsSequence -> new TemplateListSequence(new ArrayList<>(set));
+            case Collection<?> collection when collectionAsSequence -> new TemplateListSequence(new ArrayList<>(collection));
+            default -> o.getClass().isArray() ? provideArray(o) : null;
+        };
     }
 }
