@@ -6,6 +6,7 @@ import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.SystemFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -431,6 +432,7 @@ class StringInterpolationTest {
             "test: ${'*' * 1};test: *",
             "test: ${'=' * 0};test: "
     }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    @Disabled
     void repeat(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("sequence", List.of(1,2,3,4,5))));

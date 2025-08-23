@@ -22,6 +22,7 @@ public interface TemplateObject {
         if (type.isInstance(result)) {
             return type.cast(result);
         }
+        context.reductionCheck(result);
         throw new WrongTypeException("expected " + type.getSimpleName() + " but is " + result.getClass().getSimpleName() + " (" + result + ")");
     }
 
