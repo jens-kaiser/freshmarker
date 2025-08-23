@@ -24,6 +24,7 @@ public class BaseEnvironment implements Environment, TemplateObjectMapper {
     private final BuiltInVariableProvider builtInVariableProviders;
     private final List<TemplateObjectProvider> providers;
     private final Clock clock;
+    private final Map<Class<?>, TemplateObjectProvider> templateObjectProviderMap = new HashMap<>();
 
     public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, BuiltInVariableProvider builtInVariableProviders, Clock clock) {
         this.dataModel = dataModel;
@@ -49,29 +50,25 @@ public class BaseEnvironment implements Environment, TemplateObjectMapper {
     }
 
     private TemplateObject wrap(Object o) {
-        Object current;
-        switch (o) {
-            case null -> {
-                return TemplateNull.NULL;
-            }
-            case Map.Entry entry -> {
-                return new TemplateHash(entry);
-            }
-            case TemplateObject templateObject -> {
-                return templateObject;
-            }
-            case Optional<?> optional -> {
-                if (optional.isEmpty()) {
-                    return TemplateNull.NULL_OPTIONAL;
-                }
-                current = optional.get();
-            }
-            case TemplateObjectSupplier<?> templateObjectSupplier -> current = templateObjectSupplier.get();
-            default -> current = o;
+        return switch (o) {
+            case null -> TemplateNull.NULL;
+            case Map.Entry entry -> new TemplateHash(entry);
+            case TemplateObject templateObject -> templateObject;
+            case Optional<?> optional -> optional.map(object -> wrapByProviders(o, object)).orElse(TemplateNull.NULL_OPTIONAL);
+            case TemplateObjectSupplier<?> templateObjectSupplier -> wrapByProviders(o, templateObjectSupplier.get());
+            default -> wrapByProviders(o, o);
+        };
+    }
+
+    private TemplateObject wrapByProviders(Object o, Object current) {
+        TemplateObjectProvider cached = templateObjectProviderMap.get(o.getClass());
+        if (cached != null) {
+            return cached.provide(this, current);
         }
         for (TemplateObjectProvider provider : providers) {
             TemplateObject object = provider.provide(this, current);
             if (object != null) {
+                templateObjectProviderMap.put(current.getClass(), provider);
                 return object;
             }
         }
