@@ -9,7 +9,6 @@ import org.freshmarker.core.model.TemplateSequenceLoopVariable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ListEnvironment extends WrapperEnvironment {
     private final Map<String, TemplateObject> map = new HashMap<>();
