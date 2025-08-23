@@ -382,3 +382,41 @@ _Partial Reduction_ on _List Directives_ is executed by unrolling the loops.
 Unrolling is used by default only if there is a maximum of five entries in the list.
 
 This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.
+
+=== Reserved Words
+
+Not all possible identifiers can be used within the templates. Some words are reserved for internal use.
+
+|===
+| Name | Usage
+
+|true, false
+|Boolean
+
+|if, elseif, else
+|If Directive
+
+|set, var, assign
+|Set/Var Directive
+
+|list, with, sorted, asc, desc, limit, offset, filter
+|List Directive
+
+|switch, case, on, default
+|Switch Directive
+
+|macro, break, nested, return, function
+|Macro/Function Directive
+
+|import, include
+|Import/Include Directive
+
+|brick
+|Brick Directive
+
+|try, except
+|Try Directive
+
+|outputformat
+|Outputformat Directive
+|===

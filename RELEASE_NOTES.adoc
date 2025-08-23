@@ -6,6 +6,12 @@
 
 - add string repeat operator `*`
 
+== Release 2.1.1 (2025-08-24)
+
+=== Bugfix
+
+- fix reduction with relations
+
 == Release 2.1.0 (2025-08-13)
 
 === Improvements

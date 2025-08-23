@@ -30,6 +30,29 @@ class ReduceTemplateTest {
     }
 
     @Nested
+    class Expressions {
+        @ParameterizedTest
+        @CsvSource({
+                "${value1 > 23},yes",
+                "${23 < value1},yes",
+                "${value1 > value2},yes",
+                "${value2 < value1},yes",
+                "${value1 + 23},65",
+                "${23 + value1},65",
+                "${value1 + value2},65",
+                "${value2 + value1},65"
+        })
+        void expression(String input, String expected) {
+            Map<String, Object> reduceModel = Map.of("value1", 42);
+            Template template = templateBuilder.getTemplate("test", input);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+
+        }
+    }
+
+    @Nested
     class UnfoldListDirectiveWithMergeConstantFragments {
         @BeforeEach
         void setUp() {
