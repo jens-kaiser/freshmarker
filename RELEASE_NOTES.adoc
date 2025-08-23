@@ -11,6 +11,7 @@
 === Bugfix
 
 - fix reduction with relations
+- fix minor performance issues
 
 == Release 2.1.0 (2025-08-13)
 
