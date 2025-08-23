@@ -9,7 +9,6 @@ import org.freshmarker.core.model.TemplateSequenceLoopVariable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ListEnvironment extends WrapperEnvironment {
     private final Map<String, TemplateObject> map = new HashMap<>();
@@ -36,7 +35,8 @@ public class ListEnvironment extends WrapperEnvironment {
 
     @Override
     public TemplateObject getValue(String name) {
-        return Optional.ofNullable(map.get(name)).orElseGet(() -> wrapped.getValue(name));
+        TemplateObject value = map.get(name);
+        return value != null ? value : wrapped.getValue(name);
     }
 
     public TemplateLooper getLooper() {

@@ -21,4 +21,9 @@ public record StaticContext(ExtensionRegistry registry, BuiltInRepository builtI
         this(registry, registry.getBuiltIns(), registry.getFormatterRegistry(), registry.getOutputFormats(), registry.getProviders(),
                 registry.getUserDirectives(), templateLoader, registry.getFunctions(), registry.getBuiltInVariableProviders());
     }
+
+    public StaticContext(ExtensionRegistry registry, TemplateLoader templateLoader, Map<Class<? extends TemplateObject>, Formatter> combinedFormatters) {
+        this(registry, registry.getBuiltIns(), combinedFormatters, registry.getOutputFormats(), registry.getProviders(),
+                registry.getUserDirectives(), templateLoader, registry.getFunctions(), registry.getBuiltInVariableProviders());
+    }
 }
