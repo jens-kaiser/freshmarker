@@ -36,7 +36,8 @@ public class ListEnvironment extends WrapperEnvironment {
 
     @Override
     public TemplateObject getValue(String name) {
-        return Optional.ofNullable(map.get(name)).orElseGet(() -> wrapped.getValue(name));
+        TemplateObject value = map.get(name);
+        return value != null ? value : wrapped.getValue(name);
     }
 
     public TemplateLooper getLooper() {
