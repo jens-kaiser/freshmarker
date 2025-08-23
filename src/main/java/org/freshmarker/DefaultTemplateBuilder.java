@@ -191,7 +191,9 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         Root root = (Root) parser.rootNode();
         new TokenLineNormalizer().normalize(root);
         ExtensionRegistry extensionRegistry = new ExtensionRegistry(registry, featureSet);
-        StaticContext templateContext = new StaticContext(extensionRegistry, templateLoader);
+        Map<Class<? extends TemplateObject>, Formatter> combinedFormatters = extensionRegistry.getFormatterRegistry();
+        combinedFormatters.putAll(this.formatter);
+        StaticContext templateContext = new StaticContext(extensionRegistry, templateLoader, combinedFormatters);
         SimpleFeatureSet featureSetCopy = new SimpleFeatureSet(featureSet);
         Template template = new Template(this, templateContext, templateLoader, importPath, featureSetCopy);
         List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, featureSetCopy, 0, templateContext), new ArrayList<>());
@@ -202,8 +204,6 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     @Override
     public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet) {
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), context.builtInVariableProviders(), clock);
-        Map<Class<? extends TemplateObject>, Formatter> combinedFormatters = context.registry().getFormatterRegistry();
-        combinedFormatters.putAll(this.formatter);
-        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, combinedFormatters, featureSet);
+        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, context.formatter(), featureSet);
     }
 }
