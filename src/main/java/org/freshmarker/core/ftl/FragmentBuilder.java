@@ -31,8 +31,6 @@ import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.directive.MacroUserDirective;
-import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.Fragments;
@@ -47,6 +45,7 @@ import org.freshmarker.core.fragment.SettingFragment;
 import org.freshmarker.core.fragment.TryFragment;
 import org.freshmarker.core.fragment.UserDirectiveFragment;
 import org.freshmarker.core.fragment.VarVariableFragment;
+import org.freshmarker.core.ftl.TemplateDictionary.VariableType;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
@@ -56,7 +55,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,17 +81,17 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     private final InterpolationBuilder interpolationBuilder;
     private final StaticContext templateContext;
     private final NamedArgsBuilder namedArgsBuilder;
-    private final ParameterListBuilder parameterListBuilder;
+    private final TemplateDictionary dictionary;
 
-    public FragmentBuilder(Template template, String nameSpace, FeatureSet featureSet, int includeLevel, StaticContext templateContext) {
+    public FragmentBuilder(Template template, String nameSpace, FeatureSet featureSet, int includeLevel, StaticContext templateContext, TemplateDictionary dictionary) {
         this.template = template;
         this.nameSpace = nameSpace;
         this.featureSet = featureSet;
         this.includeLevel = includeLevel;
         this.templateContext = templateContext;
-        interpolationBuilder = new InterpolationBuilder(featureSet, templateContext);
-        namedArgsBuilder = new NamedArgsBuilder(interpolationBuilder);
-        parameterListBuilder = new ParameterListBuilder(interpolationBuilder);
+        this.dictionary = dictionary;
+        interpolationBuilder = new InterpolationBuilder(featureSet, templateContext, dictionary);
+        namedArgsBuilder = new NamedArgsBuilder(interpolationBuilder, dictionary);
     }
 
     @Override
@@ -132,13 +130,17 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(IfStatement ftl, List<Fragment> input) {
+        dictionary.push();
         input.add(ftl.accept(new IfFragmentBuilder(this, interpolationBuilder), null));
+        dictionary.poll();
         return input;
     }
 
     @Override
     public List<Fragment> visit(SwitchInstruction ftl, List<Fragment> input) {
+        dictionary.push();
         input.add(ftl.accept(new SwitchFragmentBuilder(this, interpolationBuilder, featureSet), null));
+        dictionary.poll();
         return input;
     }
 
@@ -151,8 +153,10 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(ListInstruction ftl, List<Fragment> input) {
+        dictionary.push();
         TemplateObject list = ftl.get(3).accept(interpolationBuilder, null);
         String identifier = ftl.get(5).toString();
+        dictionary.putVariable(identifier, VariableType.KEY);
         int index = 6;
         Comparator<String> comparator = null;
         if (ftl.get(index).getType() == TokenType.SORTED) {
@@ -162,11 +166,13 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         String valueIdentifier = null;
         if (ftl.get(index).getType() == TokenType.COMMA) {
             valueIdentifier = ftl.get(index + 1).toString();
+            dictionary.putVariable(valueIdentifier, VariableType.VALUE);
             index += 2;
         }
         String looperIdentifier = null;
         if (ftl.get(index).getType() == TokenType.WITH) {
             looperIdentifier = ((IDENTIFIER) ftl.get(index + 1)).toString();
+            dictionary.putVariable(looperIdentifier, VariableType.LOOPER);
             index += 2;
         }
         TemplateObject filter = null;
@@ -191,6 +197,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
         } else {
             input.add(new SequenceListFragment(list, identifier, looperIdentifier, block, ftl, filter, offset, limit));
         }
+        dictionary.push();
         return input;
     }
 
@@ -239,39 +246,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
-        TokenType type = (TokenType) ftl.get(1).getType();
-        if (type != TokenType.MACRO) {
-            throw new ParsingException("function unsupported", ftl);
-        }
-        String name = ftl.get(3).toString();
-        List<ParameterHolder> parameterList = getParameterHolders(ftl);
-        Fragment block = getFragment(ftl);
-        logger.debug("macro directive: namespace={}, type={}, name={}, block={}", nameSpace, type, name, block);
-        template.getUserDirectives().put(new NameSpaced(nameSpace, name), new MacroUserDirective(block, parameterList));
-        return input;
-    }
-
-    private Fragment getFragment(MacroDefinition ftl) {
-        if (ftl.get(ftl.size() - 2).getType() == TokenType.CLOSE_TAG) {
-            return ConstantFragment.EMPTY;
-        }
-        return Fragments.optimizeWithVariableContext(ftl.get(ftl.size() - 2).accept(this, new ArrayList<>()));
-    }
-
-    private List<ParameterHolder> getParameterHolders(MacroDefinition ftl) {
-        int parameterListIndex = getParameterListIndex(ftl);
-        if (ftl.get(parameterListIndex).getType() == TokenType.CLOSE_TAG) {
-            return Collections.emptyList();
-        }
-        return ftl.get(parameterListIndex).accept(parameterListBuilder, new ArrayList<>());
-    }
-
-    private int getParameterListIndex(MacroDefinition ftl) {
-        int closeTag = ftl.indexOf(ftl.firstChildOfType(TokenType.CLOSE_TAG));
-        if (closeTag == 4) {
-            return 4;
-        }
-        return ftl.firstChildOfType(TokenType.OPEN_PAREN) == null ? 4 : 5;
+        return ftl.accept(new MacroBuilder(template, nameSpace, featureSet, includeLevel, templateContext), new ArrayList<>());
     }
 
     @Override
@@ -316,6 +291,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
                 i++;
             }
             i++;
+            dictionary.putVariable(name, VariableType.VAR);
             input.add(new VarVariableFragment(name, expression, ftl));
         }
         return input;
@@ -376,7 +352,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
             parser.Root();
             Root root = (Root) parser.rootNode();
             new TokenLineNormalizer().normalize(root);
-            List<Fragment> fragments = root.accept(new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1, templateContext), new ArrayList<>());
+            List<Fragment> fragments = root.accept(new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1, templateContext, dictionary), new ArrayList<>());
             Fragments.withVariableContext(fragments).forEach(template.getRootFragment()::addFragment);
             return input;
         } catch (IOException e) {

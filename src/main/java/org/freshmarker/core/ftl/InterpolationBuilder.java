@@ -34,6 +34,9 @@ import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.ftl.TemplateDictionary.VariableType;
+import org.freshmarker.core.model.DefaultTemplateVariable;
+import org.freshmarker.core.model.ModelVariable;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
 import org.freshmarker.core.model.TemplateBuiltIn;
@@ -80,10 +83,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     private final FeatureSet featureSet;
     private final StaticContext templateContext;
+    private final TemplateDictionary dictionary;
 
-    public InterpolationBuilder(FeatureSet featureSet, StaticContext templateContext) {
+    public InterpolationBuilder(FeatureSet featureSet, StaticContext templateContext, TemplateDictionary dictionary) {
         this.featureSet = featureSet;
         this.templateContext = templateContext;
+        this.dictionary = dictionary;
         argsListBuilder = new PositionalArgsListBuilder(this);
     }
 
@@ -99,7 +104,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case LONG -> getLongTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
-            case IDENTIFIER -> new TemplateVariable(expression.toString());
+            case IDENTIFIER -> {
+                VariableType type = dictionary.getVariable(expression.toString());
+                yield switch (type) {
+                    case MODEL -> new ModelVariable(expression.toString());
+                    default -> new DefaultTemplateVariable(expression.toString());
+                };
+            }
             case EXISTS_OPERATOR -> new TemplateExists(((TemplateObjectAndNode) input).templateObject());
             case NULL -> TemplateNull.NULL_LITERAL;
             default -> throw new IllegalArgumentException(
