@@ -48,3 +48,72 @@ div .switch, .switch .switch--item {
 subheader, .admonitionblock td.content>.title, .audioblock>.title, .exampleblock>.title, .imageblock>.title, .listingblock>.title, .literalblock>.title, .stemblock>.title, .openblock>.title, .paragraph>.title, .quoteblock>.title, table.tableblock>.title, .verseblock>.title, .videoblock>.title, .dlist>.title, .olist>.title, .ulist>.title, .qlist>.title, .hdlist>.title {
   color: var(--freshmarker-dark-color);
 }
+
+body.dark-mode #header>h1:first-child, body.dark-mode #header .details {
+  color: white;
+}
+
+body.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+body.dark-mode #toc.toc2 {
+  background-color: black;
+  color: white;
+}
+
+div.dark-mode {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 8px 32px;
+}
+
+div.dark-mode button {
+  background-image: url("sun-solid-full.svg");
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.dark-mode div.dark-mode button {
+  background-image: url("moon-solid-full.svg");
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.dark-mode #header .details span.email a {
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+.dark-mode .admonitionblock>table td.content {
+ color: white;
+}

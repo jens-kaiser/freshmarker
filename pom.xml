@@ -372,6 +372,8 @@
                             <includes>
                                 <include>freshmarker-logo3.svg</include>
                                 <include>favicon.png</include>
+                                <include>sun-solid-full.svg</include>
+                                <include>moon-solid-full.svg</include>
                             </includes>
                         </resource>
                         <resource>
