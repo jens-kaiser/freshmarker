@@ -39,7 +39,7 @@ public class ImportBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     @Override
     public List<Fragment> visit(MacroDefinition ftl, List<Fragment> input) {
-        fragmentBuilder = Objects.requireNonNullElseGet(fragmentBuilder, () -> new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1, templateContext));
+        fragmentBuilder = Objects.requireNonNullElseGet(fragmentBuilder, () -> new FragmentBuilder(template, nameSpace, featureSet, includeLevel + 1, templateContext, new TemplateDictionary()));
         return ftl.accept(fragmentBuilder, input);
     }
 }
