@@ -17,7 +17,8 @@ class TemplateObjectVisitorTest {
         assertNull(new TemplateBuiltInVariable(null).accept(visitor));
         assertNull(new TemplateDefault(null, null).accept(visitor));
         assertNull(new TemplateMarkup(null).accept(visitor));
-        assertNull(new TemplateVariable(null).accept(visitor));
+        assertNull(new DefaultTemplateVariable(null).accept(visitor));
+        assertNull(new ModelVariable(null).accept(visitor));
         assertNull(new TemplateEquality(null, null).accept(visitor));
         assertNull(new TemplateNegative(null).accept(visitor));
         assertNull(new TemplateDotKey(null, null).accept(visitor));

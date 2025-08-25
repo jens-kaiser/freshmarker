@@ -15,7 +15,7 @@ public class BuiltInKey {
     public BuiltInKey(Class<? extends TemplateObject> type, String name) {
         this.type = Objects.requireNonNull(type);
         this.name = Objects.requireNonNull(name);
-        hash = Objects.hash(type, name);
+        hash = type.hashCode() * 31 + name.hashCode();
     }
 
     @Override
