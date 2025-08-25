@@ -36,6 +36,8 @@ import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.ftl.TemplateDictionary.VariableType;
 import org.freshmarker.core.model.DefaultTemplateVariable;
+import org.freshmarker.core.model.KeyValueLoopVariable;
+import org.freshmarker.core.model.LooperVariable;
 import org.freshmarker.core.model.ModelVariable;
 import org.freshmarker.core.model.TemplateBean;
 import org.freshmarker.core.model.TemplateBooleanExpression;
@@ -105,10 +107,12 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
             case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
             case IDENTIFIER -> {
-                VariableType type = dictionary.getVariable(expression.toString());
+                VariableType type = dictionary.getVariable(image);
                 yield switch (type) {
-                    case MODEL -> new ModelVariable(expression.toString());
-                    default -> new DefaultTemplateVariable(expression.toString());
+                    case MODEL -> new ModelVariable(image);
+                    case LOOPER -> new LooperVariable(image);
+                    case KEY, VALUE -> new KeyValueLoopVariable(image);
+                    default -> new DefaultTemplateVariable(image);
                 };
             }
             case EXISTS_OPERATOR -> new TemplateExists(((TemplateObjectAndNode) input).templateObject());

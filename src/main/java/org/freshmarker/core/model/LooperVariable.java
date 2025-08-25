@@ -2,7 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 
-public record DefaultTemplateVariable(String name) implements TemplateVariable {
+public record LooperVariable(String name) implements TemplateVariable {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
