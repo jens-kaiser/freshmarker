@@ -3,6 +3,9 @@
 
 :root {
   --freshmarker-dark-color: #4cbf00;
+  --freshmarker-code-background-color: #f8ffdf;
+  --freshmarker-code-border-color: #c7c7c;
+  --freshmarker-background-color: #f8ffdf;
 }
 
 #toctitle, h1, h2, h3, h4, h5 {
@@ -10,23 +13,19 @@
 }
 
 .literalblock pre, .listingblock>.content>pre:not(.highlight), .listingblock>.content>pre[class=highlight], .listingblock>.content>pre[class^="highlight "] {
-  background-color: #f8ffdf;
+  background-color: var(--freshmarker-code-background-color);
 }
 
 p.tableblock>code:only-child {
-  background-color: #f8ffdf;
-  padding: 0;
+  background-color: var(--freshmarker-code-background-color);
 }
 
 .listingblock>.content {
-  border-color: #7c7c7c;
-  border-width: 1px;
-  border-radius: 0px 0px 4px 4px;
-  border-style: solid;
+  border-color: var(--freshmarker-code-border-color);
 }
 
 .content .hljs, :not(pre):not([class^=L])>code {
-  background-color: #f8ffdf;
+  background-color: var(--freshmarker-code-background-color);
 }
 
 .switch .switch--item:not(:first-child) {
@@ -60,7 +59,7 @@ body.dark-mode {
 
 body.dark-mode #toc.toc2 {
   background-color: black;
-  color: white;
+  color: var(--freshmarker-background-color);
 }
 
 div.dark-mode {
@@ -78,13 +77,18 @@ div.dark-mode button {
 
 .dark-mode div.dark-mode button {
   background-image: url("moon-solid-full.svg");
-  border-radius: 16px;
-  padding: 16px;
-  filter: invert(1);
 }
 
 .dark-mode #header .details span.email a {
-  color: white;
+  color: var(--freshmarker-background-color);
+}
+
+.dark-mode table.tableblock {
+  background-color: #ececec;
+}
+
+.dark-mode table thead, table tfoot {
+    background: #dddddf;
 }
 
 ::-webkit-scrollbar {
@@ -107,7 +111,6 @@ div.dark-mode button {
   background: #0d0d0d;
 }
 
-
 .dark-mode ::-webkit-scrollbar-thumb {
   background: #555;
 }
@@ -117,5 +120,5 @@ div.dark-mode button {
 }
 
 .dark-mode .admonitionblock>table td.content {
- color: white;
+ color: var(--freshmarker-background-color);
 }
