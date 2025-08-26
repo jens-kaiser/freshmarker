@@ -73,12 +73,14 @@ div.dark-mode button {
   background-image: url("sun-solid-full.svg");
   border-radius: 16px;
   padding: 16px;
+  filter: invert(1);
 }
 
 .dark-mode div.dark-mode button {
   background-image: url("moon-solid-full.svg");
   border-radius: 16px;
   padding: 16px;
+  filter: invert(1);
 }
 
 .dark-mode #header .details span.email a {
