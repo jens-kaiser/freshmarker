@@ -3,76 +3,39 @@ package org.freshmarker.core.environment;
 import org.freshmarker.core.BuiltInVariableProvider;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessException;
-import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.fragment.Fragment;
-import org.freshmarker.core.model.TemplateHash;
-import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.providers.TemplateObjectMapper;
-import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.time.Clock;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class BaseEnvironment implements Environment, TemplateObjectMapper {
+public class BaseEnvironment implements Environment {
 
     private final Map<String, Object> dataModel;
     private final Map<String, TemplateObject> cached;
     private final BuiltInVariableProvider builtInVariableProviders;
-    private final List<TemplateObjectProvider> providers;
     private final Clock clock;
-    private final Map<Class<?>, TemplateObjectProvider> templateObjectProviderMap = new HashMap<>();
+    private final TemplateObjectMapper templateObjectMapper;
 
-    public BaseEnvironment(Map<String, Object> dataModel, List<TemplateObjectProvider> providers, BuiltInVariableProvider builtInVariableProviders, Clock clock) {
+    public BaseEnvironment(Map<String, Object> dataModel, BuiltInVariableProvider builtInVariableProviders, Clock clock, TemplateObjectMapper templateObjectMapper) {
         this.dataModel = dataModel;
-        this.providers = providers;
-        cached = HashMap.newHashMap(dataModel.size());
         this.builtInVariableProviders = builtInVariableProviders;
         this.clock = clock;
-    }
-
-    @Override
-    public TemplateObject mapObject(Object object) {
-        return wrap(object);
+        this.templateObjectMapper = templateObjectMapper;
+        cached = HashMap.newHashMap(dataModel.size());
     }
 
     @Override
     public TemplateObject getValue(String name) {
-        return cached.computeIfAbsent(name, n -> wrap(dataModel.get(n)));
+        return cached.computeIfAbsent(name, n -> templateObjectMapper.mapObject(dataModel.get(n)));
     }
 
     @Override
     public boolean checkVariable(String name) {
         return false;
-    }
-
-    private TemplateObject wrap(Object o) {
-        return switch (o) {
-            case null -> TemplateNull.NULL;
-            case Map.Entry entry -> new TemplateHash(entry);
-            case TemplateObject templateObject -> templateObject;
-            case Optional<?> optional -> optional.map(object -> wrapByProviders(o, object)).orElse(TemplateNull.NULL_OPTIONAL);
-            case TemplateObjectSupplier<?> templateObjectSupplier -> wrapByProviders(o, templateObjectSupplier.get());
-            default -> wrapByProviders(o, o);
-        };
-    }
-
-    private TemplateObject wrapByProviders(Object o, Object current) {
-        TemplateObjectProvider cached = templateObjectProviderMap.get(o.getClass());
-        if (cached != null) {
-            return cached.provide(this, current);
-        }
-        for (TemplateObjectProvider provider : providers) {
-            TemplateObject object = provider.provide(this, current);
-            if (object != null) {
-                templateObjectProviderMap.put(current.getClass(), provider);
-                return object;
-            }
-        }
-        throw new UnsupportedDataTypeException("unsupported data type: " + o.getClass());
     }
 
     @Override

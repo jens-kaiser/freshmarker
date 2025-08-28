@@ -10,6 +10,7 @@ import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.environment.DefaultTemplateObjectMapper;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.SimpleFeatureSet;
@@ -204,7 +205,8 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
 
     @Override
     public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet) {
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.providers(), context.builtInVariableProviders(), clock);
-        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, context.formatter(), featureSet);
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), new HashMap<>());
+        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.builtInVariableProviders(), clock, templateObjectMapper);
+        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, context.formatter(), featureSet, templateObjectMapper);
     }
 }

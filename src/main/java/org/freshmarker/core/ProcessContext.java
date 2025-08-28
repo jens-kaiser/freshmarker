@@ -6,6 +6,7 @@ import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFunction;
 import org.freshmarker.api.UserDirective;
 import org.freshmarker.core.environment.BaseEnvironment;
+import org.freshmarker.core.environment.DefaultTemplateObjectMapper;
 import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.BuiltInRepository;
 import org.freshmarker.core.model.TemplateObject;
@@ -27,6 +28,7 @@ public class ProcessContext {
     private Writer writer;
     protected Environment environment;
     protected final FeatureSet featureSet;
+    private DefaultTemplateObjectMapper templateObjectMapper;
     protected final BaseEnvironment baseEnvironment;
     protected final Map<Object, Map<Object, Object>> stores = new HashMap<>();
     protected final BuiltInRepository builtIns;
@@ -53,13 +55,15 @@ public class ProcessContext {
         this.outputFormats.addFirst(context.getOutputFormat());
         this.resourceBundleName = context.resourceBundleName;
         this.featureSet = context.featureSet;
+        this.templateObjectMapper = context.templateObjectMapper;
     }
 
-    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet, DefaultTemplateObjectMapper templateObjectMapper) {
         this.baseEnvironment = baseEnvironment;
         this.environment = baseEnvironment;
         this.writer = writer;
         this.featureSet = featureSet;
+        this.templateObjectMapper = templateObjectMapper;
         this.userDirectives = List.of(userDirectives, context.userDirectives());
         this.builtIns = context.builtIns();
         this.outputs = context.outputs();
@@ -68,6 +72,7 @@ public class ProcessContext {
         this.locals.addFirst(locale);
         this.zoneIds.addFirst(zoneId);
         this.outputFormats.addFirst(outputFormat);
+        this.templateObjectMapper = templateObjectMapper;
     }
 
     public Environment getEnvironment() {
@@ -75,7 +80,7 @@ public class ProcessContext {
     }
 
     public TemplateObject mapObject(Object object) {
-        return baseEnvironment.mapObject(object);
+        return templateObjectMapper.mapObject(object);
     }
 
     public void setEnvironment(Environment environment) {

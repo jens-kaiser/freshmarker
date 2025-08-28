@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +21,7 @@ class BaseEnvironmentTest {
 
     @BeforeEach
     void setUp() {
-        environment = new BaseEnvironment(Map.of(), List.of(), new BuiltInVariableProvider(), Clock.systemDefaultZone());
+        environment = new BaseEnvironment(Map.of(), new BuiltInVariableProvider(), Clock.systemDefaultZone(), new DefaultTemplateObjectMapper(List.of(), new HashMap<>()));
     }
 
     @Test
