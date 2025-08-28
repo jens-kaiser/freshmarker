@@ -13,9 +13,11 @@ import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -35,19 +37,22 @@ public final class Template {
     private final Path path;
     private final Map<String, Fragment> bricks = new HashMap<>();
     private final FeatureSet featureSet;
+    private final HashMap<Class<?>, TemplateObjectProvider> templateObjectProviderMap;
     private String resourceBundleName;
 
     Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, FeatureSet featureSet) {
-        this(contextCreator, context, templateLoader, path, new BlockFragment(new ArrayList<>()), featureSet);
+        this(contextCreator, context, templateLoader, path, new BlockFragment(new ArrayList<>()), featureSet, new HashMap<>());
     }
 
-    private Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, BlockFragment rootFragment, FeatureSet featureSet) {
+    private Template(ContextCreator contextCreator, StaticContext context, TemplateLoader templateLoader, Path path, BlockFragment rootFragment,
+                     FeatureSet featureSet, HashMap<Class<?>, TemplateObjectProvider> templateObjectProviderMap) {
         this.contextCreator = contextCreator;
         this.context = context;
         this.templateLoader = templateLoader;
         this.path = path;
         this.rootFragment = rootFragment;
         this.featureSet = featureSet;
+        this.templateObjectProviderMap = templateObjectProviderMap;
     }
 
     public void addBrick(String key, Fragment fragment) {
@@ -70,7 +75,7 @@ public final class Template {
     }
 
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
-        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, writer, userDirectives, featureSet);
+        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, writer, userDirectives, featureSet, templateObjectProviderMap);
         processContext.setResourceBundle(resourceBundleName);
         try {
             brickFragment.process(processContext);
@@ -99,16 +104,28 @@ public final class Template {
 
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.before().set(rootFragment.getSize());
-        ProcessContext processContext = contextCreator.createContext(this.context, dataModel, new StringBuilderWriter(), userDirectives, featureSet);
+        ProcessContext processContext = contextCreator.createContext(context, dataModel, new StringBuilderWriter(), userDirectives, featureSet, templateObjectProviderMap);
         processContext.setEnvironment(new ReducingVariableEnvironment(processContext.getEnvironment()));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status)));
             status.after().set(reducedFragment.getSize());
             log.debug("reduced by: {}", status);
-            return new Template(contextCreator, this.context, templateLoader, path, reducedFragment, featureSet);
+            return new Template(contextCreator, context, templateLoader, path, reducedFragment, featureSet, templateObjectProviderMap);
         } catch (RuntimeException e) {
             throw new ReduceException("cannot reduce: " + e.getMessage(), e);
         }
+    }
+
+    public Template hook(Map<String, Object> dataModel) {
+        HashMap<Class<?>, TemplateObjectProvider> templateObjectProviderMap = new HashMap<>();
+        ProcessContext processContext = contextCreator.createContext(context, dataModel, new StringWriter(), userDirectives, featureSet, templateObjectProviderMap);
+        processContext.setResourceBundle(resourceBundleName);
+        try {
+            rootFragment.process(processContext);
+        } catch (TemplateReturnException e) {
+            log.debug("return exception: {}", e.getMessage());
+        }
+        return new Template(contextCreator, context, templateLoader, path, rootFragment, featureSet, templateObjectProviderMap);
     }
 
     private BlockFragment toBlock(Fragment fragment) {

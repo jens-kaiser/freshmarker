@@ -30,6 +30,7 @@ import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
+import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -204,8 +205,8 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     }
 
     @Override
-    public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet) {
-        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), new HashMap<>());
+    public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet, Map<Class<?>, TemplateObjectProvider> templateObjectProviderMap) {
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.builtInVariableProviders(), clock, templateObjectMapper);
         return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, context.formatter(), featureSet, templateObjectMapper);
     }
