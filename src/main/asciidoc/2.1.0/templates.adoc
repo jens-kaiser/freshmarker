@@ -350,7 +350,7 @@ TemplateBuilder templateBuilder = configuration.builder();
 Template template = templateBuilder.getTemplate("test", """"
    ${company.domain?upper_case}
    """);
-Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+Template reducedTemplate = template.reduce(Map.of("company", new Company("schegge.de")));
 ----
 
 In this example, the interpolation is replaced by the text `SCHEGGE.DE`.
@@ -371,7 +371,7 @@ Template template = templateBuilder.getTemplate("test", """"
    No email address
    </#if>
    """);
-Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+Template reducedTemplate = template.reduce(Model.of("company", new Company("schegge.de")));
 ----
 
 In this example, the _If Directive_ can be replaced by `${e.firstname}.${e.lastname}@schegge.de` because the expression `company.domain??` could be evaluated.

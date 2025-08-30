@@ -308,7 +308,6 @@ Template reducedTemplate = template.reduce(reductionMap);
 The reduce method receives some of the necessary data and partially evaluates the template.
 As a result, it delivers a new template in which part of the structure has been simplified.
 
-
 [TIP]
 ====
 Although the replaced variables do not have to be passed to the `process` method later, it is recommended to make them available anyway.
@@ -350,7 +349,7 @@ TemplateBuilder templateBuilder = configuration.builder();
 Template template = templateBuilder.getTemplate("test", """"
    ${company.domain?upper_case}
    """);
-Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+Template reducedTemplate = template.reduce(Map.of("company", new Company("schegge.de")));
 ----
 
 In this example, the interpolation is replaced by the text `SCHEGGE.DE`.
@@ -371,7 +370,7 @@ Template template = templateBuilder.getTemplate("test", """"
    No email address
    </#if>
    """);
-Template reducedTemplate = template.reduce("company", new Company("schegge.de"));
+Template reducedTemplate = template.reduce(Map.of("company", new Company("schegge.de")));
 ----
 
 In this example, the _If Directive_ can be replaced by `${e.firstname}.${e.lastname}@schegge.de` because the expression `company.domain??` could be evaluated.
@@ -382,6 +381,34 @@ _Partial Reduction_ on _List Directives_ is executed by unrolling the loops.
 Unrolling is used by default only if there is a maximum of five entries in the list.
 
 This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.
+
+=== Model Hooking (experimental)
+
+Da die Templates von FreshMarker erst zur Laufzeit verarbeitet werden und keine Informationen zum Typ der Modelvariablen vor deer Verarbeitung zur Verfügung stehen, leidet die Verarbeitungsgeschwindigkeit.
+
+Wird ein Template sehr oft mit gleichartigen Modellen verwendet, dann werden die Typen der Modellvariablen bei jedem Durchlauf ausgewertet.
+Da die Typen der Modelvariablen erst bei der Verarbeitung bekannt sind, kann man aus der Not eine Tugend machen.
+
+Die Idee bei Model Hocking ist es, mit einem exemplarischen Model, die Auswertung im Vorfeld durchzuführen und diese Informationen im Template vorzuhalten. In den tatsächlichen Verarbeitungen wird dann auf die Informationen zugegriffen und die Verarbeitung beschleunigt.
+
+.Example Template with hooked Model
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
+   <#if company.domain??>
+   ${employee.firstname}.${employee.lastname}@${company.domain}
+   <#else>
+   No email address
+   </#if>
+   """);
+Map<String, Object> model = Map.of(
+        "company", new Company("schegge.de"),
+        "employee", new Employee("Jens", "Kaiser"));
+Template hookedTemplate = template.hook(model);
+----
+
+WARNING: Dieses Feature ist experimental und sollte nicht produktiv verwendet werden. Eine Verarbeitung mit anders strukturierten Modellen ist mit den modifizierten Templates möglich.
 
 === Reserved Words
 
