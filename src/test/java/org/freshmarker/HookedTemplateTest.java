@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Map;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
-public class HookedTemplateTest {
+class HookedTemplateTest {
     public static class Bean {
         private final String title;
 

@@ -28,7 +28,7 @@ public class ProcessContext {
     private Writer writer;
     protected Environment environment;
     protected final FeatureSet featureSet;
-    private DefaultTemplateObjectMapper templateObjectMapper;
+    private final DefaultTemplateObjectMapper templateObjectMapper;
     protected final BaseEnvironment baseEnvironment;
     protected final Map<Object, Map<Object, Object>> stores = new HashMap<>();
     protected final BuiltInRepository builtIns;
@@ -58,7 +58,7 @@ public class ProcessContext {
         this.templateObjectMapper = context.templateObjectMapper;
     }
 
-    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet, DefaultTemplateObjectMapper templateObjectMapper, LocalContext localContext) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, Writer writer, FeatureSet featureSet, DefaultTemplateObjectMapper templateObjectMapper, LocalContext localContext) {
         this.baseEnvironment = baseEnvironment;
         this.environment = baseEnvironment;
         this.writer = writer;
@@ -68,11 +68,10 @@ public class ProcessContext {
         this.builtIns = context.builtIns();
         this.outputs = context.outputs();
         this.functions = context.functions();
-        this.formatters.addFirst(formatter);
+        this.formatters.addFirst(context.formatter());
         this.locals.addFirst(localContext.locale());
         this.zoneIds.addFirst(localContext.zoneId());
         this.outputFormats.addFirst(localContext.outputFormat());
-        this.templateObjectMapper = templateObjectMapper;
     }
 
     public Environment getEnvironment() {

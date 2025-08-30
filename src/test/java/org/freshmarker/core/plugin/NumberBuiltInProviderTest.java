@@ -82,7 +82,7 @@ class NumberBuiltInProviderTest {
     @Test
     void format(@Mock StaticContext staticContext, @Mock BaseEnvironment baseEnvironment) {
         LocalContext localContext = new LocalContext(Locale.GERMANY, null, null, null, null);
-        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, Map.of(), null, null, localContext);
+        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, null, null, localContext);
         BuiltIn builtIn = builtIns.get("format");
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
         context.push(Locale.US);

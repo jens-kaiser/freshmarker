@@ -17,7 +17,7 @@ class ProcessContextTest {
     @Test
     void getStore(@Mock StaticContext staticContext, @Mock BaseEnvironment baseEnvironment) {
         LocalContext localContext = new LocalContext(Locale.GERMANY, null, null, null, null);
-        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, Map.of(), null, null, localContext);
+        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, null, null, localContext);
         context.getStore("store1").put("key", "value");
         assertEquals("value", context.getStore("store1").get("key"));
         assertNull(context.getStore("store2").get("key"));

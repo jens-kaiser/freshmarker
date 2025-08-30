@@ -58,6 +58,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
         return visitor.visit(this, this.toString());
     }
 
+    @Override
     public boolean equality(TemplateObject operand, ProcessContext context) {
         return equals(operand);
     }

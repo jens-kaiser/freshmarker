@@ -12,8 +12,6 @@ import static org.freshmarker.core.SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE
 
 public class TemplateString extends TemplatePrimitive<String> {
 
-    private static final boolean DISABLED = true;
-
     public static final TemplateString EMPTY = new TemplateString("");
 
     public TemplateString(String value) {
@@ -41,9 +39,6 @@ public class TemplateString extends TemplatePrimitive<String> {
     }
 
     private TemplateString repeat(TemplateObject operand, ProcessContext context) {
-        if (DISABLED) {
-            super.operation(TokenType.TIMES, operand, context);
-        }
         int repeat = operand.evaluate(context, TemplateNumber.class).asInt();
         return new TemplateString(getValue().repeat(repeat));
     }

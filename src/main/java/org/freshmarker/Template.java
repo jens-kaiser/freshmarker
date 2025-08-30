@@ -118,15 +118,15 @@ public final class Template {
     }
 
     public Template hook(Map<String, Object> dataModel) {
-        HashMap<Class<?>, TemplateObjectProvider> templateObjectProviderMap = new HashMap<>(this.templateObjectProviderMap);
-        ProcessContext processContext = createContext(context, dataModel, new StringWriter(), userDirectives, featureSet, templateObjectProviderMap, localContext);
+        HashMap<Class<?>, TemplateObjectProvider> currentMap = new HashMap<>(templateObjectProviderMap);
+        ProcessContext processContext = createContext(context, dataModel, new StringWriter(), userDirectives, featureSet, currentMap, localContext);
         processContext.setResourceBundle(resourceBundleName);
         try {
             rootFragment.process(processContext);
         } catch (TemplateReturnException e) {
             log.debug("return exception: {}", e.getMessage());
         }
-        return new Template(context, path, rootFragment, featureSet, localContext, templateObjectProviderMap);
+        return new Template(context, path, rootFragment, featureSet, localContext, currentMap);
     }
 
     private BlockFragment toBlock(Fragment fragment) {
@@ -157,6 +157,6 @@ public final class Template {
                                         FeatureSet featureSet, Map<Class<?>, TemplateObjectProvider> templateObjectProviderMap, LocalContext localContext) {
         DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.builtInVariableProviders(), localContext.clock(), templateObjectMapper);
-        return new ProcessContext(context, baseEnvironment, userDirectives, writer, context.formatter(), featureSet, templateObjectMapper, localContext);
+        return new ProcessContext(context, baseEnvironment, userDirectives, writer, featureSet, templateObjectMapper, localContext);
     }
 }
