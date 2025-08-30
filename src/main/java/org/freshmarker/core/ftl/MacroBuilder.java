@@ -2,8 +2,6 @@ package org.freshmarker.core.ftl;
 
 import ftl.Token.TokenType;
 import ftl.ast.MacroDefinition;
-import ftl.ast.NestedInstruction;
-import ftl.ast.ReturnInstruction;
 import org.freshmarker.Template;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.StaticContext;
@@ -12,8 +10,6 @@ import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.Fragments;
-import org.freshmarker.core.fragment.NestedInstructionFragment;
-import org.freshmarker.core.fragment.ReturnInstructionFragment;
 import org.freshmarker.core.ftl.TemplateDictionary.VariableType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +21,6 @@ import java.util.List;
 public class MacroBuilder implements UnaryFtlVisitor<List<Fragment>> {
 
     private static final Logger logger = LoggerFactory.getLogger(MacroBuilder.class);
-
-    private static final NestedInstructionFragment NESTED_INSTRUCTION_FRAGMENT = new NestedInstructionFragment();
-    private static final ReturnInstructionFragment RETURN_INSTRUCTION_FRAGMENT = new ReturnInstructionFragment();
 
     private final Template template;
     private final String nameSpace;
@@ -80,17 +73,5 @@ public class MacroBuilder implements UnaryFtlVisitor<List<Fragment>> {
             return 4;
         }
         return ftl.firstChildOfType(TokenType.OPEN_PAREN) == null ? 4 : 5;
-    }
-
-    @Override
-    public List<Fragment> visit(NestedInstruction ftl, List<Fragment> input) {
-        input.add(NESTED_INSTRUCTION_FRAGMENT);
-        return input;
-    }
-
-    @Override
-    public List<Fragment> visit(ReturnInstruction ftl, List<Fragment> input) {
-        input.add(RETURN_INSTRUCTION_FRAGMENT);
-        return input;
     }
 }
