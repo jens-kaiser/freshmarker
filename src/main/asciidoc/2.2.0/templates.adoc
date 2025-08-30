@@ -287,8 +287,6 @@ _FreshMarker_ does not know any caching mechanism, but you can store and reuse t
 
 === Partial Reduction
 
-NOTE: This feature is in an experimental stage and should be used with care.
-
 When processing a template, all necessary data must be available in the model.
 Otherwise, an exception is thrown if data is missing during processing.
 If the template contains values that remain the same for a large number of evaluations,
@@ -384,12 +382,11 @@ This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<part
 
 === Model Hooking (experimental)
 
-Da die Templates von FreshMarker erst zur Laufzeit verarbeitet werden und keine Informationen zum Typ der Modelvariablen vor deer Verarbeitung zur Verfügung stehen, leidet die Verarbeitungsgeschwindigkeit.
+As **FreshMarker**'s templates are only processed at runtime and no information on the type of model variables is available before processing, the processing speed suffers.
 
-Wird ein Template sehr oft mit gleichartigen Modellen verwendet, dann werden die Typen der Modellvariablen bei jedem Durchlauf ausgewertet.
-Da die Typen der Modelvariablen erst bei der Verarbeitung bekannt sind, kann man aus der Not eine Tugend machen.
+If a template is used very often with similar models, the types of the model variables are evaluated with each run. As the types of the model variables are only known during processing, a virtue can be made of necessity.
 
-Die Idee bei Model Hocking ist es, mit einem exemplarischen Model, die Auswertung im Vorfeld durchzuführen und diese Informationen im Template vorzuhalten. In den tatsächlichen Verarbeitungen wird dann auf die Informationen zugegriffen und die Verarbeitung beschleunigt.
+The idea of _model hocking_ is to carry out the evaluation in advance with an exemplary model and to store this information in the template. The information is then accessed in the actual processing and processing is accelerated.
 
 .Example Template with hooked Model
 [source,java]
@@ -408,7 +405,7 @@ Map<String, Object> model = Map.of(
 Template hookedTemplate = template.hook(model);
 ----
 
-WARNING: Dieses Feature ist experimental und sollte nicht produktiv verwendet werden. Eine Verarbeitung mit anders strukturierten Modellen ist mit den modifizierten Templates möglich.
+WARNING: This feature is experimental and should used with care. Processing with differently structured models is possible with the modified templates.
 
 === Reserved Words
 
