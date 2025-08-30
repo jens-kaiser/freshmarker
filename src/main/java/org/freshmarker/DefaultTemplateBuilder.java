@@ -3,15 +3,10 @@ package org.freshmarker;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
-import org.freshmarker.api.FeatureSet;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.TemplateFeature;
-import org.freshmarker.api.UserDirective;
-import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.LocalContext;
 import org.freshmarker.core.StaticContext;
-import org.freshmarker.core.environment.BaseEnvironment;
-import org.freshmarker.core.environment.DefaultTemplateObjectMapper;
-import org.freshmarker.core.environment.NameSpaced;
 import org.freshmarker.core.extension.ExtensionRegistry;
 import org.freshmarker.core.features.SimpleFeatureSet;
 import org.freshmarker.core.formatter.DateFormatter;
@@ -30,12 +25,10 @@ import org.freshmarker.core.model.temporal.TemplateOffsetDateTime;
 import org.freshmarker.core.model.temporal.TemplateZonedDateTime;
 import org.freshmarker.api.OutputFormat;
 import org.freshmarker.core.output.StandardOutputFormats;
-import org.freshmarker.core.providers.TemplateObjectProvider;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,7 +41,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class DefaultTemplateBuilder implements ContextCreator, TemplateBuilder {
+public final class DefaultTemplateBuilder implements TemplateBuilder {
     private final Locale locale;
     private final ZoneId zoneId;
     private final OutputFormat outputFormat;
@@ -58,7 +51,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
     private final ExtensionRegistry registry;
     private final org.freshmarker.api.TemplateLoader templateLoader;
 
-    DefaultTemplateBuilder(StaticContext context, SimpleFeatureSet featureSet) {
+    DefaultTemplateBuilder(StaticContext context, SimpleFeatureSet featureSet, org.freshmarker.api.TemplateLoader templateLoader) {
         this.locale = Locale.getDefault();
         this.zoneId = ZoneId.systemDefault();
         this.outputFormat = StandardOutputFormats.NONE;
@@ -66,7 +59,7 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         this.featureSet = featureSet;
         this.formatter = new HashMap<>();
         registry = context.registry();
-        templateLoader = context.templateLoader();
+        this.templateLoader = templateLoader;
     }
 
     private DefaultTemplateBuilder(DefaultTemplateBuilder builder, Locale locale, ZoneId zoneId, OutputFormat outputFormat, Clock clock, SimpleFeatureSet featureSet) {
@@ -196,18 +189,12 @@ public final class DefaultTemplateBuilder implements ContextCreator, TemplateBui
         ExtensionRegistry extensionRegistry = new ExtensionRegistry(registry, featureSet);
         Map<Class<? extends TemplateObject>, Formatter> combinedFormatters = extensionRegistry.getFormatterRegistry();
         combinedFormatters.putAll(this.formatter);
-        StaticContext templateContext = new StaticContext(extensionRegistry, templateLoader, combinedFormatters);
+        StaticContext templateContext = new StaticContext(extensionRegistry, combinedFormatters);
+        LocalContext localContext = new LocalContext(locale, outputFormat, zoneId, clock, templateLoader);
         SimpleFeatureSet featureSetCopy = new SimpleFeatureSet(featureSet);
-        Template template = new Template(this, templateContext, templateLoader, importPath, featureSetCopy);
+        Template template = new Template(templateContext, importPath, featureSetCopy, localContext);
         List<Fragment> fragments = root.accept(new FragmentBuilder(template, null, featureSetCopy, 0, templateContext, new TemplateDictionary()), new ArrayList<>());
         Fragments.withVariableContext(fragments).forEach(template.getRootFragment()::addFragment);
         return template;
-    }
-
-    @Override
-    public ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet, Map<Class<?>, TemplateObjectProvider> templateObjectProviderMap) {
-        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
-        BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.builtInVariableProviders(), clock, templateObjectMapper);
-        return new ProcessContext(context, baseEnvironment, userDirectives, outputFormat, locale, zoneId, writer, context.formatter(), featureSet, templateObjectMapper);
     }
 }

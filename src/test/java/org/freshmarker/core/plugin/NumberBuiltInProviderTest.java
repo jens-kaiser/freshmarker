@@ -1,6 +1,7 @@
 package org.freshmarker.core.plugin;
 
 import org.freshmarker.api.BuiltIn;
+import org.freshmarker.core.LocalContext;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.StaticContext;
 import org.freshmarker.core.environment.BaseEnvironment;
@@ -80,7 +81,8 @@ class NumberBuiltInProviderTest {
 
     @Test
     void format(@Mock StaticContext staticContext, @Mock BaseEnvironment baseEnvironment) {
-        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, Locale.GERMANY, null, null, Map.of(), null, null);
+        LocalContext localContext = new LocalContext(Locale.GERMANY, null, null, null, null);
+        ProcessContext context = new ProcessContext(staticContext, baseEnvironment, Map.of(), null, Map.of(), null, null, localContext);
         BuiltIn builtIn = builtIns.get("format");
         assertEquals("42,00", builtIn.apply(new TemplateNumber(42.0), List.of(new TemplateString("%.2f")), context).toString());
         context.push(Locale.US);

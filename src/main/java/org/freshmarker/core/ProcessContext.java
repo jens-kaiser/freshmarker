@@ -58,7 +58,7 @@ public class ProcessContext {
         this.templateObjectMapper = context.templateObjectMapper;
     }
 
-    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, OutputFormat outputFormat, Locale locale, ZoneId zoneId, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet, DefaultTemplateObjectMapper templateObjectMapper) {
+    public ProcessContext(StaticContext context, BaseEnvironment baseEnvironment, Map<NameSpaced, UserDirective> userDirectives, Writer writer, Map<Class<? extends TemplateObject>, Formatter> formatter, FeatureSet featureSet, DefaultTemplateObjectMapper templateObjectMapper, LocalContext localContext) {
         this.baseEnvironment = baseEnvironment;
         this.environment = baseEnvironment;
         this.writer = writer;
@@ -69,9 +69,9 @@ public class ProcessContext {
         this.outputs = context.outputs();
         this.functions = context.functions();
         this.formatters.addFirst(formatter);
-        this.locals.addFirst(locale);
-        this.zoneIds.addFirst(zoneId);
-        this.outputFormats.addFirst(outputFormat);
+        this.locals.addFirst(localContext.locale());
+        this.zoneIds.addFirst(localContext.zoneId());
+        this.outputFormats.addFirst(localContext.outputFormat());
         this.templateObjectMapper = templateObjectMapper;
     }
 
