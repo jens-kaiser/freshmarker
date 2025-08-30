@@ -1,10 +1,19 @@
 = Release Notes
 
-== Release 2.2.0 (2025-08-XX planned)
+== Release 2.2.0 (2025-09-XX planned)
 
 === Improvements
 
 - add string repeat operator `*`
+- dark-mode for the manual
+
+=== Experimental
+
+- add `Template#hook` method to hook a model structure to a template
+
+=== Bugfix
+
+- fix minor performance issues
 
 == Release 2.1.1 (2025-08-24)
 
