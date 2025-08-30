@@ -380,13 +380,18 @@ Unrolling is used by default only if there is a maximum of five entries in the l
 
 This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.
 
-=== Model Hooking (experimental)
+=== Model Hooking (since 2.2.0, experimental)
+
+As **FreshMarker**'s templates are only processed at runtime and no information on the type of model variables is available before processing, the processing speed suffers.
+WARNING: This feature is experimental and should used with care. Processing with differently structured models is not possible with the modified templates.
 
 As **FreshMarker**'s templates are only processed at runtime and no information on the type of model variables is available before processing, the processing speed suffers.
 
-If a template is used very often with similar models, the types of the model variables are evaluated with each run. As the types of the model variables are only known during processing, a virtue can be made of necessity.
+If a template is used very often with similar models, the types of the model variables are evaluated with each run.
+As the types of the model variables are only known during processing, a virtue can be made of necessity.
 
-The idea of _model hocking_ is to carry out the evaluation in advance with an exemplary model and to store this information in the template. The information is then accessed in the actual processing and processing is accelerated.
+The idea of _model hocking_ is to carry out the evaluation in advance with an exemplary model and to store this information in the template.
+The information is then accessed in the actual processing and processing is accelerated.
 
 .Example Template with hooked Model
 [source,java]
@@ -404,8 +409,6 @@ Map<String, Object> model = Map.of(
         "employee", new Employee("Jens", "Kaiser"));
 Template hookedTemplate = template.hook(model);
 ----
-
-WARNING: This feature is experimental and should used with care. Processing with differently structured models is possible with the modified templates.
 
 === Reserved Words
 
