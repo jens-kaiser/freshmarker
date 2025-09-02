@@ -148,7 +148,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         ResourceBundle resourceBundle = ResourceBundle.getBundle("freshmarker", e.getLocale());
         StringJoiner stringJoiner = new StringJoiner(", ");
         get(stringJoiner, period.getValue().getYears(), resourceBundle, "year");
-        get(stringJoiner, period.getValue().getMonths(), resourceBundle, "month");
+        get(stringJoiner, period.getValue().getMonths(), resourceBundle, MONTH);
         get(stringJoiner, period.getValue().getDays(), resourceBundle, "day");
         return new TemplateString(stringJoiner.toString());
     }
