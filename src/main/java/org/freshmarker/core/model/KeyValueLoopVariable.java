@@ -6,8 +6,7 @@ public record KeyValueLoopVariable(String name) implements TemplateVariable {
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
-        TemplateObject value = context.getEnvironment().getValue(name);
-        return value.evaluateToObject(context);
+        return context.getEnvironment().getValue(name).evaluateToObject(context);
     }
 
     @Override

@@ -12,7 +12,10 @@ public class TemplateHashLooper extends AbstractTemplateLooper<Entry<String, Obj
     }
 
     @Override
-    public TemplateHash evaluateToObject(ProcessContext context) {
-        return new TemplateHash(sequence.get(index));
+    public TemplateObject evaluateToObject(ProcessContext context) {
+        if (current == null) {
+            current = new TemplateHash(sequence.get(index));
+        }
+        return current;
     }
 }

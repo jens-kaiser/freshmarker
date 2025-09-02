@@ -12,10 +12,15 @@ public class TemplateSequenceLooper extends AbstractTemplateLooper<Object> {
 
   @Override
   public TemplateObject evaluateToObject(ProcessContext context) {
-    Object object = sequence.get(index);
-    if (object instanceof TemplateObject templateObject) {
-      return templateObject;
-    }
-    return context.mapObject(object);
+      if (current != null) {
+          return current;
+      }
+      Object object = sequence.get(index);
+      if (object instanceof TemplateObject templateObject) {
+        current = templateObject;
+        return templateObject;
+      }
+      current = context.mapObject(object);
+      return current;
   }
 }

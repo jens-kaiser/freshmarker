@@ -8,6 +8,7 @@ import java.util.List;
 public abstract class AbstractTemplateLooper<T> implements TemplateLooper {
     protected final List<T> sequence;
     protected int index;
+    protected TemplateObject current;
 
     protected AbstractTemplateLooper(List<T> sequence) {
         this.sequence = sequence;
@@ -35,6 +36,7 @@ public abstract class AbstractTemplateLooper<T> implements TemplateLooper {
 
     public void increment() {
         index++;
+        current = null;
     }
 
     public int size() {
