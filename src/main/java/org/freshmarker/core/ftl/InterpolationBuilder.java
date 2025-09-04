@@ -338,7 +338,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (TemplateBoolean.TRUE.equals(left)) {
             return right;
         }
-        if ((TemplateBoolean.FALSE.equals(left) || TemplateBoolean.FALSE.equals(right))) {
+        if (TemplateBoolean.FALSE.equals(left) && TemplateBoolean.FALSE.equals(right) || type == TokenType.AND2 && TemplateBoolean.FALSE.equals(left)) {
             return TemplateBoolean.FALSE;
         }
         return new TemplateJunction(type, left, right);
@@ -372,7 +372,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (TemplateBoolean.FALSE.equals(left)) {
             return right;
         }
-        if ((TemplateBoolean.TRUE.equals(left) || TemplateBoolean.TRUE.equals(right))) {
+        if (TemplateBoolean.TRUE.equals(left) && TemplateBoolean.TRUE.equals(right) || type == TokenType.OR2 && TemplateBoolean.TRUE.equals(left)) {
             return TemplateBoolean.TRUE;
         }
         return new TemplateJunction(type, left, right);
