@@ -13,7 +13,8 @@
 
 === Bugfix
 
-- fix minor performance issues
+- fix performance issues
+- fix optimization bug in not short circuit or operator
 
 == Release 2.1.1 (2025-08-24)
 

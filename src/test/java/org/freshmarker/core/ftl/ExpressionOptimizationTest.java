@@ -28,6 +28,8 @@ class ExpressionOptimizationTest {
             "${true && true},true",
             "${true && false},false",
             "${false && true},false",
+            "${false & variable},false",
+            "${variable & false},false",
             "${false && false},false",
             "${false && variable},false",
             "${!(false && variable)},true",
@@ -39,6 +41,8 @@ class ExpressionOptimizationTest {
             "${true || false},true",
             "${false || true},true",
             "${false || false},false",
+            "${true | variable},true",
+            "${variable | true},true",
             "${true || variable},true",
             "${!(true || variable)},false",
             "${true ^ true},false",
@@ -60,10 +64,12 @@ class ExpressionOptimizationTest {
     @CsvSource({
             "${variable}",
             "${variable & true}",
+            "${true & variable}",
             "${variable && true}",
             "${variable | false}",
             "${variable || false}",
             "${false || variable}",
+            "${false | variable}",
     })
     void optimizeExpressionWithVariable(String content) throws ParseException {
         FreshMarkerParser parser = new FreshMarkerParser(content);
@@ -77,13 +83,7 @@ class ExpressionOptimizationTest {
 
     @ParameterizedTest
     @CsvSource({
-            "${false ^ variable}",
-            "${true & variable}",
-            "${false & variable}",
-            "${false | variable}",
-            "${true | variable}",
-            "${false | variable}",
-            "${true | variable}",
+            "${false ^ variable}",        
             "${variable ^ false}",
             "${false ^ variable}",
     })

@@ -323,28 +323,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateObject visit(AndExpression expression, Object input) {
         return switch (((Token) expression.get(1)).getType()) {
-            case AND -> handleAnd(expression);
-            case AND2 -> handleAnd2(expression);
+            case AND -> handleAnd(TokenType.AND, expression);
+            case AND2 -> handleAnd(TokenType.AND2, expression);
             default -> throw new IllegalArgumentException("invalid conjunction");
         };
     }
 
-    private TemplateObject handleAnd(AndExpression expression) {
-        TemplateObject left = expression.getFirst().accept(this, null);
-        TemplateObject right = expression.get(2).accept(this, null);
-        if (!(right instanceof TemplateBoolean r)) {
-            return new TemplateJunction(TokenType.AND, left, right);
-        }
-        if (left instanceof TemplateBoolean l) {
-            return TemplateBoolean.from(l.getValue() && r.getValue());
-        }
-        if (TemplateBoolean.TRUE.equals(right)) {
-            return left;
-        }
-        return new TemplateJunction(TokenType.AND, left, right);
-    }
-
-    private TemplateObject handleAnd2(AndExpression expression) {
+    private TemplateObject handleAnd(TokenType type, AndExpression expression) {
         TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         if (TemplateBoolean.TRUE.equals(right)) {
@@ -356,14 +341,14 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if ((TemplateBoolean.FALSE.equals(left) || TemplateBoolean.FALSE.equals(right))) {
             return TemplateBoolean.FALSE;
         }
-        return new TemplateJunction(TokenType.AND2, left, right);
+        return new TemplateJunction(type, left, right);
     }
 
     @Override
     public TemplateObject visit(OrExpression expression, Object input) {
         return switch (((Token) expression.get(1)).getType()) {
-            case OR -> handleOr(expression);
-            case OR2 -> handleOr2(expression);
+            case OR -> handleOr(TokenType.OR, expression);
+            case OR2 -> handleOr(TokenType.OR2, expression);
             case XOR -> handleXor(expression);
             default -> throw new IllegalArgumentException("invalid disjunction");
         };
@@ -378,31 +363,19 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         return new TemplateJunction(TokenType.XOR, left, right);
     }
 
-    private TemplateObject handleOr2(OrExpression expression) {
+    private TemplateObject handleOr(TokenType type, OrExpression expression) {
         TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
-        if (TemplateBoolean.FALSE.equals(left)) {
-            return right;
-        }
         if (TemplateBoolean.FALSE.equals(right)) {
             return left;
+        }
+        if (TemplateBoolean.FALSE.equals(left)) {
+            return right;
         }
         if ((TemplateBoolean.TRUE.equals(left) || TemplateBoolean.TRUE.equals(right))) {
             return TemplateBoolean.TRUE;
         }
-        return new TemplateJunction(TokenType.OR2, left, right);
-    }
-
-    private TemplateObject handleOr(OrExpression expression) {
-        TemplateObject left = expression.getFirst().accept(this, null);
-        TemplateObject right = expression.get(2).accept(this, null);
-        if (right instanceof TemplateBoolean r) {
-            if (left instanceof TemplateBoolean l) {
-                return TemplateBoolean.from(l.getValue() || r.getValue());
-            }
-            return left;
-        }
-        return new TemplateJunction(TokenType.OR, left, right);
+        return new TemplateJunction(type, left, right);
     }
 
     @Override
