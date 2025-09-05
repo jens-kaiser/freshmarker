@@ -54,10 +54,16 @@ public class TemplateListSequence implements TemplateSequence<Object> {
     @Override
     public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
         TemplateObject value = operand.evaluateToObject(context);
-        if (operator == TokenType.PLUS && value instanceof TemplateListSequence sequence2) {
-            List<Object> newSequence = new ArrayList<>(sequence);
-            newSequence.addAll(sequence2.sequence);
-            return new TemplateListSequence(newSequence);
+        if (value instanceof TemplateListSequence sequence2) {
+            if (operator == TokenType.PLUS) {
+                List<Object> newSequence = new ArrayList<>(sequence);
+                newSequence.addAll(sequence2.sequence);
+                return new TemplateListSequence(newSequence);
+            } else if (operator == TokenType.MINUS) {
+                List<Object> newSequence = new ArrayList<>(sequence);
+                newSequence.removeAll(sequence2.sequence);
+                return new TemplateListSequence(newSequence);
+            }
         }
         throw new ProcessException("unsupported operation: " + operator);
     }

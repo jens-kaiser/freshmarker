@@ -384,39 +384,39 @@ m|date - 7
 |subtract the amount of days from the given date. This operation is not a commutativity. (experimental)
 
 m|+
-|Period Addition Operator
+|Period Addition Operator (since 1.7.2)
 m|period + period
-|add the period to the given period. (experimental)
+|add the period to the given period.
 
 m|-
-|Period Subtraction Operator
+|Period Subtraction Operator (since 1.7.2)
 m|period - period
-|subtract the period from the given period. (experimental)
+|subtract the period from the given period.
 
 m|+
-|Period Addition Operator
+|Period Addition Operator (since 1.7.2)
 m|period + 3
-|add the amount of days to the given period. This operation is not a commutativity. (experimental)
+|add the amount of days to the given period. This operation is not a commutativity.
 
 m|-
-|Period Subtraction Operator
+|Period Subtraction Operator (since 1.7.2)
 m|period - 7
-|subtract the amount of days from the given period. This operation is not a commutativity. (experimental)
+|subtract the amount of days from the given period. This operation is not a commutativity.
 
 m|+
-|Year Addition Operator
+|Year Addition Operator (since 1.7.2)
 m|year + 3
-|add the amount of years to the given year. This operation is not a commutativity. (experimental)
+|add the amount of years to the given year. This operation is not a commutativity.
 
 m|-
-|Year Subtraction Operator
+|Year Subtraction Operator (since 1.7.2)
 m|year - 7
-|subtract the amount of years from the given year. This operation is not a commutativity. (experimental)
+|subtract the amount of years from the given year. This operation is not a commutativity.
 
 m|+
-|List Concatenation Operator
+|List Concatenation Operator (since 1.7.2)
 m|list + list
-|Concatenate the lists to a new list. (experimental)
+|Concatenate the lists to a new list.
 |===
 
 === Negation

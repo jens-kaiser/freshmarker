@@ -4,7 +4,8 @@
 
 === Improvements
 
-- add string repeat operator `*`
+- add `*` string repeat operator
+- add `-` list difference operator
 - dark-mode for the manual
 
 === Experimental
