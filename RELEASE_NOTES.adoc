@@ -11,6 +11,7 @@
 === Experimental
 
 - add `Template#hook` method to hook a model structure to a template
+- add partial template reduction for interpolation expressions
 
 === Bugfix
 

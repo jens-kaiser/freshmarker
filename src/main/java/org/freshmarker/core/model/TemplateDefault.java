@@ -18,7 +18,11 @@ public record TemplateDefault(TemplateObject base, TemplateObject fallback) impl
 
     @Override
     public TemplateObject reduce(ReduceContext context) {
-        TemplateObject templateObject = base.reduce(context);
-        return templateObject.isNull() ? this : templateObject;
+        TemplateObject baseValue = base.reduce(context);
+        if (baseValue != base) {
+            context.getStatus().expression().incrementAndGet();
+            return baseValue;
+        }
+        return new TemplateDefault(base, fallback.reduce(context));
     }
 }

@@ -4,6 +4,7 @@ import org.freshmarker.Configuration;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.ReductionStatus;
 import org.freshmarker.Template;
+import org.freshmarker.core.model.TemplateDefault;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateJunction;
 import org.freshmarker.core.model.TemplateMarkup;
@@ -48,6 +49,11 @@ class ReduceTemplateTest {
             }
 
             @Override
+            public String visit(TemplateDefault fallback) {
+                return fallback.base().accept(this) + "!" + fallback.fallback().accept(this);
+            }
+
+            @Override
             public String visit(TemplateMarkup markup, TemplateObject content) {
                 return content.accept(this);
             }
@@ -87,7 +93,6 @@ class ReduceTemplateTest {
             Map<String, Object> reduceModel = Map.of("value1", 42);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
             assertEquals(new ReductionStatus(2,2,2,3), reductionStatus);
         }
@@ -101,7 +106,7 @@ class ReduceTemplateTest {
             Map<String, Object> reduceModel = Map.of("value1", 42);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
             assertEquals(new ReductionStatus(1,1,1,1), reductionStatus);
             assertEquals(reducedExpression, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
@@ -116,7 +121,6 @@ class ReduceTemplateTest {
             Map<String, Object> reduceModel = Map.of("value1", 42);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
             assertEquals(new ReductionStatus(1,1,1,1), reductionStatus);
             assertEquals(reducedExpression, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
@@ -131,7 +135,6 @@ class ReduceTemplateTest {
             Map<String, Object> reduceModel = Map.of("value1", 42);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
             assertEquals(new ReductionStatus(2,2,2,3), reductionStatus);
         }
@@ -145,7 +148,6 @@ class ReduceTemplateTest {
             Map<String, Object> reduceModel = Map.of("value1", 42);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
             assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
             assertEquals(reducedExpression, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
@@ -164,7 +166,6 @@ class ReduceTemplateTest {
             Template template = templateBuilder.getTemplate("test", input);
             assertEquals(expected, template.process(Map.of("value1", true, "value2", false)));
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", true, "value2", false)));
             assertEquals(new ReductionStatus(2,2,1,3), reductionStatus);
             assertEquals("value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
@@ -183,7 +184,6 @@ class ReduceTemplateTest {
             Template template = templateBuilder.getTemplate("test", input);
             assertEquals(expected, template.process(Map.of("value1", true, "value2", false)));
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", true, "value2", false)));
             assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
         }
@@ -201,11 +201,39 @@ class ReduceTemplateTest {
             Template template = templateBuilder.getTemplate("test", input);
             assertEquals(expected, template.process(Map.of("value1", false, "value2", true)));
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", false, "value2", true)));
             assertEquals(reducedExpressison, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
             assertEquals(new ReductionStatus(2,2,1,3), reductionStatus);
             assertEquals("value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @Test
+        void defaultValueWithoutBase() {
+            Template template = templateBuilder.getTemplate("test", "${value1!value2 == value3}");
+            assertEquals("no", template.process(Map.of("value2", 42, "value3", 23)));
+            Template reducedTemplate = template.reduce(Map.of("value2", 42), reductionStatus);
+            assertEquals("no", reducedTemplate.process(Map.of("value2", 42, "value3", 23)));
+            assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
+            assertEquals("value1!42==value3", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @Test
+        void defaultValue() {
+            Template template = templateBuilder.getTemplate("test", "${value1!value2 == value3}");
+            assertEquals("no", template.process(Map.of("value1", 43, "value2", 42, "value3", 23)));
+            Template reducedTemplate = template.reduce(Map.of("value1", 43, "value2", 42), reductionStatus);
+            assertEquals("no", reducedTemplate.process(Map.of("value1", 43, "value2", 42, "value3", 23)));
+            assertEquals(new ReductionStatus(2,2,1,2), reductionStatus);
+            assertEquals("43==value3", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @Test
+        void localeBuiltInVariable() {
+            Template template = templateBuilder.getTemplate("test", "${.locale}");
+            assertEquals("de_DE", template.process(Map.of()));
+            Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
+            assertEquals("de_DE", reducedTemplate.process(Map.of()));
+            assertEquals(new ReductionStatus(2,2,2,0), reductionStatus);
         }
     }
 
@@ -222,7 +250,6 @@ class ReduceTemplateTest {
             String input = "<#list seq as company>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
             assertEquals("1 2 3 4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 13, 9), reductionStatus);
         }
@@ -233,7 +260,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 13, 9), reductionStatus);
         }
@@ -244,7 +271,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s filter s % 2 == 0 offset 1 limit 4>${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("4 6 8 10 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))));
             assertEquals(new ReductionStatus(5, 13, 9), reductionStatus);
         }
@@ -255,7 +282,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as k, v>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of("1", 2, "2", 4))));
             assertEquals(new ReductionStatus(5, 7, 5), reductionStatus);
         }
@@ -270,7 +297,7 @@ class ReduceTemplateTest {
                 </#list>""";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("""
                 1. schegge.de/1 jens
                 2. schegge.de/2 jens
@@ -286,7 +313,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company}/${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(7, 7, 3), reductionStatus);
         }
@@ -297,7 +324,7 @@ class ReduceTemplateTest {
             String input = "<#var name='Jens'><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(10, 9, 5), reductionStatus);
         }
@@ -308,7 +335,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s with l>${l?counter} ${company}/${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1 schegge.de/1 2 schegge.de/2 3 schegge.de/3 4 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(9, 9, 3), reductionStatus);
         }
@@ -326,7 +353,7 @@ class ReduceTemplateTest {
                 </#list>""";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("""
                 1. schegge.de/3 1
                 2. schegge.de/4 2
@@ -342,7 +369,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 5, 3), reductionStatus);
         }
@@ -361,7 +388,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as company>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1 2 3 4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 5, 9), reductionStatus);
         }
@@ -372,7 +399,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 5, 9), reductionStatus);
         }
@@ -383,7 +410,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s filter s % 2 == 0 offset 1 limit 4>${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("4 6 8 10 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))));
             assertEquals(new ReductionStatus(5, 5, 9), reductionStatus);
         }
@@ -394,7 +421,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as k, v>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of("1", 2, "2", 4))));
             assertEquals(new ReductionStatus(5, 3, 5), reductionStatus);
         }
@@ -406,7 +433,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as k, v>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
             assertEquals(new ReductionStatus(5, 3, 3), reductionStatus);
         }
@@ -421,7 +448,7 @@ class ReduceTemplateTest {
                 </#list>""";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("""
                 1. schegge.de/1 jens
                 2. schegge.de/2 jens
@@ -437,7 +464,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company}/${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(7, 6, 3), reductionStatus);
         }
@@ -448,7 +475,7 @@ class ReduceTemplateTest {
             String input = "<#var name='Jens'><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(10, 8, 5), reductionStatus);
         }
@@ -459,7 +486,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s with l>${l?counter} ${company}/${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1 schegge.de/1 2 schegge.de/2 3 schegge.de/3 4 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(9, 7, 3), reductionStatus);
         }
@@ -477,7 +504,7 @@ class ReduceTemplateTest {
                 </#list>""";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("""
                 1. schegge.de/3 1
                 2. schegge.de/4 2
@@ -493,7 +520,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 3, 3), reductionStatus);
         }
@@ -504,7 +531,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.with(ReductionFeature.UNROLL_LIST, 2).getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 3, 3), reductionStatus);
         }
@@ -585,7 +612,7 @@ class ReduceTemplateTest {
             String input = "<#var name='Jens'><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(10, 8, 5), reductionStatus);
         }
@@ -596,7 +623,7 @@ class ReduceTemplateTest {
             String input = "<#var name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(10, 8, 5), reductionStatus);
         }
@@ -607,7 +634,7 @@ class ReduceTemplateTest {
             String input = "<#var name='Jens'><#set name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(11, 9, 6), reductionStatus);
         }
@@ -618,7 +645,7 @@ class ReduceTemplateTest {
             String input = "<#var name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS",
                     reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4), "firstname", "jens")));
             assertEquals(new ReductionStatus(10, 8, 4), reductionStatus);
@@ -710,7 +737,7 @@ class ReduceTemplateTest {
             Map<String, Object> reduceModel = Map.of("company", "schegge.de", "flag", flag);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals(expected, reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
             assertEquals(new ReductionStatus(9, 2, replaced), reductionStatus);
         }
@@ -721,7 +748,7 @@ class ReduceTemplateTest {
             String input = "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
             assertEquals(new ReductionStatus(9, 9, 4), reductionStatus);
         }
@@ -732,7 +759,7 @@ class ReduceTemplateTest {
             String input = "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("default", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
             assertEquals(new ReductionStatus(9, 2, 1), reductionStatus);
         }
@@ -743,7 +770,7 @@ class ReduceTemplateTest {
             String input = "<#switch flag><#case 1>${company}<#case 2>${name}<#case 3>three<#default>default</#switch>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("Jens Kaiser", reducedTemplate.process(Map.of("name", "Jens Kaiser", "flag", 2)));
             assertEquals(new ReductionStatus(9, 9, 4), reductionStatus);
         }
@@ -753,7 +780,7 @@ class ReduceTemplateTest {
             Template template = templateBuilder.with(SwitchDirectiveFeature.OPTIMIZE_CONSTANT_SWITCH)
                     .getTemplate("test", "<#switch flag><#case 1>1<#case 2>2</#switch>");
             Template reducedTemplate = template.reduce(Map.of("flag", 1), reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1", reducedTemplate.process(Map.of()));
             assertEquals(new ReductionStatus(5, 2, 1), reductionStatus);
         }
@@ -763,7 +790,7 @@ class ReduceTemplateTest {
             Template template = templateBuilder
                     .getTemplate("test", "<#switch flag><#case 1>1<#case 2>2</#switch>");
             Template reducedTemplate = template.reduce(Map.of("flag", 1), reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1", reducedTemplate.process(Map.of()));
             assertEquals(new ReductionStatus(7, 2, 1), reductionStatus);
         }
@@ -777,7 +804,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 5, 3), reductionStatus);
         }
@@ -788,7 +815,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 5, 3), reductionStatus);
         }
@@ -799,7 +826,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as company>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1 2 3 4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(5, 5, 2), reductionStatus);
         }
@@ -810,7 +837,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s>${company}/${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 schegge.de/2 schegge.de/3 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(7, 7, 3), reductionStatus);
         }
@@ -821,7 +848,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as s with l>${l?counter} ${company}/${s} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("1 schegge.de/1 2 schegge.de/2 3 schegge.de/3 4 schegge.de/4 ", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(9, 9, 3), reductionStatus);
         }
@@ -836,7 +863,7 @@ class ReduceTemplateTest {
                 </#list>""";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("""
                 1. schegge.de/1 jens
                 2. schegge.de/2 jens
@@ -859,7 +886,7 @@ class ReduceTemplateTest {
                 </#list>""";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);assertEquals("""
+assertEquals("""
                 1. schegge.de/3 1
                 2. schegge.de/4 2
                 1. schegge.de/3 3
@@ -875,7 +902,7 @@ class ReduceTemplateTest {
             String input = "<#list seq as k, v>${company} </#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de schegge.de ", reducedTemplate.process(Map.of("seq", Map.of(1, 2, 2, 4))));
             assertEquals(new ReductionStatus(5, 5, 3), reductionStatus);
         }
@@ -889,7 +916,7 @@ class ReduceTemplateTest {
             String input = "<#var name='Jens'><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(10, 9, 5), reductionStatus);
         }
@@ -900,7 +927,7 @@ class ReduceTemplateTest {
             String input = "<#var name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(10, 9, 5), reductionStatus);
 
@@ -912,7 +939,7 @@ class ReduceTemplateTest {
             String input = "<#var name='Jens'><#set name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS", reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4))));
             assertEquals(new ReductionStatus(11, 10, 6), reductionStatus);
         }
@@ -923,7 +950,7 @@ class ReduceTemplateTest {
             String input = "<#var name=firstname><#list seq as s>${company}/${s} ${name?upper_case}</#list>";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("schegge.de/1 JENSschegge.de/2 JENSschegge.de/3 JENSschegge.de/4 JENS",
                     reducedTemplate.process(Map.of("seq", List.of(1, 2, 3, 4), "firstname", "jens")));
             assertEquals(new ReductionStatus(10, 9, 4), reductionStatus);
@@ -941,7 +968,7 @@ class ReduceTemplateTest {
             String input = "<#var name=value>${name}";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
-            assertNotNull(reducedTemplate);
+
             assertEquals("Jens", reducedTemplate.process(Map.of("value", "Jens")));
             assertEquals(new ReductionStatus(4, 3, 2), reductionStatus);
         }
@@ -951,7 +978,7 @@ class ReduceTemplateTest {
             String input = "<#var name=value><#var name=value>${name}";
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(Map.of("value", "Jens"), reductionStatus);
-            assertNotNull(reducedTemplate);
+
             Map<String, Object> dataModel = Map.of();
             ProcessException exception = assertThrows(ProcessException.class, () -> reducedTemplate.process(dataModel));
             assertEquals("variable name must not exist at test:1:18 '<#var name=value>'", exception.getMessage());
