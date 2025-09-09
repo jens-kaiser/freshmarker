@@ -6,6 +6,7 @@ import org.freshmarker.ReductionStatus;
 import org.freshmarker.Template;
 import org.freshmarker.core.model.TemplateDefault;
 import org.freshmarker.core.model.TemplateEquality;
+import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
@@ -42,6 +43,10 @@ class ReduceTemplateTest {
     @Nested
     class Expressions {
         private static class ExpressionPrinter implements TemplateObjectVisitor<String> {
+            @Override
+            public String visit(TemplateExists templateExists) {
+                return templateExists.expression().accept(this) + "??";
+            }
 
             @Override
             public String visit(TemplatePrimitive<?> primitive, String string) {
@@ -234,6 +239,25 @@ class ReduceTemplateTest {
             Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
             assertEquals("de_DE", reducedTemplate.process(Map.of()));
             assertEquals(new ReductionStatus(2,2,2,0), reductionStatus);
+        }
+
+        @Test
+        void exists() {
+            Template template = templateBuilder.getTemplate("test", "${value1??}");
+            assertEquals("yes", template.process(Map.of("value1", 43)));
+            Template reducedTemplate = template.reduce(Map.of("value1", 43), reductionStatus);
+            assertEquals("yes", reducedTemplate.process(Map.of()));
+            assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
+        }
+
+        @Test
+        void existsNot() {
+            Template template = templateBuilder.getTemplate("test", "${value1??}");
+            assertEquals("yes", template.process(Map.of("value1", 43)));
+            Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
+            assertEquals("yes", reducedTemplate.process(Map.of("value1", 43)));
+            assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
+            assertEquals("value1??", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
         }
     }
 

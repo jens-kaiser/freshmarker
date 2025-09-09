@@ -22,8 +22,12 @@ public record TemplateExists(TemplateObject expression) implements TemplateBoole
     return visitor.visit(this);
   }
 
-    @Override
-    public TemplateObject reduce(ReduceContext context) {
-        return new TemplateExists(expression.reduce(context));
+  @Override
+  public TemplateObject reduce(ReduceContext context) {
+      TemplateObject result = expression.reduce(context);
+      if (result == TemplateNull.NULL) {
+          return this;
+      }
+      return result.isPrimitive() ? TemplateBoolean.TRUE : new TemplateExists(result);
     }
 }
