@@ -53,8 +53,9 @@ public class InterpolationFragment implements Fragment {
                 context.getStatus().expressions().add(expression);
                 context.getStatus().expressions().add(reduced);
                 log.debug("Reduced: {} to {}", expression, reduced);
+                return new InterpolationFragment(reduced, ftl);
             }
-            return new InterpolationFragment(reduced, ftl);
+            return this;
         }
     }
 

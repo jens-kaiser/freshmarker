@@ -33,6 +33,9 @@ public class TemplateMarkup implements TemplateObject {
     @Override
     public TemplateMarkup reduce(ReduceContext context) {
         TemplateObject templateObject = content.reduce(context);
+        if (templateObject.isNull() || templateObject == content) {
+            return this;
+        }
         if (!templateObject.isPrimitive()) {
             return new TemplateMarkup(templateObject);
         }
