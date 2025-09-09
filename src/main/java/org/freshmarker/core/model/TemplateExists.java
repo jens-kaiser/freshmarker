@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public record TemplateExists(TemplateObject expression) implements TemplateBooleanExpression {
@@ -20,4 +21,9 @@ public record TemplateExists(TemplateObject expression) implements TemplateBoole
   public <R> R accept(TemplateObjectVisitor<R> visitor) {
     return visitor.visit(this);
   }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        return new TemplateExists(expression.reduce(context));
+    }
 }

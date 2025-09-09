@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.UnsupportedDataTypeException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -102,5 +103,12 @@ public class TemplateSlice implements TemplateObject {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, sequence, range);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject templateRange = range.reduce(context);
+        TemplateObject value = sequence.reduce(context);
+        return new TemplateSlice(templateRange, value);
     }
 }

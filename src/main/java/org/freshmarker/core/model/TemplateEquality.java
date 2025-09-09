@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public record TemplateEquality(TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
@@ -36,5 +37,10 @@ public record TemplateEquality(TemplateObject left, TemplateObject right) implem
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, left, right);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        return new TemplateEquality(left.reduce(context), right.reduce(context));
     }
 }

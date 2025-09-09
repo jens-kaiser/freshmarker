@@ -4,6 +4,15 @@ import org.freshmarker.Configuration;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.ReductionStatus;
 import org.freshmarker.Template;
+import org.freshmarker.core.model.TemplateEquality;
+import org.freshmarker.core.model.TemplateJunction;
+import org.freshmarker.core.model.TemplateMarkup;
+import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateObjectVisitor;
+import org.freshmarker.core.model.TemplateOperation;
+import org.freshmarker.core.model.TemplateRelational;
+import org.freshmarker.core.model.TemplateVariable;
+import org.freshmarker.core.model.primitive.TemplatePrimitive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,24 +40,172 @@ class ReduceTemplateTest {
 
     @Nested
     class Expressions {
+        private static class ExpressionPrinter implements TemplateObjectVisitor<String> {
+
+            @Override
+            public String visit(TemplatePrimitive<?> primitive, String string) {
+                return string;
+            }
+
+            @Override
+            public String visit(TemplateMarkup markup, TemplateObject content) {
+                return content.accept(this);
+            }
+
+            @Override
+            public String visit(TemplateVariable variable, String name) {
+                return name;
+            }
+
+            @Override
+            public String visit(TemplateEquality templateEquality, TemplateObject left, TemplateObject right) {
+                return left.accept(this) + "==" + right.accept(this);
+            }
+
+            @Override
+            public String visit(TemplateJunction templateJunction) {
+                return templateJunction.left().accept(this) + " " +  templateJunction.type() + " " + templateJunction.right().accept(this);
+            }
+
+            @Override
+            public String visit(TemplateOperation templateOperation) {
+                return templateOperation.left().accept(this) + " " +  templateOperation.op() + " " + templateOperation.right().accept(this);
+            }
+
+            @Override
+            public String visit(TemplateRelational templateRelational) {
+                return templateRelational.left().accept(this) + " " + templateRelational.type() + " " + templateRelational.right().accept(this);
+            }
+        }
+
         @ParameterizedTest
         @CsvSource({
-                "${value1 > 23},yes",
-                "${23 < value1},yes",
-                "${value1 > value2},yes",
-                "${value2 < value1},yes",
                 "${value1 + 23},65",
                 "${23 + value1},65",
-                "${value1 + value2},65",
-                "${value2 + value1},65"
         })
-        void expression(String input, String expected) {
+        void operationWithConstants(String input, String expected) {
             Map<String, Object> reduceModel = Map.of("value1", 42);
             Template template = templateBuilder.getTemplate("test", input);
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
             assertNotNull(reducedTemplate);
             assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+            assertEquals(new ReductionStatus(2,2,2,3), reductionStatus);
+        }
 
+        @ParameterizedTest
+        @CsvSource({
+                "${value1 + value2},65,42 PLUS value2",
+                "${value2 + value1},65,value2 PLUS 42"
+        })
+        void operation(String input, String expected, String reducedExpression) {
+            Map<String, Object> reduceModel = Map.of("value1", 42);
+            Template template = templateBuilder.getTemplate("test", input);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+            assertEquals(new ReductionStatus(1,1,1,1), reductionStatus);
+            assertEquals(reducedExpression, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value1 > value2},yes,42 GT value2",
+                "${value2 < value1},yes,value2 LT 42",
+        })
+        void relation(String input, String expected, String reducedExpression) {
+            Map<String, Object> reduceModel = Map.of("value1", 42);
+            Template template = templateBuilder.getTemplate("test", input);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+            assertEquals(new ReductionStatus(1,1,1,1), reductionStatus);
+            assertEquals(reducedExpression, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value1 > 23},yes",
+                "${23 < value1},yes",
+        })
+        void relationWithConstant(String input, String expected) {
+            Map<String, Object> reduceModel = Map.of("value1", 42);
+            Template template = templateBuilder.getTemplate("test", input);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+            assertEquals(new ReductionStatus(2,2,2,3), reductionStatus);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value2 > 23},no,value2 GT 23",
+                "${23 < value2},no,23 LT value2",
+        })
+        void relationWithVariableAndConstant(String input, String expected, String reducedExpression) {
+            Map<String, Object> reduceModel = Map.of("value1", 42);
+            Template template = templateBuilder.getTemplate("test", input);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+            assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
+            assertEquals(reducedExpression, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value2 & value1},no",
+                "${value2 && value1},no",
+
+                "${value1 & value2},no",
+                "${value1 && value2},no",
+        })
+        void junctionAnd(String input, String expected) {
+            Map<String, Object> reduceModel = Map.of("value1", true);
+            Template template = templateBuilder.getTemplate("test", input);
+            assertEquals(expected, template.process(Map.of("value1", true, "value2", false)));
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", true, "value2", false)));
+            assertEquals(new ReductionStatus(2,2,1,3), reductionStatus);
+            assertEquals("value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value2 & false},no",
+                "${value2 && false},no",
+
+                "${false & value2},no",
+                "${false && value2},no",
+        })
+        void junctionAndWithConstants(String input, String expected) {
+            Map<String, Object> reduceModel = Map.of("value1", true);
+            Template template = templateBuilder.getTemplate("test", input);
+            assertEquals(expected, template.process(Map.of("value1", true, "value2", false)));
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", true, "value2", false)));
+            assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value2 | value1},yes,value2",
+                "${value2 || value1},yes,value2",
+
+                "${value1 | value2},yes,value2",
+                "${value1 || value2},yes,value2",
+        })
+        void junctionOr(String input, String expected, String reducedExpressison) {
+            Map<String, Object> reduceModel = Map.of("value1", false);
+            Template template = templateBuilder.getTemplate("test", input);
+            assertEquals(expected, template.process(Map.of("value1", false, "value2", true)));
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertNotNull(reducedTemplate);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", false, "value2", true)));
+            assertEquals(reducedExpressison, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+            assertEquals(new ReductionStatus(2,2,1,3), reductionStatus);
+            assertEquals("value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
         }
     }
 

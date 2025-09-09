@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.WrongTypeException;
 
 public class TemplateDotKey implements TemplateExpression {
@@ -26,5 +27,14 @@ public class TemplateDotKey implements TemplateExpression {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, map, dotKey);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject templateObject = map.evaluateToObject(context);
+        if (templateObject instanceof DotHashAddressable addressable) {
+            return addressable.get(context, dotKey);
+        }
+        return this;
     }
 }

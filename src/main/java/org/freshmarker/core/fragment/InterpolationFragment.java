@@ -9,10 +9,14 @@ import org.freshmarker.core.UnsupportedBuiltInException;
 import org.freshmarker.core.WrongTypeException;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.primitive.TemplateString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class InterpolationFragment implements Fragment {
+
+    private static final Logger log = LoggerFactory.getLogger(InterpolationFragment.class);
 
     private final TemplateMarkup expression;
     private final Interpolation ftl;
@@ -37,14 +41,20 @@ public class InterpolationFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
+        TemplateMarkup reduced = expression.reduce(context);
         try {
-            TemplateString templateObject = expression.evaluate(context, TemplateString.class);
+            TemplateString templateObject = reduced.evaluate(context, TemplateString.class);
             context.getStatus().replaced().incrementAndGet();
             return new ConstantFragment(templateObject.getValue());
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), ftl, e);
         } catch (ProcessException e) {
-            return this;
+            if (reduced != expression) {
+                context.getStatus().expressions().add(expression);
+                context.getStatus().expressions().add(reduced);
+                log.debug("Reduced: {} to {}", expression, reduced);
+            }
+            return new InterpolationFragment(reduced, ftl);
         }
     }
 
