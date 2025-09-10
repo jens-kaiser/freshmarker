@@ -1,7 +1,6 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ReduceContext;
 
 public record DefaultTemplateVariable(String name) implements TemplateVariable {
 
