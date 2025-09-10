@@ -222,7 +222,32 @@ class ReduceTemplateTest {
             assertEquals(expected, reducedTemplate.process(Map.of("value1", false, "value2", true)));
             assertEquals(reducedExpressison, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
             assertEquals(new ReductionStatus(2,2,1,3), reductionStatus);
-            assertEquals("value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "${value2 ^ value1},yes,value2 XOR false",
+                "${value1 ^ value2},yes,false XOR value2",
+        })
+        void junctionXor(String input, String expected, String reducedExpressison) {
+            Map<String, Object> reduceModel = Map.of("value1", false);
+            Template template = templateBuilder.getTemplate("test", input);
+            assertEquals(expected, template.process(Map.of("value1", false, "value2", true)));
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", false, "value2", true)));
+            assertEquals(reducedExpressison, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+            assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
+        }
+
+        @Test
+        void junctionXor() {
+            Map<String, Object> reduceModel = Map.of("value1", false);
+            Template template = templateBuilder.getTemplate("test", "${value2 ^ value2}");
+            assertEquals("no", template.process(Map.of("value1", false, "value2", true)));
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals("no", reducedTemplate.process(Map.of("value1", false, "value2", true)));
+            assertEquals("value2 XOR value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+            assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
         }
 
         @Test

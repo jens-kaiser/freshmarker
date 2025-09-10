@@ -13,8 +13,8 @@ public record TemplateExists(TemplateObject expression) implements TemplateBoole
   }
 
   @Override
-  public TemplateNegative not() {
-    return new TemplateNegative(this);
+  public TemplateNot not() {
+    return new TemplateNot(this);
   }
 
   @Override

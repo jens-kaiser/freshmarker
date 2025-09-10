@@ -27,9 +27,9 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
         return switch (type) {
             case AND -> new TemplateJunction(TokenType.OR, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);
             case OR -> new TemplateJunction(TokenType.AND, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);
-            case AND2 -> new TemplateJunction(TokenType.OR2, newLeft, new TemplateNegative(right));
-            case OR2 -> new TemplateJunction(TokenType.AND2, newLeft, new TemplateNegative(right));
-            case XOR -> new TemplateNegative(this);
+            case AND2 -> new TemplateJunction(TokenType.OR2, newLeft, new TemplateNot(right));
+            case OR2 -> new TemplateJunction(TokenType.AND2, newLeft, new TemplateNot(right));
+            case XOR -> new TemplateNot(this);
             default -> throw new ProcessException("unsupported junction: " + type);
         };
     }

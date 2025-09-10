@@ -4,11 +4,11 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateNegative implements TemplateBooleanExpression {
+public class TemplateNot implements TemplateBooleanExpression {
 
     private final TemplateObject expression;
 
-    public TemplateNegative(TemplateObject expression) {
+    public TemplateNot(TemplateObject expression) {
         this.expression = expression;
     }
 
@@ -33,6 +33,6 @@ public class TemplateNegative implements TemplateBooleanExpression {
         if (value instanceof TemplateBoolean templateBoolean) {
             return templateBoolean.not();
         }
-        return new TemplateNegative(value);
+        return new TemplateNot(value);
     }
 }

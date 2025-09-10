@@ -7,8 +7,8 @@ import org.freshmarker.core.model.primitive.TemplateBoolean;
 
 public record TemplateEquality(TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
 
-    public TemplateNegative not() {
-        return new TemplateNegative(this);
+    public TemplateNot not() {
+        return new TemplateNot(this);
     }
 
     @Override
