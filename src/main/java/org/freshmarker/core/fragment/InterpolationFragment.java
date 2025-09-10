@@ -20,10 +20,12 @@ public class InterpolationFragment implements Fragment {
 
     private final TemplateMarkup expression;
     private final Interpolation ftl;
+    private final boolean partialExpressionReduction;
 
-    public InterpolationFragment(TemplateMarkup expression, Interpolation ftl) {
+    public InterpolationFragment(TemplateMarkup expression, Interpolation ftl, boolean partialExpressionReduction) {
         this.expression = expression;
         this.ftl = ftl;
+        this.partialExpressionReduction = partialExpressionReduction;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class InterpolationFragment implements Fragment {
 
     @Override
     public Fragment reduce(ReduceContext context) {
-        TemplateMarkup reduced = expression.reduce(context);
+        TemplateMarkup reduced = partialExpressionReduction ? expression.reduce(context) : expression;
         try {
             TemplateString templateObject = reduced.evaluate(context, TemplateString.class);
             context.getStatus().replaced().incrementAndGet();
@@ -49,11 +51,11 @@ public class InterpolationFragment implements Fragment {
         } catch (WrongTypeException e) {
             throw new ReduceException(e.getMessage(), ftl, e);
         } catch (ProcessException e) {
-            if (reduced != expression) {
+            if (partialExpressionReduction && reduced != expression) {
                 context.getStatus().expressions().add(expression);
                 context.getStatus().expressions().add(reduced);
                 log.debug("Reduced: {} to {}", expression, reduced);
-                return new InterpolationFragment(reduced, ftl);
+                return new InterpolationFragment(reduced, ftl, true);
             }
             return this;
         }

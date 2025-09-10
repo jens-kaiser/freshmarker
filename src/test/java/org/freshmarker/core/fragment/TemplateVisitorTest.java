@@ -20,7 +20,7 @@ class TemplateVisitorTest {
         assertNull(new ConstantFragment(null).accept(visitor));
         assertNull(new HashListFragment(null, null, null, null, null, null, null, null, null, null).accept(visitor));
         assertNull(new IfFragment(null, null, null).accept(visitor));
-        assertNull(new InterpolationFragment(null, null).accept(visitor));
+        assertNull(new InterpolationFragment(null, null, false).accept(visitor));
         assertNull(new NestedInstructionFragment().accept(visitor));
         assertNull(new OutputFormatFragment(null, null, null).accept(visitor));
         assertNull(new ReturnInstructionFragment().accept(visitor));

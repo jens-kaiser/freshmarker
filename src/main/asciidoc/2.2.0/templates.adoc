@@ -380,9 +380,32 @@ Unrolling is used by default only if there is a maximum of five entries in the l
 
 This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.
 
+=== Reducing Expressions (since 2.2.0, experimental)
+
+The _Partial Reduction_ previously only handled directives, i.e. if sufficient information can be found in the model, the directives are modified.
+
+WARNING: This feature is experimental and should used with care. Currently, this feature only works on interpolations and cannot simplify all possible expressions.
+
+With the `SystemFeature.PARTIAL_EXPRESSION_REDUCTION` the reduction of expressions can be activated.
+This allows simplifications to be made even though the information is not sufficient to simplify an entire directive.
+
+.Example Template with reduced Expression
+[source,java]
+----
+TemplateBuilder templateBuilder = configuration.builder();
+Template template = templateBuilder.getTemplate("test", """"
+   ${value1!value2 == value3}
+   """);
+Map<String, Object> model = Map.of("value2", 42, "value3", 23);
+Template reducedTemplate = template.reduce(model);
+----
+
+In this example, the template `reducedTemplate` no longer contains the interpolation `${value1!value2 == value3}` but the simplified version `${value1?42 == 23}`.
+
 === Model Hooking (since 2.2.0, experimental)
 
 As **FreshMarker**'s templates are only processed at runtime and no information on the type of model variables is available before processing, the processing speed suffers.
+
 WARNING: This feature is experimental and should used with care. Processing with differently structured models is not possible with the modified templates.
 
 As **FreshMarker**'s templates are only processed at runtime and no information on the type of model variables is available before processing, the processing speed suffers.

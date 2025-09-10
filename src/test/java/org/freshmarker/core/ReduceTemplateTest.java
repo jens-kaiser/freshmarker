@@ -31,17 +31,28 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReduceTemplateTest {
-    private ReductionStatus reductionStatus;
-    private TemplateBuilder templateBuilder;
-
-    @BeforeEach
-    void setUp() {
-        templateBuilder = new Configuration().builder();
-        reductionStatus = new ReductionStatus();
-    }
+    private final ReductionStatus reductionStatus = new ReductionStatus();
+    private TemplateBuilder templateBuilder = new Configuration().builder();
 
     @Nested
+    class ExpressionsWithoutPartialReduction {
+        @ParameterizedTest
+        @CsvSource({
+                "${value1 + 23},65",
+                "${23 + value1},65",
+        })
+        void operationWithConstants(String input, String expected) {
+            Map<String, Object> reduceModel = Map.of("value1", 42);
+            Template template = templateBuilder.getTemplate("test", input);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", 42, "value2", 23)));
+            assertEquals(new ReductionStatus(2,2,2,0), reductionStatus);
+        }
+    }
+    @Nested
     class Expressions {
+        private final TemplateBuilder templateBuilder = ReduceTemplateTest.this.templateBuilder.with(SystemFeature.PARTIAL_EXPRESSION_REDUCTION);
+
         private static class ExpressionPrinter implements TemplateObjectVisitor<String> {
             @Override
             public String visit(TemplateExists templateExists) {
