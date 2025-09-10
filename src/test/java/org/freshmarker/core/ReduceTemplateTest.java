@@ -22,6 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -245,7 +246,7 @@ class ReduceTemplateTest {
 
         @Test
         void localeBuiltInVariable() {
-            Template template = templateBuilder.getTemplate("test", "${.locale}");
+            Template template = templateBuilder.withLocale(Locale.GERMANY).getTemplate("test", "${.locale}");
             assertEquals("de_DE", template.process(Map.of()));
             Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
             assertEquals("de_DE", reducedTemplate.process(Map.of()));
