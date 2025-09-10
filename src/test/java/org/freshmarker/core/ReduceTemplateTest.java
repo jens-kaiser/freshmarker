@@ -50,6 +50,7 @@ class ReduceTemplateTest {
             assertEquals(new ReductionStatus(2,2,2,0), reductionStatus);
         }
     }
+
     @Nested
     class Expressions {
         private final TemplateBuilder templateBuilder = ReduceTemplateTest.this.templateBuilder.with(SystemFeature.PARTIAL_EXPRESSION_REDUCTION);
