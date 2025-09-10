@@ -31,7 +31,7 @@ public class TemplateDotKey implements TemplateExpression {
 
     @Override
     public TemplateObject reduce(ReduceContext context) {
-        TemplateObject templateObject = map.evaluateToObject(context);
+        TemplateObject templateObject = map.reduce(context);
         if (templateObject instanceof DotHashAddressable addressable) {
             TemplateObject result = addressable.get(context, dotKey);
             if (result != TemplateNull.NULL) {

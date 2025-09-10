@@ -5,6 +5,7 @@ import org.freshmarker.TemplateBuilder;
 import org.freshmarker.ReductionStatus;
 import org.freshmarker.Template;
 import org.freshmarker.core.model.TemplateDefault;
+import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
@@ -56,6 +57,11 @@ class ReduceTemplateTest {
         private final TemplateBuilder templateBuilder = ReduceTemplateTest.this.templateBuilder.with(SystemFeature.PARTIAL_EXPRESSION_REDUCTION);
 
         private static class ExpressionPrinter implements TemplateObjectVisitor<String> {
+            @Override
+            public String visit(TemplateDotKey templateDotKey, TemplateObject map, String dotKey) {
+                return map.accept(this) + "." + dotKey;
+            }
+
             @Override
             public String visit(TemplateExists templateExists) {
                 return templateExists.expression().accept(this) + "??";
@@ -296,6 +302,16 @@ class ReduceTemplateTest {
             assertEquals("yes", reducedTemplate.process(Map.of("value1", 43)));
             assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
             assertEquals("value1??", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @Test
+        void dotKey() {
+            Template template = templateBuilder.getTemplate("test", "${value1.key == value2}");
+            assertEquals("no", template.process(Map.of("value1", Map.of("key", 23), "value2", 42)));
+            Template reducedTemplate = template.reduce(Map.of("value1", Map.of("key", 23)), reductionStatus);
+            assertEquals("no", reducedTemplate.process(Map.of("value1", Map.of("key", 23), "value2", 42)));
+            assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
+            assertEquals("23==value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
         }
     }
 
