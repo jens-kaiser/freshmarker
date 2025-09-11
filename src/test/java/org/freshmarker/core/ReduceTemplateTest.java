@@ -313,6 +313,16 @@ class ReduceTemplateTest {
             assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
             assertEquals("23==value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
         }
+
+        @Test
+        void not() {
+            Template template = templateBuilder.getTemplate("test", "${value1 == !value2}");
+            assertEquals("yes", template.process(Map.of("value1", false,  "value2", true)));
+            Template reducedTemplate = template.reduce(Map.of("value2", true), reductionStatus);
+            assertEquals("yes", reducedTemplate.process(Map.of("value1", false,  "value2", true)));
+            assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
+            assertEquals("value1==false", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
     }
 
     @Nested
