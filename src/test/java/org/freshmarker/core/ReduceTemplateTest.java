@@ -315,6 +315,16 @@ class ReduceTemplateTest {
         }
 
         @Test
+        void dotKeyWithoutAttribute() {
+            Template template = templateBuilder.getTemplate("test", "${value1.key == value2}");
+            assertEquals("no", template.process(Map.of("value1", Map.of("key", 23), "value2", 42)));
+            Template reducedTemplate = template.reduce(Map.of("value1", Map.of()), reductionStatus);
+            assertEquals("no", reducedTemplate.process(Map.of("value1", Map.of("key", 23), "value2", 42)));
+            assertEquals(new ReductionStatus(2,2,1,1), reductionStatus);
+            assertEquals("value1.key==value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+        }
+
+        @Test
         void not() {
             Template template = templateBuilder.getTemplate("test", "${value1 == !value2}");
             assertEquals("yes", template.process(Map.of("value1", false,  "value2", true)));
