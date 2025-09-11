@@ -31,6 +31,7 @@ import org.freshmarker.TokenLineNormalizer;
 import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.IncludeDirectiveFeature;
 import org.freshmarker.core.StaticContext;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.fragment.ConstantFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.Fragments;
@@ -147,7 +148,7 @@ public class FragmentBuilder implements UnaryFtlVisitor<List<Fragment>> {
     @Override
     public List<Fragment> visit(Interpolation ftl, List<Fragment> input) {
         TemplateObject interpolation = ftl.get(1).accept(interpolationBuilder, null);
-        input.add(new InterpolationFragment(new TemplateMarkup(interpolation), ftl));
+        input.add(new InterpolationFragment(new TemplateMarkup(interpolation), ftl, featureSet.isEnabled(SystemFeature.PARTIAL_EXPRESSION_REDUCTION)));
         return input;
     }
 

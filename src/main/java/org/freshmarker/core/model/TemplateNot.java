@@ -1,13 +1,14 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public class TemplateNegative implements TemplateBooleanExpression {
+public class TemplateNot implements TemplateBooleanExpression {
 
     private final TemplateObject expression;
 
-    public TemplateNegative(TemplateObject expression) {
+    public TemplateNot(TemplateObject expression) {
         this.expression = expression;
     }
 
@@ -24,5 +25,14 @@ public class TemplateNegative implements TemplateBooleanExpression {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, expression);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject value = expression.reduce(context);
+        if (value instanceof TemplateBoolean templateBoolean) {
+            return templateBoolean.not();
+        }
+        return new TemplateNot(value);
     }
 }

@@ -31,7 +31,7 @@ public interface TemplateObjectVisitor<R> {
         return null;
     }
 
-    default R visit(TemplateNegative templateNegative, TemplateObject expression) {
+    default R visit(TemplateNot templateNot, TemplateObject expression) {
         return null;
     }
 

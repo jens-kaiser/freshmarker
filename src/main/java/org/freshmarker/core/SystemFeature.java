@@ -4,6 +4,15 @@ import org.freshmarker.api.TemplateFeature;
 
 public enum SystemFeature implements TemplateFeature {
     /**
+     * Feature that enables partial expression reduction.
+     *<p>
+     * The default value is 'false', meaning that partial expression reduction is not used
+     *<p>
+     * The feature is disabled by default.
+     */
+    PARTIAL_EXPRESSION_REDUCTION,
+
+    /**
      * Feature that enables locale sensitive String compare.
      *<p>
      * The default value is 'false', meaning that String instances are compared not locale sensitive
