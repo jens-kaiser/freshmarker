@@ -93,12 +93,19 @@ These features are controlled by constants in the `SystemFeature` class.
 | *COLLECTION_AS_SEQUENCE*
 | Feature that enables Collection instances as sequences. This does not affect collections that are recognized as `SequencedCollection` (since 2.1.0).
 | `false`
+
+| *PARTIAL_EXPRESSION_REDUCTION*
+| Feature that enables partial expression reduction in interpolations (since 2.2.0, experimental).
+| `false`
 |===
 
 .Example with locale sensitive string compare.
 [source,java]
 ----
-import org.freshmarker.core.SystemFeature;import java.text.Collator;TemplateBuilder builder = new Configuration().builder()
+import org.freshmarker.core.SystemFeature;
+import java.text.Collator;
+
+TemplateBuilder builder = new Configuration().builder()
     .with(SystemFeature.LOCALE_SENSITIVE_STRING_COMPARE, Collator.PRIMARY);
 ----
 

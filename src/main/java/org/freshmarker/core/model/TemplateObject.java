@@ -3,6 +3,7 @@ package org.freshmarker.core.model;
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.WrongTypeException;
 
 public interface TemplateObject {
@@ -48,5 +49,9 @@ public interface TemplateObject {
 
     default <R> R accept(TemplateObjectVisitor<R> visitor) {
         return null;
+    }
+
+    default TemplateObject reduce(ReduceContext context) {
+        return this;
     }
 }

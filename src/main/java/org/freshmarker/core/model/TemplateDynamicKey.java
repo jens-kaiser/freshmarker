@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateCharacter;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -75,5 +76,10 @@ public class TemplateDynamicKey implements TemplateExpression {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, sequenceOrMap, dynamicKey);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        return new TemplateDynamicKey(sequenceOrMap.reduce(context),  dynamicKey.reduce(context));
     }
 }

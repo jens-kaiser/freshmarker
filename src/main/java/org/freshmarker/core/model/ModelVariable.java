@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 
 public record ModelVariable(String name) implements TemplateVariable {
 
@@ -12,5 +13,15 @@ public record ModelVariable(String name) implements TemplateVariable {
   @Override
   public <R> R accept(TemplateObjectVisitor<R> visitor) {
     return visitor.visit(this, name);
+  }
+
+  @Override
+  public TemplateObject reduce(ReduceContext context) {
+    TemplateObject value = context.getBaseEnvironment().getValue(name);
+    if (value != TemplateNull.NULL) {
+        context.getStatus().expression().incrementAndGet();
+        return value;
+    }
+    return this;
   }
 }

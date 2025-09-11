@@ -52,7 +52,7 @@ import org.freshmarker.core.model.TemplateJunction;
 import org.freshmarker.core.model.TemplateLengthLimitedRange;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateMethodCall;
-import org.freshmarker.core.model.TemplateNegative;
+import org.freshmarker.core.model.TemplateNot;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateOperation;
@@ -293,7 +293,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (subExpression instanceof TemplateBooleanExpression templateBooleanExpression) {
             return templateBooleanExpression.not();
         }
-        return new TemplateNegative(subExpression);
+        return new TemplateNot(subExpression);
     }
 
     @Override

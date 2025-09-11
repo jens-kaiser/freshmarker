@@ -3,6 +3,7 @@ package org.freshmarker.core.model;
 import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
 public record TemplateRelational(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
@@ -28,6 +29,18 @@ public record TemplateRelational(TokenType type, TemplateObject left, TemplateOb
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject leftObject = left.reduce(context);
+        TemplateObject rightObject = right.reduce(context);
+        if (leftObject instanceof TemplatePrimitive<?> leftPrimitive && rightObject instanceof TemplatePrimitive<?> rightPrimitive) {
+            TemplatePrimitive<?> result = leftPrimitive.relational(type, rightPrimitive, context);
+            context.getStatus().expression().addAndGet(2);
+            return result;
+        }
+        return new TemplateRelational(type, leftObject, rightObject);
     }
 }
 

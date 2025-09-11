@@ -7,10 +7,12 @@
 - add `*` string repeat operator
 - add `-` list difference operator
 - dark-mode for the manual
+- add `SystemFeature.PARTIAL_EXPRESSION_REDUCTION` to allow reducing of expressions.
 
 === Experimental
 
 - add `Template#hook` method to hook a model structure to a template
+- add partial template reduction for interpolation expressions
 
 === Bugfix
 
