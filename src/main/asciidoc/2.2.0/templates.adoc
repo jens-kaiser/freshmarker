@@ -380,7 +380,7 @@ Unrolling is used by default only if there is a maximum of five entries in the l
 
 This feature has to be activated with `ReductionFeature.UNFOLD_LIST`. See <<partial-reduction-feature>> how to change the maximum of five entries for unrolling.
 
-=== Reducing Expressions (since 2.2.0, experimental)
+==== Reducing Expressions (since 2.2.0, experimental)
 
 The _Partial Reduction_ previously only handled directives, i.e. if sufficient information can be found in the model, the directives are modified.
 
