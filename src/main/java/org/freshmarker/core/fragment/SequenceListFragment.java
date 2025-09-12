@@ -29,7 +29,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     public void process(ProcessContext context) {
         try {
             TemplateSequence<Object> evaluate = list.evaluate(context, TemplateSequence.class);
-            List<Object> objectList = filterSequence(context, evaluate.sequence());
+            List<Object> objectList = filterSequence(context, evaluate.sequence(), evaluate.isRightUnlimited());
             TemplateSequenceLooper looper = new TemplateSequenceLooper(objectList);
             processLoop(context, new ListEnvironment(context.getEnvironment(), identifier, looperIdentifier, looper));
         } catch (RuntimeException e) {
@@ -71,7 +71,7 @@ public class SequenceListFragment extends AbstractListFragment<Object> {
     private List<Object> getList(ReduceContext context) {
         TemplateObject templateObject = list.evaluateToObject(context);
         if (templateObject instanceof TemplateListSequence sequence) {
-            return filterSequence(context, sequence.sequence());
+            return filterSequence(context, sequence.sequence(), false);
         }
         return List.of();
     }
