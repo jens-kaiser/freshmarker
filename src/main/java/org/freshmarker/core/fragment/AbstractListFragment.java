@@ -3,6 +3,7 @@ package org.freshmarker.core.fragment;
 import ftl.ast.ListInstruction;
 import org.freshmarker.core.Environment;
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.ReductionFeature;
 import org.freshmarker.core.environment.FilterVariableEnvironment;
@@ -38,9 +39,12 @@ public abstract class AbstractListFragment<T> implements Fragment {
 
     protected abstract void addFilterVariable(FilterVariableEnvironment environment, T value);
 
-    protected List<T> filterSequence(ProcessContext context, List<T> sequence) {
+    protected List<T> filterSequence(ProcessContext context, List<T> sequence, boolean isUnlimited) {
         int intOffset = offset == null ? 0 : offset.evaluate(context, TemplateNumber.class).asInt();
         Integer intLimit = limit == null ? null : limit.evaluate(context, TemplateNumber.class).asInt();
+        if (intLimit == null && isUnlimited) {
+            throw new ProcessException("right unlimited range not supported");
+        }
         if (filter != null) {
             sequence = handleFilter(context, sequence, intOffset, intLimit);
         } else if (intLimit != null) {

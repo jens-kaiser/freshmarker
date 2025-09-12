@@ -106,6 +106,15 @@ class SliceAndRangeInterpolationTest {
     }
 
     @ParameterizedTest
+    @CsvSource({
+            "test: <#list (1..) as i limit 10>${i}</#list>,test: 12345678910"
+    })
+    void validUnlimitedRangeUsage(String input, String expected, TemplateBuilder builder) throws ParseException {
+        Template template = builder.getTemplate("test", input);
+        assertEquals(expected,template.process(Map.of("map", Map.of())));
+    }
+
+    @ParameterizedTest
     @CsvSource(value = {
             "test: ${(a..b)[c..d]?join};1;7;2;4;test: 3, 4, 5",
             "test: ${(a..b)[c..d]?join};7;1;2;4;test: 5, 4, 3",

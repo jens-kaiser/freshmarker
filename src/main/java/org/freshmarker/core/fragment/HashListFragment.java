@@ -85,7 +85,7 @@ public class HashListFragment extends AbstractListFragment<Entry<String, Object>
         if (comparator != null) {
             sequence.sort(Entry.comparingByKey(comparator));
         }
-        return filterSequence(context, sequence);
+        return filterSequence(context, sequence, false);
     }
 
     private record HashSequence(List<Entry<String, Object>> sequence) implements TemplateSequence<Entry<String, Object>> {

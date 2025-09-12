@@ -42,7 +42,7 @@ Because `l` is the name of the loop variable, the first interpolation evaluates 
 ==== List Directive with a range
 
 A range is defined by a lower and a non-mandatory upper numerical limit.
-Although _FreshMarker_ also masters _right-unlimited ranges_, _List Directives_ are not allowed to use them.
+Although _FreshMarker_ also masters _right-unlimited ranges_, _List Directives_ only allow them together with a _limit_.
 
 .List Directive example with a range
 [source,freshmarker,subs="verbatim,quotes"]
@@ -161,7 +161,9 @@ If the list ist filtered by a filter expression, the limit is applied to the fil
 .List Directive example with filter expression
 [source,freshmarker,subs="verbatim,quotes"]
 ----
-*<#list 1..10 as s limit 4>*
+*<#list 1.. as s limit 4>*
 ${s} * ${s} = ${s*s}
 *</#list>*
 ----
+
+WARNING: As the limit specification refers to filtered lists, the processing of _right-unlimited ranges_ can take an extremely long time. In the worst case, all elements are filtered out and the entire range from -2,147,483,648 to 2,147,483,647 is run through.

@@ -4,9 +4,28 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
+import java.util.AbstractList;
 import java.util.List;
 
 public class TemplateRightUnlimitedRange implements TemplateRange {
+
+    private static class UnlimitedList extends AbstractList<Object> {
+        private final int leftBound;
+
+        private UnlimitedList(int leftBound) {
+            this.leftBound = leftBound;
+        }
+
+        @Override
+        public Integer get(int index) {
+            return leftBound + index;
+        }
+
+        @Override
+        public int size() {
+            return Integer.MAX_VALUE;
+        }
+    }
 
     private final TemplateObject lower;
     private Integer lowerNumber;
@@ -50,7 +69,7 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
 
     @Override
     public List<Object> sequence() {
-        throw new ProcessException("right unlimited range not supported");
+        return new UnlimitedList(lowerNumber);
     }
 
     @Override

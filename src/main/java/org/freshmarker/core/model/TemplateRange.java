@@ -7,10 +7,6 @@ public interface TemplateRange extends TemplateSequence<Object> {
         return false;
     }
 
-    default  boolean isRightUnlimited() {
-        return false;
-    }
-
     TemplateObject getLower();
 
     TemplateObject getUpper(ProcessContext context);
