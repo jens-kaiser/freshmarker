@@ -185,7 +185,7 @@ m|x ≥ 9
 
 m|+<=>+
 |Spaceship Operator (since 2.0.0)
-|12 +<=>+ 24
+m|12 +<=>+ 24
 |===
 
 ==== String Comparison Operators (since 2.0.0)
@@ -281,7 +281,7 @@ m|one_year > half_year
 
 m|>=
 |Greater Equals Operator
-m|one_week >= one_wek
+m|one_week >= one_week
 
 m|≥
 |Unicode Greater Equals Operator
@@ -350,6 +350,10 @@ m|x % 4
 m|*
 |String Repeat Operator (since 2.2.0)
 m|"▲▼" * 3
+
+m|×
+|Unicode String Repeat Operator (since 2.2.0)
+m|"▲▼" × 3
 |===
 
 === Additive Operators
