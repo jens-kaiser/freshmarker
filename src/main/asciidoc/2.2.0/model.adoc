@@ -70,7 +70,7 @@ NOTE: This must be considered with the enums, because the `toString` method can 
 
 Other types, such as ranges, slices, sequences and hashes are only permitted in expressions.
 
-Literals of primitive types can be used for Null, String, Boolean, Integer and Double in the templates.
+Literals of primitive types can be used for Null, String, Boolean, Integer, Long and Double in the templates. Integer values outside the Integer range are interpreted as Long.
 
 |===
 | Type | Examples
@@ -78,6 +78,7 @@ Literals of primitive types can be used for Null, String, Boolean, Integer and D
 | Null | null
 | String | 'test', '', "test", ""
 | Integer | 1234, 42
+| Long | 9223372036854775000, 2147483649
 | Double | 12.34, 42.0
 |===
 
@@ -291,6 +292,18 @@ To imitate the behavior of a Java substring with an exclusive upper bound, a rig
 ${'abraxas'[1..<5]} // => brax
 ----
 ====
+
+==== Number Slices
+
+The slice operator on `Number` values applies the `clamp` function to the source number. The upper and lower limits of the slice are the operators of the `clamp` function.
+
+.Example `Number` slices
+[source,subs="verbatim,quotes"]
+----
+${42[1..23]} // => 23
+${1[23..42]}  // => 23
+${23[1..42]} // => 23
+----
 
 === Optional Values
 
