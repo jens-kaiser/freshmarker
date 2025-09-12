@@ -351,9 +351,9 @@ m|*
 |String Repeat Operator (since 2.2.0)
 m|"▲▼" * 3
 
-m|*
+m|×
 |Unicode String Repeat Operator (since 2.2.0)
-m|"▲▼" * 3
+m|"▲▼" × 3
 |===
 
 === Additive Operators
