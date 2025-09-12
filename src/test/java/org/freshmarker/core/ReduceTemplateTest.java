@@ -197,6 +197,20 @@ class ReduceTemplateTest {
 
         @ParameterizedTest
         @CsvSource({
+                "${value3 == (value1 & value2)},yes",
+                "${value3 == (value1 && value2)},yes",
+        })
+        void junctionAndWithLeftBooleanTrue(String input, String expected) {
+            Map<String, Object> reduceModel = Map.of("value1", true);
+            Template template = templateBuilder.getTemplate("test", input);
+            assertEquals(expected, template.process(Map.of("value1", true, "value2", false, "value3", false)));
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals(expected, reducedTemplate.process(Map.of("value1", true, "value2", false, "value3", false)));
+            assertEquals(new ReductionStatus(2,2,1,3), reductionStatus);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
                 "${value2 & false},no",
                 "${value2 && false},no",
 
