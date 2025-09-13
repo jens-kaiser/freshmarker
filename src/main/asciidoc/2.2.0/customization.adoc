@@ -232,7 +232,8 @@ TemplateBuilder builder = config.builder().withClock(Clock.fixed(instant, ZoneOf
 
 ==== With Locale
 
-TBD
+The `TemplateBuilder` normally creates a `Template` with the systems default locale.
+A `TemplateBuilder` created with the `withLocale` method uses the specified `Locale` instead.
 
 .Example builder with german locale
 [source,java]
@@ -243,7 +244,8 @@ TemplateBuilder builder = config.builder().withLocale(Locale.GERMANY);
 
 ==== With Zone-ID
 
-TBD
+The `TemplateBuilder` normally creates a `Template` with the systems Zone-Id.
+A `TemplateBuilder` created with the `withZoneId` method uses the specified `ZoneId` instead.
 
 .Example builder with "Europe/Berlin" Zone-ID
 [source,java]
