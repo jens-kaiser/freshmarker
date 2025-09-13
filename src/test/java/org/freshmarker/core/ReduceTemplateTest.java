@@ -294,6 +294,18 @@ class ReduceTemplateTest {
         }
 
         @Test
+        void junctionAndWithTwoBoolean() {
+            Template template = templateBuilder.getTemplate("test", "${value1 == (value2 & value3)}");
+            Map<String, Object> model = Map.of("value1", false, "value2", true, "value3", true);
+            assertEquals("no", template.process(model));
+            Map<String, Object> reduceModel = Map.of("value2", true, "value3", true);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals("no", reducedTemplate.process(model));
+            assertEquals("value1==true", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+            assertEquals(new ReductionStatus(2,2,1,4), reductionStatus);
+        }
+
+        @Test
         void defaultValueWithoutBase() {
             Template template = templateBuilder.getTemplate("test", "${value1!value2 == value3}");
             assertEquals("no", template.process(Map.of("value2", 42, "value3", 23)));
