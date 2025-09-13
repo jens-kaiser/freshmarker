@@ -55,6 +55,7 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
     private TemplateObject reduceXor(ReduceContext context, TemplateObject leftValue) {
         TemplateObject rightValue = right.reduce(context);
         if (leftValue instanceof TemplateBoolean leftBoolean && rightValue instanceof TemplateBoolean rightBoolean) {
+            context.getStatus().expression().addAndGet(2);
             return TemplateBoolean.from(leftBoolean.getValue() ^ rightBoolean.getValue());
         }
         return new TemplateJunction(type, leftValue, rightValue);

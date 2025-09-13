@@ -278,7 +278,19 @@ class ReduceTemplateTest {
             Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
             assertEquals("yes", reducedTemplate.process(model));
             assertEquals("value1==false", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
-            assertEquals(new ReductionStatus(2,2,1,2), reductionStatus);
+            assertEquals(new ReductionStatus(2,2,1,4), reductionStatus);
+        }
+
+        @Test
+        void junctionOrWithTwoBoolean() {
+            Template template = templateBuilder.getTemplate("test", "${value1 == (value2 | value3)}");
+            Map<String, Object> model = Map.of("value1", false, "value2", true, "value3", true);
+            assertEquals("no", template.process(model));
+            Map<String, Object> reduceModel = Map.of("value2", true, "value3", true);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals("no", reducedTemplate.process(model));
+            assertEquals("value1==true", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+            assertEquals(new ReductionStatus(2,2,1,4), reductionStatus);
         }
 
         @Test
