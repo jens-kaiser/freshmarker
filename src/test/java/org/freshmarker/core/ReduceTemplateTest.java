@@ -261,13 +261,24 @@ class ReduceTemplateTest {
 
         @Test
         void junctionXor() {
-            Map<String, Object> reduceModel = Map.of("value1", false);
             Template template = templateBuilder.getTemplate("test", "${value2 ^ value2}");
             assertEquals("no", template.process(Map.of("value1", false, "value2", true)));
-            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            Template reducedTemplate = template.reduce(Map.of(), reductionStatus);
             assertEquals("no", reducedTemplate.process(Map.of("value1", false, "value2", true)));
             assertEquals("value2 XOR value2", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
             assertEquals(new ReductionStatus(2,2,1,0), reductionStatus);
+        }
+
+        @Test
+        void junctionXorWithTwoBoolean() {
+            Template template = templateBuilder.getTemplate("test", "${value1 == (value2 ^ value3)}");
+            Map<String, Object> model = Map.of("value1", false, "value2", true, "value3", true);
+            assertEquals("yes", template.process(model));
+            Map<String, Object> reduceModel = Map.of("value2", true, "value3", true);
+            Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+            assertEquals("yes", reducedTemplate.process(model));
+            assertEquals("value1==false", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+            assertEquals(new ReductionStatus(2,2,1,2), reductionStatus);
         }
 
         @Test

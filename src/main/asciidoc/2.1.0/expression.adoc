@@ -505,19 +505,59 @@ The dot key operator returns the attribute with the specified name from a hash t
 
 === Dynamic Key Operator
 
-TBD
-
-==== Slice
-
-TBD
+The _Dynamic Key Operator_ is used to access information from different data types.
+The operator can be used in three different ways. These are as an _Index_, _Hash_ and slice operator.
+What these operators have in common is that the expression for the operator is written in square brackets.
 
 ==== Index
 
-TBD
+The _Index Operator_ addresses an element in a structure via an integer index.
+The index can be an arbitrarily complex expression that returns an integer value.
+The operator can be used to access elements in sequences, strings and ranges.
+
+[cols="1,2,2"]
+|===
+|Operator | Description | Example
+
+m|[_index_]
+|String Index Operator
+m|'gonzo'[3] // 'z'
+
+m|[_index_]
+|Sequence Index Operator
+m|['A', 'B', 'C'][1] // 'B'
+
+m|[_index_]
+|Range Index Operator
+m|(23..42)[5] // 28
+
+|===
 
 ==== Hash
 
-TBD
+The _Hash Operator_ uses a string for addressing.
+This means that it works in the same way as the _Dot Key Operator_.
+The difference is that the _Hash Operator_ can use any expressions that return a string value, while the _Dot Key Operator_ can only use a fixed identifier.
+The operator can be used to access elements in hashes and structured primitives.
+
+[cols="1,2,2"]
+|===
+|Operator | Description | Example
+
+m|[_hash_]
+|Hash Operator for _Hashes_ (Maps, Beans and Records)
+m|bean['name']
+
+m|[_hash_]
+|Hash Operator for _Structured Primitives_
+m|version['minor']
+|===
+
+==== Slice
+
+The Slices Operator uses a range for adressing.
+The operator can be used to access elements in sequences, ranges, numbers and strings.
+Slices are dealt with in detail in the <<slices-model,Slices>> section.
 
 === Built-In Operator
 
