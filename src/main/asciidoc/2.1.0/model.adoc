@@ -208,6 +208,7 @@ If the size of the range is positive, then the upper limit is greater than the l
 a..*b   // lower bound in variable _a_ and an range size in variable _c_
 ----
 
+[#slices-model]
 === Slices
 
 `Slices` define slice operators on other data types.
