@@ -122,7 +122,7 @@ This built-in returns the date of Easter sunday in the year of the value as a da
 |===
 | Interpolation | Output | Type
 
-m|${temporal?day}
+m|${temporal?easter}
 m|1968-04-14
 |date
 |===
