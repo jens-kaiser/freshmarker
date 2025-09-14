@@ -10,24 +10,16 @@ import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateObjectVisitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class HookedBuiltIn implements TemplateObject {
-    private final List<TemplateObject> parameter;
-    private final TemplateObject expression;
+public class HookedBuiltIn extends AbstractBuiltIn {
     private final BuiltIn builtIn;
     private final BuiltInKey builtInKey;
-    final boolean ignoreOptionalEmpty;
-    final boolean ignoreNull;
 
     public HookedBuiltIn(TemplateObject expression, BuiltInKey builtInKey, BuiltIn builtIn, List<TemplateObject> parameter, boolean ignoreOptionalEmpty, boolean ignoreNull) {
+        super(builtInKey.getName(), expression, parameter, ignoreOptionalEmpty, ignoreNull);
         this.builtInKey = builtInKey;
         this.builtIn = builtIn;
-        this.parameter = parameter;
-        this.expression = expression;
-        this.ignoreOptionalEmpty = ignoreOptionalEmpty;
-        this.ignoreNull = ignoreNull;
     }
 
     @Override
@@ -52,26 +44,21 @@ public class HookedBuiltIn implements TemplateObject {
     @Override
     public TemplateObject reduce(ReduceContext context) {
         TemplateObject result = expression.reduce(context);
-        boolean allReduced = true;
-        List<TemplateObject> reducedParameters = new ArrayList<>();
-        for (TemplateObject p : parameter) {
-            TemplateObject reducedParameter = p.reduce(context);
-            if (reducedParameter == p) {
-                allReduced = false;
-            }
-            reducedParameters.add(reducedParameter);
-        }
+        ReducedParameters reducedParameters = reduceParameters(context);
+
+        boolean noneReduced = reducedParameters.noneReduced();
+
         if (builtInKey.getType() != result.getClass()) {
-            return allReduced ? new HookedBuiltIn(result, builtInKey, builtIn, reducedParameters, ignoreOptionalEmpty, ignoreNull) : this;
+            return noneReduced ? this : new HookedBuiltIn(result, builtInKey, builtIn, reducedParameters.parameters(), ignoreOptionalEmpty, ignoreNull);
         }
 
         try {
-            return builtIn.apply(result, reducedParameters, context);
+            return builtIn.apply(result, reducedParameters.parameters(), context);
         } catch (RuntimeException e) {
-            if (result == expression && !allReduced) {
+            if (result == expression && noneReduced) {
                 return this;
             }
-            return new HookedBuiltIn(result, builtInKey, builtIn, reducedParameters, ignoreOptionalEmpty, ignoreNull);
+            return new HookedBuiltIn(result, builtInKey, builtIn, reducedParameters.parameters(), ignoreOptionalEmpty, ignoreNull);
         }
     }
 
