@@ -2,8 +2,10 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.UnsupportedBuiltInException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class TemplateBuiltIn implements TemplateExpression {
@@ -42,6 +44,29 @@ public final class TemplateBuiltIn implements TemplateExpression {
 
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
-        return visitor.visit(this);
+        return visitor.visit(this, name, expression, parameter);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject result = expression.reduce(context);
+        boolean allReduced = true;
+        List<TemplateObject> reducedParameters = new ArrayList<>();
+        for (TemplateObject p : parameter) {
+            TemplateObject reducedParameter = p.reduce(context);
+            if (reducedParameter == p) {
+                allReduced = false;
+            }
+            reducedParameters.add(reducedParameter);
+        }
+
+        try {
+            return context.getBuiltIn(result.getClass(), name).apply(result, reducedParameters, context);
+        } catch (RuntimeException e) {
+            if (result == expression && !allReduced) {
+                return this;
+            }
+            return new TemplateBuiltIn(name, result, reducedParameters, ignoreOptionalNull, ignoreNull);
+        }
     }
 }
