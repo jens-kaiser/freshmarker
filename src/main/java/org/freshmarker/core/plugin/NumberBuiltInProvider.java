@@ -37,12 +37,9 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         return (TemplateNumber) object;
     }
 
-    private static TemplateNumber getNumberParameter(List<TemplateObject> list) {
+    private static TemplateNumber getNumberParameter(List<TemplateObject> list, ProcessContext context) {
         BuiltInHelper.checkParametersLength(list, 1);
-        if (list.getFirst() instanceof TemplateNumber number) {
-            return number;
-        }
-        throw new ProcessException("expected TemplateNumber but found " + list.getFirst().getClass().getSimpleName());
+        return list.getFirst().evaluate(context, TemplateNumber.class);
     }
 
     private TemplateObject human(TemplateNumber value, ProcessContext context) {
@@ -109,8 +106,8 @@ public final class NumberBuiltInProvider implements BuiltInProvider {
         builtInRegister.add("utf_roman", (x, y, e) -> RomanNumbers.utfRoman(x));
         builtInRegister.add("clock_roman", (x, y, e) -> RomanNumbers.clockRoman(x));
         builtInRegister.add("h", (x, y, e) -> human(getNumber(x), e));
-        builtInRegister.add("min", (x, y, e) -> getNumber(x).min(getNumberParameter(y)));
-        builtInRegister.add("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y)));
+        builtInRegister.add("min", (x, y, e) -> getNumber(x).min(getNumberParameter(y, e)));
+        builtInRegister.add("max", (x, y, e) -> getNumber(x).max(getNumberParameter(y, e)));
         builtInRegister.add("is_number", BuiltInHelper.alwaysTrue());
         builtInRegister.add("clamp", (x, y, e) -> clamp((TemplateNumber) x, e, y));
         builtInRegister.add("unicode", (x, y, e) -> unicode((TemplateNumber) x, e, y));
