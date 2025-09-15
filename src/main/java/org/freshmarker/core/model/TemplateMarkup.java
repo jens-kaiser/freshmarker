@@ -36,10 +36,10 @@ public class TemplateMarkup implements TemplateObject {
         if (templateObject.isNull() || templateObject == content) {
             return this;
         }
-        if (!templateObject.isPrimitive()) {
-            return new TemplateMarkup(templateObject);
+        if (templateObject.isPrimitive()) {
+            return new TemplateMarkup(getString(context, templateObject));
         }
-        return new TemplateMarkup(getString(context, templateObject));
+        return new TemplateMarkup(templateObject);
     }
 
     private static TemplateString getString(ProcessContext context, TemplateObject templateObject) {

@@ -1,13 +1,16 @@
 package org.freshmarker.core.model;
 
+import org.freshmarker.core.model.builtin.HookedBuiltIn;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
+
+import java.util.List;
 
 public interface TemplateObjectVisitor<R> {
     default R visit(TemplatePrimitive<?> primitive, String string) {
         return null;
     }
 
-    default R visit(TemplateBuiltIn builtIn) {
+    default R visit(TemplateBuiltIn builtIn, String name, TemplateObject expression, List<TemplateObject> parameter) {
         return null;
     }
 
@@ -76,6 +79,10 @@ public interface TemplateObjectVisitor<R> {
     }
 
     default R visit(TemplateLengthLimitedRange templateLengthLimitedRange, TemplateObject lower, TemplateObject upper, TemplateObject count) {
+        return null;
+    }
+
+    default R visit(HookedBuiltIn hookedBuiltIn, String name, TemplateObject expression, List<TemplateObject> parameter) {
         return null;
     }
 }

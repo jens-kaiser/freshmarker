@@ -9,6 +9,7 @@
 - dark-mode for the manual
 - add `SystemFeature.PARTIAL_EXPRESSION_REDUCTION` to allow reducing of expressions.
 - allow right-unlimited ranges in list directives
+- allow expressions as parameters for the `min` and `max` number build-ins
 
 === Experimental
 
