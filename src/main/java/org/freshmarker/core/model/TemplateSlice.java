@@ -12,9 +12,9 @@ import java.util.List;
 public class TemplateSlice implements TemplateObject {
 
     private final TemplateObject base;
-    private final TemplateObject range;
+    private final TemplateRange range;
 
-    public TemplateSlice(TemplateObject base, TemplateObject range) {
+    public TemplateSlice(TemplateObject base, TemplateRange range) {
         this.base = base;
         this.range = range;
     }
@@ -107,18 +107,15 @@ public class TemplateSlice implements TemplateObject {
 
     @Override
     public TemplateObject reduce(ReduceContext context) {
-        TemplateObject reducedRange = range.reduce(context);
+        TemplateRange reducedRange = (TemplateRange)range.reduce(context);
         TemplateObject reducedBase = base.reduce(context);
-        if (!(reducedRange instanceof TemplateRange templateRange)) {
-            return new TemplateSlice(reducedBase, reducedRange);
-        }
         try {
             return switch (reducedBase) {
                 case TemplateSlice templateSlice -> templateSlice.evaluateToObject(context);
-                case TemplateString templateString -> handleSequence(context, templateRange, templateString);
-                case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
-                case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
-                case TemplateNumber templateNumberValue -> handleNumber(context, templateRange, templateNumberValue);
+                case TemplateString templateString -> handleSequence(context, reducedRange, templateString);
+                case TemplateListSequence templateListSequence -> handleSequence(context, reducedRange, templateListSequence);
+                case TemplateRange templateRangeValue -> handleSequence(context, reducedRange, templateRangeValue);
+                case TemplateNumber templateNumberValue -> handleNumber(context, reducedRange, templateNumberValue);
                 default -> new TemplateSlice(reducedBase, reducedRange);
             };
         } catch (RuntimeException e) {
