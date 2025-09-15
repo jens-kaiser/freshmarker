@@ -70,7 +70,7 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
             return this;
         }
         if (reducedLower instanceof TemplateNumber lowerNumber && reducedCount instanceof TemplateNumber countNumber) {
-            return new TemplateLengthLimitedRange(reducedLower, null, countNumber, evaluateBounds(lowerNumber, countNumber));
+            return newRange(evaluateBounds(lowerNumber, countNumber));
         }
         return new TemplateLengthLimitedRange(reducedLower, reducedCount);
     }

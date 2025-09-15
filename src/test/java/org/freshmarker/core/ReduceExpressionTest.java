@@ -576,4 +576,59 @@ class ReduceExpressionTest {
         assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
         assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${sequence[value1..value2]?join(' ')},11,19,11,19,11 12 13 14 15 16 17 18 19,sequence[(11..19)]?join(' ')",
+            "${sequence[value1..<value2]?join(' ')},11,20,11,20,11 12 13 14 15 16 17 18 19,sequence[(11..19)]?join(' ')",
+            "${sequence[value1..*value2]?join(' ')},11,9,11,9,11 12 13 14 15 16 17 18 19,sequence[(11..*9)]?join(' ')",
+    })
+    void fullSliceOnSequence(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        List<Integer> sequence = IntStream.range(0, 30).boxed().toList();
+        Template template = templateBuilder.getTemplate("slice with sequence and string", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper, "sequence", sequence)));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper, "sequence", sequence)));
+        assertEquals(new ReductionStatus(2, 2, 1, 2), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${sequence[value1..value2]},11,19,11,19,123456789,sequence[(11..19)]",
+            "${sequence[value1..<value2]},11,20,11,20,123456789,sequence[(11..19)]",
+            "${sequence[value1..*value2]},11,9,11,9,123456789,sequence[(11..*9)]",
+    })
+    void fullSliceOnString(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        Template template = templateBuilder.getTemplate("slice with sequence and string", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper, "sequence", "01234567890123456789")));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper, "sequence", "01234567890123456789")));
+        assertEquals(new ReductionStatus(2, 2, 1, 2), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${sequence[value1..value2]},11,19,11,19,15,sequence[(11..19)]",
+            "${sequence[value1..<value2]},11,20,11,20,15,sequence[(11..19)]",
+            "${sequence[value1..*value2]},11,9,11,9,15,sequence[(11..*9)]",
+    })
+    void fullSliceOnNumber(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        Template template = templateBuilder.getTemplate("slice with sequence and string", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper, "sequence", 15)));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper, "sequence", 15)));
+        assertEquals(new ReductionStatus(2, 2, 1, 2), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
 }

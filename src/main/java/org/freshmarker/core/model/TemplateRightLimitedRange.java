@@ -13,9 +13,9 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
         this.exclusive = exclusive;
     }
 
-    TemplateRightLimitedRange(Bounds bounds, boolean exclusive) {
+    TemplateRightLimitedRange(Bounds bounds) {
         super(TemplateNumber.of(bounds.lower()), TemplateNumber.of(bounds.upper()), bounds);
-        this.exclusive = exclusive;
+        this.exclusive = false;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
 
     @Override
     protected TemplateRange newRange(Bounds bounds) {
-        return new TemplateRightLimitedRange(bounds, false);
+        return new TemplateRightLimitedRange(bounds);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
             return this;
         }
         if (reducedLower instanceof TemplateNumber lowerNumber && reducedUpper instanceof TemplateNumber upperNumber) {
-            return new TemplateRightLimitedRange(evaluateBounds(lowerNumber, upperNumber), exclusive);
+            return new TemplateRightLimitedRange(evaluateBounds(lowerNumber, upperNumber));
         }
         return new TemplateRightLimitedRange(reducedLower, reducedUpper, exclusive);
     }
