@@ -1,5 +1,7 @@
 package org.freshmarker.core.model;
 
+import org.freshmarker.core.buildin.BuiltInKey;
+import org.freshmarker.core.model.builtin.HookedBuiltIn;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.Test;
 
@@ -32,5 +34,6 @@ class TemplateObjectVisitorTest {
         assertNull(new TemplateRightLimitedRange(null, null, false).accept(visitor));
         assertNull(new TemplateRightUnlimitedRange(null).accept(visitor));
         assertNull(new TemplateLengthLimitedRange(null, null).accept(visitor));
+        assertNull(new HookedBuiltIn(null, new BuiltInKey(TemplateObject.class, ""), null, null, false, false).accept(visitor));
     }
 }

@@ -17,11 +17,11 @@ public record ModelVariable(String name) implements TemplateVariable {
 
   @Override
   public TemplateObject reduce(ReduceContext context) {
-    TemplateObject value = context.getBaseEnvironment().getValue(name);
-    if (value != TemplateNull.NULL) {
-        context.getStatus().expression().incrementAndGet();
-        return value;
-    }
-    return this;
+    TemplateObject value = evaluateToObject(context);
+      if (value == TemplateNull.NULL) {
+          return this;
+      }
+      context.getStatus().expression().incrementAndGet();
+      return value;
   }
 }
