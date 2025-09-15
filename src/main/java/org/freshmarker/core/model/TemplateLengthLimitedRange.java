@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateLengthLimitedRange extends AbstractLimitedRange {
@@ -20,8 +21,12 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     }
 
     protected Bounds evaluate(ProcessContext context) {
-        int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
-        int newCount = count.evaluate(context, TemplateNumber.class).asInt();
+        return evaluateBounds(lower.evaluate(context, TemplateNumber.class), count.evaluate(context, TemplateNumber.class));
+    }
+
+    private static Bounds evaluateBounds(TemplateNumber lowerNumber, TemplateNumber countNumber) {
+        int newLower = lowerNumber.asInt();
+        int newCount = countNumber.asInt();
         int newUpper;
         int size = Math.abs(newCount);
         if (newCount == 0) {
@@ -55,5 +60,18 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, lower, upper, count);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject reducedLower = lower.reduce(context);
+        TemplateObject reducedCount = count.reduce(context);
+        if (reducedLower == lower && reducedCount == count) {
+            return this;
+        }
+        if (reducedLower instanceof TemplateNumber lowerNumber && reducedCount instanceof TemplateNumber countNumber) {
+            return newRange(evaluateBounds(lowerNumber, countNumber));
+        }
+        return new TemplateLengthLimitedRange(reducedLower, reducedCount);
     }
 }
