@@ -1,5 +1,6 @@
 package org.freshmarker.core;
 
+import org.checkerframework.common.value.qual.IntRange;
 import org.freshmarker.Configuration;
 import org.freshmarker.ReductionStatus;
 import org.freshmarker.Template;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
@@ -489,6 +491,88 @@ class ReduceExpressionTest {
         reduceModel.put("value2", reduceUpper);
         Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
         assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper)));
+        assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${(0..30)[value1..value2]?join(' ')},11,19,11,,11 12 13 14 15 16 17 18 19,(0..30)[(11..value2)]?join(' ')",
+            "${(0..30)[value1..value2]?join(' ')},11,19,,19,11 12 13 14 15 16 17 18 19,(0..30)[(value1..19)]?join(' ')",
+            "${(0..30)[value1..<value2]?join(' ')},11,20,11,,11 12 13 14 15 16 17 18 19,(0..30)[(11..<value2)]?join(' ')",
+            "${(0..30)[value1..<value2]?join(' ')},11,20,,20,11 12 13 14 15 16 17 18 19,(0..30)[(value1..<20)]?join(' ')",
+            "${(0..30)[value1..*value2]?join(' ')},11,9,11,,11 12 13 14 15 16 17 18 19,(0..30)[(11..*value2)]?join(' ')",
+            "${(0..30)[value1..*value2]?join(' ')},11,9,,9,11 12 13 14 15 16 17 18 19,(0..30)[(value1..*9)]?join(' ')",
+            "${(0..<30)[value1..value2]?join(' ')},11,19,11,,11 12 13 14 15 16 17 18 19,(0..<30)[(11..value2)]?join(' ')",
+            "${(0..<30)[value1..value2]?join(' ')},11,19,,19,11 12 13 14 15 16 17 18 19,(0..<30)[(value1..19)]?join(' ')",
+            "${(0..<30)[value1..<value2]?join(' ')},11,20,11,,11 12 13 14 15 16 17 18 19,(0..<30)[(11..<value2)]?join(' ')",
+            "${(0..<30)[value1..<value2]?join(' ')},11,20,,20,11 12 13 14 15 16 17 18 19,(0..<30)[(value1..<20)]?join(' ')",
+            "${(0..<30)[value1..*value2]?join(' ')},11,9,11,,11 12 13 14 15 16 17 18 19,(0..<30)[(11..*value2)]?join(' ')",
+            "${(0..<30)[value1..*value2]?join(' ')},11,9,,9,11 12 13 14 15 16 17 18 19,(0..<30)[(value1..*9)]?join(' ')",
+            "${(0..*30)[value1..value2]?join(' ')},11,19,11,,11 12 13 14 15 16 17 18 19,(0..*30)[(11..value2)]?join(' ')",
+            "${(0..*30)[value1..value2]?join(' ')},11,19,,19,11 12 13 14 15 16 17 18 19,(0..*30)[(value1..19)]?join(' ')",
+            "${(0..*30)[value1..<value2]?join(' ')},11,20,11,,11 12 13 14 15 16 17 18 19,(0..*30)[(11..<value2)]?join(' ')",
+            "${(0..*30)[value1..<value2]?join(' ')},11,20,,20,11 12 13 14 15 16 17 18 19,(0..*30)[(value1..<20)]?join(' ')",
+            "${(0..*30)[value1..*value2]?join(' ')},11,9,11,,11 12 13 14 15 16 17 18 19,(0..*30)[(11..*value2)]?join(' ')",
+            "${(0..*30)[value1..*value2]?join(' ')},11,9,,9,11 12 13 14 15 16 17 18 19,(0..*30)[(value1..*9)]?join(' ')",
+            "${(0..)[value1..value2]?join(' ')},11,19,11,,11 12 13 14 15 16 17 18 19,(0..)[(11..value2)]?join(' ')",
+            "${(0..)[value1..value2]?join(' ')},11,19,,19,11 12 13 14 15 16 17 18 19,(0..)[(value1..19)]?join(' ')",
+            "${(0..)[value1..<value2]?join(' ')},11,20,11,,11 12 13 14 15 16 17 18 19,(0..)[(11..<value2)]?join(' ')",
+            "${(0..)[value1..<value2]?join(' ')},11,20,,20,11 12 13 14 15 16 17 18 19,(0..)[(value1..<20)]?join(' ')",
+            "${(0..)[value1..*value2]?join(' ')},11,9,11,,11 12 13 14 15 16 17 18 19,(0..)[(11..*value2)]?join(' ')",
+            "${(0..)[value1..*value2]?join(' ')},11,9,,9,11 12 13 14 15 16 17 18 19,(0..)[(value1..*9)]?join(' ')",
+    })
+    void sliceWithRanges(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        Template template = templateBuilder.getTemplate("slice with ranges", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper)));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper)));
+        assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${'01234567890123456789'[value1..value2]},11,19,11,,123456789,'01234567890123456789'[(11..value2)]",
+            "${'01234567890123456789'[value1..value2]},11,19,,19,123456789,'01234567890123456789'[(value1..19)]",
+            "${'01234567890123456789'[value1..<value2]},11,20,11,,123456789,'01234567890123456789'[(11..<value2)]",
+            "${'01234567890123456789'[value1..<value2]},11,20,,20,123456789,'01234567890123456789'[(value1..<20)]",
+            "${'01234567890123456789'[value1..*value2]},11,9,11,,123456789,'01234567890123456789'[(11..*value2)]",
+            "${'01234567890123456789'[value1..*value2]},11,9,,9,123456789,'01234567890123456789'[(value1..*9)]",
+    })
+    void sliceWithStrings(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        Template template = templateBuilder.getTemplate("slice with sequence and string", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper)));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper)));
+        assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${sequence[value1..value2]?join(' ')},11,19,11,,11 12 13 14 15 16 17 18 19,sequence[(11..value2)]?join(' ')",
+            "${sequence[value1..value2]?join(' ')},11,19,,19,11 12 13 14 15 16 17 18 19,sequence[(value1..19)]?join(' ')",
+            "${sequence[value1..<value2]?join(' ')},11,20,11,,11 12 13 14 15 16 17 18 19,sequence[(11..<value2)]?join(' ')",
+            "${sequence[value1..<value2]?join(' ')},11,20,,20,11 12 13 14 15 16 17 18 19,sequence[(value1..<20)]?join(' ')",
+            "${sequence[value1..*value2]?join(' ')},11,9,11,,11 12 13 14 15 16 17 18 19,sequence[(11..*value2)]?join(' ')",
+            "${sequence[value1..*value2]?join(' ')},11,9,,9,11 12 13 14 15 16 17 18 19,sequence[(value1..*9)]?join(' ')",
+    })
+    void sliceWithSequences(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        List<Integer> sequence = IntStream.range(0, 30).boxed().toList();
+        Template template = templateBuilder.getTemplate("slice with sequence and string", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper, "sequence", sequence)));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper, "sequence", sequence)));
         assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
         assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
     }

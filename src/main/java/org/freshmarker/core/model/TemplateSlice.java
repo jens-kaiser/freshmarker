@@ -110,15 +110,19 @@ public class TemplateSlice implements TemplateObject {
         TemplateObject reducedRange = range.reduce(context);
         TemplateObject reducedBase = base.reduce(context);
         if (!(reducedRange instanceof TemplateRange templateRange)) {
-            return new TemplateSlice(reducedRange, reducedBase);
+            return new TemplateSlice(reducedBase, reducedRange);
         }
-        return switch (reducedBase) {
-            case TemplateSlice templateSlice -> templateSlice.evaluateToObject(context);
-            case TemplateString templateString -> handleSequence(context, templateRange, templateString);
-            case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
-            case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
-            case TemplateNumber templateNumberValue -> handleNumber(context, templateRange, templateNumberValue);
-            default -> new TemplateSlice(reducedRange, reducedBase);
-        };
+        try {
+            return switch (reducedBase) {
+                case TemplateSlice templateSlice -> templateSlice.evaluateToObject(context);
+                case TemplateString templateString -> handleSequence(context, templateRange, templateString);
+                case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
+                case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
+                case TemplateNumber templateNumberValue -> handleNumber(context, templateRange, templateNumberValue);
+                default -> new TemplateSlice(reducedBase, reducedRange);
+            };
+        } catch (RuntimeException e) {
+            return new TemplateSlice(reducedBase, reducedRange);
+        }
     }
 }

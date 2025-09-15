@@ -80,7 +80,7 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
 
     @Override
     public TemplateRange slice(int min, int max) {
-        return new TemplateRightLimitedRange(new Bounds(lowerNumber + min, lowerNumber + max));
+        return new TemplateRightLimitedRange(new Bounds(lowerNumber + min, lowerNumber + max), false);
     }
 
     @Override

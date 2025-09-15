@@ -21,8 +21,12 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     }
 
     protected Bounds evaluate(ProcessContext context) {
-        int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
-        int newCount = count.evaluate(context, TemplateNumber.class).asInt();
+        return evaluateBounds(lower.evaluate(context, TemplateNumber.class), count.evaluate(context, TemplateNumber.class));
+    }
+
+    private static Bounds evaluateBounds(TemplateNumber lowerNumber, TemplateNumber countNumber) {
+        int newLower = lowerNumber.asInt();
+        int newCount = countNumber.asInt();
         int newUpper;
         int size = Math.abs(newCount);
         if (newCount == 0) {
@@ -65,7 +69,9 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
         if (reducedLower == lower && reducedCount == count) {
             return this;
         }
+        if (reducedLower instanceof TemplateNumber lowerNumber && reducedCount instanceof TemplateNumber countNumber) {
+            return new TemplateLengthLimitedRange(reducedLower, null, countNumber, evaluateBounds(lowerNumber, countNumber));
+        }
         return new TemplateLengthLimitedRange(reducedLower, reducedCount);
     }
-
 }
