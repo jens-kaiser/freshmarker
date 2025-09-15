@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateRightLimitedRange extends AbstractLimitedRange {
@@ -19,8 +20,12 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
 
     @Override
     protected Bounds evaluate(ProcessContext context) {
-        int newLower = lower.evaluate(context, TemplateNumber.class).asInt();
-        int newUpper = upper.evaluate(context, TemplateNumber.class).asInt();
+        return evaluateBounds(lower.evaluate(context, TemplateNumber.class), upper.evaluate(context, TemplateNumber.class));
+    }
+
+    private Bounds evaluateBounds(TemplateNumber lowerNumber, TemplateNumber upperNumber) {
+        int newLower = lowerNumber.asInt();
+        int newUpper = upperNumber.asInt();
         int size = Math.abs(newLower - newUpper) + 1;
         if (exclusive) {
             size--;
@@ -37,5 +42,18 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, lower, upper, exclusive);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject reducedLower = lower.reduce(context);
+        TemplateObject reducedUpper = upper.reduce(context);
+        if (reducedLower == lower && reducedUpper == upper) {
+            return this;
+        }
+        if (reducedLower instanceof TemplateNumber lowerNumber && reducedUpper instanceof TemplateNumber upperNumber) {
+            return new TemplateRightLimitedRange(evaluateBounds(lowerNumber, upperNumber));
+        }
+        return new TemplateRightLimitedRange(reducedLower, reducedUpper, exclusive);
     }
 }

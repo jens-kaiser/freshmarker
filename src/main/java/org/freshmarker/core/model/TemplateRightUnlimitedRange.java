@@ -2,6 +2,7 @@ package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 import java.util.AbstractList;
@@ -85,5 +86,14 @@ public class TemplateRightUnlimitedRange implements TemplateRange {
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, lower);
+    }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject reducedLower = lower.reduce(context);
+        if (reducedLower == lower) {
+            return this;
+        }
+        return new TemplateRightUnlimitedRange(reducedLower);
     }
 }

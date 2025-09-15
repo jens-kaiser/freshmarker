@@ -218,8 +218,8 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateObject visit(DynamicKey expression, Object input) {
         TemplateObject dynamicKey = expression.get(1).accept(this, null);
-        if (dynamicKey instanceof TemplateRange) {
-            return new TemplateSlice(((TemplateObjectAndNode)input).templateObject(), dynamicKey);
+        if (dynamicKey instanceof TemplateRange templateRange) {
+            return new TemplateSlice(((TemplateObjectAndNode)input).templateObject(), templateRange);
         }
         return new TemplateDynamicKey(((TemplateObjectAndNode)input).templateObject(), dynamicKey);
     }

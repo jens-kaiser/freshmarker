@@ -36,17 +36,6 @@ m|${(2..6)?reverse?join}
 m|6, 5, 4, 3, 2
 |===
 
-==== `size` Built-In (since 1.6.4)
-
-This built-in returns the size of a limited range as a number.
-
-|===
-|Template |Output
-
-m|${(2..6)?size}
-m|5
-|===
-
 ==== `join` Built-In (since 1.6.4)
 
 This built-in returns the elements of a limited range as a string.
@@ -66,9 +55,9 @@ m|${(2..6)?join(", ", " and ")}
 m|2, 3, 4, 5 and 6
 |===
 
-==== `size` Built-In
+==== `size` Built-In (since 1.6.4)
 
-This built-in return the size of the text.
+This built-in returns the size of a limited range as a number.
 
 |===
 |Interpolation | Output
@@ -76,8 +65,8 @@ This built-in return the size of the text.
 m|${(0..<0)?size}
 m|0
 
-m|${(0..6)?length}
-m|5
+m|${(0..6)?size}
+m|7
 |===
 
 ==== `is_empty` Built-In (since 1.11.0)
