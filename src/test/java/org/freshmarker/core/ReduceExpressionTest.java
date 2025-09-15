@@ -1,6 +1,5 @@
 package org.freshmarker.core;
 
-import org.checkerframework.common.value.qual.IntRange;
 import org.freshmarker.Configuration;
 import org.freshmarker.ReductionStatus;
 import org.freshmarker.Template;
@@ -37,7 +36,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 @Nested
 class ReduceExpressionTest {
