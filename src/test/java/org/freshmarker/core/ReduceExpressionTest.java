@@ -10,11 +10,15 @@ import org.freshmarker.core.model.TemplateDotKey;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
+import org.freshmarker.core.model.TemplateLengthLimitedRange;
 import org.freshmarker.core.model.TemplateMarkup;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateObjectVisitor;
 import org.freshmarker.core.model.TemplateOperation;
 import org.freshmarker.core.model.TemplateRelational;
+import org.freshmarker.core.model.TemplateRightLimitedRange;
+import org.freshmarker.core.model.TemplateRightUnlimitedRange;
+import org.freshmarker.core.model.TemplateSlice;
 import org.freshmarker.core.model.TemplateVariable;
 import org.freshmarker.core.model.builtin.HookedBuiltIn;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
@@ -24,12 +28,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.Year;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 @Nested
 class ReduceExpressionTest {
@@ -102,6 +108,26 @@ class ReduceExpressionTest {
         @Override
         public String visit(TemplateRelational templateRelational) {
             return templateRelational.left().accept(this) + " " + templateRelational.type() + " " + templateRelational.right().accept(this);
+        }
+
+        @Override
+        public String visit(TemplateSlice templateSlice, TemplateObject sequence, TemplateObject range) {
+            return sequence.accept(this) + "[" + range.accept(this) + "]";
+        }
+
+        @Override
+        public String visit(TemplateRightLimitedRange templateRightLimitedRange, TemplateObject lower, TemplateObject upper, boolean exclusive) {
+            return "(" + lower.accept(this) + (exclusive ? "..<" : "..") + upper.accept(this) + ")";
+        }
+
+        @Override
+        public String visit(TemplateRightUnlimitedRange templateRightUnlimitedRange, TemplateObject lower) {
+            return "(" + lower.accept(this) + "..)";
+        }
+
+        @Override
+        public String visit(TemplateLengthLimitedRange templateLengthLimitedRange, TemplateObject lower, TemplateObject upper, TemplateObject count) {
+            return "(" + lower.accept(this) + "..*" + count.accept(this) + ")";
         }
     }
 
@@ -444,5 +470,26 @@ class ReduceExpressionTest {
             assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
             assertEquals("2025?supports(value2)", reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
         }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${(value1..value2)?join(' ')},11,19,11,,11 12 13 14 15 16 17 18 19,(11..value2)?join(' ')",
+            "${(value1..value2)?join(' ')},11,19,,19,11 12 13 14 15 16 17 18 19,(value1..19)?join(' ')",
+            "${(value1..<value2)?join(' ')},11,20,11,,11 12 13 14 15 16 17 18 19,(11..<value2)?join(' ')",
+            "${(value1..<value2)?join(' ')},11,20,,20,11 12 13 14 15 16 17 18 19,(value1..<20)?join(' ')",
+            "${(value1..*value2)?join(' ')},11,9,11,,11 12 13 14 15 16 17 18 19,(11..*value2)?join(' ')",
+            "${(value1..*value2)?join(' ')},11,9,,9,11 12 13 14 15 16 17 18 19,(value1..*9)?join(' ')",
+    })
+    void range(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        Template template = templateBuilder.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("value1" , lower, "value2", upper)));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(Map.of("value1" , lower, "value2", upper)));
+        assertEquals(new ReductionStatus(2, 2, 1, 1), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
     }
 }

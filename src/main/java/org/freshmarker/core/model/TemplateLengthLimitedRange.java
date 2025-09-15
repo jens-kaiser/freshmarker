@@ -1,6 +1,7 @@
 package org.freshmarker.core.model;
 
 import org.freshmarker.core.ProcessContext;
+import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 
 public class TemplateLengthLimitedRange extends AbstractLimitedRange {
@@ -56,4 +57,15 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
         return visitor.visit(this, lower, upper, count);
     }
+
+    @Override
+    public TemplateObject reduce(ReduceContext context) {
+        TemplateObject reducedLower = lower.reduce(context);
+        TemplateObject reducedCount = count.reduce(context);
+        if (reducedLower == lower && reducedCount == count) {
+            return this;
+        }
+        return new TemplateLengthLimitedRange(reducedLower, reducedCount);
+    }
+
 }

@@ -11,18 +11,18 @@ import java.util.List;
 
 public class TemplateSlice implements TemplateObject {
 
-    private final TemplateObject sequence;
+    private final TemplateObject base;
     private final TemplateObject range;
 
-    public TemplateSlice(TemplateObject sequence, TemplateObject range) {
-        this.sequence = sequence;
+    public TemplateSlice(TemplateObject base, TemplateObject range) {
+        this.base = base;
         this.range = range;
     }
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
         TemplateRange templateRange = range.evaluate(context, TemplateRange.class);
-        TemplateObject value = sequence.evaluateToObject(context);
+        TemplateObject value = base.evaluateToObject(context);
         return switch (value) {
             case TemplateSlice templateSlice -> templateSlice.evaluateToObject(context);
             case TemplateString templateString -> handleSequence(context, templateRange, templateString);
@@ -102,13 +102,23 @@ public class TemplateSlice implements TemplateObject {
 
     @Override
     public <R> R accept(TemplateObjectVisitor<R> visitor) {
-        return visitor.visit(this, sequence, range);
+        return visitor.visit(this, base, range);
     }
 
     @Override
     public TemplateObject reduce(ReduceContext context) {
-        TemplateObject templateRange = range.reduce(context);
-        TemplateObject value = sequence.reduce(context);
-        return new TemplateSlice(templateRange, value);
+        TemplateObject reducedRange = range.reduce(context);
+        TemplateObject reducedBase = base.reduce(context);
+        if (!(reducedRange instanceof TemplateRange templateRange)) {
+            return new TemplateSlice(reducedRange, reducedBase);
+        }
+        return switch (reducedBase) {
+            case TemplateSlice templateSlice -> templateSlice.evaluateToObject(context);
+            case TemplateString templateString -> handleSequence(context, templateRange, templateString);
+            case TemplateListSequence templateListSequence -> handleSequence(context, templateRange, templateListSequence);
+            case TemplateRange templateRangeValue -> handleSequence(context, templateRange, templateRangeValue);
+            case TemplateNumber templateNumberValue -> handleNumber(context, templateRange, templateNumberValue);
+            default -> new TemplateSlice(reducedRange, reducedBase);
+        };
     }
 }
