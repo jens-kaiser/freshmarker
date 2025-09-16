@@ -48,11 +48,15 @@ public class TemplateRightLimitedRange extends AbstractLimitedRange {
     public TemplateObject reduce(ReduceContext context) {
         TemplateObject reducedLower = lower.reduce(context);
         TemplateObject reducedUpper = upper.reduce(context);
+        if (reducedLower instanceof TemplateNumber lowerNumber && reducedUpper instanceof TemplateNumber upperNumber) {
+            if (reducedLower == lower && reducedUpper == upper) {
+                bounds = evaluateBounds(lowerNumber, upperNumber);
+                return this;
+            }
+            return new TemplateRightLimitedRange(evaluateBounds(lowerNumber, upperNumber));
+        }
         if (reducedLower == lower && reducedUpper == upper) {
             return this;
-        }
-        if (reducedLower instanceof TemplateNumber lowerNumber && reducedUpper instanceof TemplateNumber upperNumber) {
-            return new TemplateRightLimitedRange(evaluateBounds(lowerNumber, upperNumber));
         }
         return new TemplateRightLimitedRange(reducedLower, reducedUpper, exclusive);
     }

@@ -47,6 +47,7 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     @Override
     public TemplateObject getUpper(ProcessContext context) {
         evaluate(context);
+        evaluatedUpper = TemplateNumber.of(bounds.upper());
         return evaluatedUpper;
     }
 
@@ -66,11 +67,15 @@ public class TemplateLengthLimitedRange extends AbstractLimitedRange {
     public TemplateObject reduce(ReduceContext context) {
         TemplateObject reducedLower = lower.reduce(context);
         TemplateObject reducedCount = count.reduce(context);
+        if (reducedLower instanceof TemplateNumber lowerNumber && reducedCount instanceof TemplateNumber countNumber) {
+            if (reducedLower == lower && reducedCount == count) {
+                bounds = evaluateBounds(lowerNumber, countNumber);
+                return this;
+            }
+            return newRange(evaluateBounds(lowerNumber, countNumber));
+        }
         if (reducedLower == lower && reducedCount == count) {
             return this;
-        }
-        if (reducedLower instanceof TemplateNumber lowerNumber && reducedCount instanceof TemplateNumber countNumber) {
-            return newRange(evaluateBounds(lowerNumber, countNumber));
         }
         return new TemplateLengthLimitedRange(reducedLower, reducedCount);
     }

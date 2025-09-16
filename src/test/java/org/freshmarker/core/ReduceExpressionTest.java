@@ -634,4 +634,30 @@ class ReduceExpressionTest {
         assertEquals(new ReductionStatus(2, 2, 1, 3), reductionStatus);
         assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${value3 == sequence[0..20][value1..value2]},11,19,11,19,yes,value3=='agilistic'",
+            "${value3 == sequence[0..20][value1..<value2]},11,20,11,20,yes,value3=='agilistic'",
+            "${value3 == sequence[0..20][value1..*value2]},11,9,11,9,yes,value3=='agilistic'",
+            "${value3 == sequence[0..<21][value1..value2]},11,19,11,19,yes,value3=='agilistic'",
+            "${value3 == sequence[0..<21][value1..<value2]},11,20,11,20,yes,value3=='agilistic'",
+            "${value3 == sequence[0..<21][value1..*value2]},11,9,11,9,yes,value3=='agilistic'",
+            "${value3 == sequence[0..*20][value1..value2]},11,19,11,19,yes,value3=='agilistic'",
+            "${value3 == sequence[0..*20][value1..<value2]},11,20,11,20,yes,value3=='agilistic'",
+            "${value3 == sequence[0..*20][value1..*value2]},11,9,11,9,yes,value3=='agilistic'",
+    })
+    void fullSliceOnSlice(String input, int lower, int upper, Integer reduceLower, Integer reduceUpper, String expected, String reduced) {
+        Template template = templateBuilder.getTemplate("slice with sequence and string", input);
+        Map<String, Object> model = Map.of("value1", lower, "value2", upper, "sequence", "Supercalifragilisticexpialidocious", "value3", "agilistic");
+        assertEquals(expected, template.process(model));
+        Map<String, Object> reduceModel = new HashMap<>();
+        reduceModel.put("value1", reduceLower);
+        reduceModel.put("value2", reduceUpper);
+        reduceModel.put("sequence", "Supercalifragilisticexpialidocious");
+        Template reducedTemplate = template.reduce(reduceModel, reductionStatus);
+        assertEquals(expected, reducedTemplate.process(model));
+        assertEquals(new ReductionStatus(2, 2, 1, 3), reductionStatus);
+        assertEquals(reduced, reductionStatus.expressions().getLast().accept(new ExpressionPrinter()));
+    }
 }

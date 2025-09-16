@@ -346,4 +346,9 @@ class SliceAndRangeInterpolationTest {
         assertEquals(expected, builder.getTemplate("test", input).process(Map.of()));
     }
 
+    @Test
+    void sliceOfSlice(TemplateBuilder builder) {
+        Template template = builder.getTemplate("slice of slice", "${'Supercalifragilisticexpialidocious'[0..20][5..10]}");
+        assertEquals("califr", template.process(Map.of()));
+    }
 }
