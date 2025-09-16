@@ -138,6 +138,9 @@ ${s} * ${s} = ${s*s}
 *</#list>*
 ----
 
+WARNING: the filter creates a new list based on the existing list.
+With _right unlimited ranges_, this can lead to problems because incorrect filters can generate lists with up to 2,147,483,64 elements.
+
 ==== List Directive with an offset (since 1.7.2)
 
 The start offset in the list directive can be increased using an offset expression.
@@ -165,5 +168,3 @@ If the list ist filtered by a filter expression, the limit is applied to the fil
 ${s} * ${s} = ${s*s}
 *</#list>*
 ----
-
-WARNING: As the limit specification refers to filtered lists, the processing of _right-unlimited ranges_ can take an extremely long time. In the worst case, all elements are filtered out and the entire range from -2,147,483,648 to 2,147,483,647 is run through.

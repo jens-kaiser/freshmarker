@@ -6,6 +6,7 @@ import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -310,5 +311,30 @@ ListDirectiveTest {
                         2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24
                         """,
                 template.process(Map.of("count", 12)));
+    }
+
+    @Nested
+    class Unlimited {
+        @Test
+        void withoutLimit() {
+            Template template = builder.getTemplate("test", """
+                    <#list (-2147483648..) as s>${s} </#list>
+                    """);
+            Map<String, Object> dataModel = Map.of();
+            ProcessException exception = assertThrows(ProcessException.class, () -> template.process(dataModel));
+            assertEquals("right unlimited range not supported at test:1:1 '<#list (-2147483648..) as s>${s} </#list>'", exception.getMessage());
+        }
+
+        @Test
+        void withLimit() {
+            Template template = builder.getTemplate("test", "<#list (-2147483648..) as s limit 5>${s?c} </#list>");
+            assertEquals("-2147483648 -2147483647 -2147483646 -2147483645 -2147483644 ", template.process(Map.of()));
+        }
+
+        @Test
+        void withMissedLimit() {
+            Template template = builder.getTemplate("test", "<#list (-2147483648..) as s filter 0 == s % 1000000 limit 5>${s?c} </#list>");
+            assertEquals("-2147000000 -2146000000 -2145000000 -2144000000 -2143000000 ", template.process(Map.of()));
+        }
     }
 }
