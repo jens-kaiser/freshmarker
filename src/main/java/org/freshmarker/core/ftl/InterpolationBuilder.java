@@ -394,9 +394,6 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (token.getType() == TokenType.PLUS || templateObject.isPrimitive()) {
             return templateObject;
         }
-        if (templateObject instanceof TemplateNumber number) {
-            return number.negate();
-        }
         return new TemplateSign(templateObject);
     }
 

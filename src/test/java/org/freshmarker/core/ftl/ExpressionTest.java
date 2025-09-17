@@ -36,6 +36,12 @@ class ExpressionTest {
         assertEquals("test: dies ist einfach nur ein text", template.process(Map.of()));
     }
 
+    @Test
+    void signedValues() throws ParseException {
+        Template template = builder.getTemplate("test", "test: ${-42} ${-a} ${+42} ${+a}");
+        assertEquals("test: -42 -42 42 42", template.process(Map.of("a", 42)));
+    }
+
     @Nested
     class ConcatWithPlusOperator {
         @Test
