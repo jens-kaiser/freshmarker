@@ -1,0 +1,70 @@
+== Built-In Variables
+
+=== Default Built-In Variables
+
+[cols="1,4,2,1"]
+|===
+|Name| Description| Example | Output
+
+m|.now
+| The `.now` built-in variable of Type `TemplateZoneDateTime`  provides the current timestamp.
+m| ${.now?date}
+| 2025-07-19
+
+m|.locale
+|The `.locale` built-in variable of Type `TemplateLocale`  provides the current locale.
+m|${.locale?country_name}
+|Germany
+
+m|.country
+|The `.country` built-in variable of Type `TemplateString`  provides the current locales country code.
+m|${.country}
+|DE
+
+m|.laguage
+|The `.laguage` built-in variable of Type `TemplateString`  provides the current locales language code.
+m|${.laguage}
+|de
+
+m|.version
+|The `.version` built-in variable of Type `TemplateVersion`  provides the current _FreshMarker_ version.
+m|${version.major}
+|2
+
+|===
+
+=== Random Built-In Variable
+
+[NOTE]
+====
+The  `.random` built-in variable is included via an additional artifact.
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+  <groupId>de.schegge</groupId>
+  <artifactId>freshmarker-random</artifactId>
+  <version>{plugin-random-version}</version>
+</dependency>
+----
+====
+
+The `.random` built-in variable of Type `TemplateRandom` can be used to generate random value via several built-ins.
+
+=== Hemisphere Built-In Variable
+
+[NOTE]
+====
+The  `.hemisphere` built-in variable is included via an additional artifact.
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+  <groupId>de.schegge</groupId>
+  <artifactId>freshmarker-astro</artifactId>
+  <version>{plugin-astro-version}</version>
+</dependency>
+----
+====
+
+The `.hemisphere` built-in variable of Type `TemplateEnum` can be used to distinguish between the Northern Hemisphere (NORTH) and the Southern Hemisphere (SOUTH).

@@ -1,5 +1,7 @@
 = Release Notes
 
+== Release 2.3.0 (2025-10-XX)
+
 == Release 2.2.0 (2025-09-19)
 
 === Improvements

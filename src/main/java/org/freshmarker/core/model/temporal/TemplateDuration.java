@@ -17,4 +17,9 @@ public class TemplateDuration extends TemplatePrimitive<Duration> {
     TemplateDuration rightValue = (TemplateDuration)operand;
     return compareValues(operator, getValue().compareTo(rightValue.getValue()));
   }
+
+    @Override
+    public TemplateDuration negate() {
+        return new TemplateDuration(getValue().negated());
+    }
 }

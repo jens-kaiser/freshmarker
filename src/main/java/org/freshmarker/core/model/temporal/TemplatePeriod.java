@@ -47,4 +47,9 @@ public class TemplatePeriod extends TemplatePrimitive<Period> {
       default -> super.relation(operator, operand, context);
     });
   }
+
+    @Override
+    public TemplatePeriod negate() {
+        return new TemplatePeriod(getValue().negated());
+    }
 }
