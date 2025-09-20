@@ -1,6 +1,10 @@
 = Release Notes
 
-== Release 2.3.0 (2025-10-XX)
+== Release 2.3.0 (2025-10-XX, planned)
+
+=== Improvements
+
+- add sign operator for duration and period
 
 == Release 2.2.0 (2025-09-19)
 
