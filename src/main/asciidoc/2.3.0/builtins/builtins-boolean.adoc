@@ -1,0 +1,35 @@
+=== Boolean Built-Ins
+
+==== `c` (computer language) Built-In
+
+This built-in converts a boolean to the string literals `true` or `false`.
+
+==== `h` (human language) Built-In  (since 1.4.6)
+
+This built-in converts a boolean to the localized string literals `true` or `false`.
+
+include::localization_tip.adoc[]
+
+|===
+|Interpolation | Output
+
+m|<#setting locale="fr-FR">${true?h}
+m|vrai
+
+m|<#setting locale="de">${false?h}
+m|falsch
+|===
+
+==== `then` Built-In
+
+This built-in returns its first parameter if the value is `true` or the second parameter if the value is `false`.
+
+|===
+|Interpolation | Output
+
+m|${true?then(23, 42)}
+m|23
+
+m|${false?then(23, 42)}
+m|42
+|===

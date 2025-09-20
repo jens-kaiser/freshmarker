@@ -1,0 +1,29 @@
+= Migration Guide
+
+Obwohl FreshMarker viele Ähnlichkeiten mit Freemarker aufweißt, unterscheiden sich die Template Engines an diversen Stellen. Dies muss  bei einer Migration beachtet werden.
+
+== Template Loader
+
+Der FreeMarker Template Loader besitzt einen eingebauten Cache mechanismus den FreshMarker so nicht kennt. Wenn ein Template erzeugt wurde, kann man es aber auf beliebige Weise in der eigenen Anwendung speichern (Cache, Map, Konstante, Membervariable).
+
+== Template
+
+Das Datenmodel zur Verarbeitung des templates kann bei Freemarker ein beliebiges Object sein, bei FreshMarker wird eine Map<String, Object> struktur erwartet. Das bedeutet, dass ein Template Source ggf. eine weitere Top Level Variable benötigt
+
+.Freemarker
+[source,freemarker]
+----
+${title}
+----
+
+.FreshMarker
+[source,freshmarker]
+----
+${bean.title}
+----
+
+== Directives
+
+== Built-In
+
+== Variables

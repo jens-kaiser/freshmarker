@@ -1,0 +1,36 @@
+=== Additional User Directives
+
+The `UserDirectiveProvider` defines the API for `Extensions` that wish to add new user directives.
+
+Each custom user directive hast to implement the `UserDirective` interface.
+
+.Example UserDirective
+[source,java,role="primary"]
+----
+public class ExampleUserDirective implements UserDirective {
+    public execute(ProcessContext context, Map<String, TemplateObject> args, Fragment body) {
+        body.process(context);
+        body.process(context);
+    }
+}
+----
+
+.Example UserDirective as Lambda
+[source,java,role="secondary"]
+----
+(context, args, body) -> { body.process(context); body.process(context); };
+----
+
+Since each `UserDirective` has a name, the `UserDirectiveProvider` returns the user directives as `Map<String,UserDirective>`.
+
+.Example UserDirectiveProvider
+[source,java]
+----
+public final class ExampleUserDirectiveProvider implements UserDirectiveProvider {
+    public Map<String,UserDirective> provideUserDirectives() {
+        Map.of("example", new ExampleUserDirective());
+    }
+}
+----
+
+TBD

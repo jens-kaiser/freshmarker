@@ -18,18 +18,19 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
-class TemporalPeriodInterpolationTest {
+class TemporalDurationAndPeriodInterpolationTest {
 
     @Test
     void interpolationDuration(TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.getTemplate("test", "test: ${temporal}");
+        Template template = templateBuilder.getTemplate("test", "test: ${temporal} ${+temporal}");
         Map<String, Object> dataModel = Map.of("temporal", Duration.of(43, ChronoUnit.MINUTES));
-        assertEquals("test: PT43M", template.process(dataModel));
+        assertEquals("test: PT43M PT43M", template.process(dataModel));
     }
 
     @ParameterizedTest
     @CsvSource(value = {
             "de;P0D;test: ${temporal};test: P0D",
+            "de;P0D;test: ${+temporal};test: P0D",
             "de;P0Y0M0D;test: ${temporal};test: P0D",
             "de;P2Y4M1D;test: ${temporal};test: P2Y4M1D",
             "de;P4M1D;test: ${temporal};test: P4M1D",
@@ -106,5 +107,29 @@ class TemporalPeriodInterpolationTest {
         Template template = templateBuilder.getTemplate("test", "test: ${" + input +"}");
         Map<String, Object> model = Map.of("duration1", Duration.ofMinutes(23), "duration2", Duration.ofMinutes(42));
         assertEquals(expected, template.process(model));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "PT1H43M,test: PT-1H-43M",
+            "PT1H-43M,test: PT-17M",
+            "PT-1H43M,test: PT17M"
+    })
+    void negatedDuration(Duration duration, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${-temporal}");
+        Map<String, Object> dataModel = Map.of("temporal", duration);
+        assertEquals(expected, template.process(dataModel));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "P1M4D,test: P-1M-4D",
+            "P1M-2D,test: P-1M2D",
+            "P-1M-2D,test: P1M2D"
+    })
+    void negatedPeriod(Period period, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", "test: ${-temporal}");
+        Map<String, Object> dataModel = Map.of("temporal", period);
+        assertEquals(expected, template.process(dataModel));
     }
 }

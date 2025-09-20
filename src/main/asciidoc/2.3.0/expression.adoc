@@ -1,0 +1,633 @@
+== Expressions
+
+Expressions are an important part of template evaluation. They are evaluated within _Conditional Directives_ and _Interpolations_.
+
+The expressions are based on _Java_ expressions, but have some differences. The majority of the deviations result from the basic implementation decisions for _FreshMarker_ as a template engine.
+
+As far as practicable, calculations should not take place within the template engine but in the external application. Basically, expressions should be used to make decisions in the _Conditional Directives_ and to influence the output of _Interpolations_.
+
+For this reason, _FreshMarker_ does not have any bit shift operators, for example.
+Variables are assigned values within the template via the _Var_ and _Set Directives_, so _FreshMarker_ does not have an assignment operator or compound operators like _Java_.
+
+=== Literal Expressions
+
+_FreshMarker_ knows literals for some basic data types. These literals are interpreted by _FreshMarker_ as constants.
+
+The data types `Null`, `Boolean`, `Long`, `Integer`, `Double`, `String`, `Range`, `Sequence` and `Hash` support literals.
+
+==== Null Literal
+
+The type `Null` supports the literal `null`. This can be used for `null` comparisons.
+
+==== Boolean Literals
+
+The `Boolean` type supports the literals `true` and `false`.
+
+==== Integer Literals
+
+The `Integer` type supports integer numeric literals in the range from `-2,147,483,648` to `2,147,483,647`. If the numeric literal contains a decimal point, it is not interpreted as an `Integer`.
+
+==== Long Literals (since 2.1.0)
+
+The `Long` type supports integer numeric literals in the range from `-9,223,372,036,854,775,808` to `9,223,372,036,854,775,807`. If the numeric literal contains a decimal point, it is not interpreted as an `Long`.
+
+Literals from `-2,147,483,648` to `2,147,483,647` are interpreted as `Integer` except the literal ends with the character `L` or `l`.
+
+WARNING: The parser throws an exception if an integer numeric literal exceeds the value range. Later _FreshMarker_ versions will probably include support for `Long` or `BigInteger`.
+
+==== Double Literals
+
+The type `Double` supports numeric literals in the value range of `java.lang.Double`. Only numeric literals with a decimal point are interpreted as double, the scientific notation is not supported.
+
+==== String Literals
+
+TBD
+
+==== Range Literals
+
+TBD
+
+==== Sequence Literals
+
+TBD
+
+==== Hash Literals
+
+TBD
+
+=== Variables
+
+TBD
+
+=== Function Invocation
+
+TBD
+
+=== Conjunctions
+
+|===
+|Operator | Name | Description |Example
+
+m|&
+|Logical And Operator
+|evaluates both operands
+m|true & true
+
+m|∧
+|Unicode Logical And Operator
+|evaluates both operands
+m|true ∧ true
+
+m|&&
+|Conditional And Operator
+|evaluates only the first operand, if it evaluates to false
+m|false && true
+|===
+
+=== Disjunctions
+
+|===
+|Operator | Name | Description |Example
+
+m|\|
+|Logical Or Operator
+|evaluates both operands
+m|true \| true
+
+m|∨
+|Unicode Logical Or Operator
+|evaluates both operands
+m|true ∨ true
+
+m|\|\|
+|Conditional Or Operator
+|evaluates only the first operand, if it evaluates to true
+m|false \|\| true
+
+m|^
+|Logical XOR Operator
+|evaluates both operands
+m|false ^ true
+
+m|⊻
+|Unicode Logical XOR Operator
+|evaluates both operands
+m|false ⊻ true
+|===
+
+=== Range Operator
+
+TBD
+
+=== Equality Operators
+
+This operator works only on _FreshMarkers_ primitive types.
+There is no equality defined on _Hashes_, _Sequences_ or _Ranges_.
+
+TIP: The `String` equality can also be carried out according to language-specific rules using a `Collator`.
+This must be activated by a  <<System Features (since 2.0.0),feature flag>>.
+
+|===
+|Operator | Name |Example
+
+m|=
+|Equals Operator
+m|x == 1
+
+m|!=
+|Not Equals Operator
+m|x != 2
+
+m|≠
+|Unicode Not Equals Operator
+m|x ≠ 3
+|===
+
+=== Relational Operators
+
+WARNING: The greater `>` and the greater equals `>=` operator must be surrounded by parenthesis in directive expression to distinguish it from the directive closing symbol `>`.
+
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Therefore, they are not only available for numeric types, but also for `Version`, `String`, `Duration`, `Period` and the temporal types.
+Custom types can also _overload_ all relational operators.
+
+Since  _FreshMarker 2.0.0_ the spaceship operator `+<=>+` can be used.
+This operator return -1 if the left operand is smaller, 0 if both operands are equals and 1 otherwise.
+
+==== Numerical Comparison Operators
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|x < 4
+
+m|\<=
+|Less Equals Operator
+m|x \<= 5
+
+m|≤
+|Unicode Less Equals Operator
+m|x ≤ 6
+
+m|>
+|Greater Operator
+m|x > 7
+
+m|>=
+|Greater Equals Operator
+m|x >= 8
+
+m|≥
+|Unicode Greater Equals Operator
+m|x ≥ 9
+
+m|+<=>+
+|Spaceship Operator (since 2.0.0)
+m|12 +<=>+ 24
+|===
+
+==== String Comparison Operators (since 2.0.0)
+
+Two `String` values can be compared lexicographic with each other.
+
+TIP: The `String` comparison can also be carried out according to language-specific rules using a `Collator`.
+This must be activated by a  <<System Features (since 2.0.0),feature flag>>.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|'Jens' < 'Kaiser'
+
+m|\<=
+|Less Equals Operator
+m|'Jens' \<= 'Jens'
+
+m|≤
+|Unicode Less Equals Operator
+m|'Fix' ≤ 'Foxy'
+
+m|>
+|Greater Operator
+m|'Kaiser' > 'Jens'
+
+m|>=
+|Greater Equals Operator
+m|'Jens' >= 'Jens'
+
+m|≥
+|Unicode Greater Equals Operator
+m|'Simon' ≥ 'Garfunkel'
+|===
+
+==== Temporal Comparison Operators (since 2.0.0)
+
+Two temporal values of the same type can be compared with each other.footnote:legacyTemporal[]
+An exception to this is the type `MonthDay`, as the year would be required as a context for correct comparison.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|yesterday < today
+
+m|\<=
+|Less Equals Operator
+m|yesterday \<= today
+
+m|≤
+|Unicode Less Equals Operator
+m|yesterday ≤ today
+
+m|>
+|Greater Operator
+m|tomorrow > today
+
+m|>=
+|Greater Equals Operator
+m|tomorrow >= today
+
+m|≥
+|Unicode Greater Equals Operator
+m|tomorrow ≥ today
+|===
+
+==== Duration and Period Comparison Operators (since 2.0.0)
+
+`Duration` and `Period` can be compared with each other values of the same type.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|one_week < two_weeks
+
+m|+<=+
+|Less Equals Operator
+m|one_minute +<=+ two_minutes_warning
+
+m|≤
+|Unicode Less Equals Operator
+m|one_second ≤ two_minutes_warning
+
+m|>
+|Greater Operator
+m|one_year > half_year
+
+m|>=
+|Greater Equals Operator
+m|one_week >= one_week
+
+m|≥
+|Unicode Greater Equals Operator
+m|thirty_seconds ≥ thirty_seconds
+|===
+
+==== Version Comparison Operators
+
+Two versions are compared with each other according to the _Semantic Versioning_ schema.
+
+|===
+|Operator | Name | Example
+
+m|<
+|Less Operator
+m|'1.0.0'?version < .version
+
+m|+<=+
+|Less Equals Operator
+m|'1.0.0'?version +<=+ .version
+
+m|≤
+|Unicode Less Equals Operator
+m|'1.0.0'?version ≤ .version
+
+m|>
+|Greater Operator
+m|'1.0.0'?version > .version
+
+m|>=
+|Greater Equals Operator
+m|'1.0.0'?version >= .version
+
+m|≥
+|Unicode Greater Equals Operator
+m|'1.0.0'?version ≥ .version
+|===
+
+=== Multiplicative Operators
+
+NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+
+|===
+|Operator |Name |Example
+
+m|*
+|Multiplication Operator
+m|x * 2
+
+m|×
+|Unicode Multiplication Operator
+m|x × 2
+
+m|/
+|Division Operator
+m|x / 3
+
+m|÷
+|Unicode Division Operator
+m|x ÷ 3
+
+m|%
+|Remainder Operator
+m|x % 4
+
+m|*
+|String Repeat Operator (since 2.2.0)
+m|"▲▼" * 3
+
+m|×
+|Unicode String Repeat Operator (since 2.2.0)
+m|"▲▼" × 3
+|===
+
+=== Additive Operators
+
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+In addition to the additive operators for the numeric types and the string concatenation, there are some overloaded operators for date and period.
+
+|===
+|Operator | Name |Example | Description
+
+m|+
+|String Concatenation Operator
+m|'x' + ' ' + 'y'
+|
+
+m|~
+|String Concatenation Operator (since 2.0.0)
+m|'x' ~ 'y'
+|This operator concatenates to String values with a whitespace character as separator.
+
+m|+
+|Numerical Addition Operator
+m|x + 3
+|
+
+m|-
+|Numerical Subtraction Operator
+m|x - 4
+|
+
+m|+
+|Temporal Addition Operator
+m|date + period
+|add the period to the given date. This operation is not a commutativity. (experimental)
+
+m|-
+|Temporal Subtraction Operator
+m|date - period
+|subtract the period from the given date. This operation is not a commutativity. (experimental)
+
+m|+
+|Temporal Addition Operator
+m|date + 3
+|add the amount of days to the given date. This operation is not a commutativity. (experimental)
+
+m|-
+|Temporal Subtraction Operator
+m|date - 7
+|subtract the amount of days from the given date. This operation is not a commutativity. (experimental)
+
+m|+
+|Period Addition Operator (since 1.7.2)
+m|period + period
+|add the period to the given period.
+
+m|-
+|Period Subtraction Operator (since 1.7.2)
+m|period - period
+|subtract the period from the given period.
+
+m|+
+|Period Addition Operator (since 1.7.2)
+m|period + 3
+|add the amount of days to the given period. This operation is not a commutativity.
+
+m|-
+|Period Subtraction Operator (since 1.7.2)
+m|period - 7
+|subtract the amount of days from the given period. This operation is not a commutativity.
+
+m|+
+|Year Addition Operator (since 1.7.2)
+m|year + 3
+|add the amount of years to the given year. This operation is not a commutativity.
+
+m|-
+|Year Subtraction Operator (since 1.7.2)
+m|year - 7
+|subtract the amount of years from the given year. This operation is not a commutativity.
+
+m|+
+|List Concatenation Operator (since 1.7.2)
+m|list + list
+|Concatenate the lists to a new list.
+
+m|-
+|List Difference Operator (since 2.2.0)
+m|list - list
+|Creates a list with all elements of the first list not contained in the second list.
+|===
+
+=== Negation
+
+|===
+|Operator | Description |Example
+
+m|!
+|Logical Not Operator
+m|!false
+
+m|¬
+|Unicode Logical Not Operator
+m|¬true
+
+|===
+
+=== Sign Operators
+
+
+Since _FreshMarker 2.3.0_ model types can _overload_ these operators.
+In addition to the sign operators for the numeric types there are overloaded operators for duration and period. It should be noted that only the unary minus operator can actually be overloaded and the unary plus operator is always ignored.
+
+==== Numerical Sign Operators
+
+|===
+|Operator | Name |Example
+
+m|+
+|Unary Plus Operator
+m|+4
+
+m|-
+|Unary Minus Operator
+m|-4
+|===
+
+==== Duration/Period Sign Operators
+
+|===
+|Operator | Name |Example
+
+m|+
+|Unary Plus Operator
+m|+duration
+
+m|-
+|Unary Minus Operator
+m|-period
+|===
+
+=== Default Operator
+
+Returns its parameter if the operant is `NULL`. If the argument is missing, the default operator returns an empty string.
+
+|===
+|Operator | Description |Example
+
+m|!
+|Default Operator
+m|value!
+
+m|!
+|Default Operator with parameter
+m|value!"default"
+
+m|!!
+|Default Operator
+m|value!!
+
+m|!!
+|Default Operator with parameter
+m|value!!"default"
+
+|===
+
+=== Elvis Operator (since 2.0.0)
+
+Returns its parameter if the operant is `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|?:
+|Elvis Operator
+m|value?:"default"
+
+|===
+
+=== Dot Key Operator
+
+The dot key operator returns the attribute with the specified name from a hash type or a structured primitive.
+
+=== Dynamic Key Operator
+
+The _Dynamic Key Operator_ is used to access information from different data types.
+The operator can be used in three different ways. These are as an _Index_, _Hash_ and slice operator.
+What these operators have in common is that the expression for the operator is written in square brackets.
+
+==== Index
+
+The _Index Operator_ addresses an element in a structure via an integer index.
+The index can be an arbitrarily complex expression that returns an integer value.
+The operator can be used to access elements in sequences, strings and ranges.
+
+[cols="1,2,2"]
+|===
+|Operator | Description | Example
+
+m|[_index_]
+|String Index Operator
+m|'gonzo'[3] // 'z'
+
+m|[_index_]
+|Sequence Index Operator
+m|['A', 'B', 'C'][1] // 'B'
+
+m|[_index_]
+|Range Index Operator
+m|(23..42)[5] // 28
+
+|===
+
+==== Hash
+
+The _Hash Operator_ uses a string for addressing.
+This means that it works in the same way as the _Dot Key Operator_.
+The difference is that the _Hash Operator_ can use any expressions that return a string value, while the _Dot Key Operator_ can only use a fixed identifier.
+The operator can be used to access elements in hashes and structured primitives.
+
+[cols="1,2,2"]
+|===
+|Operator | Description | Example
+
+m|[_hash_]
+|Hash Operator for _Hashes_ (Maps, Beans and Records)
+m|bean['name']
+
+m|[_hash_]
+|Hash Operator for _Structured Primitives_
+m|version['minor']
+|===
+
+==== Slice
+
+The Slices Operator uses a range for adressing.
+The operator can be used to access elements in sequences, ranges, numbers and strings.
+Slices are dealt with in detail in the <<slices-model,Slices>> section.
+
+=== Built-In Operator
+
+The Built-In operator calls type-specific functions, so-called Built-Is, on an expression. If the specified operator does not exist for the specific type, processing is terminated with an error.
+
+The built-in operator is available in the default `?` and a null-safe variant `?!`.
+
+With the null-safe variant, the processing of `NULL` and `Optional` values is less restrictive. Instead of an error, the built-ins return their input value here.
+
+This processing can also be configured for the default variant using a <<_builtin_handling_features_since_1_7_4, Feature>>.
+
+|===
+|Operator | Description |Example
+
+m|?
+|Built-In Operator
+m|?upper_case
+
+m|?!
+|Null-safe Built-In Operator
+m|?!lower_case
+
+|===
+
+==== Existence Operator
+
+Returns `true` if the operant is not `NULL`.
+
+|===
+|Operator | Description |Example
+
+m|??
+|Existence Operator
+m|value??
+
+m|∃
+|Unicode Existence Operator
+m|value∃
+
+|===

@@ -1,0 +1,216 @@
+=== Year Built-Ins
+
+The Built-Ins in the examples operate on the value `2025`.
+
+==== `c` (computer language) Built-In (since 1.7.0)
+
+This built-in returns a year string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|2025
+|string
+|===
+
+==== `year` Built-In (since 1.7.0)
+
+This built-in returns the year of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?year}
+m|2025
+|year
+|===
+
+==== `is_leap` Built-In (since 1.7.0)
+
+This built-in returns true if the year is a leap year.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?is_leap}
+m|false
+|boolean
+|===
+
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?easter}
+m|2025-04-20
+|date
+|===
+
+
+==== `supports` Built-In (since 1.8.2)
+
+This built-in returns `true` for the supported temporal units, `false` otherwise. From the currently available temporal units only `YEARS` is supported.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?supports('YEARS'}
+m|true
+|boolean
+
+m|${temporal?supports('MONTHS'}
+m|false
+|boolean
+
+m|${temporal?supports('DAYS'}
+m|false
+|boolean
+|===
+
+=== YearMonth Built-Ins
+
+The Built-Ins in the examples operate on the value `2025-08`.
+
+==== `c` (computer language) Built-In (since 1.7.0)
+
+This built-in returns a year string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|2025-08
+|string
+|===
+
+==== `year` Built-In (since 1.7.0)
+
+This built-in returns the year of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?year}
+m|2025
+|year
+|===
+
+==== `month` Built-In (since 1.7.0)
+
+This built-in returns the month of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|AUGUST
+|month
+|===
+
+==== `is_leap` Built-In (since 1.7.0)
+
+This built-in returns true if the year is a leap year.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?is_leap}
+m|false
+|boolean
+|===
+
+==== `easter` Built-In (since 1.8.0)
+
+This built-in returns the date of Easter sunday in the year of the value as a date.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?easter}
+m|2025-04-20
+|date
+|===
+
+==== `supports` Built-In (since 1.8.2)
+
+This built-in returns `true` for the supported temporal units, `false` otherwise. From the currently available temporal units only `YEARS` and `MONTHS` are supported.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?supports('YEARS'}
+m|true
+|boolean
+
+m|${temporal?supports('MONTHS'}
+m|true
+|boolean
+
+m|${temporal?supports('DAYS'}
+m|false
+|boolean
+|===
+
+=== MonthDay Built-Ins
+
+The Built-Ins in the examples operate on the value `08-24`.
+
+==== `c` (computer language) Built-In (since 1.7.0)
+
+This built-in returns a year string of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?c}
+m|08-24
+|string
+|===
+
+==== `month` Built-In (since 1.7.0)
+
+This built-in returns the month of the value.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?months}
+m|AUGUST
+|month
+|===
+
+==== `day` Built-In (since 1.7.0)
+
+This built-in returns the day of month of the value as a number
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?day}
+m|24
+|number
+|===
+
+==== `supports` Built-In (since 1.8.2)
+
+This built-in returns `true` for the supported temporal unit, `false` otherwise. For this type only `MONTHS` and `DAYS` are supported.
+
+|===
+| Interpolation | Output | Type
+
+m|${temporal?supports('YEAR'}
+m|false
+|boolean
+
+m|${temporal?supports('MONTH'}
+m|true
+|boolean
+
+m|${temporal?supports('DAYS'}
+m|false
+|true
+|===
