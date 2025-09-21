@@ -22,6 +22,7 @@ public record TemplateRelational(TokenType type, TemplateObject left, TemplateOb
             case GT -> new TemplateRelational(TokenType.LTE, left, right);
             case LTE -> new TemplateRelational(TokenType.GT, left, right);
             case GTE, UNICODE_GTE -> new TemplateRelational(TokenType.LT, left, right);
+            case COMPARE -> new TemplateRelational(TokenType.COMPARE, right, left);
             default -> throw new ProcessException("unsupported relation: " + type);
         };
     }

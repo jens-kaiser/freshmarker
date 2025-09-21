@@ -124,8 +124,9 @@ class ExpressionTest {
             "!(second > first), false",
             "!(first <= first), false",
             "!(second >= first), false",
+            "!(second <=> first), -1",
     })
-    void negatedRelation(String expression, boolean result) throws ParseException {
+    void negatedRelation(String expression, String result) throws ParseException {
         Template template = builder.getTemplate("test", "test: ${(" + expression + ")?c}");
         assertEquals("test: " + result, template.process(Map.of("first", 1, "second", 2)));
     }
