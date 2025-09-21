@@ -1,6 +1,5 @@
 package org.freshmarker.core.model.temporal;
 
-import ftl.Token;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateRelational.Relation;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;

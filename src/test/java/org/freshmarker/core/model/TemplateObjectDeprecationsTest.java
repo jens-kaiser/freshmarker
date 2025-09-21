@@ -5,7 +5,6 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateOperation.Operator;
 import org.freshmarker.core.model.TemplateRelational.Relation;
 import org.freshmarker.core.model.primitive.TemplateString;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
