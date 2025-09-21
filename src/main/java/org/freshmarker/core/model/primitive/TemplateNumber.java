@@ -1,8 +1,9 @@
 package org.freshmarker.core.model.primitive;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateOperation.Operator;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -576,20 +577,20 @@ public class TemplateNumber extends TemplatePrimitive<Number> {
     }
 
     @Override
-    public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+    public TemplateObject operation(Operator operator, TemplateObject operand, ProcessContext context) {
         TemplateNumber rightNumber = operand.evaluate(context, TemplateNumber.class);
         return switch (operator) {
             case PLUS -> add(rightNumber);
             case MINUS -> subtract(rightNumber);
-            case TIMES -> multiply(rightNumber);
+            case MULTIPLY -> multiply(rightNumber);
             case DIVIDE -> divide(rightNumber);
-            case PERCENT -> modulo(rightNumber);
+            case MODULO -> modulo(rightNumber);
             default -> super.operation(operator, operand, context);
         };
     }
 
     @Override
-    public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+    public TemplatePrimitive<?> relational(Relation operator, TemplatePrimitive<?> operand, ProcessContext context) {
         TemplateNumber rightValue = (TemplateNumber)operand;
         return compareValues(operator, compare(rightValue).sign().asInt());
     }

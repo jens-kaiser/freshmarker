@@ -5,9 +5,10 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.WrongTypeException;
+import org.freshmarker.core.model.TemplateOperation.Operator;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 
 public interface TemplateObject {
-
     default boolean isPrimitive() {
         return false;
     }
@@ -35,8 +36,30 @@ public interface TemplateObject {
         throw new ProcessException("unsupported operation: " + operator);
     }
 
+    default TemplateObject operation(Operator operator, TemplateObject operand, ProcessContext context) {
+        return switch (operator) {
+            case PLUS -> operation(TokenType.PLUS, operand, context);
+            case MINUS -> operation(TokenType.MINUS, operand, context);
+            case MULTIPLY -> operation(TokenType.TIMES, operand, context);
+            case DIVIDE -> operation(TokenType.DIVIDE, operand, context);
+            case MODULO -> operation(TokenType.PERCENT, operand, context);
+            case CONCAT -> operation(TokenType.CONCAT, operand, context);
+        };
+    }
+
+    @Deprecated
     default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
         throw new ProcessException("unsupported operation: " + operator);
+    }
+
+    default boolean relation(Relation operator, TemplateObject operand, ProcessContext context) {
+        return switch (operator) {
+            case LT -> relation(TokenType.LT, operand, context);
+            case GT -> relation(TokenType.GT, operand, context);
+            case LTE -> relation(TokenType.LTE, operand, context);
+            case GTE -> relation(TokenType.GTE, operand, context);
+            case COMPARE -> relation(TokenType.COMPARE, operand, context);
+        };
     }
 
     default boolean equality(TemplateObject operand, ProcessContext context) {

@@ -1,11 +1,13 @@
 package org.freshmarker.core.model;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 
-public record TemplateOperation(TokenType op, TemplateObject left, TemplateObject right) implements TemplateExpression {
+public record TemplateOperation(Operator op, TemplateObject left, TemplateObject right) implements TemplateExpression {
+    public enum Operator {
+        PLUS, MINUS, MULTIPLY, DIVIDE, MODULO,  CONCAT
+    }
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext processContext) {
