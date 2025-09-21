@@ -73,7 +73,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
         return equals(operand);
     }
 
-    @Deprecated
+    @Deprecated(since = "2.3.0", forRemoval = true)
     public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
         return TemplateBoolean.from(relation(RELATIONS.get(operator), operand, context));
     }
@@ -82,7 +82,7 @@ public class TemplatePrimitive<P> implements TemplateObject {
         return TemplateBoolean.from(relation(operator, operand, context));
     }
 
-    @Deprecated
+    @Deprecated(since = "2.3.0", forRemoval = true)
     protected TemplatePrimitive<?> compareValues(TokenType operator, int compare) {
         return compareValues(RELATIONS.get(operator), compare);
     }

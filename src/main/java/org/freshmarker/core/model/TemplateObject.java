@@ -32,7 +32,7 @@ public interface TemplateObject {
         return getClass();
     }
 
-    @Deprecated
+    @Deprecated(since = "2.3.0", forRemoval = true)
     default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
         return switch (operator) {
             case PLUS -> operation(Operator.PLUS, operand, context);
@@ -49,7 +49,7 @@ public interface TemplateObject {
         throw new ProcessException("unsupported operation: " + operator);
     }
 
-    @Deprecated
+    @Deprecated(since = "2.3.0", forRemoval = true)
     default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
         return switch (operator) {
             case LT -> relation(Relation.LT, operand, context);
