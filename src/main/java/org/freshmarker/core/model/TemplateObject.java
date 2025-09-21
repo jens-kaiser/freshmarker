@@ -32,6 +32,7 @@ public interface TemplateObject {
         return getClass();
     }
 
+    @Deprecated
     default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
         throw new ProcessException("unsupported operation: " + operator);
     }
