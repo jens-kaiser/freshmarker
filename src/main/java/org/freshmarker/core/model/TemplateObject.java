@@ -34,37 +34,39 @@ public interface TemplateObject {
 
     @Deprecated
     default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        throw new ProcessException("unsupported operation: " + operator);
+        return switch (operator) {
+            case PLUS -> operation(Operator.PLUS, operand, context);
+            case MINUS -> operation(Operator.MINUS, operand, context);
+            case TIMES -> operation(Operator.MULTIPLY, operand, context);
+            case DIVIDE -> operation(Operator.DIVIDE, operand, context);
+            case PERCENT -> operation(Operator.MODULO, operand, context);
+            case CONCAT -> operation(Operator.CONCAT, operand, context);
+            default -> throw new ProcessException("unsupported operation: " + operator);
+        };
     }
 
     default TemplateObject operation(Operator operator, TemplateObject operand, ProcessContext context) {
-        return switch (operator) {
-            case PLUS -> operation(TokenType.PLUS, operand, context);
-            case MINUS -> operation(TokenType.MINUS, operand, context);
-            case MULTIPLY -> operation(TokenType.TIMES, operand, context);
-            case DIVIDE -> operation(TokenType.DIVIDE, operand, context);
-            case MODULO -> operation(TokenType.PERCENT, operand, context);
-            case CONCAT -> operation(TokenType.CONCAT, operand, context);
-        };
+        throw new ProcessException("unsupported operation: " + operator);
     }
 
     @Deprecated
     default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        throw new ProcessException("unsupported operation: " + operator);
-    }
-
-    default boolean relation(Relation operator, TemplateObject operand, ProcessContext context) {
         return switch (operator) {
-            case LT -> relation(TokenType.LT, operand, context);
-            case GT -> relation(TokenType.GT, operand, context);
-            case LTE -> relation(TokenType.LTE, operand, context);
-            case GTE -> relation(TokenType.GTE, operand, context);
-            case COMPARE -> relation(TokenType.COMPARE, operand, context);
+            case LT -> relation(Relation.LT, operand, context);
+            case GT -> relation(Relation.GT, operand, context);
+            case LTE -> relation(Relation.LTE, operand, context);
+            case GTE, UNICODE_GTE -> relation(Relation.GTE, operand, context);
+            case COMPARE -> relation(Relation.COMPARE, operand, context);
+            default -> throw new ProcessException("unsupported relation: " + operator);
         };
     }
 
+    default boolean relation(Relation operator, TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported relation: " + operator);
+    }
+
     default boolean equality(TemplateObject operand, ProcessContext context) {
-        throw new ProcessException("unsupported operation: " + TokenType.EQUALS);
+        throw new ProcessException("unsupported equality: " + TokenType.EQUALS);
     }
 
     default TemplateObject negate() {

@@ -330,7 +330,7 @@ class ExpressionTest {
     @Test
     void invalidRelation() {
         ParsingException exception = assertThrows(ParsingException.class, () -> builder.getTemplate("test", "${true < false}"));
-        assertEquals("unsupported operation: LT at test:1:3 'true < false'", exception.getMessage());
+        assertEquals("unsupported relation: LT at test:1:3 'true < false'", exception.getMessage());
     }
 
     @ParameterizedTest
