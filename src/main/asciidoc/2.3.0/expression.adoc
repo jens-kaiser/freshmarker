@@ -1,6 +1,6 @@
 == Expressions
 
-Expressions are an important part of template evaluation. They are evaluated within _Conditional Directives_ and _Interpolations_.
+Expressions are an important part of template evaluation. They are evaluated within _Directives_ and _Interpolations_.
 
 The expressions are based on _Java_ expressions, but have some differences. The majority of the deviations result from the basic implementation decisions for _FreshMarker_ as a template engine.
 
@@ -40,10 +40,6 @@ WARNING: The parser throws an exception if an integer numeric literal exceeds th
 The type `Double` supports numeric literals in the value range of `java.lang.Double`. Only numeric literals with a decimal point are interpreted as double, the scientific notation is not supported.
 
 ==== String Literals
-
-TBD
-
-==== Range Literals
 
 TBD
 
@@ -322,7 +318,7 @@ m|'1.0.0'?version ≥ .version
 
 === Multiplicative Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
 
 |===
 |Operator |Name |Example
@@ -442,7 +438,8 @@ m|list + list
 m|-
 |List Difference Operator (since 2.2.0)
 m|list - list
-|Creates a list with all elements of the first list not contained in the second list.
+|Creates a list with all elements of the first list not contained in the second list. Lists must be provided as variables. Sequence literals are not yet usable.
+
 |===
 
 === Negation
@@ -539,7 +536,7 @@ The dot key operator returns the attribute with the specified name from a hash t
 === Dynamic Key Operator
 
 The _Dynamic Key Operator_ is used to access information from different data types.
-The operator can be used in three different ways. These are as an _Index_, _Hash_ and slice operator.
+The operator can be used in three different ways. These are as an _Index_, _Hash_ and _Slice_ operator.
 What these operators have in common is that the expression for the operator is written in square brackets.
 
 ==== Index
@@ -594,7 +591,7 @@ Slices are dealt with in detail in the <<slices-model,Slices>> section.
 
 === Built-In Operator
 
-The Built-In operator calls type-specific functions, so-called Built-Is, on an expression. If the specified operator does not exist for the specific type, processing is terminated with an error.
+The Built-In operator calls type-specific functions, so-called Built-Ins, on an expression. If the specified operator does not exist for the specific type, processing is terminated with an error.
 
 The built-in operator is available in the default `?` and a null-safe variant `?!`.
 
