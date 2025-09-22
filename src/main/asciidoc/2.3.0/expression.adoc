@@ -318,7 +318,7 @@ m|'1.0.0'?version ≥ .version
 
 === Multiplicative Operators
 
-NOTE: Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
+Since _FreshMarker 1.6.3_ model types can _overload_ these operators.
 
 |===
 |Operator |Name |Example
@@ -438,7 +438,8 @@ m|list + list
 m|-
 |List Difference Operator (since 2.2.0)
 m|list - list
-|Creates a list with all elements of the first list not contained in the second list.
+|Creates a list with all elements of the first list not contained in the second list. Lists must be provided as variables. Sequence literals are not yet usable.
+
 |===
 
 === Negation
