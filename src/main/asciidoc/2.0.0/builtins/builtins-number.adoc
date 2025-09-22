@@ -41,7 +41,7 @@ This built-in format the number by the given format parameter and the current lo
 
 m|${3.14159?format("%.2f")}
 m|Locale.GERMANY
-m|3.14
+m|3,14
 
 m|${3.14159?format("%.4f")}
 m|Locale.US
