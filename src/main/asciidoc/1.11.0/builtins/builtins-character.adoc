@@ -10,7 +10,7 @@ This built-in returns `true` if the character is a whitespace and `false` otherw
 
 ==== `is_digit` Built-In
 
-This built-in returns `true` if the character is a digit and `false` otherwise. See `java.lang.Character#isDigit`).
+This built-in returns `true` if the character is a digit and `false` otherwise. (see `java.lang.Character#isDigit`).
 
 ==== `is_letter` Built-In
 
