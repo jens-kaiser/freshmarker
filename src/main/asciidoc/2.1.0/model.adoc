@@ -165,7 +165,6 @@ Ranges differ from other types because they only exist as literals in the templa
 In principle, a right-unlimited range has no upper limit and can therefore only be used in a few places.
 
 The main area of application is slicing, where a part is cut out of a list, `String` or range.
-3
 A right unlimited range has the form `_x_..` where `_x_` can be any numerical expression.
 
 .Example right-unlimited ranges
@@ -205,7 +204,7 @@ If the size of the range is positive, then the upper limit is greater than the l
 1..\*10  // lower bound 1 and upper bound 10
 5..*5   // lower bound 5 and upper bound 9
 4..*-5  // lower bound 4 and upper bound 0
-a..*b   // lower bound in variable _a_ and an range size in variable _c_
+a..*b   // lower bound in variable _a_ and an range size in variable _b_
 ----
 
 [#slices-model]
