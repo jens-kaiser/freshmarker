@@ -2,6 +2,7 @@ package org.freshmarker.core.ftl;
 
 import ftl.FreshMarkerParser;
 import ftl.ast.ParameterList;
+import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParameterListBuilderTest {
 
-    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder(new InterpolationBuilder(null, null, new TemplateDictionary()));
+    private static final ParameterListBuilder PARAMETER_LIST_BUILDER = new ParameterListBuilder(new InterpolationBuilder(new TemplateFeatures(), null, new TemplateDictionary()));
 
     @Test
     void emptyParameterList() {
