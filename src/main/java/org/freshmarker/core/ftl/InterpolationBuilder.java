@@ -117,6 +117,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         this.templateContext = templateContext;
         this.dictionary = dictionary;
         argsListBuilder = new PositionalArgsListBuilder(this);
+        withCharacterLiteral = featureSet.isEnabled(SystemFeature.CHARACTER_LITERAL);
     }
 
     private record TemplateObjectAndNode(TemplateObject templateObject, String node) { }

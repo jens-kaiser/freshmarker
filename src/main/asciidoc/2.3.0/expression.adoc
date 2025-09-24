@@ -41,10 +41,15 @@ The type `Double` supports numeric literals in the value range of `java.lang.Dou
 
 ==== String Literals
 
+The type `String` supports string literals directly, by enclosing the text in double quotation marks, e.g.: “example text” or in single quotation marks, e.g. ‘example text’. Both forms are equivalent.
 
-==== Character Literals
+==== Character Literals (since 2.3.0)
 
-See <<System Features (since 2.0.0), System Features>>.
+The type `Character` supports character literals directly, by enclosing the character in single quotation marks, e.g. ‘A’.
+
+No distinction can be made between character literals and string literals with only a single character. In order for character literals to be recognized, this must be activated via a feature flag.
+
+(See <<System Features (since 2.0.0), System Features>>).
 
 ==== Sequence Literals
 

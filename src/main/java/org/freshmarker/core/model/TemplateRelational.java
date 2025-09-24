@@ -44,4 +44,3 @@ public record TemplateRelational(Relation type, TemplateObject left, TemplateObj
         return new TemplateRelational(type, leftObject, rightObject);
     }
 }
-
