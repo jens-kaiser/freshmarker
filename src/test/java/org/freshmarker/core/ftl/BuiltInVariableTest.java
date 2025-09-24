@@ -7,6 +7,7 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -117,9 +118,9 @@ class BuiltInVariableTest {
     }
 
     @Test
-    void systemEnvironment(TemplateBuilder templateBuilder) {Template template = templateBuilder.getTemplate("test", "${.env['java.version']}");
-        assertEquals(System.getProperties().getProperty("java.version"), template.process(Map.of()));
-        System.err.println(System.getProperties().entrySet().stream().map(e -> e.getKey() + "->" + e.getValue()).collect(Collectors.joining("\n")));
-        System.err.println(System.getenv().entrySet().stream().map(e -> e.getKey() + "->" + e.getValue()).collect(Collectors.joining("\n")));
+    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
+    void systemEnvironment(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "${.env['CI_PROJECT_VISIBILITY']}");
+        assertEquals("public", template.process(Map.of()));
     }
 }
