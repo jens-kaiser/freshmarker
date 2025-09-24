@@ -13,7 +13,7 @@ Variables are assigned values within the template via the _Var_ and _Set Directi
 
 _FreshMarker_ knows literals for some basic data types. These literals are interpreted by _FreshMarker_ as constants.
 
-The data types `Null`, `Boolean`, `Long`, `Integer`, `Double`, `String`, `Range`, `Sequence` and `Hash` support literals.
+The data types `Null`, `Boolean`, `Long`, `Integer`, `Double`, `String`, `Character`, `Range`, `Sequence` and `Hash` support literals.
 
 ==== Null Literal
 
@@ -41,7 +41,10 @@ The type `Double` supports numeric literals in the value range of `java.lang.Dou
 
 ==== String Literals
 
-TBD
+
+==== Character Literals
+
+See <<System Features (since 2.0.0), System Features>>.
 
 ==== Sequence Literals
 

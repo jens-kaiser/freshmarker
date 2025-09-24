@@ -97,6 +97,11 @@ These features are controlled by constants in the `SystemFeature` class.
 | *PARTIAL_EXPRESSION_REDUCTION*
 | Feature that enables partial expression reduction in interpolations (since 2.2.0, experimental).
 | `false`
+
+| *CHARACTER_LITERALS*
+| Feature that enables Character literals. String literals with single quotes and length one become character literals. (since 2.3.0)
+| `false`
+
 |===
 
 .Example with locale sensitive string compare.

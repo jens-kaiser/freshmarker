@@ -39,7 +39,17 @@ public enum SystemFeature implements TemplateFeature {
      *<p>
      * The feature is disabled by default.
      */
-    COLLECTION_AS_SEQUENCE;
+    COLLECTION_AS_SEQUENCE,
+
+    /**
+     * Feature that enables Character literals.
+     * String literals with single quotes and length one become character literals.
+     *<p>
+     * The default value is 'false', meaning that no Character literals are available
+     *<p>
+     * The feature is disabled by default.
+     */
+    CHARACTER_LITERAL;
 
     @Override
     public boolean isEnabledByDefault() {
