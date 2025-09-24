@@ -1,6 +1,7 @@
 package org.freshmarker.core;
 
 import org.freshmarker.api.extension.BuiltInVariable;
+import org.freshmarker.core.model.TemplateEnvironment;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplateLocale;
 import org.freshmarker.core.model.primitive.TemplateString;
@@ -26,6 +27,7 @@ public class BuiltInVariableProvider {
             case "country" -> new TemplateString(context.getLocale().getCountry());
             case "lang", "language" -> new TemplateString(context.getLocale().getLanguage());
             case "version" -> new TemplateVersion(getClass().getPackage().getImplementationVersion());
+            case "env" -> (TemplateEnvironment)context.getStore("env").computeIfAbsent("env", k -> new TemplateEnvironment());
             default -> handleRegisteredProviders(name, context);
         };
     }

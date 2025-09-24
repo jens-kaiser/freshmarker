@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -107,5 +108,20 @@ class BuiltInVariableTest {
         Template template = templateBuilder.getTemplate("test", "${'1.6.3'?version.micro}");
         Map<String, Object> dataModel = Map.of();
         assertThrows(ProcessException.class, () -> template.process(dataModel));
+    }
+
+    @Test
+    void systemProperties(TemplateBuilder templateBuilder) {
+        Template template = templateBuilder.getTemplate("test", "${.env['java.version']}");
+        assertEquals(System.getProperties().getProperty("java.version"), template.process(Map.of()));
+    }
+
+    @Test
+    void systemEnvironment(TemplateBuilder templateBuilder) {
+        System.getenv().put("TEST", "test");
+        Template template = templateBuilder.getTemplate("test", "${.env['java.version']}");
+        assertEquals(System.getProperties().getProperty("java.version"), template.process(Map.of()));
+        System.err.println(System.getProperties().entrySet().stream().map(e -> e.getKey() + "->" + e.getValue()).collect(Collectors.joining("\n")));
+        System.err.println(System.getenv().entrySet().stream().map(e -> e.getKey() + "->" + e.getValue()).collect(Collectors.joining("\n")));
     }
 }
