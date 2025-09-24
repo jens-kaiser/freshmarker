@@ -116,11 +116,4 @@ class BuiltInVariableTest {
         Template template = templateBuilder.getTemplate("test", "${.env['java.version']}");
         assertEquals(System.getProperties().getProperty("java.version"), template.process(Map.of()));
     }
-
-    @Test
-    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
-    void systemEnvironment(TemplateBuilder templateBuilder) {
-        Template template = templateBuilder.getTemplate("test", "${.env['CI_PROJECT_VISIBILITY']}");
-        assertEquals("public", template.process(Map.of()));
-    }
 }

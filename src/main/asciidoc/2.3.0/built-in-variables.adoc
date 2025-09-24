@@ -31,6 +31,11 @@ m|.version
 m|${version.major}
 |2
 
+m|.env
+|The `.env` built-in variable of type `TemplateEnvironment`provides access to the Java system properties and the environment variables.
+m|${.env['java.version]}
+|21.0.8
+
 |===
 
 === Random Built-In Variable
