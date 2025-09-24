@@ -47,9 +47,8 @@ The type `String` supports string literals directly, by enclosing the text in do
 
 The type `Character` supports character literals directly, by enclosing the character in single quotation marks, e.g. ‘A’.
 
-No distinction can be made between character literals and string literals with only a single character. In order for character literals to be recognized, this must be activated via a feature flag.
-
-(See <<System Features (since 2.0.0), System Features>>).
+No distinction can be made between character literals and string literals with only a single character.
+In order for character literals to be recognized, this must be activated via a feature flag. (see <<System Features (since 2.0.0), System Features>>).
 
 ==== Sequence Literals
 
