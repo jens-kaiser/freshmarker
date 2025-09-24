@@ -49,6 +49,7 @@ import org.freshmarker.core.model.TemplateDynamicKey;
 import org.freshmarker.core.model.TemplateEquality;
 import org.freshmarker.core.model.TemplateExists;
 import org.freshmarker.core.model.TemplateJunction;
+import org.freshmarker.core.model.TemplateJunction.Junctor;
 import org.freshmarker.core.model.TemplateLengthLimitedRange;
 import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateMethodCall;
@@ -56,8 +57,10 @@ import org.freshmarker.core.model.TemplateNot;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateOperation;
+import org.freshmarker.core.model.TemplateOperation.Operator;
 import org.freshmarker.core.model.TemplateRange;
 import org.freshmarker.core.model.TemplateRelational;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 import org.freshmarker.core.model.TemplateRightLimitedRange;
 import org.freshmarker.core.model.TemplateRightUnlimitedRange;
 import org.freshmarker.core.model.TemplateSign;
@@ -74,12 +77,31 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
 public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateObject> {
 
     private static final Logger logger = LoggerFactory.getLogger(InterpolationBuilder.class);
+
+    private static final Map<TokenType, Relation> RELATIONS = Map.of(
+            TokenType.LT, Relation.LT,
+            TokenType.GT, Relation.GT,
+            TokenType.LTE, Relation.LTE,
+            TokenType.GTE, Relation.GTE,
+            TokenType.UNICODE_GTE, Relation.GTE,
+            TokenType.COMPARE, Relation.COMPARE
+    );
+
+    private static final Map<TokenType, Operator> OPERATORS = Map.of(
+            TokenType.PLUS, Operator.PLUS,
+            TokenType.MINUS, Operator.MINUS,
+            TokenType.TIMES, Operator.MULTIPLY,
+            TokenType.DIVIDE, Operator.DIVIDE,
+            TokenType.PERCENT, Operator.MODULO,
+            TokenType.CONCAT, Operator.CONCAT
+    );
 
     private final PositionalArgsListBuilder argsListBuilder;
 
@@ -268,7 +290,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         for (int i = 1; i < expression.size(); i += 2) {
             Token token = (Token) expression.get(i);
             TemplateObject second = expression.get(i + 1).accept(this, null);
-            TemplateOperation operation = new TemplateOperation(token.getType(), result, second);
+            TemplateOperation operation = new TemplateOperation(OPERATORS.get(token.getType()), result, second);
             if (result.isPrimitive() && second.isPrimitive()) {
                 try {
                     result = operation.evaluateToObject(null);
@@ -307,7 +329,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         TokenType type = ((Token) expression.get(1)).getType();
-        TemplateRelational relational = new TemplateRelational(type, left, right);
+        TemplateRelational relational = new TemplateRelational(RELATIONS.get(type), left, right);
         try {
             if (left.isPrimitive() && right.isPrimitive()) {
                 return relational.evaluateToObject(null);
@@ -323,13 +345,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     @Override
     public TemplateObject visit(AndExpression expression, Object input) {
         return switch (((Token) expression.get(1)).getType()) {
-            case AND -> handleAnd(TokenType.AND, expression);
-            case AND2 -> handleAnd(TokenType.AND2, expression);
+            case AND -> handleAnd(TokenType.AND, expression, Junctor.AND);
+            case AND2 -> handleAnd(TokenType.AND2, expression, Junctor.AND2);
             default -> throw new IllegalArgumentException("invalid conjunction");
         };
     }
 
-    private TemplateObject handleAnd(TokenType type, AndExpression expression) {
+    private TemplateObject handleAnd(TokenType type, AndExpression expression, Junctor junctor) {
         TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         if (TemplateBoolean.TRUE.equals(right)) {
@@ -341,14 +363,14 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (TemplateBoolean.FALSE.equals(left) && TemplateBoolean.FALSE.equals(right) || type == TokenType.AND2 && TemplateBoolean.FALSE.equals(left)) {
             return TemplateBoolean.FALSE;
         }
-        return new TemplateJunction(type, left, right);
+        return new TemplateJunction(junctor, left, right);
     }
 
     @Override
     public TemplateObject visit(OrExpression expression, Object input) {
         return switch (((Token) expression.get(1)).getType()) {
-            case OR -> handleOr(TokenType.OR, expression);
-            case OR2 -> handleOr(TokenType.OR2, expression);
+            case OR -> handleOr(TokenType.OR, expression, Junctor.OR);
+            case OR2 -> handleOr(TokenType.OR2, expression, Junctor.OR2);
             case XOR -> handleXor(expression);
             default -> throw new IllegalArgumentException("invalid disjunction");
         };
@@ -360,10 +382,10 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (right instanceof TemplateBoolean r && left instanceof TemplateBoolean l) {
             return TemplateBoolean.from(l.getValue() ^ r.getValue());
         }
-        return new TemplateJunction(TokenType.XOR, left, right);
+        return new TemplateJunction(Junctor.XOR, left, right);
     }
 
-    private TemplateObject handleOr(TokenType type, OrExpression expression) {
+    private TemplateObject handleOr(TokenType type, OrExpression expression, Junctor junctor) {
         TemplateObject left = expression.getFirst().accept(this, null);
         TemplateObject right = expression.get(2).accept(this, null);
         if (TemplateBoolean.FALSE.equals(right)) {
@@ -375,7 +397,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         if (TemplateBoolean.TRUE.equals(left) && TemplateBoolean.TRUE.equals(right) || type == TokenType.OR2 && TemplateBoolean.TRUE.equals(left)) {
             return TemplateBoolean.TRUE;
         }
-        return new TemplateJunction(type, left, right);
+        return new TemplateJunction(junctor, left, right);
     }
 
     @Override

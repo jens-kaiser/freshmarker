@@ -5,10 +5,20 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateObjectVisitor;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class TemplatePrimitive<P> implements TemplateObject {
+    private static final Map<TokenType, Relation> RELATIONS = Map.of(
+            TokenType.LT, Relation.LT,
+            TokenType.GT, Relation.GT,
+            TokenType.LTE, Relation.LTE,
+            TokenType.GTE, Relation.GTE,
+            TokenType.UNICODE_GTE, Relation.GTE,
+            TokenType.COMPARE, Relation.COMPARE
+    );
 
     private final P value;
 
@@ -63,19 +73,29 @@ public class TemplatePrimitive<P> implements TemplateObject {
         return equals(operand);
     }
 
+    @Deprecated(since = "2.3.0", forRemoval = true)
     public TemplatePrimitive<?> relational(TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        return TemplateBoolean.from(relation(RELATIONS.get(operator), operand, context));
+    }
+
+    public TemplatePrimitive<?> relational(Relation operator, TemplatePrimitive<?> operand, ProcessContext context) {
         return TemplateBoolean.from(relation(operator, operand, context));
     }
 
+    @Deprecated(since = "2.3.0", forRemoval = true)
     protected TemplatePrimitive<?> compareValues(TokenType operator, int compare) {
-        if (TokenType.COMPARE == operator) {
+        return compareValues(RELATIONS.get(operator), compare);
+    }
+
+    protected TemplatePrimitive<?> compareValues(Relation operator, int compare) {
+        if (Relation.COMPARE == operator) {
             return TemplateNumber.of(Integer.signum(compare));
         }
         return TemplateBoolean.from(switch (operator) {
             case LT -> compare < 0;
             case GT -> compare > 0;
             case LTE -> compare <= 0;
-            case GTE, UNICODE_GTE -> compare >= 0;
+            case GTE -> compare >= 0;
             default -> throw new ProcessException("unsupported operation: " + operator);
         });
     }

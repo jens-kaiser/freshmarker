@@ -1,9 +1,10 @@
 package org.freshmarker.core.model.primitive;
-import ftl.Token;
+
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.DotHashAddressable;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 import org.freshmarker.core.model.version.Version;
 
 public class TemplateVersion extends TemplatePrimitive<Version> implements DotHashAddressable {
@@ -30,17 +31,17 @@ public class TemplateVersion extends TemplatePrimitive<Version> implements DotHa
     }
 
     @Override
-    public TemplatePrimitive<?> relational(Token.TokenType operator, TemplatePrimitive<?>  operand, ProcessContext context) {
-        TemplateVersion rightValue = (TemplateVersion)operand;
+    public TemplatePrimitive<?> relational(Relation operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        TemplateVersion rightValue = (TemplateVersion) operand;
         return compareValues(operator, getValue().compareTo(rightValue.getValue()));
     }
 
     public TemplateObject get(ProcessContext context, String name) {
-       return switch (name) {
-           case "major" -> TemplateNumber.of(getValue().major());
-           case "minor" -> TemplateNumber.of(getValue().minor());
-           case "patch" -> TemplateNumber.of(getValue().patch());
-           default -> throw new ProcessException("unknown attribute: " + name);
-       };
+        return switch (name) {
+            case "major" -> TemplateNumber.of(getValue().major());
+            case "minor" -> TemplateNumber.of(getValue().minor());
+            case "patch" -> TemplateNumber.of(getValue().patch());
+            default -> throw new ProcessException("unknown attribute: " + name);
+        };
     }
 }

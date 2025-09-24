@@ -1,12 +1,15 @@
 package org.freshmarker.core.model;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 
-public record TemplateJunction(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
+public record TemplateJunction(Junctor type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
+
+    public enum Junctor {
+        AND, AND2, OR, OR2, XOR
+    }
+
 
     @Override
     public TemplateBoolean evaluateToObject(ProcessContext context) {
@@ -17,7 +20,6 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
             case OR -> right.evaluate(context, TemplateBoolean.class).getValue() || leftValue.getValue();
             case OR2 -> leftValue.getValue() || right.evaluate(context, TemplateBoolean.class).getValue();
             case XOR -> leftValue.getValue() ^ right.evaluate(context, TemplateBoolean.class).getValue();
-            default -> throw new ProcessException("unsupported junction: " + type);
         });
     }
 
@@ -25,12 +27,11 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
     public TemplateBooleanExpression not() {
         TemplateObject newLeft = left instanceof TemplateBooleanExpression leftExpression ? leftExpression.not() : left;
         return switch (type) {
-            case AND -> new TemplateJunction(TokenType.OR, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);
-            case OR -> new TemplateJunction(TokenType.AND, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);
-            case AND2 -> new TemplateJunction(TokenType.OR2, newLeft, new TemplateNot(right));
-            case OR2 -> new TemplateJunction(TokenType.AND2, newLeft, new TemplateNot(right));
+            case AND -> new TemplateJunction(Junctor.OR, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);
+            case OR -> new TemplateJunction(Junctor.AND, newLeft, right instanceof TemplateBooleanExpression r ? r.not() : right);
+            case AND2 -> new TemplateJunction(Junctor.OR2, newLeft, new TemplateNot(right));
+            case OR2 -> new TemplateJunction(Junctor.AND2, newLeft, new TemplateNot(right));
             case XOR -> new TemplateNot(this);
-            default -> throw new ProcessException("unsupported junction: " + type);
         };
     }
 
@@ -48,7 +49,6 @@ public record TemplateJunction(TokenType type, TemplateObject left, TemplateObje
             case OR -> reduceOr(context, leftValue);
             case OR2 -> reduceOr2(context, leftValue);
             case XOR -> reduceXor(context, leftValue);
-            default -> throw new ProcessException("unsupported junction: " + type);
         };
     }
 
