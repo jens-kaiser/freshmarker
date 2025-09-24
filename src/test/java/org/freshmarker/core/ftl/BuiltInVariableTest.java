@@ -117,9 +117,7 @@ class BuiltInVariableTest {
     }
 
     @Test
-    void systemEnvironment(TemplateBuilder templateBuilder) {
-        System.getenv().put("TEST", "test");
-        Template template = templateBuilder.getTemplate("test", "${.env['java.version']}");
+    void systemEnvironment(TemplateBuilder templateBuilder) {Template template = templateBuilder.getTemplate("test", "${.env['java.version']}");
         assertEquals(System.getProperties().getProperty("java.version"), template.process(Map.of()));
         System.err.println(System.getProperties().entrySet().stream().map(e -> e.getKey() + "->" + e.getValue()).collect(Collectors.joining("\n")));
         System.err.println(System.getenv().entrySet().stream().map(e -> e.getKey() + "->" + e.getValue()).collect(Collectors.joining("\n")));
