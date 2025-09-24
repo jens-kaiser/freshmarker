@@ -1,10 +1,10 @@
 package org.freshmarker.core.model.temporal;
 
-import ftl.Token;
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateOperation.Operator;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
@@ -26,7 +26,7 @@ public class TemplateYear extends TemplatePrimitive<Year> {
     }
 
     @Override
-    public TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+    public TemplateObject operation(Operator operator, TemplateObject operand, ProcessContext context) {
         TemplateObject duration = operand.evaluateToObject(context);
         return switch (operator) {
             case PLUS -> new TemplateYear(getValue().plus(getValue(duration)));
@@ -46,8 +46,8 @@ public class TemplateYear extends TemplatePrimitive<Year> {
     }
 
     @Override
-    public TemplatePrimitive<?> relational(Token.TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
-        TemplateYear rightValue = (TemplateYear)operand;
+    public TemplatePrimitive<?> relational(Relation operator, TemplatePrimitive<?> operand, ProcessContext context) {
+        TemplateYear rightValue = (TemplateYear) operand;
         return compareValues(operator, getValue().compareTo(rightValue.getValue()));
     }
 }

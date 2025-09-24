@@ -5,9 +5,10 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.WrongTypeException;
+import org.freshmarker.core.model.TemplateOperation.Operator;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 
 public interface TemplateObject {
-
     default boolean isPrimitive() {
         return false;
     }
@@ -31,16 +32,41 @@ public interface TemplateObject {
         return getClass();
     }
 
+    @Deprecated(since = "2.3.0", forRemoval = true)
     default TemplateObject operation(TokenType operator, TemplateObject operand, ProcessContext context) {
+        return switch (operator) {
+            case PLUS -> operation(Operator.PLUS, operand, context);
+            case MINUS -> operation(Operator.MINUS, operand, context);
+            case TIMES -> operation(Operator.MULTIPLY, operand, context);
+            case DIVIDE -> operation(Operator.DIVIDE, operand, context);
+            case PERCENT -> operation(Operator.MODULO, operand, context);
+            case CONCAT -> operation(Operator.CONCAT, operand, context);
+            default -> throw new ProcessException("unsupported operation: " + operator);
+        };
+    }
+
+    default TemplateObject operation(Operator operator, TemplateObject operand, ProcessContext context) {
         throw new ProcessException("unsupported operation: " + operator);
     }
 
+    @Deprecated(since = "2.3.0", forRemoval = true)
     default boolean relation(TokenType operator, TemplateObject operand, ProcessContext context) {
-        throw new ProcessException("unsupported operation: " + operator);
+        return switch (operator) {
+            case LT -> relation(Relation.LT, operand, context);
+            case GT -> relation(Relation.GT, operand, context);
+            case LTE -> relation(Relation.LTE, operand, context);
+            case GTE, UNICODE_GTE -> relation(Relation.GTE, operand, context);
+            case COMPARE -> relation(Relation.COMPARE, operand, context);
+            default -> throw new ProcessException("unsupported relation: " + operator);
+        };
+    }
+
+    default boolean relation(Relation operator, TemplateObject operand, ProcessContext context) {
+        throw new ProcessException("unsupported relation: " + operator);
     }
 
     default boolean equality(TemplateObject operand, ProcessContext context) {
-        throw new ProcessException("unsupported operation: " + TokenType.EQUALS);
+        throw new ProcessException("unsupported equality: " + TokenType.EQUALS);
     }
 
     default TemplateObject negate() {

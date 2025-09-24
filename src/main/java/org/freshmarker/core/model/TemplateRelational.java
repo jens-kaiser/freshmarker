@@ -1,12 +1,13 @@
 package org.freshmarker.core.model;
 
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
-import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.ReduceContext;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
 
-public record TemplateRelational(TokenType type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
+public record TemplateRelational(Relation type, TemplateObject left, TemplateObject right) implements TemplateBooleanExpression {
+    public enum Relation {
+        LT, GT, LTE, GTE, COMPARE
+    }
 
     @Override
     public TemplateObject evaluateToObject(ProcessContext context) {
@@ -18,12 +19,11 @@ public record TemplateRelational(TokenType type, TemplateObject left, TemplateOb
     @Override
     public TemplateRelational not() {
         return switch (type) {
-            case LT -> new TemplateRelational(TokenType.GTE, left, right);
-            case GT -> new TemplateRelational(TokenType.LTE, left, right);
-            case LTE -> new TemplateRelational(TokenType.GT, left, right);
-            case GTE, UNICODE_GTE -> new TemplateRelational(TokenType.LT, left, right);
-            case COMPARE -> new TemplateRelational(TokenType.COMPARE, right, left);
-            default -> throw new ProcessException("unsupported relation: " + type);
+            case LT -> new TemplateRelational(Relation.GTE, left, right);
+            case GT -> new TemplateRelational(Relation.LTE, left, right);
+            case LTE -> new TemplateRelational(Relation.GT, left, right);
+            case GTE -> new TemplateRelational(Relation.LT, left, right);
+            case COMPARE -> new TemplateRelational(Relation.COMPARE, right, left);
         };
     }
 

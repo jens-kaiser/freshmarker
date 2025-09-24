@@ -2,10 +2,10 @@ package org.freshmarker.core.model.temporal;
 
 import java.time.Period;
 
-import ftl.Token;
-import ftl.Token.TokenType;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.model.TemplateObject;
+import org.freshmarker.core.model.TemplateOperation.Operator;
+import org.freshmarker.core.model.TemplateRelational.Relation;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
@@ -17,7 +17,7 @@ public class TemplatePeriod extends TemplatePrimitive<Period> {
   }
 
   @Override
-  public TemplateObject operation(Token.TokenType operator, TemplateObject operand, ProcessContext context) {
+  public TemplateObject operation(Operator operator, TemplateObject operand, ProcessContext context) {
     TemplatePeriod period = operand.evaluate(context, TemplatePeriod.class);
     return switch (operator) {
       case PLUS -> new TemplatePeriod(getValue().plus(period.getValue()));
@@ -27,10 +27,10 @@ public class TemplatePeriod extends TemplatePrimitive<Period> {
   }
 
   @Override
-  public TemplatePrimitive<?> relational(Token.TokenType operator, TemplatePrimitive<?> operand, ProcessContext context) {
+  public TemplatePrimitive<?> relational(Relation operator, TemplatePrimitive<?> operand, ProcessContext context) {
     TemplatePeriod rightValue = (TemplatePeriod)operand;
     Period period = getValue().minus(rightValue.getValue());
-    if (TokenType.COMPARE == operator) {
+    if (Relation.COMPARE == operator) {
       if (period.isZero()) {
         return TemplateNumber.of(0);
       }
@@ -43,7 +43,7 @@ public class TemplatePeriod extends TemplatePrimitive<Period> {
       case LT -> period.isNegative();
       case GT -> !period.isNegative();
       case LTE -> period.isNegative() || period.isZero();
-      case GTE, UNICODE_GTE -> !period.isNegative() || period.isZero();
+      case GTE -> !period.isNegative() || period.isZero();
       default -> super.relation(operator, operand, context);
     });
   }
