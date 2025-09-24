@@ -11,9 +11,9 @@ public class TemplateEnvironment implements TemplateObject, DotHashAddressable {
 
     @Override
     public TemplateObject get(ProcessContext context, String name) {
-        String value = System.getenv(name);
+        String value = System.getProperty(name);
         if (value == null) {
-            value = System.getProperty(name);
+            value = System.getenv(name);
         }
         return new TemplateString(value);
     }
