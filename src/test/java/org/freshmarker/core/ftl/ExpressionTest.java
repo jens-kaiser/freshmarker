@@ -425,6 +425,12 @@ class ExpressionTest {
         }
 
         @Test
+        void unknownEscapeCode() {
+            ParsingException exception = assertThrows(ParsingException.class, () -> templateBuilder.getTemplate("escape", "${'\\X'}"));
+            assertEquals("cannot escape string at escape:1:3 ''\\X''", exception.getMessage());
+        }
+
+        @Test
         void escapeControlCodes() {
             Template template = templateBuilder.getTemplate("escape", "${'\\\\ \\n \\t \\b \\r \\f \\' \\\"'}");
             assertEquals("\\ \n \t \b \r \f ' \"", template.process(Map.of()));
