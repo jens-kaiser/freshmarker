@@ -83,7 +83,7 @@ m|\uxxxx
 The type `Character` supports character literals directly, by enclosing the character in single quotation marks, e.g. ‘A’.
 
 No distinction can be made between character literals and string literals with only a single character.
-In order for character literals to be recognized, this must be activated via the feature `SystemFeature.CHARACTER_LITERAL. (see <<System Features (since 2.0.0), System Features>>).
+In order for character literals to be recognized, this must be activated via the feature `SystemFeature.CHARACTER_LITERAL` (see <<System Features (since 2.0.0), System Features>>).
 
 ==== Sequence Literals
 
