@@ -33,6 +33,7 @@ import org.freshmarker.api.FeatureSet;
 import org.freshmarker.core.BuiltinHandlingFeature;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.StaticContext;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.buildin.BuiltInKey;
 import org.freshmarker.core.ftl.TemplateDictionary.VariableType;
 import org.freshmarker.core.model.DefaultTemplateVariable;
@@ -69,6 +70,7 @@ import org.freshmarker.core.model.TemplateVariable;
 import org.freshmarker.core.model.builtin.HookedBuiltIn;
 import org.freshmarker.core.model.builtin.LogBuiltIn;
 import org.freshmarker.core.model.primitive.TemplateBoolean;
+import org.freshmarker.core.model.primitive.TemplateCharacter;
 import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.slf4j.Logger;
@@ -108,12 +110,14 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     private final FeatureSet featureSet;
     private final StaticContext templateContext;
     private final TemplateDictionary dictionary;
+    private final boolean withCharacterLiteral;
 
     public InterpolationBuilder(FeatureSet featureSet, StaticContext templateContext, TemplateDictionary dictionary) {
         this.featureSet = featureSet;
         this.templateContext = templateContext;
         this.dictionary = dictionary;
         argsListBuilder = new PositionalArgsListBuilder(this);
+        withCharacterLiteral = featureSet.isEnabled(SystemFeature.CHARACTER_LITERAL);
     }
 
     private record TemplateObjectAndNode(TemplateObject templateObject, String node) { }
@@ -127,7 +131,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case INTEGER -> getIntegerTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
             case LONG -> getLongTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
-            case STRING_LITERAL -> new TemplateString(image.substring(1, image.length() - 1));
+            case STRING_LITERAL -> getStringOrCharacterLiteral(image);
             case IDENTIFIER -> {
                 VariableType type = dictionary.getVariable(image);
                 yield switch (type) {
@@ -142,6 +146,13 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             default -> throw new IllegalArgumentException(
                     "invalid token type: " + expression.getType() + " source='" + expression.getSource() + "'");
         };
+    }
+
+    private TemplateObject getStringOrCharacterLiteral(String image) {
+        if (withCharacterLiteral && image.length() == 3 && image.charAt(0) == '\'') {
+            return new TemplateCharacter(image.charAt(1));
+        }
+        return new TemplateString(image.substring(1, image.length() - 1));
     }
 
     private static TemplateNumber getLongTemplateNumber(String image) {
