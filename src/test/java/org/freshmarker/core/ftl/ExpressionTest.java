@@ -7,7 +7,6 @@ import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.WrongTypeException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -392,7 +391,7 @@ class ExpressionTest {
 
         @Test
         void unicodeEscape() {
-            Template template = templateBuilder.getTemplate("literal", "${'\\u2328'?is_character}");
+            Template template = templateBuilder.with(SystemFeature.ESCAPE_SEQUENCE).getTemplate("literal", "${'\\u2328'?is_character}");
             assertEquals("yes", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
         }
     }

@@ -164,7 +164,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
 
     private String escapeStringLiteral(String image, Token token) {
         if (withoutEscapeSequence) {
-            return image;
+            return image.substring(1, image.length() - 1);
         }
         try {
             StringBuilder builder = new StringBuilder();
