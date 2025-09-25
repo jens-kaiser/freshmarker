@@ -184,6 +184,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
                         case 't' -> builder.append("\t");
                         case 'b' -> builder.append("\b");
                         case 'f' -> builder.append("\f");
+                        default -> throw new IllegalArgumentException("unsupported escape sequence: \\" + image.charAt(index + 1));
                     }
                     index +=2;
                 } else {
