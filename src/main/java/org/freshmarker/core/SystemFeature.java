@@ -49,7 +49,17 @@ public enum SystemFeature implements TemplateFeature {
      *<p>
      * The feature is disabled by default.
      */
-    CHARACTER_LITERAL;
+    CHARACTER_LITERAL,
+
+    /**
+     * Feature that enables escape sequences.
+     * Escape sequences in string literals are replaced by the corresponding character.
+     *<p>
+     * The default value is 'false', meaning that escape sequences are not replaced.
+     *<p>
+     * The feature is disabled by default.
+     */
+    ESCAPE_SEQUENCE;
 
     @Override
     public boolean isEnabledByDefault() {

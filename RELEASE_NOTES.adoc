@@ -7,6 +7,10 @@
 - add sign operator for duration and period
 - add support for negated spaceship operator
 - add `.env` built-in variable
+- add escape sequences for string literals
+- add character literals
+- add `SystemFeature.ESCAPE_SEQUENCE` to activate escape sequences
+- add `SystemFeature.CHARACTER_LITERAL` to activate character literals
 
 === Deprecation
 
