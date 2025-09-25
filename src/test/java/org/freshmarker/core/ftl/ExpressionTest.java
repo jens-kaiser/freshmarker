@@ -5,6 +5,7 @@ import org.freshmarker.Configuration;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.WrongTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -382,5 +383,17 @@ class ExpressionTest {
     void join(String input, String expected) throws ParseException {
         Template template = builder.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+    }
+
+    @Test
+    void characterLiteral() {
+        Template template = builder.with(SystemFeature.CHARACTER_LITERAL).getTemplate("literal", "${'A'?is_character}");
+        assertEquals("yes", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+    }
+
+    @Test
+    void stringLiteral() {
+        Template template = builder.getTemplate("literal", "${'A'?is_character}");
+        assertEquals("no", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
     }
 }

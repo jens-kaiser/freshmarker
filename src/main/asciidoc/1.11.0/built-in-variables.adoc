@@ -8,27 +8,27 @@
 |Name| Description| Example | Output
 
 m|.now
-| The `.now` built-in variable of Type `TemplateZoneDateTime`  provides the current timestamp.
+| The `.now` built-in variable of type `TemplateZoneDateTime`  provides the current timestamp.
 m| ${.now?date}
 | 2025-07-19
 
 m|.locale
-|The `.locale` built-in variable of Type `TemplateLocale`  provides the current locale.
+|The `.locale` built-in variable of type `TemplateLocale`  provides the current locale.
 m|${.locale?country_name}
 |Germany
 
 m|.country
-|The `.country` built-in variable of Type `TemplateString`  provides the current locales country code.
+|The `.country` built-in variable of type `TemplateString`  provides the current locales country code.
 m|${.country}
 |DE
 
 m|.laguage
-|The `.laguage` built-in variable of Type `TemplateString`  provides the current locales language code.
+|The `.laguage` built-in variable of type `TemplateString`  provides the current locales language code.
 m|${.laguage}
 |de
 
 m|.version
-|The `.version` built-in variable of Type `TemplateVersion`  provides the current _FreshMarker_ version.
+|The `.version` built-in variable of type `TemplateVersion`  provides the current _FreshMarker_ version.
 m|${version?minor}
 |11
 
@@ -50,7 +50,7 @@ The  `.random` built-in variable is included via an additional artefact.
 ----
 ====
 
-The `.random` built-in variable of Type `TemplateRandom` can be used to generate random value via several built-ins.
+The `.random` built-in variable of type `TemplateRandom` can be used to generate random value via several built-ins.
 
 === Hemisphere Built-In Variable
 
@@ -68,4 +68,4 @@ The  `.hemisphere` built-in variable is included via an additional artifact.
 ----
 ====
 
-The `.hemisphere` built-in variable of Type `TemplateEnum` can be used to distinguish between the Northern Hemisphere (NORTH) and the Southern Hemisphere (SOUTH).
+The `.hemisphere` built-in variable of type `TemplateEnum` can be used to distinguish between the Northern Hemisphere (NORTH) and the Southern Hemisphere (SOUTH).

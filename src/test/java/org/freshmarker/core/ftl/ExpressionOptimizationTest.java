@@ -3,6 +3,7 @@ package org.freshmarker.core.ftl;
 import ftl.FreshMarkerParser;
 import ftl.ParseException;
 import ftl.ast.Root;
+import org.freshmarker.core.features.TemplateFeatures;
 import org.freshmarker.core.model.TemplateJunction;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateVariable;
@@ -51,7 +52,7 @@ class ExpressionOptimizationTest {
         parser.setInputSource("test");
         parser.Root();
         Root root = (Root) parser.rootNode();
-        TemplateObject templateObject = root.getFirst().get(1).accept(new InterpolationBuilder(null, null, new TemplateDictionary()), null);
+        TemplateObject templateObject = root.getFirst().get(1).accept(new InterpolationBuilder(new TemplateFeatures(), null, new TemplateDictionary()), null);
         TemplateBoolean templateBoolean = assertInstanceOf(TemplateBoolean.class, templateObject);
         assertEquals(expected, templateBoolean.getValue());
     }
@@ -72,7 +73,7 @@ class ExpressionOptimizationTest {
         parser.setInputSource("test");
         parser.Root();
         Root root = (Root) parser.rootNode();
-        TemplateObject templateObject = root.getFirst().get(1).accept(new InterpolationBuilder(null, null, new TemplateDictionary()), null);
+        TemplateObject templateObject = root.getFirst().get(1).accept(new InterpolationBuilder(new TemplateFeatures(), null, new TemplateDictionary()), null);
         TemplateVariable templateVariable = assertInstanceOf(TemplateVariable.class, templateObject);
         assertEquals("variable", templateVariable.name());
     }
@@ -92,7 +93,7 @@ class ExpressionOptimizationTest {
         parser.setInputSource("test");
         parser.Root();
         Root root = (Root) parser.rootNode();
-        TemplateObject templateObject = root.getFirst().get(1).accept(new InterpolationBuilder(null, null, new TemplateDictionary()), null);
+        TemplateObject templateObject = root.getFirst().get(1).accept(new InterpolationBuilder(new TemplateFeatures(), null, new TemplateDictionary()), null);
         assertInstanceOf(TemplateJunction.class, templateObject);
     }
 }
