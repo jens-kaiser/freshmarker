@@ -77,6 +77,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
     private final StaticContext templateContext;
     private final TemplateDictionary dictionary;
     private final boolean withCharacterLiteral;
+    private final boolean withoutEscapeSequence;
 
     public InterpolationBuilder(FeatureSet featureSet, StaticContext templateContext, TemplateDictionary dictionary) {
         this.featureSet = featureSet;
@@ -118,6 +120,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         this.dictionary = dictionary;
         argsListBuilder = new PositionalArgsListBuilder(this);
         withCharacterLiteral = featureSet.isEnabled(SystemFeature.CHARACTER_LITERAL);
+        withoutEscapeSequence = featureSet.isDisabled(SystemFeature.ESCAPE_SEQUENCE);
     }
 
     private record TemplateObjectAndNode(TemplateObject templateObject, String node) { }
@@ -131,7 +134,7 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
             case INTEGER -> getIntegerTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
             case LONG -> getLongTemplateNumber(input == TokenType.MINUS ? "-" + image : image);
             case DECIMAL -> new TemplateNumber(Double.parseDouble(image));
-            case STRING_LITERAL -> getStringOrCharacterLiteral(image);
+            case STRING_LITERAL -> getStringOrCharacterLiteral(image, expression);
             case IDENTIFIER -> {
                 VariableType type = dictionary.getVariable(image);
                 yield switch (type) {
@@ -148,11 +151,50 @@ public class InterpolationBuilder implements ExpressionVisitor<Object, TemplateO
         };
     }
 
-    private TemplateObject getStringOrCharacterLiteral(String image) {
-        if (withCharacterLiteral && image.length() == 3 && image.charAt(0) == '\'') {
-            return new TemplateCharacter(image.charAt(1));
+    private TemplateObject getStringOrCharacterLiteral(String image, Token token) {
+        if (image.length() == 2) {
+            return TemplateString.EMPTY;
         }
-        return new TemplateString(image.substring(1, image.length() - 1));
+        String text = escapeStringLiteral(image, token);
+        if (withCharacterLiteral && text.length() == 1 && image.charAt(0) == '\'') {
+            return new TemplateCharacter(text.charAt(0));
+        }
+        return new TemplateString(text);
+    }
+
+    private String escapeStringLiteral(String image, Token token) {
+        if (withoutEscapeSequence) {
+            return image;
+        }
+        try {
+            StringBuilder builder = new StringBuilder();
+            int index = 1;
+            while (index < image.length() - 1) {
+                if (image.charAt(index) == '\\') {
+                    switch (image.charAt(index + 1)) {
+                        case 'u' -> {
+                            builder.append((char) HexFormat.fromHexDigits(image, index + 2, index + 6));
+                            index += 4;
+                        }
+                        case '\\' -> builder.append("\\");
+                        case 'n' -> builder.append("\n");
+                        case '\'' -> builder.append("'");
+                        case '"' -> builder.append("\"");
+                        case 'r' -> builder.append("\r");
+                        case 't' -> builder.append("\t");
+                        case 'b' -> builder.append("\b");
+                        case 'f' -> builder.append("\f");
+                    }
+                    index +=2;
+                } else {
+                    builder.append(image.charAt(index));
+                    index++;
+                }
+            }
+            return builder.toString();
+        } catch (RuntimeException e) {
+            throw new ParsingException("cannot escape string", token);
+        }
     }
 
     private static TemplateNumber getLongTemplateNumber(String image) {

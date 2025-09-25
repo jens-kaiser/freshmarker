@@ -24,12 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExpressionTest {
 
-    private TemplateBuilder builder;
-
-    @BeforeEach
-    void setUp() {
-        builder = new Configuration().builder();
-    }
+    private final TemplateBuilder builder = new Configuration().builder();
 
     @Test
     void constantFragments() throws ParseException {
@@ -385,15 +380,66 @@ class ExpressionTest {
         assertEquals(expected, template.process(Map.of("sequence", List.of(1,2,3,4,5))));
     }
 
-    @Test
-    void characterLiteral() {
-        Template template = builder.with(SystemFeature.CHARACTER_LITERAL).getTemplate("literal", "${'A'?is_character}");
-        assertEquals("yes", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+    @Nested
+    class CharacterLiteral {
+        private final TemplateBuilder templateBuilder = builder.with(SystemFeature.CHARACTER_LITERAL);
+
+        @Test
+        void simpleChar() {
+            Template template = templateBuilder.getTemplate("literal", "${'A'?is_character}");
+            assertEquals("yes", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+        }
+
+        @Test
+        void unicodeEscape() {
+            Template template = templateBuilder.getTemplate("literal", "${'\\u2328'?is_character}");
+            assertEquals("yes", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+        }
     }
 
     @Test
     void stringLiteral() {
         Template template = builder.getTemplate("literal", "${'A'?is_character}");
         assertEquals("no", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+    }
+
+    @Test
+    void noEscapeSequenceLiteral() {
+        Template template = builder.getTemplate("literal", "${'\\\\'}");
+        assertEquals("\\\\", template.process(Map.of("sequence", List.of(1,2,3,4,5))));
+    }
+
+    @Nested
+    class Escapes {
+        private final TemplateBuilder templateBuilder = builder.with(SystemFeature.ESCAPE_SEQUENCE);
+
+        @Test
+        void escapeUnicode() {
+            Template template = templateBuilder.getTemplate("escape", "${'\\u2328'}");
+            assertEquals("⌨", template.process(Map.of()));
+        }
+
+        @Test
+        void invalidEscapeUnicode() {
+            ParsingException exception = assertThrows(ParsingException.class, () -> templateBuilder.getTemplate("escape", "${'\\u232'}"));
+            assertEquals("cannot escape string at escape:1:3 ''\\u232''", exception.getMessage());
+        }
+
+        @Test
+        void escapeControlCodes() {
+            Template template = templateBuilder.getTemplate("escape", "${'\\\\ \\n \\t \\b \\r \\f \\' \\\"'}");
+            assertEquals("\\ \n \t \b \r \f ' \"", template.process(Map.of()));
+        }
+
+        @Test
+        void invalidEscapeControlCode() {
+            ParseException exception = assertThrows(ParseException.class, () -> templateBuilder.getTemplate("escape", "${'\\'}"));
+            assertEquals("""
+                    
+                    Encountered an error at (or somewhere around) escape:1:3
+                    Was expecting one of the following:
+                    EOF
+                    Found string "\\'\\\\\\'" of type INVALID""", exception.getMessage());
+        }
     }
 }

@@ -43,12 +43,47 @@ The type `Double` supports numeric literals in the value range of `java.lang.Dou
 
 The type `String` supports string literals directly, by enclosing the text in double quotation marks, e.g.: “example text” or in single quotation marks, e.g. ‘example text’. Both forms are equivalent.
 
+===== Escape Sequences (since 2.3.0)
+
+Escape sequences can be used in the strings. However, the feature `SystemFeature.ESCAPE_SEQUENCE` must be activated for this, as no escape sequences were previously supported.
+
+|===
+|Escape Sequences | Description
+
+m|\"
+| Double Quote (u0022)
+
+m|\'
+| Single Quote (u0027)
+
+m|\\
+| Back slash (u005C)
+
+m|\n
+| Line feed (u000A)
+
+m|\r
+| Carriage return (u000D)
+
+m|\t
+| Tab  (u0009)
+
+m|\b
+| Backspace (u0008)
+
+m|\f
+| Form feed (u000C)
+
+m|\uxxxx
+| Unicode escape with four digit hex code
+|===
+
 ==== Character Literals (since 2.3.0)
 
 The type `Character` supports character literals directly, by enclosing the character in single quotation marks, e.g. ‘A’.
 
 No distinction can be made between character literals and string literals with only a single character.
-In order for character literals to be recognized, this must be activated via a feature flag. (see <<System Features (since 2.0.0), System Features>>).
+In order for character literals to be recognized, this must be activated via the feature `SystemFeature.CHARACTER_LITERAL. (see <<System Features (since 2.0.0), System Features>>).
 
 ==== Sequence Literals
 
