@@ -27,15 +27,15 @@ A https://gitlab.com/schegge/freshmarker/-/blob/develop/src/main/resources/fmcs.
 
 == Example Benchmarks
 
+A Java 21 port of the `com.mitchellbosecke:template-benchmark` project.
 |===
 .8+|image:performance.svg[float="right"] |mustache | 0.9.11
 |freemarker | 2.3.23
 |velocity | 1.7
 |thymeleaf | 2.1.4.RELEASE
-|trimou | 1.8.2.Final
 |handlebars | 4.0.1
 |pebble | 2.2.1
-|freshmarker | 2.2.0-SNAPSHOT
+|freshmarker | 2.2.0
 |===
 
 == Usage
