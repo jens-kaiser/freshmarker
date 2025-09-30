@@ -47,6 +47,8 @@ The type `String` supports string literals directly, by enclosing the text in do
 
 Escape sequences can be used in the strings. However, the feature `SystemFeature.ESCAPE_SEQUENCE` must be activated for this, as no escape sequences were previously supported.
 
+TIP: If you embed template sources as strings in your Java code, you do not need to activate escape sequences because the Java environment already replaces the escape sequences.
+
 |===
 |Escape Sequences | Description
 
