@@ -6,6 +6,7 @@ import org.freshmarker.api.extension.Register;
 import org.freshmarker.api.extension.support.SingleTypeBuiltInRegister;
 import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.model.TemplateListSequence;
 import org.freshmarker.core.model.TemplateNull;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.TemplateStringMarkup;
@@ -14,6 +15,7 @@ import org.freshmarker.core.model.primitive.TemplateNumber;
 import org.freshmarker.core.model.primitive.TemplateString;
 import org.freshmarker.core.output.StandardOutputFormats;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -225,7 +227,27 @@ public final class StringBuiltInProvider implements BuiltInProvider {
         register.add("mask_full", (x, y, e) -> mask((TemplateString) x, e, y, true));
         register.add( "is_string", BuiltInHelper.alwaysTrue());
         register.add("is_empty", (x, y, e) -> TemplateBoolean.from(((TemplateString)x).getValue().isEmpty()));
+        register.add("matches", (x, y, e) -> matches((TemplateString) x, y, e));
+        register.add("find", (x, y, e) -> find((TemplateString) x, y, e));
+        register.add("split", (x, y, e) -> split((TemplateString) x, y, e));
         return register;
+    }
+
+    private TemplateBoolean matches(TemplateString x, List<TemplateObject> y, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(y, 1);
+        return TemplateBoolean.from(x.getValue().matches(y.getFirst().evaluate(context, TemplateString.class).getValue()));
+    }
+
+    private TemplateBoolean find(TemplateString x, List<TemplateObject> y, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(y, 1);
+        Pattern pattern = Pattern.compile(y.getFirst().evaluate(context, TemplateString.class).getValue());
+        return TemplateBoolean.from(pattern.matcher(x.getValue()).find());
+    }
+
+    private TemplateListSequence split(TemplateString x, List<TemplateObject> y, ProcessContext context) {
+        BuiltInHelper.checkParametersLength(y, 1);
+        Pattern pattern = Pattern.compile(y.getFirst().evaluate(context, TemplateString.class).getValue());
+        return new TemplateListSequence(Arrays.asList(pattern.split(x.getValue())));
     }
 
     private TemplateString apply(TemplateObject value, UnaryOperator<String> operator) {

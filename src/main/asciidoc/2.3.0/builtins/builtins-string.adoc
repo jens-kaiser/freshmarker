@@ -584,3 +584,43 @@ m|${'+49 176 04069042'?mask_full('●○', 2)}
 m|●○●○●○●○●○●○●○42
 
 |===
+
+==== `matches` Built-In (since 2.3.0)
+
+This built-in return `true` if the text matches the specified regular expression, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|'The quick brown Fox jumps over the lazy Dog'?matches('.+Fox')
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?matches('.+Cat')}
+m|false
+|===
+
+==== `find` Built-In (since 2.3.0)
+
+This built-in return `true` if a part of the text matches the specified regular expression, otherwise `false`.
+
+|===
+|Interpolation | Output
+
+m|'The quick brown Fox jumps over the lazy Dog'?find('.o.')
+m|true
+
+m|${'The quick brown Fox jumps over the lazy Dog'?matches('[Cc]at')}
+m|false
+|===
+
+==== `split` Built-In (since 2.3.0)
+
+This built-in return a sequence containing the parts of the text split by the specified regular expression.
+
+|===
+|Interpolation | Output
+
+m|'The  quick brown  Fox jumps  over the  lazy Dog'?split('\s+')
+m|['The', 'quick', 'brown', 'Fox', 'jumps', 'over', 'the', 'lazy', 'Dog']
+
+|===

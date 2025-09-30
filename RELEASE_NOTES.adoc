@@ -11,6 +11,7 @@
 - add character literals
 - add `SystemFeature.ESCAPE_SEQUENCE` to activate escape sequences
 - add `SystemFeature.CHARACTER_LITERAL` to activate character literals
+- add string built-ins `matches`, `find` and `split`
 
 === Deprecation
 
