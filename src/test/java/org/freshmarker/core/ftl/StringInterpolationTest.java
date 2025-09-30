@@ -435,4 +435,18 @@ class StringInterpolationTest {
         Template template = templateBuilder.getTemplate("test", input);
         assertEquals(expected, template.process(Map.of("sequence", List.of(1,2,3,4,5))));
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test: ${text?matches('.+Dog')};test: yes",
+            "test: ${text?matches('Dog')};test: no",
+            "test: ${text?find('Fox')};test: yes",
+            "test: ${text?find('Cat')};test: no",
+            "test: ${text?split('\\s')?last?upper_case};test: DOG",
+            "test: ${text?split('\\s+')?reverse?join('-')};test: Dog-lazy-the-over-jumps-Fox-brown-quick-The"
+    }, delimiterString = ";", ignoreLeadingAndTrailingWhitespace = false)
+    void regex(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.getTemplate("test", input);
+        assertEquals(expected, template.process(Map.of("text", "The quick  brown Fox  jumps over  the  lazy Dog")));
+    }
 }
