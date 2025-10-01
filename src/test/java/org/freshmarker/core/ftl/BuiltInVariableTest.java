@@ -7,7 +7,6 @@ import org.freshmarker.core.ProcessException;
 import org.freshmarker.core.model.primitive.TemplateVersion;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -15,7 +14,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
