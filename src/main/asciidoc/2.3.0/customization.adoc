@@ -309,7 +309,7 @@ TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormat
 
 === Customization by Extensions
 
-The *FreshMarker* template engine is expandable, so customization is also possible.
+The _FreshMarker_ template engine is expandable, so customization by Extensions is also possible.
 Some extensions are already available and can be used easily.
 The extensions only need to be made available on the classpath.
 
