@@ -282,3 +282,23 @@ TBD
 Configuration config = new Configuration();
 TemplateBuilder builder = config.builder().withOutputFormat(StandardOutputFormats.ADOC);
 ----
+
+=== Customization by Extensions
+
+The _FreshMarker_ template engine is expandable, so customization by Extensions is also possible.
+Some extensions are already available and can be used easily.
+The extensions only need to be made available on the classpath.
+
+.FreshMarker and its default Extensions
+[plantuml,format=svg]
+----
+@startmindmap
+-[#Orange] FreshMarker
+-- Telephone
+-- Holiday
+++[#Orange] FreshMarker File
+++[#Orange] FreshMarker Money
+++[#Orange] Freshmarker Random
+++[#Orange] FreshMarker Astro
+@endmindmap
+----
