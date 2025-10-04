@@ -469,6 +469,7 @@
                                 <plugin-random-version>2.1.0</plugin-random-version>
                                 <source-highlighter>highlight.js</source-highlighter>
                             </attributes>
+                            <requires><require>asciidoctor-diagram</require></requires>
                         </configuration>
                     </execution>
                 </executions>
@@ -477,6 +478,16 @@
                         <groupId>io.spring.asciidoctor</groupId>
                         <artifactId>spring-asciidoctor-extensions-block-switch</artifactId>
                         <version>${asciidoctor-extensions-spring-boot}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-diagram</artifactId>
+                        <version>3.0.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-diagram-plantuml</artifactId>
+                        <version>1.2025.3</version>
                     </dependency>
                 </dependencies>
             </plugin>
