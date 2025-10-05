@@ -52,6 +52,10 @@ public final class TokenLineNormalizer {
             addNonWhitespaceTokenToLine(token);
             return;
         }
+        splitWhitespace(token);
+    }
+
+    private void splitWhitespace(Token token) {
         String image = token.toString();
         int index = image.indexOf("\n");
         if (index == -1 || index == image.length() - 1) {
