@@ -37,6 +37,9 @@ public final class TokenLineNormalizer {
 
     private void normalizeWhitespaces(Token token) {
         if (token.getType() == TokenType.EOF) {
+            if (!containNonTag) {
+                getFirstAsWhitespace().ifPresent(f -> f.getParent().remove(f));
+            }
             Token previous = token.getPrevious();
             if (previous.getType() == TokenType.WHITESPACE && !previous.toString().contains("\n")) {
                 Token previous1 = previous.getPrevious();
@@ -49,6 +52,10 @@ public final class TokenLineNormalizer {
             addNonWhitespaceTokenToLine(token);
             return;
         }
+        splitWhitespace(token);
+    }
+
+    private void splitWhitespace(Token token) {
         String image = token.toString();
         int index = image.indexOf("\n");
         if (index == -1 || index == image.length() - 1) {
