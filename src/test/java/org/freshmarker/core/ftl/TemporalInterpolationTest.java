@@ -1,9 +1,11 @@
 package org.freshmarker.core.ftl;
 
 import ftl.ParseException;
+import org.freshmarker.Configuration;
 import org.freshmarker.TemplateBuilder;
 import org.freshmarker.Template;
 import org.freshmarker.core.ProcessException;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -293,5 +295,33 @@ class TemporalInterpolationTest {
     void interpolationLocalTimeWithFormatB(int input, String expected, TemplateBuilder templateBuilder) throws ParseException {
         Template template = templateBuilder.getTemplate("test", "test: ${temporal?string('B')}");
         assertEquals("test: " + expected, template.process(Map.of("temporal", LocalTime.of(input, 0, 0))));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${'2025-08-24 22:33:44'?datetime},2025-08-24 22:33:44",
+            "${'24.08.2025 22:33:44'?datetime('dd.MM.yyyy HH:mm:ss')},2025-08-24 22:33:44",
+            "${'2025-08-24'?date},2025-08-24",
+            "${'24.08.2025'?date('dd.MM.yyyy')},2025-08-24",
+            "${'12:34:56'?time},12:34:56",
+            "${'22:33:44'?time('HH:mm:ss')},22:33:44",
+    })
+    void parseTemporal(String input, String expected, TemplateBuilder templateBuilder) throws ParseException {
+        Template template = templateBuilder.withTimeFormat("HH:mm:ss").withDateTimeFormat("yyyy-MM-dd HH:mm:ss").getTemplate("datetime", input);
+        assertEquals(expected, template.process(Map.of()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "${'2025-08-24 22:33:44'?datetime},2025-08-24 22:33:44",
+            "${'24.08.2025 22:33:44'?datetime('dd.MM.yyyy HH:mm:ss')},2025-08-24 22:33:44",
+            "${'2025-08-24'?date},2025-08-24",
+            "${'24.08.2025'?date('dd.MM.yyyy')},2025-08-24",
+            "${'12:34:56'?time},12:34:56",
+            "${'22:33:44'?time('HH:mm:ss')},22:33:44",
+    })
+    void parseTemporalByConfiguration(String input, String expected) throws ParseException {
+        Template template = new Configuration(SystemFeature.HOUR_OF_DAY).builder().getTemplate("datetime", input);
+        assertEquals(expected, template.process(Map.of()));
     }
 }
