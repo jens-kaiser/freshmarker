@@ -63,8 +63,8 @@ class TemporalInterpolationTest {
     void interpolationLocalDateTimeWithFormatter(String pattern, String expectedDe, String expectedUs, TemplateBuilder templateBuilder) throws ParseException {
         Template templateDe = templateBuilder.withLocale(Locale.GERMANY).withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
         Template templateUs = templateBuilder.withLocale(Locale.US).withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
-        assertEquals(expectedDe, templateDe.process(Map.of("temporal", LOCAL_DATE_TIME)));
-        assertEquals(expectedUs, templateUs.process(Map.of("temporal", LOCAL_DATE_TIME)));
+        assertEquals(expectedDe, templateDe.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneOffset.UTC))));
+        assertEquals(expectedUs, templateUs.process(Map.of("temporal", LOCAL_DATE_TIME.atZone(ZoneOffset.UTC))));
     }
 
     @ParameterizedTest
