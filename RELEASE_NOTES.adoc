@@ -23,6 +23,7 @@
 === Bugfix
 
 - fix whitespace handling in last lines. https://gitlab.com/schegge/freshmarker/-/issues/145[#145]
+- fix lost formatters
 
 == Release 2.2.0 (2025-09-19)
 
