@@ -629,7 +629,7 @@ m|['The', 'quick', 'brown', 'Fox', 'jumps', 'over', 'the', 'lazy', 'Dog']
 
 This built-in return a date-time value parsed from the current value. The built-in can use a different format via an optional parameter.
 
-TIP: The standard formats use CLOCK_HOUR_OF_AMPM (`hh`) in their patterns). However, the pattern requires HOUR_OF_DAY (`HH`) for the time to be recognized. To do this, either the variant with the pattern parameter can be used or the `Configuration` can be generated with `SystemFeature.HOUR_OF_DAY`.
+TIP: The standard formats in _FeshMarker_  use CLOCK_HOUR_OF_AMPM (`hh`) in their patterns. However, the pattern requires HOUR_OF_DAY (`HH`) for the time to be recognized. To do this, either the built-in variant with the pattern parameter can be used or the `Configuration` can be generated with `SystemFeature.HOUR_OF_DAY`.
 
 |===
 |Interpolation | Output  | Type
@@ -665,7 +665,7 @@ m|date
 
 This built-in return a time value parsed from the current value. The built-in can use a different format via an optional parameter.
 
-TIP: The standard formats use CLOCK_HOUR_OF_AMPM (`hh`) in their patterns). However, the pattern requires HOUR_OF_DAY (`HH`) for the time to be recognized. To do this, either the variant with the pattern parameter can be used or the `Configuration` can be generated with `SystemFeature.HOUR_OF_DAY`.
+TIP: The standard formats in _FeshMarker_ use CLOCK_HOUR_OF_AMPM (`hh`) in their patterns. However, the pattern requires HOUR_OF_DAY (`HH`) for the time to be recognized. To do this, either the built-in variant with the pattern parameter can be used or the `Configuration` can be generated with `SystemFeature.HOUR_OF_DAY`.
 
 |===
 |Interpolation | Output  | Type
