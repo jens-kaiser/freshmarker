@@ -380,6 +380,7 @@
                             <directory>src/main/asciidoc/css</directory>
                         </resource>
                     </resources>
+                    <requires><require>asciidoctor-diagram</require></requires>
                 </configuration>
                 <executions>
                     <execution>
@@ -469,7 +470,6 @@
                                 <plugin-random-version>2.1.0</plugin-random-version>
                                 <source-highlighter>highlight.js</source-highlighter>
                             </attributes>
-                            <requires><require>asciidoctor-diagram</require></requires>
                         </configuration>
                     </execution>
                 </executions>
