@@ -592,7 +592,7 @@ This built-in return `true` if the text matches the specified regular expression
 |===
 |Interpolation | Output
 
-m|'The quick brown Fox jumps over the lazy Dog'?matches('.+Fox')
+m|'The quick brown Fox jumps over the lazy Dog'?matches('.+Dog')
 m|true
 
 m|${'The quick brown Fox jumps over the lazy Dog'?matches('.+Cat')}
