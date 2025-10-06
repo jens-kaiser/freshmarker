@@ -75,29 +75,29 @@ public final class DefaultTemplateBuilder implements TemplateBuilder {
 
     public TemplateBuilder withDateTimeFormat(String pattern, ZoneId zoneId) {
         DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.putAll(formatter);
         newBuilder.formatter.put(TemplateInstant.class, new DateTimeFormatter(pattern, zoneId));
         newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern, zoneId));
-        newBuilder.formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern, zoneId));
-        newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern, zoneId));
-        return newBuilder;
+        newBuilder.formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern, zoneId));return newBuilder;
     }
 
     public TemplateBuilder withDateTimeFormat(String pattern) {
         DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, featureSet);
-        newBuilder.formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(pattern));
-        newBuilder.formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(pattern));
+        newBuilder.formatter.putAll(formatter);
         newBuilder.formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(pattern));
         return newBuilder;
     }
 
     public TemplateBuilder withDateFormat(String pattern) {
         DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.putAll(formatter);
         newBuilder.formatter.put(TemplateLocalDate.class, new DateFormatter(pattern));
         return newBuilder;
     }
 
     public TemplateBuilder withTimeFormat(String pattern) {
         DefaultTemplateBuilder newBuilder =  new DefaultTemplateBuilder(this, locale, zoneId, outputFormat, clock, featureSet);
+        newBuilder.formatter.putAll(formatter);
         newBuilder.formatter.put(TemplateLocalTime.class, new TimeFormatter(pattern, zoneId));
         return newBuilder;
     }

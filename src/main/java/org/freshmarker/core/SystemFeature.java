@@ -59,7 +59,17 @@ public enum SystemFeature implements TemplateFeature {
      *<p>
      * The feature is disabled by default.
      */
-    ESCAPE_SEQUENCE;
+    ESCAPE_SEQUENCE,
+
+    /**
+     * Feature that enables HOUR_OF_DAY in formatter pattern.
+     * So far, CLOCK_HOUR_OF_AMPM has been included in the initial patterns.
+     *<p>
+     * The default value is 'false', meaning that CLOCK_HOUR_OF_AMPM is used.
+     *<p>
+     * The feature is disabled by default.
+     */
+    HOUR_OF_DAY;
 
     @Override
     public boolean isEnabledByDefault() {

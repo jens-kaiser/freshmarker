@@ -1,5 +1,6 @@
 package org.freshmarker.core.formatter;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatterBuilder;
@@ -11,6 +12,7 @@ import java.util.Set;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.core.model.TemplateObject;
 import org.freshmarker.core.model.primitive.TemplatePrimitive;
+import org.freshmarker.core.model.temporal.TemplateLocalDateTime;
 
 public class DateTimeFormatter implements Formatter {
 
@@ -39,7 +41,12 @@ public class DateTimeFormatter implements Formatter {
     return formatter.get(locale).format((TemporalAccessor) dateTime.getValue());
   }
 
-  public java.time.format.DateTimeFormatter getFormatter(Locale locale) {
+    @Override
+    public TemplateLocalDateTime parse(String input, Locale locale) {
+        return new TemplateLocalDateTime(LocalDateTime.parse(input, formatter.get(locale)));
+    }
+
+    public java.time.format.DateTimeFormatter getFormatter(Locale locale) {
     return formatter.get(locale);
   }
 }

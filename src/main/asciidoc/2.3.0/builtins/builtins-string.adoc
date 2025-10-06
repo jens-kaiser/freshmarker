@@ -624,3 +624,58 @@ m|'The  quick brown  Fox jumps  over the  lazy Dog'?split('\s+')
 m|['The', 'quick', 'brown', 'Fox', 'jumps', 'over', 'the', 'lazy', 'Dog']
 
 |===
+
+==== `datetime` Built-In (since 2.3.0)
+
+This built-in return a date-time value parsed from the current value. The built-in can use a different format via an optional parameter.
+
+TIP: The standard formats use CLOCK_HOUR_OF_AMPM (`hh`) in their patterns). However, the pattern requires HOUR_OF_DAY (`HH`) for the time to be recognized. To do this, either the variant with the pattern parameter can be used or the `Configuration` can be generated with `SystemFeature.HOUR_OF_DAY`.
+
+|===
+|Interpolation | Output  | Type
+
+m|'2025-08-24 22:33:44'?date_time
+m|2025-08-24 22:33:44
+m|date-time
+
+m|'24.08.2025 22:33'?date_time('dd.MM.yyyy HH:mm')
+m|2025-08-24 22:33
+m|date-time
+
+|===
+
+==== `date` Built-In (since 2.3.0)
+
+This built-in return a date value parsed from the current value. The built-in can use a different format via an optional parameter.
+
+|===
+|Interpolation | Output  | Type
+
+m|'2025-08-24'?date
+m|2025-08-24
+m|date
+
+m|'24.08.2025 22:33'?date_time('dd.MM.yyyy')
+m|2025-08-24
+m|date
+
+|===
+
+==== `time` Built-In (since 2.3.0)
+
+This built-in return a time value parsed from the current value. The built-in can use a different format via an optional parameter.
+
+TIP: The standard formats use CLOCK_HOUR_OF_AMPM (`hh`) in their patterns). However, the pattern requires HOUR_OF_DAY (`HH`) for the time to be recognized. To do this, either the variant with the pattern parameter can be used or the `Configuration` can be generated with `SystemFeature.HOUR_OF_DAY`.
+
+|===
+|Interpolation | Output  | Type
+
+m|'22:33:44'?time
+m|22:33:44
+m|time
+
+m|'22:33'?date_time('HH:mm')
+m|22:33
+m|time
+
+|===
