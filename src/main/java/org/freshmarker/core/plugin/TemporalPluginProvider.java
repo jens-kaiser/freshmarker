@@ -1,5 +1,6 @@
 package org.freshmarker.core.plugin;
 
+import org.freshmarker.api.FeatureSet;
 import org.freshmarker.api.extension.BuiltInProvider;
 import org.freshmarker.api.Formatter;
 import org.freshmarker.api.extension.FormatterProvider;
@@ -10,6 +11,7 @@ import org.freshmarker.core.ProcessContext;
 import org.freshmarker.core.ProcessException;
 import org.freshmarker.api.TypeMapper;
 import org.freshmarker.api.BuiltIn;
+import org.freshmarker.core.SystemFeature;
 import org.freshmarker.core.formatter.DateFormatter;
 import org.freshmarker.core.formatter.DateTimeFormatter;
 import org.freshmarker.core.formatter.DurationFormatter;
@@ -66,6 +68,8 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private static final String DATE_TIME = "date_time";
 
     private static final EnumSet<ChronoUnit> SUPPORTED_TEMPORAL_UNITS = EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.MINUTES, ChronoUnit.HOURS, ChronoUnit.DAYS, ChronoUnit.MONTHS, ChronoUnit.YEARS);
+
+    private boolean useHourOfDay;
 
     private TemplateZonedDateTime to(ZonedDateTime dateTime) {
         return new TemplateZonedDateTime(dateTime);
@@ -194,6 +198,11 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     }
 
     @Override
+    public void init(FeatureSet featureSet) {
+        useHourOfDay = featureSet.isEnabled(SystemFeature.HOUR_OF_DAY);
+    }
+
+    @Override
     public Register<Class<? extends TemplateObject>, String, BuiltIn> provideBuiltInRegister() {
         BuiltInRegister register = new BuiltInRegister();
         register.add(TemplateInstant.class, DATE_TIME, (x, y, e) -> to(((TemplateInstant) x).getValue().atZone(e.getZoneId()).toLocalDateTime()));
@@ -276,18 +285,47 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
         register.add(TemplateMonthDay.class, "is_temporal", BuiltInHelper.alwaysTrue());
         register.add(TemplateMonthDay.class, "supports", (x, y, e) -> supports(y, e));
 
+        register.add(TemplateString.class, "datetime", (x, y, e) -> parseDateTime((TemplateString) x, y, e));
+        register.add(TemplateString.class, "date", (x, y, e) -> parseDate((TemplateString) x, y, e));
+        register.add(TemplateString.class, "time", (x, y, e) -> parseTime((TemplateString) x, y, e));
+
         return register;
+    }
+
+    private TemplateObject parseDateTime(TemplateString x, List<TemplateObject> y, ProcessContext e) {
+        if (y.isEmpty()) {
+            return e.getFormatter(TemplateLocalDateTime.class).parse(x.getValue(), e.getLocale());
+        }
+        String pattern = y.getFirst().evaluate(e, TemplateString.class).getValue();
+        return new TemplateLocalDateTime(LocalDateTime.parse(x.getValue(), java.time.format.DateTimeFormatter.ofPattern(pattern, e.getLocale())));
+    }
+
+    private TemplateObject parseDate(TemplateString x, List<TemplateObject> y, ProcessContext e) {
+        if (y.isEmpty()) {
+            return e.getFormatter(TemplateLocalDate.class).parse(x.getValue(), e.getLocale());
+        }
+        String pattern = y.getFirst().evaluate(e, TemplateString.class).getValue();
+        return new TemplateLocalDate(LocalDate.parse(x.getValue(), java.time.format.DateTimeFormatter.ofPattern(pattern, e.getLocale())));
+    }
+
+    private TemplateObject parseTime(TemplateString x, List<TemplateObject> y, ProcessContext e) {
+        if (y.isEmpty()) {
+            return e.getFormatter(TemplateLocalTime.class).parse(x.getValue(), e.getLocale());
+        }
+        String pattern = y.getFirst().evaluate(e, TemplateString.class).getValue();
+        return new TemplateLocalTime(LocalTime.parse(x.getValue(), java.time.format.DateTimeFormatter.ofPattern(pattern, e.getLocale())));
     }
 
     @Override
     public Map<Class<? extends TemplateObject>, Formatter> providerFormatter() {
         Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
-        formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd hh:mm:ss VV", ZoneOffset.UTC));
-        formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss VV"));
-        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss XX"));
-        formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter("yyyy-MM-dd hh:mm:ss"));
+        String time = useHourOfDay ? "HH:mm:ss" : "hh:mm:ss";
+        formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd " + time + " VV", ZoneOffset.UTC));
+        formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter("yyyy-MM-dd " + time + " VV"));
+        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter("yyyy-MM-dd " + time + " XX"));
+        formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter("yyyy-MM-dd " + time));
         formatter.put(TemplateLocalDate.class, new DateFormatter("yyyy-MM-dd"));
-        formatter.put(TemplateLocalTime.class, new TimeFormatter("hh:mm:ss", ZoneOffset.UTC));
+        formatter.put(TemplateLocalTime.class, new TimeFormatter(time, ZoneOffset.UTC));
         formatter.put(TemplateDuration.class, new DurationFormatter());
         formatter.put(TemplatePeriod.class, new DurationFormatter());
         formatter.put(TemplateMonthDay.class, new DateTimeFormatter("MM-dd"));

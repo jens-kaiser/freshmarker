@@ -33,7 +33,7 @@ class OffsetDateTimeInterpolationTest {
             "short;test: 24.08.68, 12:30"
     }, delimiterString = ";")
     void interpolationZonedDateTimeWithFormatter(String pattern, String expected, TemplateBuilder templateBuilder) throws ParseException {
-        Template template = templateBuilder.withLocale(Locale.GERMANY).withDateTimeFormat(pattern).getTemplate("test", "test: ${temporal}");
+        Template template = templateBuilder.withLocale(Locale.GERMANY).withDateTimeFormat(pattern, ZoneOffset.UTC).getTemplate("test", "test: ${temporal}");
         String result = template.process(Map.of("temporal", OFFSET_DATE_TIME));
         assertEquals(expected, result);
     }
