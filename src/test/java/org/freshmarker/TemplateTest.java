@@ -1,5 +1,6 @@
 package org.freshmarker;
 
+import org.freshmarker.core.ProcessException;
 import org.freshmarker.test.util.TemplateBuilderParameterResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -10,6 +11,7 @@ import java.io.StringWriter;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(TemplateBuilderParameterResolver.class)
 class TemplateTest {
@@ -130,5 +132,12 @@ class TemplateTest {
             template.processBrick("title", new Record("Title"), writer);
             assertEquals("title: Title", writer.toString());
         }
+    }
+
+    @Test
+    void processBrickWithWriter(TemplateBuilder builder) {
+        Template template = builder.getTemplate("example", "<#brick 'title'>title: ${title}</#brick>");
+        ProcessException exception = assertThrows(ProcessException.class, () -> template.process("test"));
+        assertEquals("invalid data model: class java.lang.String", exception.getMessage());
     }
 }
