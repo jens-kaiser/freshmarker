@@ -16,6 +16,7 @@ import org.freshmarker.core.environment.ReducingVariableEnvironment;
 import org.freshmarker.core.fragment.BlockFragment;
 import org.freshmarker.core.fragment.Fragment;
 import org.freshmarker.core.fragment.TemplateReturnException;
+import org.freshmarker.core.model.TemplateMap;
 import org.freshmarker.core.providers.TemplateObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,10 @@ public final class Template {
         process(dataModel, writer, rootFragment);
     }
 
+    public void process(Object dataModel, Writer writer) {
+        process(dataModel, writer, rootFragment);
+    }
+
     public void processBrick(String brickName, Map<String, Object> dataModel, Writer writer) {
         Fragment brickFragment = bricks.get(brickName);
         if (brickFragment == null) {
@@ -75,8 +80,27 @@ public final class Template {
         process(dataModel, writer, brickFragment);
     }
 
+    public void processBrick(String brickName, Object dataModel, Writer writer) {
+        Fragment brickFragment = bricks.get(brickName);
+        if (brickFragment == null) {
+            throw new ProcessException("missing brick: " + brickName);
+        }
+        process(dataModel, writer, brickFragment);
+    }
+
     private void process(Map<String, Object> dataModel, Writer writer, Fragment brickFragment) {
-        ProcessContext processContext = createContext(this.context, dataModel, writer, userDirectives, featureSet, templateObjectProviderMap, localContext);
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
+        process(writer, brickFragment, dataModel, templateObjectMapper);
+    }
+
+    private void process(Object value, Writer writer, Fragment brickFragment) {
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
+        Map<String, Object> dataModel = getDataModel(value, templateObjectMapper);
+        process(writer, brickFragment, dataModel, templateObjectMapper);
+    }
+
+    private void process(Writer writer, Fragment brickFragment, Map<String, Object> dataModel, DefaultTemplateObjectMapper templateObjectMapper) {
+        ProcessContext processContext = createContext(this.context, dataModel, writer, userDirectives, featureSet, localContext, templateObjectMapper);
         processContext.setResourceBundle(resourceBundleName);
         try {
             brickFragment.process(processContext);
@@ -92,7 +116,21 @@ public final class Template {
         }
     }
 
+    public String processBrick(String brickName, Object dataModel) {
+        try (StringBuilderWriter writer = new StringBuilderWriter()) {
+            processBrick(brickName, dataModel, writer);
+            return writer.toString();
+        }
+    }
+
     public String process(Map<String, Object> dataModel) {
+        try (StringBuilderWriter writer = new StringBuilderWriter()) {
+            process(dataModel, writer);
+            return writer.toString();
+        }
+    }
+
+    public String process(Object dataModel) {
         try (StringBuilderWriter writer = new StringBuilderWriter()) {
             process(dataModel, writer);
             return writer.toString();
@@ -103,9 +141,24 @@ public final class Template {
         return reduce(dataModel, new ReductionStatus());
     }
 
+    public Template reduce(Object dataModel) {
+        return reduce(dataModel, new ReductionStatus());
+    }
+
     public Template reduce(Map<String, Object> dataModel, ReductionStatus status) {
         status.before().set(rootFragment.getSize());
-        ProcessContext processContext = createContext(context, dataModel, new StringBuilderWriter(), userDirectives, featureSet, templateObjectProviderMap, localContext);
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
+        return reduce(status, dataModel, templateObjectMapper);
+    }
+
+    public Template reduce(Object value, ReductionStatus status) {
+        status.before().set(rootFragment.getSize());
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
+        return reduce(status, getDataModel(value, templateObjectMapper), templateObjectMapper);
+    }
+
+    private Template reduce(ReductionStatus status, Map<String, Object> dataModel, DefaultTemplateObjectMapper templateObjectMapper) {
+        ProcessContext processContext = createContext(context, dataModel, new StringBuilderWriter(), userDirectives, featureSet, localContext, templateObjectMapper);
         processContext.setEnvironment(new ReducingVariableEnvironment(processContext.getEnvironment()));
         try {
             BlockFragment reducedFragment = toBlock(rootFragment.reduce(new ReduceContext(processContext, status)));
@@ -118,8 +171,19 @@ public final class Template {
     }
 
     public Template hook(Map<String, Object> dataModel) {
-        HashMap<Class<?>, TemplateObjectProvider> currentMap = new HashMap<>(templateObjectProviderMap);
-        ProcessContext processContext = createContext(context, dataModel, new StringWriter(), userDirectives, featureSet, currentMap, localContext);
+        Map<Class<?>, TemplateObjectProvider> currentMap = new HashMap<>(templateObjectProviderMap);
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), currentMap);
+        return hook(dataModel, templateObjectMapper, currentMap);
+    }
+
+    public Template hook(Object value) {
+        Map<Class<?>, TemplateObjectProvider> currentMap = new HashMap<>(templateObjectProviderMap);
+        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), currentMap);
+        return hook(getDataModel(value, templateObjectMapper), templateObjectMapper, currentMap);
+    }
+
+    private Template hook(Map<String, Object> dataModel, DefaultTemplateObjectMapper templateObjectMapper, Map<Class<?>, TemplateObjectProvider> currentMap) {
+        ProcessContext processContext = createContext(context, dataModel, new StringWriter(), userDirectives, featureSet, localContext, templateObjectMapper);
         processContext.setResourceBundle(resourceBundleName);
         try {
             rootFragment.process(processContext);
@@ -127,6 +191,14 @@ public final class Template {
             log.debug("return exception: {}", e.getMessage());
         }
         return new Template(context, path, rootFragment, featureSet, localContext, currentMap);
+    }
+
+    private static Map<String, Object> getDataModel(Object value, DefaultTemplateObjectMapper templateObjectMapper) {
+        try {
+            return ((TemplateMap) templateObjectMapper.mapObject(value)).map();
+        } catch (RuntimeException e) {
+            throw new ProcessException("invalid data model: " + value.getClass(), e);
+        }
     }
 
     private BlockFragment toBlock(Fragment fragment) {
@@ -153,9 +225,7 @@ public final class Template {
         this.resourceBundleName = resourceBundleName;
     }
 
-    private ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives,
-                                        FeatureSet featureSet, Map<Class<?>, TemplateObjectProvider> templateObjectProviderMap, LocalContext localContext) {
-        DefaultTemplateObjectMapper templateObjectMapper = new DefaultTemplateObjectMapper(context.providers(), templateObjectProviderMap);
+    private static ProcessContext createContext(StaticContext context, Map<String, Object> dataModel, Writer writer, Map<NameSpaced, UserDirective> userDirectives, FeatureSet featureSet, LocalContext localContext, DefaultTemplateObjectMapper templateObjectMapper) {
         BaseEnvironment baseEnvironment = new BaseEnvironment(dataModel, context.builtInVariableProviders(), localContext.clock(), templateObjectMapper);
         return new ProcessContext(context, baseEnvironment, userDirectives, writer, featureSet, templateObjectMapper, localContext);
     }

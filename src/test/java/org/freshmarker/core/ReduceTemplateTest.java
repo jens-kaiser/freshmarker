@@ -797,6 +797,18 @@ assertEquals("""
         assertEquals(new ReductionStatus(4, 4, 2), reductionStatus);
     }
 
+    public record Record(String company, String name) {
+
+    }
+    @Test
+    void reduceBlockWithRecord() {
+        Record model = new Record( "schegge.de", null);
+        Template template = templateBuilder.getTemplate("test", "${company}: ${name}").reduce(model, reductionStatus);
+        assertNotNull(template);
+        assertEquals("schegge.de: Jens Kaiser", template.process(Map.of("name", "Jens Kaiser")));
+        assertEquals(new ReductionStatus(4, 4, 2), reductionStatus);
+    }
+
     @Test
     void reduceBlockWithDefault() {
         Map<String, Object> model = Map.of("company", "schegge.de");
