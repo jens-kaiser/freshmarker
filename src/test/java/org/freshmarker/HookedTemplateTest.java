@@ -27,4 +27,10 @@ class HookedTemplateTest {
         Template template = builder.getTemplate("example", "Name: ${name}, Bean: ${bean.title}").hook(dataModel);
         Assertions.assertEquals("Name: Jens, Bean: Title", template.process(dataModel));
     }
+
+    @Test
+    void hookWithBean(TemplateBuilder builder) {
+        Template template = builder.getTemplate("example", "title: ${title}").hook(new Bean("Title"));
+        Assertions.assertEquals("title: Title", template.process(new Bean("Title")));
+    }
 }

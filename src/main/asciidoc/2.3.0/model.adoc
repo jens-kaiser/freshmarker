@@ -2,7 +2,9 @@
 
 The template engine needs data to fill the interpolations.
 Because it is an embedded _Java_ engine, normal _Java_ classes are used.
-A `Map` is always used as the model for calling the engine.
+
+The top level elements in the model are addressed via names.
+The model is therefore defined by a `Map`, a bean or a record.
 
 === Types
 
