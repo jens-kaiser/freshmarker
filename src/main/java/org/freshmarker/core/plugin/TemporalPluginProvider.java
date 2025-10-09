@@ -68,6 +68,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     private static final String DATE_TIME = "date_time";
 
     private static final EnumSet<ChronoUnit> SUPPORTED_TEMPORAL_UNITS = EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.MINUTES, ChronoUnit.HOURS, ChronoUnit.DAYS, ChronoUnit.MONTHS, ChronoUnit.YEARS);
+    private static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     private boolean useHourOfDay;
 
@@ -319,12 +320,12 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     @Override
     public Map<Class<? extends TemplateObject>, Formatter> providerFormatter() {
         Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
-        String time = useHourOfDay ? "HH:mm:ss" : "hh:mm:ss";
-        formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd " + time + " VV", ZoneOffset.UTC));
-        formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter("yyyy-MM-dd " + time + " VV"));
-        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter("yyyy-MM-dd " + time + " XX"));
-        formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter("yyyy-MM-dd " + time));
-        formatter.put(TemplateLocalDate.class, new DateFormatter("yyyy-MM-dd"));
+        String time = useHourOfDay ? " HH:mm:ss" : " hh:mm:ss";
+        formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd" + time + " VV", ZoneOffset.UTC));
+        formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(YYYY_MM_DD + time + " VV"));
+        formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(YYYY_MM_DD + time + " XX"));
+        formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(YYYY_MM_DD + time));
+        formatter.put(TemplateLocalDate.class, new DateFormatter(YYYY_MM_DD));
         formatter.put(TemplateLocalTime.class, new TimeFormatter(time, ZoneOffset.UTC));
         formatter.put(TemplateDuration.class, new DurationFormatter());
         formatter.put(TemplatePeriod.class, new DurationFormatter());
