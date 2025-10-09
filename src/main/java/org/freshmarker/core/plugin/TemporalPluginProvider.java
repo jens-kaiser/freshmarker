@@ -321,7 +321,7 @@ public final class TemporalPluginProvider implements BuiltInProvider, TypeMapper
     public Map<Class<? extends TemplateObject>, Formatter> providerFormatter() {
         Map<Class<? extends TemplateObject>, Formatter> formatter = new HashMap<>();
         String time = useHourOfDay ? "HH:mm:ss" : "hh:mm:ss";
-        formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd" + time + " VV", ZoneOffset.UTC));
+        formatter.put(TemplateInstant.class, new DateTimeFormatter("uuuu-MM-dd " + time + " VV", ZoneOffset.UTC));
         formatter.put(TemplateZonedDateTime.class, new DateTimeFormatter(YYYY_MM_DD + " " + time + " VV"));
         formatter.put(TemplateOffsetDateTime.class, new DateTimeFormatter(YYYY_MM_DD + " " + time + " XX"));
         formatter.put(TemplateLocalDateTime.class, new DateTimeFormatter(YYYY_MM_DD + " " + time));
