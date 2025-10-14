@@ -22,9 +22,9 @@ m|.country
 m|${.country}
 |DE
 
-m|.laguage
-|The `.laguage` built-in variable of type `TemplateString`  provides the current locales language code.
-m|${.laguage}
+m|.language
+|The `.language` built-in variable of type `TemplateString`  provides the current locales language code.
+m|${.language}
 |de
 
 m|.version
